@@ -35,7 +35,7 @@ local clickBlock = function (eventArgs)
   -- LogHelper:debug('men' .. data)
 
   -- LogHelper:debug('销毁江枫')
-  -- ActorHelper:clearActorWithId(jiangfeng.actorid)
+  ActorHelper:clearActorWithId(yexiaolong.actorid)
 
   -- jiangfeng:newActor(eventArgs.x, eventArgs.y, eventArgs.z, true)
   -- jiangfeng:wantMove(PositionHelper:getJiangfengMovetoPatrolPositions())

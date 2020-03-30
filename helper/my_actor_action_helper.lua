@@ -137,7 +137,8 @@ end
 -- 更新生物行为状态
 function MyActorActionHelper:updateActionState (myActor)
   if (myActor.wants) then
-    local style = myActor.wants[1].want
+    local style = myActor.wants[1].style
+    LogHelper:debug('生物想' .. style)
     if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing') then
       myActor:enableMove(true)
       MyActorHelper:closeAI(myActor.objid)

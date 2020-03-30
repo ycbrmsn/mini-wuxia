@@ -55,9 +55,9 @@ function MyActor:updatePosition ()
   if (x) then
     -- self.pos.x, self.pos.y, self.pos.z = x, y, z -- 如此修改的父类数据，所有类数据相同
     self:updateCantMoveTime(x, y, z)
-    -- LogHelper:debug(self.actorname .. 'cantMoveTime: ' .. self.cantMoveTime)
     self.x, self.y, self.z = x, y, z
   else
+    LogHelper:debug('重生' .. self.actorname)
     self:recoverActor()
   end
 end
