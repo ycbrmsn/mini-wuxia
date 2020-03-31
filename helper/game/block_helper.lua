@@ -1,6 +1,7 @@
 -- 方块工具类
 BlockHelper = {
   repeatTime = 3, -- 失败重复调用次数
+  woodenFenceid = 534, -- 木围栏id
   doorid = 812 -- 果木门id
 }
 
@@ -71,7 +72,7 @@ end
 -- 获取方块数据
 function BlockHelper:getBlockData (x, y, z)
   local onceFailMessage = '获取方块数据失败一次'
-  local finillyFailMessage = '获取方块数据失败'
+  local finillyFailMessage = StringHelper:concat('获取方块数据失败，参数：x=', x, ', y=', y, ', z=', z)
   return CommonHelper:callOneResultMethod(function (p)
     return Block:getBlockData(p.x, p.y, p.z)
   end, { x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
@@ -80,7 +81,7 @@ end
 -- 设置方块数据
 function BlockHelper:setBlockAll (x, y, z, blockid, data)
   local onceFailMessage = '设置方块数据失败一次'
-  local finillyFailMessage = '设置方块数据失败'
+  local finillyFailMessage = StringHelper:concat('设置方块数据失败，参数：x=', x, ', y=', y, ', z=', z, ', blockid=', blockid, ', data=', data)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Block:setBlockAll(p.x, p.y, p.z, p.blockid, p.data)
   end, { x = x, y = y, z = z, blockid = blockid, data = data }, onceFailMessage, finillyFailMessage)

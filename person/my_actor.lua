@@ -26,7 +26,7 @@ end
 
 -- 创建一个新生物
 function MyActor:newActor (x, y, z, isSingleton)
-  if (isSingleton and self.objid) then
+  if (isSingleton and self.objid and self.actorid) then
     ActorHelper:clearActorWithId (self.actorid)
     MyActorHelper:delByActorid(self.actorid)
   end
@@ -177,4 +177,22 @@ end
 -- 初始化人物行为
 function MyActor:init (hour)
   -- body
+end
+
+function MyActor:initActor (initPosition)
+  local areaid = AreaHelper:createInitActorArea(initPosition)
+  if (areaid) then
+    local objids = AreaHelper:getAreaCreatures(areaid)
+    if (objids && #objids == 1) then
+      self.action = MyActorAction:new(self)
+      self.objid = objids[1]
+      MyActorHelper:add(self) -- 生物加入集合中
+    else
+      self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
+    end
+  else
+    self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
+  end
+  -- 清除围栏
+
 end

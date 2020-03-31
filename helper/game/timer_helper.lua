@@ -23,7 +23,7 @@ end
 -- 创建计时器
 function TimerHelper:createTimer (timername)
   local onceFailMessage = '创建计时器失败一次'
-  local finillyFailMessage = '创建计时器失败'
+  local finillyFailMessage = StringHelper:concat('创建计时器失败，参数：timename=', timername)
   return CommonHelper:callOneResultMethod(function (p)
     return MiniTimer:createTimer(p.timername)
   end, { timername = timername }, onceFailMessage, finillyFailMessage)
@@ -32,7 +32,7 @@ end
 -- 启动正向计时器
 function TimerHelper:startForwardTimer (timerid)
   local onceFailMessage = '启动正向计时器失败一次'
-  local finillyFailMessage = '启动正向计时器失败'
+  local finillyFailMessage = StringHelper:concat('启动正向计时器失败，参数：timerid=', timerid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return MiniTimer:startForwardTimer(p.timerid)
   end, { timerid = timerid }, onceFailMessage, finillyFailMessage)

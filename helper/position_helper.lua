@@ -21,3 +21,22 @@ PositionHelper = {
 function PositionHelper:getDoorPositions ()
   return self.doorPositions
 end
+
+-- 位置字符串
+function PositionHelper:posToString (pos)
+  if (pos) then
+    local x, y, z = pos.x, pos.y, pos.z
+    if (not(x)) then
+      x = 'nil'
+    end
+    if (not(y)) then
+      y = 'nil'
+    end
+    if (not(z)) then
+      z = 'nil'
+    end
+    return '{ x = ' .. x .. ', y = ' .. y .. ', z = '.. z .. ' }'
+  else
+    return 'nil'
+  end
+end

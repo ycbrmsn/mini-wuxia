@@ -21,7 +21,7 @@ end
 -- 生成生物
 function WorldHelper:spawnCreature (x, y, z, actorid, actorCnt)
   local onceFailMessage = '生成生物失败一次'
-  local finillyFailMessage = '生成生物失败'
+  local finillyFailMessage = StringHelper:concat('生成生物失败，参数：x=', x, ', y=', y, ', z=', z, ', actorid=', actorid, ', actorCnt=', actorCnt)
   return CommonHelper:callOneResultMethod(function (p)
     return World:spawnCreature(p.x, p.y, p.z, p.actorid, p.actorCnt)
   end, { x = x, y = y, z = z, actorid = actorid, actorCnt = actorCnt }, onceFailMessage, finillyFailMessage)
@@ -30,7 +30,7 @@ end
 -- 移除生物
 function WorldHelper:despawnCreature (objid)
   local onceFailMessage = '移除生物失败一次'
-  local finillyFailMessage = '移除生物失败'
+  local finillyFailMessage = StringHelper:concat('移除生物失败，参数：objid=', objid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:despawnCreature(p.objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
@@ -39,7 +39,7 @@ end
 -- 在指定位置上播放音效
 function WorldHelper:playSoundEffectOnPos (pos, soundId, isLoop)
   local onceFailMessage = '播放声音失败一次'
-  local finillyFailMessage = '播放声音失败'
+  local finillyFailMessage = StringHelper:concat('播放声音失败，参数：pos=', pos, ', soundId=', soundId, ', isLoop=', isLoop)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:playSoundEffectOnPos(p.pos, p.soundId, self.volume, self.pitch, p.isLoop)
   end, { pos = pos, soundId = soundId, isLoop = isLoop }, onceFailMessage, finillyFailMessage)
@@ -48,7 +48,7 @@ end
 -- 停止指定位置上播放的音效
 function WorldHelper:stopSoundEffectOnPos (pos, soundId)
   local onceFailMessage = '停止播放声音失败一次'
-  local finillyFailMessage = '停止播放声音失败'
+  local finillyFailMessage = StringHelper:concat('停止播放声音失败，参数：pos=', pos, ', soundId=', soundId)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:stopSoundEffectOnPos(p.pos, p.soundId)
   end, { pos = pos, soundId = soundId }, onceFailMessage, finillyFailMessage)
@@ -57,7 +57,7 @@ end
 -- 获取当前几点
 function WorldHelper:getHours ()
   local onceFailMessage = '获取当前几点失败一次'
-  local finillyFailMessage = '获取当前几点失败'
+  local finillyFailMessage = '获取当前几点失败，无参数'
   return CommonHelper:callOneResultMethod(function (p)
     return World:getHours()
   end, {}, onceFailMessage, finillyFailMessage)
@@ -66,7 +66,7 @@ end
 -- 设置当前几点
 function WorldHelper:setHours (hour)
   local onceFailMessage = '设置当前几点失败一次'
-  local finillyFailMessage = '设置当前几点失败'
+  local finillyFailMessage = StringHelper:concat('设置当前几点失败，参数：hour=', hour)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:setHours(p.hour)
   end, { hour = hour }, onceFailMessage, finillyFailMessage)

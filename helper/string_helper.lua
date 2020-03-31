@@ -81,3 +81,49 @@ function StringHelper:join (t, c, k)
   end
   return str
 end
+
+-- 显示字符串
+function StringHelper:toString (v)
+  local t = type(v)
+  if (t == 'nil' or t == 'function' or t == 'userdata' or t == 'thread') then
+    return t
+  elseif (t == 'boolean') then
+    if (v) then
+      return 'true'
+    else
+      return 'false'
+    end
+  elseif (t == 'number' or t == 'string') then
+    return v
+  elseif (t == 'table') then
+    return self:tableToString(v)
+  else -- 不会进入这里
+    return 'other'
+  end
+end
+
+-- 显示table字符串
+function StringHelper:tableToString (t)
+  local str = '{ '
+  local index = 1
+  for k, v in pairs(t) do
+    if (index ~= 1) then
+      str = str .. ', '
+    end
+    str = str .. k .. ' = ' .. self:toString(v)
+    index = index + 1
+  end
+  str = str .. ' }'
+  return str
+end
+
+-- 拼接所有参数
+function StringHelper:concat (...)
+  local str = ''
+  local num = select("#", ...)
+  for i = 1, num do
+    local arg = select(i, ...)
+    str = str .. self:toString(arg)
+  end
+  return str
+end
