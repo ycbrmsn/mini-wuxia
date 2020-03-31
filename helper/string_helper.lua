@@ -68,14 +68,14 @@ end
 function StringHelper:join (t, c, k)
   c = c or ' '
   local str = ''
-  local index, len = 1, #t
+  local len = #t
   for i, v in ipairs(t) do
     if (k) then
       str = str .. v[k]
     else
       str = str .. v
     end
-    if (index ~= len) then
+    if (i ~= len) then
       str = str .. c
     end
   end

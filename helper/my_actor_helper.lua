@@ -46,11 +46,6 @@ end
 -- actor进入区域
 function MyActorHelper:enterArea (objid, areaid)
   local myActor = self:getActorByObjid(objid)
-  -- if (myActor) then
-  --   LogHelper:debug(myActor.actorname .. '进入区域' .. areaid)
-  -- else
-  --   LogHelper:debug('有生物进入区域' .. areaid)
-  -- end
   local doorPos = allDoorAreas[areaid]
   if (doorPos) then -- 如果门位置存在，说明这是门区域，则打开这个门
     BlockHelper:openDoor(doorPos)
@@ -124,6 +119,38 @@ function MyActorHelper:playerClickActor (objid, toobjid)
     myActor:wantStayForAWhile()
     local x, y, z = ActorHelper:getPosition(objid)
     myActor:runTo({ x = x, y = y, z = z })
+  end
+end
+
+function MyActorHelper:actorCollide (objid, toobjid)
+  local actor1 = MyActorHelper:getActorByObjid(objid)
+  if (actor1) then -- 生物是特定生物
+    if (ActorHelper:isPlayer(toobjid)) then -- 是玩家
+      actor1:wantStayForAWhile()
+      local want = actor1.wants[1]
+      local style = want.style
+      if (style == 'move' or style == 'patrol' or style == 'freeInArea') then
+        local x, y, z = ActorHelper:getPosition(toobjid)
+        local dis1 = WorldHelper:calcDistance({ x = actor1.x, y = actor1.y, z = actor1.z}, want.toPos)
+        local dis2 = WorldHelper:calcDistance({ x = x, y = y, z = z }, want.toPos)
+        local nickname = PlayerHelper:getNickname(toobjid)
+        if (dis1 < dis2) then
+          actor1.action:speak(nickname .. '，你撞到我啦', toobjid)
+        else
+          actor1.action:speak(nickname .. '，你挡着我的路了', toobjid)
+        end
+      end
+    else
+      local actor2 = MyActorHelper:getActorByObjid(toobjid)
+      if (actor2) then
+        -- 先简单处理为actorid小的停下来
+        if (actor1.actorid < actor2.actorid) then
+          actor1:wantStayForAWhile()
+        else
+          actor2:wantStayForAWhile()
+        end
+      end
+    end
   end
 end
 

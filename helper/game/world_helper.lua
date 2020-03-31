@@ -71,3 +71,8 @@ function WorldHelper:setHours (hour)
     return World:setHours(p.hour)
   end, { hour = hour }, onceFailMessage, finillyFailMessage)
 end
+
+-- 计算位置之间的距离
+function WorldHelper:calcDistance (pos1, pos2)
+  return World:calcDistance(pos1, pos2)
+end

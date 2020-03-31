@@ -12,7 +12,7 @@ local playerEnterGame = function (eventArgs)
   if (not(logPaper:hasItem())) then
     logPaper:newItem(objid)
   end
-  local result, nickname = Player:getNickname(objid)
+  local nickname = PlayerHelper:getNickname(objid)
   table.insert(allPlayers, { objid = objid, nickname = nickname })
 end
 

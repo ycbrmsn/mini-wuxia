@@ -20,22 +20,10 @@ end
 local actorCollide = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
-  local actor1 = MyActorHelper:getActorByObjid(objid)
-  if (actor1) then -- 生物是特定生物
-    if (ActorHelper:isPlayer(toobjid)) then -- 是玩家
-      actor1:wantStayForAWhile()
-    else
-      local actor2 = MyActorHelper:getActorByObjid(toobjid)
-      if (actor2) then
-        -- 先简单处理为actorid小的停下来
-        if (actor1.actorid < actor2.actorid) then
-          actor1:wantStayForAWhile()
-        else
-          actor2:wantStayForAWhile()
-        end
-      end
-    end
-  end
+  LogHelper:call(function (p)
+    MyActorHelper:actorCollide(p.objid, p.toobjid)
+  end, { objid = objid, toobjid = toobjid })
+  
 end
 
 -- 参数 timerid, timername
