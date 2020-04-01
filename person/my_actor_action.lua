@@ -35,11 +35,20 @@ function MyActorAction:transmitTo (pos)
   return self.myActor:setPosition(pos.x, pos.y, pos.z)
 end
 
--- 播放动作
-function MyActorAction:playAct (actid)
-  Chat:sendSystemMsg('actid: ' .. actid .. ', result: ' .. result)
-  local result = Actor:playAct(self.myActor.objid, actid)
-  return result == ErrorCode.OK
+function MyActorAction:playDown ()
+  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
+end
+
+function MyActorAction:playSleep ()
+  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
+end
+
+function MyActorAction:playSit ()
+  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
+end
+
+function MyActorAction:playAttack ()
+  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
 end
 
 -- 生物行动
@@ -52,9 +61,13 @@ function MyActorAction:execute ()
   -- LogHelper:debug('action: ' .. want.currentRestTime)
   if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
     want.currentRestTime = want.currentRestTime - 1
+    if (want.style == 'sleep') then
+      CreatureHelper:setWalkSpeed(self.myActor.objid, 0)
+      self:runTo(want.lookPos)
+    end
   else
-    CreatureHelper:setWalkSpeed(self.myActor.objid, -1)
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
+      CreatureHelper:setWalkSpeed(self.myActor.objid, -1)
       if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
         self:transmitTo(want.toPos)
         self.myActor.cantMoveTime = 0
@@ -62,7 +75,10 @@ function MyActorAction:execute ()
         self:runTo(want.toPos)
       end
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
-      
+
+    elseif (want.style == 'sleep') then
+      want.style = 'sleeping'
+      self:playSleep()
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end

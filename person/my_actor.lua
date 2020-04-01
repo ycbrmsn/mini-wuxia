@@ -169,6 +169,15 @@ function MyActor:nextWantDoNothing ()
   table.insert(self.wants, MyActorActionHelper:getDoNothingData())
 end
 
+function MyActor:nextWantSleep (lookPos)
+  self:nextWantWait(2)
+  table.insert(self.wants, MyActorActionHelper:getSleepData(lookPos))
+end
+
+function MyActor:nextWantWait (second)
+  table.insert(self.wants, MyActorActionHelper:getWaitData(second))
+end
+
 -- 生物固定时间点想做什么
 function MyActor:wantAtHour (hour)
   -- 各个生物重写此方法内容

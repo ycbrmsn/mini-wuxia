@@ -1,5 +1,28 @@
 -- 角色工具类
-ActorHelper = {}
+ActorHelper = {
+  ACT = {
+    HI = 1, -- 打招呼
+    THINK = 2, -- 低头思考
+    CRY = 3, -- 哭泣
+    ANGRY = 4, -- 生气
+    STRETCH = 5,  -- 伸懒腰
+    HAPPY = 6, -- 胜利（高兴）
+    THANK = 7, -- 感谢
+    FREE = 8, -- 休闲动作
+    DOWN = 9, -- 倒地
+    POSE = 10, -- 摆姿势
+    STAND = 11, -- 站立
+    RUN = 12, -- 跑
+    SLEEP = 13, -- 躺下睡觉
+    SIT = 14, -- 坐下
+    SWIM = 15, -- 游泳
+    ATTACK = 16, -- 攻击
+    DIE = 17, -- 死亡
+    BEAT = 18, -- 受击
+    FREE2 = 19, -- 休闲
+    JUMP = 20 -- 跳
+  }
+}
 
 -- 设置生物可移动状态
 function ActorHelper:setEnableMoveState (objid, switch)
@@ -79,4 +102,13 @@ end
 -- 是否是玩家
 function ActorHelper:isPlayer (objid)
   return Actor:isPlayer(objid) == ErrorCode.OK
+end
+
+-- 播放动作
+function ActorHelper:playAct (objid, actid)
+  local onceFailMessage = '清除生物失败一次'
+  local finillyFailMessage = StringHelper:concat('清除生物失败，参数：objid=', objid, ', actid=', actid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:playAct(p.objid, p.actid)
+  end, { objid = objid, actid = actid }, onceFailMessage, finillyFailMessage)
 end

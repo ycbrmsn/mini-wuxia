@@ -57,6 +57,7 @@ function MyActorHelper:enterArea (objid, areaid)
         -- LogHelper:debug(myActor.actorname .. '进入了终点区域' .. areaid)
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         local pos = MyActorActionHelper:getNextPos(want)
+        LogHelper:debug(myActor.actorname, pos)
         if (pos) then -- 有下一个行动位置
           want.toPos = pos
           MyActorActionHelper:createToPos(want)
@@ -70,7 +71,12 @@ function MyActorHelper:enterArea (objid, areaid)
           elseif (nextWant.style == 'freeInArea') then
             nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
             MyActorActionHelper:createToPos(nextWant)
-            LogHelper:debug(myActor.actorname .. '开始闲逛')
+            -- LogHelper:debug(myActor.actorname .. '开始闲逛')
+          elseif (nextWant.style == 'wait') then
+            local restTime = nextWant.restTime
+            table.remove(myActor.wants, 1)
+            nextWant = myActor.wants[1]
+            nextWant.currentRestTime = restTime
           end
         else
           myActor:defaultWant()

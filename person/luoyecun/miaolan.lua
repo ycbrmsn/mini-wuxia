@@ -5,6 +5,8 @@ function Miaolan:new ()
   local o = {
     objid = 4314184974,
     initPosition = { x = -34, y = 8, z = -13 }, -- 药店柜台后
+    bedHeadPosition = { x = -30, y = 14, z = -14 }, -- 床头位置
+    bedTailPointPosition = { x = -30, y = 14, z = -20 }, -- 床尾指向位置
     secondFloorPosition = { x = -29, y = 13, z = -14 }, -- 二楼床旁边
     secondFloorPositions1 = {
       { x = -26, y = 13, z = -15 }, -- 楼梯口
@@ -54,4 +56,9 @@ end
 function Miaolan:goSecondFloor ()
   self:wantMove({ self.secondFloorPosition })
   self:nextWantFreeInArea({ self.secondFloorPositions1, self.secondFloorPositions2 })
+end
+
+function Miaolan:goToBed ()
+  self:wantMove({ self.bedHeadPosition })
+  self:nextWantSleep(self.bedTailPointPosition)
 end

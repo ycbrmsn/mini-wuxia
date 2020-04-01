@@ -22,12 +22,6 @@ function MyActorActionHelper:getDontMoveData ()
   return { style = 'dontMove', restTime = 0, currentRestTime = 0 }
 end
 
---[[  巡逻行为数据，参数:
-      positions位置数组，即{{ x = x, y = y, z = z }, { x = x, y = y, z = z }},
-      isNegDir是否是负向行动，默认是否,
-      index位置序数，从1~#t，默认是1，负向则是负方向的第一个,
-      restTime巡逻到达一个位置后停留时间，默认是5秒
---]] 
 function MyActorActionHelper:getPatrolData (positions, isNegDir, index, restTime)
   index = index or 1
   restTime = restTime or 5
@@ -52,6 +46,15 @@ end
 -- 生物想不做事数据
 function MyActorActionHelper:getDoNothingData ()
   return { style = 'doNothing', restTime = 0, currentRestTime = 0 }
+end
+
+function MyActorActionHelper:getSleepData (lookPos)
+  return { style = 'sleep', restTime = 0, currentRestTime = 0, lookPos = lookPos }
+end
+
+function MyActorActionHelper:getWaitData (restTime)
+  restTime = restTime or 5
+  return { style = 'wait', restTime = restTime, currentRestTime = 0 }
 end
 
 -- 获取前往位置
@@ -139,7 +142,7 @@ function MyActorActionHelper:updateActionState (myActor)
   if (myActor.wants) then
     local style = myActor.wants[1].style
     LogHelper:debug('生物想' .. style)
-    if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing') then
+    if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing' or style == 'sleep') then
       myActor:enableMove(true)
       MyActorHelper:closeAI(myActor.objid)
     elseif (style == 'dontMove') then
