@@ -3,22 +3,37 @@ LogHelper = {
   level = 'debug' -- debug info error
 }
 
-function LogHelper:debug (message)
+function LogHelper:debug (...)
   if (self.level == 'debug') then
-    message = StringHelper:toString(message)
+    local message = ''
+    local num = select('#', ...)
+    for i = 1, num do
+      local arg = select(i, ...)
+      message = message .. StringHelper:toString(arg)
+    end
     ChatHelper:sendSystemMsg('debug: ' .. message)
   end
 end
 
-function LogHelper:info (message)
+function LogHelper:info (...)
   if (self.level == 'debug' or self.level == 'info') then
-    message = StringHelper:toString(message)
+    local message = ''
+    local num = select('#', ...)
+    for i = 1, num do
+      local arg = select(i, ...)
+      message = message .. StringHelper:toString(arg)
+    end
     ChatHelper:sendSystemMsg('info: ' .. message)
   end
 end
 
-function LogHelper:error (message)
-  message = StringHelper:toString(message)
+function LogHelper:error (...)
+  local message = ''
+  local num = select('#', ...)
+  for i = 1, num do
+    local arg = select(i, ...)
+    message = message .. StringHelper:toString(arg)
+  end
   ChatHelper:sendSystemMsg('error: ' .. message)
 end
 
