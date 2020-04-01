@@ -57,7 +57,7 @@ function MyActorHelper:enterArea (objid, areaid)
         -- LogHelper:debug(myActor.actorname .. '进入了终点区域' .. areaid)
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         local pos = MyActorActionHelper:getNextPos(want)
-        LogHelper:debug(myActor.actorname, pos)
+        -- LogHelper:debug(myActor.actorname, pos)
         if (pos) then -- 有下一个行动位置
           want.toPos = pos
           MyActorActionHelper:createToPos(want)

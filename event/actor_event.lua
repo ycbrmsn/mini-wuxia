@@ -5,7 +5,9 @@ local actorEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug(objid .. '进入了区域' .. areaid)
-  MyActorHelper:enterArea(objid, areaid)
+  LogHelper:call(function (p)
+    MyActorHelper:enterArea(p.objid, p.areaid)
+  end, { objid = objid, areaid = areaid })
 end
 
 -- 参数 eventobjid, areaid
@@ -13,7 +15,9 @@ local actorLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug(objid .. '离开了区域' .. areaid)
-  MyActorHelper:leaveArea(objid, areaid)
+  LogHelper:call(function (p)
+    MyActorHelper:leaveArea(p.objid, p.areaid)
+  end, { objid = objid, areaid = areaid })
 end
 
 -- 参数 eventobjid, toobjid
@@ -31,7 +35,9 @@ local changeTimer = function (eventArgs)
   local timerid = eventArgs['timerid']
   local timername = eventArgs['timername']
   -- LogHelper:debug('timer run')
-  MyActorHelper:changeTimer(timerid, timername)
+  LogHelper:call(function (p)
+    MyActorHelper:changeTimer(p.timerid, p.timername)
+  end, { timerid = timerid, timername = timername })
 end
 
 ScriptSupportEvent:registerEvent([=[Actor.AreaIn]=], actorEnterArea) -- 生物进入区域

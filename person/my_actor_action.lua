@@ -27,12 +27,12 @@ end
 
 -- 跑到指定地点
 function MyActorAction:runTo (pos)
-  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x, pos.y, pos.z)
+  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
 -- 传送到指定地点
 function MyActorAction:transmitTo (pos)
-  return self.myActor:setPosition(pos.x, pos.y, pos.z)
+  return self.myActor:setPosition(pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
 function MyActorAction:playDown ()

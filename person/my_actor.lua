@@ -154,6 +154,16 @@ function MyActor:wantDoNothing ()
   self.wants = { MyActorActionHelper:getDoNothingData() }
 end
 
+function MyActor:wantGoToSleep (...)
+  local num = select('#', ...)
+  local positions = {}
+  for i = 1, num - 1 do
+    positions[i] = select(i, ...)
+  end
+  self:wantMove(positions)
+  self:nextWantSleep(select(num, ...))
+end
+
 -- 生物接下来想巡逻
 function MyActor:nextWantPatrol (positions, isNegDir, index, restTime)
   local want = MyActorActionHelper:getPatrolData(positions, isNegDir, index, restTime)

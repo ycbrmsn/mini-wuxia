@@ -5,6 +5,8 @@ function Wangdali:new ()
   local o = {
     objid = 4315385568,
     initPosition = { x = -30, y = 9, z = -45 }, -- 屋内
+    bedHeadPosition = { x = -26, y = 10, z = -47 }, -- 床头位置
+    bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
     movePositions = {
       { x = -30, y = 9, z = -45 }, -- 屋内
       { x = -30, y = 9, z = -34 }, -- 门外
@@ -13,11 +15,11 @@ function Wangdali:new ()
     },
     outDoorPositions = {
       { x = -17, y = 9, z = -49 }, -- 亭口角
-      { x = -24, y = 9, z = -38 } -- 亭口对角
+      { x = -23, y = 9, z = -37 } -- 亭口对角
     },
     homePositions = {
-      { x = -34, y = 9, z = -38 }, -- 进门口右角落
-      { x = -26, y = 9, z = -48 } -- 对角床上
+      { x = -33, y = 9, z = -39 }, -- 进门口右角落
+      { x = -27, y = 9, z = -47 } -- 对角床上
     }
   }
   setmetatable(o, self)
@@ -60,4 +62,10 @@ end
 function Wangdali:goHome ()
   self:wantMove(self.movePositions, true)
   self:nextWantFreeInArea({ self.homePositions })
+end
+
+-- 铁匠这个模型没有此动作
+function Wangdali:goToBed ()
+  self:wantMove({ self.bedHeadPosition })
+  self:nextWantSleep(self.bedTailPointPosition)
 end

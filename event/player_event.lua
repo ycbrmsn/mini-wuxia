@@ -41,9 +41,9 @@ local clickBlock = function (eventArgs)
   
   -- local objids = AreaHelper:getAreaCreatures(areaid)
   -- LogHelper:debug(objids)
-
-  miaolan:setPosition(eventArgs.x, eventArgs.y + 1, eventArgs.z)
-  miaolan:goToBed()
+  -- wenyu.lastBedHeadPosition = wenyu.currentBedHeadPosition
+  -- yexiaolong:setPosition(eventArgs.x, eventArgs.y + 1, eventArgs.z)
+  -- yexiaolong:goToBed()
 
   -- jiangfeng:newActor(eventArgs.x, eventArgs.y, eventArgs.z, true)
   -- jiangfeng:wantMove(PositionHelper:getJiangfengMovetoPatrolPositions())

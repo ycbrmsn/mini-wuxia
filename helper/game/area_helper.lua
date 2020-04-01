@@ -1,6 +1,6 @@
 -- 区域工具类
 AreaHelper = {
-  movePosDim = { x = 1, y = 0, z = 1 },
+  movePosDim = { x = 0, y = 0, z = 0 },
   allDoorAreas = {}
 }
 
