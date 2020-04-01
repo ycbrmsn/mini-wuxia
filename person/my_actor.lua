@@ -180,19 +180,14 @@ function MyActor:init (hour)
 end
 
 function MyActor:initActor (initPosition)
-  local areaid = AreaHelper:createInitActorArea(initPosition)
-  if (areaid) then
-    local objids = AreaHelper:getAreaCreatures(areaid)
-    if (objids && #objids == 1) then
-      self.action = MyActorAction:new(self)
-      self.objid = objids[1]
-      MyActorHelper:add(self) -- 生物加入集合中
-    else
-      self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
-    end
+  local actorid = CreatureHelper:getActorID(self.objid)
+  if (actorid and actorid == self.actorid) then
+    self.action = MyActorAction:new(self)
+    MyActorHelper:add(self) -- 生物加入集合中
   else
     self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
   end
-  -- 清除围栏
-
+  local areaid = AreaHelper:getAreaByPos(initPosition)
+  -- 清除木围栏
+  AreaHelper:clearAllWoodenFence(areaid)
 end

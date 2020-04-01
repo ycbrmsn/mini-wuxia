@@ -3,8 +3,9 @@ Jiangyu = MyActor:new(jiangyuActorId, '江渔')
 
 function Jiangyu:new ()
   local o = jiangfeng:new()
-  o.actorid = jiangyuActorId
-  o.actorname = '江渔'
+  o.objid = 4313483879
+  o.actorid = self.actorid
+  o.actorname = self.actorname
   o.initPosition = { x = 10, y = 8, z = -14 }
   setmetatable(o, self)
   self.__index = self
@@ -27,7 +28,7 @@ end
 
 -- 初始化
 function Jiangyu:init (hour)
-  -- self:newActor(self.initPosition.x, self.initPosition.y, self.initPosition.z, true)
+  self:initActor(self.initPosition)
   if (hour >= 7 and hour < 19) then
     self:goHome()
   else

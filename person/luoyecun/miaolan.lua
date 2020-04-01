@@ -3,6 +3,7 @@ Miaolan = MyActor:new(miaolanActorId, '苗兰')
 
 function Miaolan:new ()
   local o = {
+    objid = 4314184974,
     initPosition = { x = -34, y = 8, z = -13 }, -- 药店柜台后
     secondFloorPosition = { x = -29, y = 13, z = -14 }, -- 二楼床旁边
     secondFloorPositions1 = {
@@ -35,7 +36,7 @@ end
 
 -- 初始化
 function Miaolan:init (hour)
-  self:newActor(self.initPosition.x, self.initPosition.y, self.initPosition.z, true)
+  self:initActor(self.initPosition)
   if (hour >= 7 and hour < 19) then
     self:goToSell()
   else

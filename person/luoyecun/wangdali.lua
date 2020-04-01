@@ -3,6 +3,7 @@ Wangdali = MyActor:new(wangdaliActorId, '王大力')
 
 function Wangdali:new ()
   local o = {
+    objid = 4315385568,
     initPosition = { x = -30, y = 9, z = -45 }, -- 屋内
     movePositions = {
       { x = -30, y = 9, z = -45 }, -- 屋内
@@ -41,7 +42,7 @@ end
 
 -- 初始化
 function Wangdali:init (hour)
-  self:newActor(self.initPosition.x, self.initPosition.y, self.initPosition.z, true)
+  self:initActor(self.initPosition)
   if (hour >= 7 and hour < 19) then
     self:goOutDoor()
   else

@@ -3,6 +3,7 @@ Wenyu = MyActor:new(wenyuActorId, '文羽')
 
 function Wenyu:new ()
   local o = {
+    objid = 4315385572,
     initPosition = { x = 22, y = 8, z = -10 } -- 屋内
   }
   setmetatable(o, self)
@@ -26,7 +27,7 @@ end
 
 -- 初始化
 function Wenyu:init (hour)
-  self:newActor(self.initPosition.x, self.initPosition.y, self.initPosition.z, true)
+  self:initActor(self.initPosition)
   if (hour >= 7 and hour < 19) then
     
   else

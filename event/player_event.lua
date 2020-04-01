@@ -37,7 +37,9 @@ local clickBlock = function (eventArgs)
   -- LogHelper:debug('销毁江枫')
   -- ActorHelper:clearActorWithId(jiangfeng.actorid)
   local areaid = AreaHelper:getAreaByPos({ x = eventArgs.x, y = eventArgs.y, z = eventArgs.z })
-  LogHelper:debug(areaid)
+  local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
+  -- local objids = AreaHelper:getAreaCreatures(areaid)
+  LogHelper:debug(objids)
 
   -- jiangfeng:newActor(eventArgs.x, eventArgs.y, eventArgs.z, true)
   -- jiangfeng:wantMove(PositionHelper:getJiangfengMovetoPatrolPositions())
@@ -76,7 +78,7 @@ local playerClickActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
   local actorid = CreatureHelper:getActorID(toobjid)
-  LogHelper:debug('生物的actorid为：' .. StringHelper:toString(actorid))
+  LogHelper:debug(toobjid .. '生物的actorid为：' .. StringHelper:toString(actorid))
   MyActorHelper:playerClickActor(objid, toobjid)
 end
 

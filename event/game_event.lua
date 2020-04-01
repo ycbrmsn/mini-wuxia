@@ -31,7 +31,8 @@ end
 
 -- 无参数
 local startGame = function ()
-  -- LogHelper:debug('开始游戏')
+  LogHelper:debug('开始游戏')
+  initHours(7)
 end
 
 -- 无参数
@@ -52,14 +53,7 @@ end
 
 function init ()
   logPaper = LogPaper:new()
-  initHours(7)
-  initMyActors(7)
-  -- LogHelper:debug('初始化人物完成')
   initStoryAreas(logPaper)
-  initDoorAreas()
-  TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
-  TimerHelper:startForwardTimer(TimerHelper.timerid)
-  LogHelper:debug('初始化结束')
 end
 
 function initHours (hour)
@@ -74,7 +68,6 @@ function initMyActors (hour)
   miaolan = Miaolan:new()
   yangwanli = Yangwanli:new()
   yexiaolong = Yexiaolong:new()
-  LogHelper:debug('初始化人物完成')
   wenyu:init(hour)
   jiangfeng:init(hour)
   jiangyu:init(hour)
@@ -93,14 +86,22 @@ function initStoryAreas (logPaper)
   end
 end
 
-allDoorAreas = {}
 function initDoorAreas ()
   local doors = PositionHelper:getDoorPositions()
   for i, v in ipairs(doors) do
-    local areaid = AreaHelper:createDoorPosArea(v)
+    local areaid = AreaHelper:getAreaByPos(v)
     -- Area:fillBlock(areaid, 200, 1)
-    table.insert(allDoorAreas, areaid, v)
-    -- LogHelper:debug('初始化门区域' .. areaid)
+    LogHelper:debug('初始化门区域：', areaid)
+    table.insert(AreaHelper.allDoorAreas, areaid, v)
+  end
+end
+
+local atSecond = function (eventArgs)
+  if (eventArgs.second == 1) then
+    initMyActors(7)
+    initDoorAreas()
+    TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
+    TimerHelper:startForwardTimer(TimerHelper.timerid)
   end
 end
 
@@ -110,3 +111,4 @@ ScriptSupportEvent:registerEvent([=[Game.Start]=], startGame) -- 开始游戏
 ScriptSupportEvent:registerEvent([=[Game.Load]=], loadGame) -- 启动游戏
 ScriptSupportEvent:registerEvent([=[Game.End]=], endGame) -- 结束游戏
 ScriptSupportEvent:registerEvent([=[Game.Hour]=], atHour) -- 世界时间到[n]点
+ScriptSupportEvent:registerEvent([=[Game.RunTime]=], atSecond) -- 世界时间到[n]秒

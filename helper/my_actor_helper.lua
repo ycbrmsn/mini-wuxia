@@ -46,7 +46,7 @@ end
 -- actor进入区域
 function MyActorHelper:enterArea (objid, areaid)
   local myActor = self:getActorByObjid(objid)
-  local doorPos = allDoorAreas[areaid]
+  local doorPos = AreaHelper.allDoorAreas[areaid]
   if (doorPos) then -- 如果门位置存在，说明这是门区域，则打开这个门
     BlockHelper:openDoor(doorPos)
   end
@@ -100,9 +100,9 @@ end
 
 -- actor离开区域
 function MyActorHelper:leaveArea (objid, areaid)
-  local doorPos = allDoorAreas[areaid]
+  local doorPos = AreaHelper.allDoorAreas[areaid]
   if (doorPos) then -- 如果门位置存在，说明这是门区域，则判断该区域内是否还有其他生物
-    local creaturelist = AreaHelper:getAreaCreatures(areaid)
+    local creaturelist = AreaHelper:getAllCreaturesInAreaId(areaid)
     if (creaturelist and #creaturelist > 0) then -- 如果区域内还有其他生物，则不关门
       -- do nothing
     else

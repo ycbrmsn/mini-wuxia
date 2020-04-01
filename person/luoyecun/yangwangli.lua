@@ -3,7 +3,8 @@ Yangwanli = MyActor:new(yangwanliActorId, '杨万里')
 
 function Yangwanli:new ()
   local o = {
-    initPosition = { x = -9, y = 8, z = -12 } -- 屋内
+    objid = 4315385574,
+    initPosition = { x = -12, y = 8, z = -11 } -- 屋内
   }
   setmetatable(o, self)
   self.__index = self
@@ -26,7 +27,7 @@ end
 
 -- 初始化
 function Yangwanli:init (hour)
-  self:newActor(self.initPosition.x, self.initPosition.y, self.initPosition.z, true)
+  self:initActor(self.initPosition)
   if (hour >= 7 and hour < 19) then
     
   else

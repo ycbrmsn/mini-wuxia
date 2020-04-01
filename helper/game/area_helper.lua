@@ -1,6 +1,7 @@
 -- 区域工具类
 AreaHelper = {
-  movePosDim = { x = 1, y = 0, z = 1 }
+  movePosDim = { x = 1, y = 0, z = 1 },
+  allDoorAreas = {}
 }
 
 -- 创建移动点区域
@@ -21,6 +22,12 @@ end
 -- 清空所有木围栏
 function AreaHelper:clearAllWoodenFence (areaid)
   return self:clearAllBlock(areaid, BlockHelper.woodenFenceid)
+end
+
+-- 查询areaid内的所有生物
+function AreaHelper:getAllCreaturesInAreaId (areaid)
+  local posBeg, posEnd = self:getAreaRectRange(areaid)
+  return self:getAllCreaturesInAreaRange(posBeg, posEnd)
 end
 
 -- 封装原始接口
@@ -86,4 +93,22 @@ function AreaHelper:getAreaByPos (pos)
   return CommonHelper:callOneResultMethod(function (p)
     return Area:getAreaByPos(p.pos)
   end, { pos = pos }, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取区域范围内全部生物
+function AreaHelper:getAllCreaturesInAreaRange (posBeg, posEnd)
+  local onceFailMessage = '获取区域范围内全部生物失败一次'
+  local finillyFailMessage = StringHelper:concat('获取区域范围内全部生物失败，参数：posBeg=', posBeg, ', posEnd=', posEnd)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Area:getAllCreaturesInAreaRange(p.posBeg, p.posEnd)
+  end, { posBeg = posBeg, posEnd = posEnd }, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取区域范围
+function AreaHelper:getAreaRectRange (areaid)
+  local onceFailMessage = '获取区域范围失败一次'
+  local finillyFailMessage = StringHelper:concat('获取区域范围失败，参数：areaid=', areaid)
+  return CommonHelper:callTwoResultMethod(function (p)
+    return Area:getAreaRectRange(p.areaid)
+  end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
 end

@@ -3,6 +3,7 @@ Jiangfeng = MyActor:new(jiangfengActorId, '江枫')
 
 function Jiangfeng:new ()
   local o = {
+    objid = 4313483881,
     initPosition = { x = 8, y = 8, z = -18 },
     patrolPositions = {
       { x = 10, y = 11, z = 12 }, -- 落叶松旁的城上
@@ -38,7 +39,6 @@ end
 -- 初始化
 function Jiangfeng:init (hour)
   self:initActor(self.initPosition)
-
   if (hour >= 7 and hour < 19) then
     self:toPatrol()
   else
