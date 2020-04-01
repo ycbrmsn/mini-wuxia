@@ -182,6 +182,7 @@ end
 function MyActor:initActor (initPosition)
   local actorid = CreatureHelper:getActorID(self.objid)
   if (actorid and actorid == self.actorid) then
+  -- if (self.objid) then
     self.action = MyActorAction:new(self)
     MyActorHelper:add(self) -- 生物加入集合中
   else

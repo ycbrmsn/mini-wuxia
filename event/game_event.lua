@@ -91,7 +91,7 @@ function initDoorAreas ()
   for i, v in ipairs(doors) do
     local areaid = AreaHelper:getAreaByPos(v)
     -- Area:fillBlock(areaid, 200, 1)
-    LogHelper:debug('初始化门区域：', areaid)
+    -- LogHelper:debug('初始化门区域：', areaid)
     table.insert(AreaHelper.allDoorAreas, areaid, v)
   end
 end
