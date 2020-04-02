@@ -56,13 +56,13 @@ end
 -- 外出
 function Wangdali:goOutDoor ()
   self:wantMove('goOut', self.movePositions)
-  self:nextWantFreeInArea('free', { self.outDoorPositions })
+  self:nextWantFreeInArea({ self.outDoorPositions })
 end
 
 -- 回家
 function Wangdali:goHome ()
-  self:wantMove('goHome', self.doorPosition, true)
-  self:nextWantFreeInArea('free', { self.homePositions })
+  self:wantMove('goHome', { self.doorPosition })
+  self:nextWantFreeInArea({ self.homePositions })
 end
 
 -- 铁匠这个模型没有此动作
