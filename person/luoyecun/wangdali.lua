@@ -5,7 +5,7 @@ function Wangdali:new ()
   local o = {
     objid = 4315385568,
     initPosition = { x = -30, y = 9, z = -45 }, -- 屋内
-    bedHeadPosition = { x = -26, y = 10, z = -47 }, -- 床头位置
+    bedTailPosition = { x = -26, y = 10, z = -47 }, -- 床尾位置
     bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
     movePositions = {
       { x = -30, y = 9, z = -45 }, -- 屋内
@@ -66,6 +66,6 @@ end
 
 -- 铁匠这个模型没有此动作
 function Wangdali:goToBed ()
-  self:wantMove({ self.bedHeadPosition })
+  self:wantMove({ self.bedTailPosition })
   self:nextWantSleep(self.bedTailPointPosition)
 end
