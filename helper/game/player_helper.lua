@@ -1,6 +1,11 @@
 -- 玩家工具类
 PlayerHelper = {}
 
+-- 设置道具不可丢弃
+function PlayerHelper:setItemDisableThrow (objid, itemid)
+  return self:setItemAttAction(objid, itemid, PLAYERATTR.ITEM_DISABLE_THROW, true)
+end
+
 -- 封装原始接口
 
 -- 获取玩家昵称
@@ -19,4 +24,13 @@ function PlayerHelper:notifyGameInfo2Self (objid, info)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Player:notifyGameInfo2Self(p.objid, p.info)
   end, { objid = objid, info = info }, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置玩家道具设置属性
+function PlayerHelper:setItemAttAction (objid, itemid, attrtype, switch)
+  local onceFailMessage = '设置玩家道具设置属性失败一次'
+  local finillyFailMessage = StringHelper:concat('设置玩家道具设置属性失败，参数：objid=', objid, ', itemid=', itemid, ', attrtype=', attrtype, ', switch=', switch)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setItemAttAction(p.objid, p.itemid, p.attrtype, p.switch)
+  end, { objid = objid, itemid = itemid, attrtype = attrtype, switch = switch }, onceFailMessage, finillyFailMessage)
 end

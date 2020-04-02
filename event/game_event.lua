@@ -10,7 +10,7 @@ local playerEnterGame = function (eventArgs)
   end
   -- 检测玩家是否有江湖日志，如果没有则放进背包
   if (not(logPaper:hasItem())) then
-    logPaper:newItem(objid)
+    logPaper:newItem(objid, 1, true)
   end
   local nickname = PlayerHelper:getNickname(objid)
   table.insert(allPlayers, { objid = objid, nickname = nickname })
