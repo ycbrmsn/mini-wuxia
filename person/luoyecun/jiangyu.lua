@@ -1,11 +1,10 @@
 -- 江渔
-Jiangyu = MyActor:new(jiangyuActorId, '江渔')
+Jiangyu = MyActor:new(jiangyuActorId)
 
 function Jiangyu:new ()
   local o = jiangfeng:new()
   o.objid = 4313483879
   o.actorid = self.actorid
-  o.actorname = self.actorname
   o.initPosition = { x = 10, y = 8, z = -14 }
   o.bedTailPosition = { x = 12, y = 9, z = -13 } -- 床尾位置
   o.bedTailPointPosition = { x = 12, y = 9, z = -11 } -- 床尾指向位置

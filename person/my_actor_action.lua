@@ -26,8 +26,11 @@ function MyActorAction:isForceMove ()
 end
 
 -- 跑到指定地点
-function MyActorAction:runTo (pos)
-  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x + 0.5, pos.y, pos.z + 0.5)
+function MyActorAction:runTo (pos, objid)
+  if (not(objid)) then
+    objid = self.myActor.objid
+  end
+  return ActorHelper:tryMoveToPos(objid, pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
 -- 传送到指定地点
@@ -87,10 +90,10 @@ end
 
 -- 生物说话
 function MyActorAction:speak (content, targetuin)
-  ChatHelper:sendSystemMsg(self.myActor.actorname .. '：#W' .. content, targetuin)
+  ChatHelper:sendSystemMsg(self.myActor:getActorName() .. '：#W' .. content, targetuin)
 end
 
 -- 生物心想
 function MyActorAction:speakInHeart (content, targetuin)
-  ChatHelper:sendSystemMsg(self.myActor.actorname .. '：#W（' .. content .. '）', targetuin)
+  ChatHelper:sendSystemMsg(self.myActor:getActorName() .. '：#W（' .. content .. '）', targetuin)
 end

@@ -1,5 +1,5 @@
 -- 苗兰
-Miaolan = MyActor:new(miaolanActorId, '苗兰')
+Miaolan = MyActor:new(miaolanActorId)
 
 function Miaolan:new ()
   local o = {

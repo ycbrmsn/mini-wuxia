@@ -11,14 +11,13 @@ MyActor = {
   wants = nil
 }
 
-function MyActor:new (actorid, actorname)
-  actorname = actorname or '神秘人'
-  local o = {
-    actorname = actorname
-  }
-  if (actorid) then
-    o['actorid'] = actorid
+function MyActor:new (actorid)
+  if (not(actorid)) then
+    LogHelper:error('初始化生物的actorid为：', actorid)
   end
+  local o = {
+    actorid = actorid
+  }
   setmetatable(o, self)
   self.__index = self
   return o
@@ -28,21 +27,39 @@ end
 function MyActor:newActor (x, y, z, isSingleton)
   if (isSingleton and self.objid and self.actorid) then
     ActorHelper:clearActorWithId (self.actorid)
-    MyActorHelper:delByActorid(self.actorid)
+    MyActorHelper:delPersonByActorid(self.actorid)
   end
-  if (not (self.action)) then -- 如果生物的行为属性不存在，则创建一个
+  if (not(self.action)) then -- 如果生物的行为属性不存在，则创建一个
     self.action = MyActorAction:new(self)
   end
   local objids = WorldHelper:spawnCreature(x, y, z, self.actorid, 1)
   if (objids and #objids > 0) then
     self.objid = objids[1]
-    MyActorHelper:add(self) -- 生物加入集合中
+    MyActorHelper:addPerson(self) -- 生物加入集合中
   end
+end
+
+function MyActor:newMonster (x, y, z, num, isSingleton)
+  if (isSingleton) then
+    MonsterHelper:delMonstersByActorid(self.actorid)
+  end
+  if (not(self.action)) then
+    self.action = MyActorAction:new(self)
+  end
+  local objids = WorldHelper:spawnCreature(x, y, z, self.actorid, num)
+  -- if (objids and #objids > 0) then
+  --   for i, v in ipairs(objids) do
+  --     MonsterHelper:addMonster(v, self) -- 怪物加入集合中
+  --   end
+  -- end
 end
 
 -- 重生一个生物
 function MyActor:recoverActor ()
-  MyActorHelper:delByObjid(self.objid)
+  MyActorHelper:delPersonByObjid(self.objid)
+  if (not(self.x)) then
+    self.x, self.y, self.z = self.initPosition.x, self.initPosition.y, self.initPosition.z
+  end
   local objids = WorldHelper:spawnCreature(self.x, self.y, self.z, self.actorid, 1)
   self.objid = objids[1]
   MyActorHelper:add(self)
@@ -57,7 +74,7 @@ function MyActor:updatePosition ()
     self:updateCantMoveTime(x, y, z)
     self.x, self.y, self.z = x, y, z
   else
-    LogHelper:debug('重生' .. self.actorname)
+    LogHelper:debug('重生' .. self:getActorName())
     self:recoverActor()
   end
 end
@@ -120,7 +137,7 @@ end
 
 -- 生物想巡逻
 function MyActor:wantPatrol (positions, isNegDir, index, restTime)
-  -- LogHelper:debug(self.actorname .. '想巡逻')
+  -- LogHelper:debug(self:getActorName() .. '想巡逻')
   MyActorHelper:closeAI(self.objid)
   local want = MyActorActionHelper:getPatrolData(positions, isNegDir, index, restTime)
   self.wants = { want }
@@ -193,6 +210,13 @@ function MyActor:wantAtHour (hour)
   -- 各个生物重写此方法内容
 end
 
+function MyActor:getActorName ()
+  if (not(self.actorname)) then
+    self.actorname = CreatureHelper:getActorName(self.objid)
+  end
+  return self.actorname
+end
+
 -- 初始化人物行为
 function MyActor:init (hour)
   -- body
@@ -203,7 +227,7 @@ function MyActor:initActor (initPosition)
   if (actorid and actorid == self.actorid) then
   -- if (self.objid) then
     self.action = MyActorAction:new(self)
-    MyActorHelper:add(self) -- 生物加入集合中
+    MyActorHelper:addPerson(self) -- 生物加入集合中
   else
     self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
   end

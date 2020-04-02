@@ -17,3 +17,6 @@ qiuzhangActorId = 8 -- 酋长id
 
 -- 道具id
 logPaperId = 4106 -- 江湖日志id
+
+-- 怪物id
+wolfActorId = 11 -- 恶狼id

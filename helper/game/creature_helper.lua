@@ -39,3 +39,11 @@ function CreatureHelper:getActorID (objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
 end
 
+-- 获取生物名称
+function CreatureHelper:getActorName (objid)
+  local onceFailMessage = '获取生物名称失败一次'
+  local finillyFailMessage = StringHelper:concat('获取生物名称失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Creature:getActorName(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end

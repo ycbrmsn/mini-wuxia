@@ -5,6 +5,7 @@ local playerEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug('玩家进入区域' .. areaid)
+  MyAreaHelper:playerEnterArea (objid, areaid)
   if (areaid == myStories[1].areaid) then -- 文羽通知事件
     AreaHelper:destroyArea(areaid)
     -- LogHelper:debug('玩家进入区域' .. areaid .. ',然后销毁' .. myStories[1].createPos.x)

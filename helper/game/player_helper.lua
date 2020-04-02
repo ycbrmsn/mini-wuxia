@@ -11,3 +11,12 @@ function PlayerHelper:getNickname (objid)
     return Player:getNickname(p.objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
 end
+
+-- 对玩家显示飘窗文字
+function PlayerHelper:notifyGameInfo2Self (objid, info)
+  local onceFailMessage = '对玩家显示飘窗文字失败一次'
+  local finillyFailMessage = StringHelper:concat('对玩家显示飘窗文字失败，参数：objid=', objid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:notifyGameInfo2Self(p.objid, p.info)
+  end, { objid = objid, info = info }, onceFailMessage, finillyFailMessage)
+end

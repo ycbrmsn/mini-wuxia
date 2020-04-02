@@ -59,14 +59,14 @@ function AreaHelper:destroyArea (areaid)
   end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
 end
 
--- 获取区域中的生物
-function AreaHelper:getAreaCreatures (areaid)
-  local onceFailMessage = '获取区域中的生物失败一次'
-  local finillyFailMessage = StringHelper:concat('获取区域中的生物失败，参数：areaid=', areaid)
-  return CommonHelper:callOneResultMethod(function (p)
-    return Area:getAreaCreatures(p.areaid)
-  end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
-end
+-- 获取区域中的生物 该接口第二次调用会报错，不使用
+-- function AreaHelper:getAreaCreatures (areaid)
+--   local onceFailMessage = '获取区域中的生物失败一次'
+--   local finillyFailMessage = StringHelper:concat('获取区域中的生物失败，参数：areaid=', areaid)
+--   return CommonHelper:callOneResultMethod(function (p)
+--     return Area:getAreaCreatures(p.areaid)
+--   end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
+-- end
 
 -- 获取随机区域内的位置
 function AreaHelper:getRandomPos (areaid)

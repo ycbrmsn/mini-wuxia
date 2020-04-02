@@ -1,5 +1,5 @@
 -- 文羽
-Wenyu = MyActor:new(wenyuActorId, '文羽')
+Wenyu = MyActor:new(wenyuActorId)
 
 function Wenyu:new ()
   local o = {

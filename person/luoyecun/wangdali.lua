@@ -1,5 +1,5 @@
 -- 王大力
-Wangdali = MyActor:new(wangdaliActorId, '王大力')
+Wangdali = MyActor:new(wangdaliActorId)
 
 function Wangdali:new ()
   local o = {

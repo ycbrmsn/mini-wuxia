@@ -1,5 +1,5 @@
 -- 杨万里
-Yangwanli = MyActor:new(yangwanliActorId, '杨万里')
+Yangwanli = MyActor:new(yangwanliActorId)
 
 function Yangwanli:new ()
   local o = {

@@ -10,21 +10,20 @@ function MyActorHelper:new (o)
   return o
 end
 
--- 新增actor
-function MyActorHelper:add (o)
+-- 新增person
+function MyActorHelper:addPerson (o)
   self.actors[o['objid']] = o
 end
 
 -- 根据objid删除actor
-function MyActorHelper:delByObjid (objid)
+function MyActorHelper:delPersonByObjid (objid)
   self.actors[objid] = nil
 end
 
 -- 根据actorid删除actor
-function MyActorHelper:delByActorid (actorid)
+function MyActorHelper:delPersonByActorid (actorid)
   for k, v in pairs(self.actors) do
     if (v.actorid == actorid) then
-      LogHelper:debug('删除actorid: ' .. actorid)
       self.actors[k] = nil
     end
   end
@@ -54,10 +53,10 @@ function MyActorHelper:enterArea (objid, areaid)
     local want = myActor.wants[1]
     if (want.toAreaId == areaid) then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
       if (want.style == 'move') then -- 如果是仅仅前往，则变更想法，并且停下来
-        -- LogHelper:debug(myActor.actorname .. '进入了终点区域' .. areaid)
+        -- LogHelper:debug(myActor:getActorName() .. '进入了终点区域' .. areaid)
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         local pos = MyActorActionHelper:getNextPos(want)
-        -- LogHelper:debug(myActor.actorname, pos)
+        -- LogHelper:debug(myActor:getActorName(), pos)
         if (pos) then -- 有下一个行动位置
           want.toPos = pos
           MyActorActionHelper:createToPos(want)
@@ -71,7 +70,7 @@ function MyActorHelper:enterArea (objid, areaid)
           elseif (nextWant.style == 'freeInArea') then
             nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
             MyActorActionHelper:createToPos(nextWant)
-            -- LogHelper:debug(myActor.actorname .. '开始闲逛')
+            -- LogHelper:debug(myActor:getActorName() .. '开始闲逛')
           elseif (nextWant.style == 'wait') then
             local restTime = nextWant.restTime
             table.remove(myActor.wants, 1)

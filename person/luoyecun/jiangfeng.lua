@@ -1,5 +1,5 @@
 -- 江枫
-Jiangfeng = MyActor:new(jiangfengActorId, '江枫')
+Jiangfeng = MyActor:new(jiangfengActorId)
 
 function Jiangfeng:new ()
   local o = {

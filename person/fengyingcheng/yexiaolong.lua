@@ -1,5 +1,5 @@
 -- 叶小龙
-Yexiaolong = MyActor:new(yexiaolongActorId, '叶小龙')
+Yexiaolong = MyActor:new(yexiaolongActorId)
 
 function Yexiaolong:new ()
   local o = {
