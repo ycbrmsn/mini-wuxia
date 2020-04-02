@@ -18,7 +18,8 @@ function Wenyu:new ()
     homeAreaPositions2 = {
       { x = 28, y = 9, z = -12 }, -- 未转角凳子旁
       { x = 21, y = 9, z = -9 } -- 床旁边
-    }
+    },
+    doorPosition = { x = 23, y = 8, z = -19 } -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self
@@ -36,7 +37,7 @@ function Wenyu:wantAtHour (hour)
     self.lastBedHeadPosition = self.currentBedHeadPosition
     self:wantFreeTime()
   elseif (hour == 19) then
-    self:wantFreeInArea({ self.homeAreaPositions })
+    self:goHome()
   elseif (hour == 22) then
     self:goToBed()
   end
@@ -48,7 +49,7 @@ function Wenyu:init (hour)
   if (hour >= 7 and hour < 19) then
     self:wantFreeTime()
   elseif (hour >= 19 and hour < 22) then
-    self:wantFreeInArea({ self.homeAreaPositions })
+    self:goHome()
   else
    self:goToBed() 
   end
@@ -56,7 +57,8 @@ end
 
 -- 回家
 function Wenyu:goHome ()
-  self:wantMove({ self.initPosition }) -- 屋里
+  self:wantMove('goHome', { self.doorPosition }) -- 门口
+  self:nextWantFreeInArea({ self.homeAreaPositions1, self.homeAreaPositions2 })
 end
 
 -- 睡觉
@@ -74,9 +76,19 @@ end
 
 function Wenyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
-  if (isPlayerInFront) then
-    self.action:speak(nickname .. '，你又挡我的路', playerid)
-  else
-    self.action:speak(nickname .. '，你又撞我', playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，不要撞我嘛。', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，要不要来玩丫？', playerid)
+  elseif (self.think == 'notice') then
+    self.action:speak(nickname .. '，有好消息告诉你哦。', playerid)
+  elseif (self.think == 'goHome') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我要回家了。不要站在路前面，好嘛。', playerid)
+    else
+      self.action:speak(nickname .. '，我要回家了。明天再玩吧。', playerid)
+    end
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，明天再玩吧。', playerid)
   end
 end

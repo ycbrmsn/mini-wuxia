@@ -51,8 +51,8 @@ end
 
 -- 卖东西
 function Miaolan:goToSell ()
-  self:wantMove({ self.initPosition })
-  self:nextWantDoNothing()
+  self:wantMove('toSell', { self.initPosition })
+  self:nextWantDoNothing('sell')
 end
 
 -- 上二楼
@@ -62,4 +62,19 @@ end
 
 function Miaolan:goToBed ()
   self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
+end
+
+function Miaolan:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，要爱护身体，不要撞来撞去。', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，这么晚过来，你受伤了吗？', playerid)
+  elseif (self.think == 'toSell') then
+    self.action:speak('我要去卖药了。', playerid)
+  elseif (self.think == 'sell') then
+    self.action:speak(nickname .. '，要抓点药吗？', playerid)
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，不要闹。', playerid)
+  end
 end

@@ -20,7 +20,8 @@ function Wangdali:new ()
     homePositions = {
       { x = -33, y = 9, z = -39 }, -- 进门口右角落
       { x = -27, y = 9, z = -47 } -- 对角床上
-    }
+    },
+    doorPosition = { x = -30, y = 9, z = -36 } -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self
@@ -54,18 +55,34 @@ end
 
 -- 外出
 function Wangdali:goOutDoor ()
-  self:wantMove(self.movePositions)
-  self:nextWantFreeInArea({ self.outDoorPositions })
+  self:wantMove('goOut', self.movePositions)
+  self:nextWantFreeInArea('free', { self.outDoorPositions })
 end
 
 -- 回家
 function Wangdali:goHome ()
-  self:wantMove(self.movePositions, true)
-  self:nextWantFreeInArea({ self.homePositions })
+  self:wantMove('goHome', self.doorPosition, true)
+  self:nextWantFreeInArea('free', { self.homePositions })
 end
 
 -- 铁匠这个模型没有此动作
 function Wangdali:goToBed ()
-  self:wantMove({ self.bedTailPosition })
-  self:nextWantSleep(self.bedTailPointPosition)
+  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
+end
+
+function Wangdali:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，你撞我做什么?', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，你想买点装备吗？', playerid)
+  elseif (self.think == 'goHome') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我要回家了，不要挡路。有事进屋里再说。', playerid)
+    else
+      self.action:speak(nickname .. '，你怎么能撞人呢。算了，天色不早了，我先回家了。', playerid)
+    end
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，有事明天再说。', playerid)
+  end
 end

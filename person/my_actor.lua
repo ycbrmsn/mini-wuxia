@@ -110,17 +110,20 @@ function MyActor:setPosition (x, y, z)
 end
 
 -- 生物想向指定位置移动
-function MyActor:wantMove (positions, isNegDir, index, restTime)
+function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   MyActorHelper:closeAI(self.objid)
-  local want = MyActorActionHelper:getMoveData(positions, isNegDir, index, restTime)
+  self.think = think
+  local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
   -- 创建当前前往区域
   MyActorActionHelper:createToPos(want)
 end
 
 -- 生物想原地不动
-function MyActor:wantDontMove ()
-  self.wants = { MyActorActionHelper:getDontMoveData() }
+function MyActor:wantDontMove (think)
+  think = think or 'dontMove'
+  self.think = think
+  self.wants = { MyActorActionHelper:getDontMoveData(think) }
 end
 
 -- 生物想停留一会儿
@@ -134,25 +137,33 @@ function MyActor:wantStayForAWhile(second)
 end
 
 -- 生物想巡逻
-function MyActor:wantPatrol (positions, isNegDir, index, restTime)
+function MyActor:wantPatrol (think, positions, isNegDir, index, restTime)
   -- LogHelper:debug(self:getActorName() .. '想巡逻')
   MyActorHelper:closeAI(self.objid)
-  local want = MyActorActionHelper:getPatrolData(positions, isNegDir, index, restTime)
+  self.think = think
+  local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
   -- 创建当前前往区域
   MyActorActionHelper:createToPos(want)
 end
 
 -- 生物想自由活动
-function MyActor:wantFreeTime ()
+function MyActor:wantFreeTime (think)
+  think = think or 'free'
   MyActorHelper:openAI(self.objid)
-  self.wants = { MyActorActionHelper:getFreeTimeData() }
+  self.think = think
+  self.wants = { MyActorActionHelper:getFreeTimeData(think) }
 end
 
--- 生物想在区域内自由活动
-function MyActor:wantFreeInArea (posPairs)
+-- 生物想在区域内自由活动，think可选
+function MyActor:wantFreeInArea (think, posPairs)
+  if (not(posPairs)) then
+    posPairs = think
+    think = 'free'
+  end
   MyActorHelper:closeAI(self.objid)
-  local want = MyActorActionHelper:setFreeInArea(self, posPairs)
+  self.think = think
+  local want = MyActorActionHelper:setFreeInArea(think, self, posPairs)
   want.toPos = MyActorActionHelper:getFreeInAreaPos(self.freeInAreaIds)
   -- 创建当前前往区域
   MyActorActionHelper:createToPos(want)
@@ -164,43 +175,45 @@ function MyActor:defaultWant ()
 end
 
 -- 生物想不做事
-function MyActor:wantDoNothing ()
+function MyActor:wantDoNothing (think)
+  think = think or 'doNothing'
   MyActorHelper:closeAI(self.objid)
-  self.wants = { MyActorActionHelper:getDoNothingData() }
+  self.think = think
+  self.wants = { MyActorActionHelper:getDoNothingData(think) }
 end
 
-function MyActor:wantGoToSleep (...)
-  local num = select('#', ...)
-  local positions = {}
-  for i = 1, num - 1 do
-    positions[i] = select(i, ...)
-  end
-  self:wantMove(positions)
-  self:nextWantSleep(select(num, ...))
+function MyActor:wantGoToSleep (bedTailPosition, lookPos)
+  self:wantMove('sleep', { bedTailPosition })
+  self:nextWantSleep('sleep', lookPos)
 end
 
 -- 生物接下来想巡逻
-function MyActor:nextWantPatrol (positions, isNegDir, index, restTime)
-  local want = MyActorActionHelper:getPatrolData(positions, isNegDir, index, restTime)
+function MyActor:nextWantPatrol (think, positions, isNegDir, index, restTime)
+  local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
   table.insert(self.wants, want)
 end
 
 -- 生物接下来想在区域内自由活动
-function MyActor:nextWantFreeInArea (posPairs)
-  MyActorActionHelper:setFreeInArea(self, posPairs, true)
+function MyActor:nextWantFreeInArea (think, posPairs)
+  if (not(posPairs)) then
+    posPairs = think
+    think = 'free'
+  end
+  MyActorActionHelper:setFreeInArea(think, self, posPairs, true)
 end
 
-function MyActor:nextWantDoNothing ()
-  table.insert(self.wants, MyActorActionHelper:getDoNothingData())
+function MyActor:nextWantDoNothing (think)
+  think = think or 'doNothing'
+  table.insert(self.wants, MyActorActionHelper:getDoNothingData(think))
 end
 
-function MyActor:nextWantSleep (lookPos)
-  self:nextWantWait(2)
-  table.insert(self.wants, MyActorActionHelper:getSleepData(lookPos))
+function MyActor:nextWantSleep (think, lookPos)
+  self:nextWantWait(think, 2)
+  table.insert(self.wants, MyActorActionHelper:getSleepData(think, lookPos))
 end
 
-function MyActor:nextWantWait (second)
-  table.insert(self.wants, MyActorActionHelper:getWaitData(second))
+function MyActor:nextWantWait (think, second)
+  table.insert(self.wants, MyActorActionHelper:getWaitData(think, second))
 end
 
 -- 生物固定时间点想做什么

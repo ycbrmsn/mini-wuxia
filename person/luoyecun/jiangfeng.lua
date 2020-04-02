@@ -11,12 +11,12 @@ function Jiangfeng:new ()
       { x = 10, y = 11, z = 12 }, -- 落叶松旁的城上
       { x = -10, y = 11, z = 12 } -- 庄稼地旁的城上
     },
-    atHomePositions = {
-      { x = 9, y = 8, z = -13 } -- 屋里中央
+    doorPositions = {
+      { x = 9, y = 8, z = -22 } -- 门外
     },
     homeAreaPositions = {
-      { x = 7, y = 9, z = -19 }, -- 屋门口边上
-      { x = 11, y = 9, z = -11 } -- 屋内小柜子旁
+      { x = 7, y = 8, z = -19 }, -- 屋门口边上
+      { x = 11, y = 8, z = -12 } -- 屋内小柜子旁，避开桌椅
     }
   }
   setmetatable(o, self)
@@ -58,15 +58,45 @@ end
 
 -- 去巡逻
 function Jiangfeng:toPatrol ()
-  self:wantPatrol(self.patrolPositions)
+  self:wantMove('toPatrol', { self.patrolPositions[1] })
+  self:nextWantPatrol('patrol', self.patrolPositions)
 end
 
 -- 回家
 function Jiangfeng:goHome ()
-  self:wantMove(self.atHomePositions)
+  self:wantMove('goHome', self.doorPositions)
   self:wantFreeInArea({ self.homeAreaPositions })
 end
 
 function Jiangfeng:goToBed ()
   self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
+end
+
+function Jiangfeng:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，撞人是不对的哦。', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，找我有事吗？', playerid)
+  elseif (self.think == 'toPatrol') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我要去巡逻了，不要挡住路。', playerid)
+    else
+      self.action:speak(nickname .. '，我要去巡逻了，不要干扰我。', playerid)
+    end
+  elseif (self.think == 'patrol') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我在巡逻呢，不要挡路。', playerid)
+    else
+      self.action:speak(nickname .. '，我在巡逻呢，不要闹。', playerid)
+    end
+  elseif (self.think == 'goHome') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我刚巡逻完，累死了，正要回家呢。不要挡路。', playerid)
+    else
+      self.action:speak(nickname .. '，我刚巡逻完，累死了，正要回家呢。不要闹。', playerid)
+    end
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，不要闹。', playerid)
+  end
 end

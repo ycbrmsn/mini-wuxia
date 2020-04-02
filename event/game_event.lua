@@ -75,7 +75,7 @@ function initMyActors (hour)
   miaolan:init(hour)
   yangwanli:init(hour)
   yexiaolong:init(hour)
-  LogHelper:debug('创建人物完成')
+  LogHelper:info('创建人物完成')
 end
 
 function initStoryAreas (logPaper)

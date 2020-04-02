@@ -44,3 +44,14 @@ end
 function Yexiaolong:goToBed ()
   self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
 end
+
+function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，你撞我是想试试你的实力吗？', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，找我有事吗？', playerid)
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，不要惹我哟。', playerid)
+  end
+end

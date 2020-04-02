@@ -84,6 +84,8 @@ function MyActorAction:execute ()
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()
+    elseif (want.style == 'wake') then
+      self.myActor:goToBed()
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end

@@ -10,7 +10,8 @@ function Yangwanli:new ()
     homeAreaPositions = {
       { x = -18, y = 9, z = -19 }, -- 屋门口边上
       { x = -7, y = 9, z = -11 } -- 床
-    }
+    },
+    doorPosition = { x = -12, y = 8, z = -22 } -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self
@@ -43,10 +44,27 @@ end
 
 -- 回家
 function Yangwanli:goHome ()
-  self:wantMove({ self.initPosition }) -- 屋里
+  self:wantMove('goHome', { self.doorPosition }) -- 门外
 end
 
 -- 睡觉
 function Yangwanli:goToBed ()
   self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
+end
+
+function Yangwanli:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (self.wants and self.wants[1].currentRestTime > 0) then
+    self.action:speak(nickname .. '，你怎么能撞老人家呢？', playerid)
+  elseif (self.think == 'free') then
+    self.action:speak(nickname .. '，找我有事吗？', playerid)
+  elseif (self.think == 'goHome') then
+    if (isPlayerInFront) then
+      self.action:speak(nickname .. '，我要回家。不要挡住老人家的路啊。', playerid)
+    else
+      self.action:speak(nickname .. '，有事去我屋里说。不要随便撞人啊', playerid)
+    end
+  elseif (self.think == 'sleep') then
+    self.action:speak(nickname .. '，我要睡觉了，不要打搅我。要尊老知不知道。', playerid)
+  end
 end

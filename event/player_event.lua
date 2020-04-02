@@ -8,10 +8,10 @@ local playerEnterArea = function (eventArgs)
   MyAreaHelper:playerEnterArea (objid, areaid)
   if (areaid == myStories[1].areaid) then -- 文羽通知事件
     AreaHelper:destroyArea(areaid)
-    -- LogHelper:debug('玩家进入区域' .. areaid .. ',然后销毁' .. myStories[1].createPos.x)
+    -- LogHelper:info('玩家进入区域' .. areaid .. ',然后销毁' .. myStories[1].createPos.x)
     wenyu:setPosition(myStories[1].createPos.x, myStories[1].createPos.y, myStories[1].createPos.z)
     -- Chat:sendSystemMsg('生物创建成功')
-    wenyu:wantMove({ myStories[1].movePos })
+    wenyu:wantMove('notice', { myStories[1].movePos })
     local content = StringHelper:join(allPlayers, '、', 'nickname')
     local subject = '你'
     if (#allPlayers > 1) then 
@@ -31,6 +31,7 @@ end
 
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
+  -- wenyu:goHome()
   -- LogHelper:debug('点击方块')
   -- local data = BlockHelper:getBlockData(eventArgs.x, eventArgs.y, eventArgs.z)
   -- LogHelper:debug('men' .. data)
@@ -47,12 +48,12 @@ local clickBlock = function (eventArgs)
   -- yexiaolong:goToBed()
 
   -- jiangfeng:newActor(eventArgs.x, eventArgs.y, eventArgs.z, true)
-  -- jiangfeng:wantMove(PositionHelper:getJiangfengMovetoPatrolPositions())
-  -- jiangfeng:wantPatrol(PositionHelper:getJiangfengPatrolPositions())
+  -- jiangfeng:wantMove('', PositionHelper:getJiangfengMovetoPatrolPositions())
+  -- jiangfeng:wantPatrol('', PositionHelper:getJiangfengPatrolPositions())
   
 
-  -- jiangfeng:wantMove(PositionHelper:getJiangfengMovetoPatrolPositions())
-  -- jiangfeng:nextWantPatrol(PositionHelper:getJiangfengPatrolPositions())
+  -- jiangfeng:wantMove('', PositionHelper:getJiangfengMovetoPatrolPositions())
+  -- jiangfeng:nextWantPatrol('', PositionHelper:getJiangfengPatrolPositions())
 
   -- LogHelper:debug('MyActorActionHelper: ' .. type(MyActorActionHelper))
   -- LogHelper:debug('PositionHelper: ' .. type(PositionHelper))

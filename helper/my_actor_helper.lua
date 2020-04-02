@@ -64,6 +64,7 @@ function MyActorHelper:enterArea (objid, areaid)
         elseif (myActor.wants[2]) then
           table.remove(myActor.wants, 1)
           local nextWant = myActor.wants[1]
+          myActor.think = nextWant.think
           if (nextWant.style == 'move' or nextWant.style == 'patrol') then
             MyActorActionHelper:createToPos(nextWant)
             -- LogHelper:debug('开始巡逻')
@@ -129,10 +130,15 @@ end
 
 function MyActorHelper:actorCollide (objid, toobjid)
   local actor1 = MyActorHelper:getActorByObjid(objid)
+  -- LogHelper:info('碰撞了', actor1:getActorName())
   if (actor1) then -- 生物是特定生物
     if (ActorHelper:isPlayer(toobjid)) then -- 是玩家
-      actor1:wantStayForAWhile()
+      if (actor1.wants and actor1.wants[1].style == 'sleeping') then
+        actor1.wants[1].style = 'wake'
+      end
       actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
+      actor1:wantStayForAWhile()
+      -- LogHelper:info('执行了')
     else
       local actor2 = MyActorHelper:getActorByObjid(toobjid)
       if (actor2) then

@@ -7,54 +7,54 @@ MyActorActionHelper = {}
       index位置序数，从1~#t，默认是1，负向则是负方向的第一个,
       restTime巡逻到达一个位置后停留时间，默认是0
 --]] 
-function MyActorActionHelper:getMoveData (positions, isNegDir, index, restTime)
+function MyActorActionHelper:getMoveData (think, positions, isNegDir, index, restTime)
   index = index or 1
   restTime = restTime or 0
   local data = { style = 'move', restTime = restTime, currentRestTime = 0, positions = positions, 
-    index = index, isNegDir = isNegDir }
+    index = index, isNegDir = isNegDir, think = think }
   local toPos = self:getToPos(positions, isNegDir, index)
   data.toPos = toPos
   return data
 end
 
 -- 不移动行为数据
-function MyActorActionHelper:getDontMoveData ()
-  return { style = 'dontMove', restTime = 0, currentRestTime = 0 }
+function MyActorActionHelper:getDontMoveData (think)
+  return { style = 'dontMove', restTime = 0, currentRestTime = 0, think = think }
 end
 
-function MyActorActionHelper:getPatrolData (positions, isNegDir, index, restTime)
+function MyActorActionHelper:getPatrolData (think, positions, isNegDir, index, restTime)
   index = index or 1
   restTime = restTime or 5
   local data = { style = 'patrol', restTime = restTime, currentRestTime = 0, positions = positions, 
-    index = index, isNegDir = isNegDir }
+    index = index, isNegDir = isNegDir, think = think }
   local toPos = self:getToPos(positions, isNegDir, index)
   data.toPos = toPos
   return data
 end
 
 -- 自由活动数据
-function MyActorActionHelper:getFreeTimeData ()
-  return { style = 'freeTime', restTime = 0, currentRestTime = 0 }
+function MyActorActionHelper:getFreeTimeData (think)
+  return { style = 'freeTime', restTime = 0, currentRestTime = 0, think = think }
 end
 
 -- 在区域内自由活动数据
-function MyActorActionHelper:getFreeInAreaData (restTime)
+function MyActorActionHelper:getFreeInAreaData (think, restTime)
   restTime = restTime or 5
-  return { style = 'freeInArea', restTime = restTime, currentRestTime = 0 }
+  return { style = 'freeInArea', restTime = restTime, currentRestTime = 0, think = think }
 end
 
 -- 生物想不做事数据
-function MyActorActionHelper:getDoNothingData ()
-  return { style = 'doNothing', restTime = 0, currentRestTime = 0 }
+function MyActorActionHelper:getDoNothingData (think)
+  return { style = 'doNothing', restTime = 0, currentRestTime = 0, think = think }
 end
 
-function MyActorActionHelper:getSleepData (lookPos)
-  return { style = 'sleep', restTime = 0, currentRestTime = 0, lookPos = lookPos }
+function MyActorActionHelper:getSleepData (think, lookPos)
+  return { style = 'sleep', restTime = 0, currentRestTime = 0, lookPos = lookPos, think = think }
 end
 
-function MyActorActionHelper:getWaitData (restTime)
+function MyActorActionHelper:getWaitData (think, restTime)
   restTime = restTime or 5
-  return { style = 'wait', restTime = restTime, currentRestTime = 0 }
+  return { style = 'wait', restTime = restTime, currentRestTime = 0, think = think }
 end
 
 -- 获取前往位置
@@ -98,13 +98,13 @@ function MyActorActionHelper:getNextPos (want)
 end
 
 -- 设置区域自由活动
-function MyActorActionHelper:setFreeInArea (myActor, posPairs, isAppend)
+function MyActorActionHelper:setFreeInArea (think, myActor, posPairs, isAppend)
   if (myActor.freeInAreaIds and #myActor.freeInAreaIds > 0) then -- 如果自由活动区域已经存在，则销毁
     for i, v in ipairs(myActor.freeInAreaIds) do
       AreaHelper:destroyArea(v)
     end
   end
-  local want = self:getFreeInAreaData()
+  local want = self:getFreeInAreaData(think)
   if (isAppend) then
     table.insert(myActor.wants, want)
   else
