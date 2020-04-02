@@ -24,7 +24,6 @@ end
 
 -- 默认想法
 function Miaolan:defaultWant ()
-  MyActorHelper:closeAI(self.objid)
   self:wantFreeTime()
 end
 
