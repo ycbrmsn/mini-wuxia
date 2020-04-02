@@ -83,8 +83,25 @@ local playerClickActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
   -- local actorid = CreatureHelper:getActorID(toobjid)
-  -- LogHelper:debug(toobjid .. '生物的actorid为：' .. StringHelper:toString(actorid))
-  MyActorHelper:playerClickActor(objid, toobjid)
+  
+  LogHelper:call(function (p)
+    -- local myActor = MyActorHelper:getActorByObjid(p.toobjid)
+    -- LogHelper:info(myActor:getActorName(), '的想法是：', myActor.wants[1].style)
+    MyActorHelper:playerClickActor(p.objid, p.toobjid)
+  end, { objid = objid, toobjid = toobjid })
+  
+end
+
+-- 参数 eventobjid, toobjid, itemid, itemnum
+local playerAddItem = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  local toobjid = eventArgs['toobjid']
+  local itemid = eventArgs['itemid']
+  local itemnum = eventArgs['itemnum']
+  -- LogHelper:info(objid, ',', toobjid, ',', itemid, ',', itemnum)
+  LogHelper:call(function (p)
+    MyStoryHelper:playerAddItem(p.itemid, p.itemnum)
+  end, { itemid = itemid, itemnum = itemnum })
 end
 
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
@@ -92,3 +109,4 @@ ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩�
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
 ScriptSupportEvent:registerEvent([=[Player.UseItem]=], playerUseItem) -- 玩家使用物品
 ScriptSupportEvent:registerEvent([=[Player.ClickActor]=], playerClickActor) -- 玩家点击生物
+ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家新增道具

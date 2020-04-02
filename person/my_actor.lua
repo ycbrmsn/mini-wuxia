@@ -62,7 +62,7 @@ function MyActor:recoverActor ()
   end
   local objids = WorldHelper:spawnCreature(self.x, self.y, self.z, self.actorid, 1)
   self.objid = objids[1]
-  MyActorHelper:add(self)
+  MyActorHelper:addPerson(self)
   MyActorActionHelper:updateActionState(self)
 end
 
@@ -74,14 +74,12 @@ function MyActor:updatePosition ()
     self:updateCantMoveTime(x, y, z)
     self.x, self.y, self.z = x, y, z
   else
-    LogHelper:debug('重生' .. self:getActorName())
     self:recoverActor()
   end
 end
 
 -- 更新不能移动时间
 function MyActor:updateCantMoveTime (x, y, z)
-  -- LogHelper:debug('更新不能移动时间')
   if (self.x) then
     if (self.x == x and self.y == y and self.z == z and self.action:isForceMove()) then
       self.cantMoveTime = self.cantMoveTime + 1
@@ -132,7 +130,7 @@ function MyActor:wantStayForAWhile(second)
     self:defaultWant()
   end
   self.wants[1].currentRestTime = second
-  CreatureHelper:setWalkSpeed(self.objid, 0)
+  self:setWalkSpeed(0)
 end
 
 -- 生物想巡逻
@@ -215,6 +213,33 @@ function MyActor:getActorName ()
     self.actorname = CreatureHelper:getActorName(self.objid)
   end
   return self.actorname
+end
+
+function MyActor:getWalkSpeed ()
+  if (not(self.walkSpeed)) then
+    self.walkSpeed = CreatureHelper:getWalkSpeed(self.objid)
+  end
+  return self.walkSpeed
+end
+
+-- 速度与原速度不同就改变速度
+function MyActor:setWalkSpeed (speed)
+  local currentSpeed = self:getWalkSpeed()
+  if (currentSpeed) then
+    if (currentSpeed == speed) then -- 速度相同就不改变
+      return true
+    else
+      if (CreatureHelper:setWalkSpeed(self.objid, speed)) then
+        self.walkSpeed = speed
+        return true
+      else
+        return false
+      end
+    end
+  else -- 取不到速度，那么设置速度也不会成功，就不做了
+    LogHelper:info('设置速度失败')
+    return false
+  end
 end
 
 -- 初始化人物行为

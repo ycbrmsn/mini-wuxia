@@ -2,13 +2,6 @@
 local data = {
   id = logPaperId,
   title = '江湖经历:',
-  mainIndex = 1,
-  mainContent = {
-    '又是新的一天，不知道会不会发生什么呢。',
-    '听文羽说风颖城的武术学院又要开始招生了，我也想前去学习。不过听说有入学考核，我得先准备一番。'
-  },
-  branchIndex = 1,
-  branchContent = {},
   content = '',
   isChange = true -- 日志是否改变
 }
@@ -28,7 +21,8 @@ end
 
 -- 更新日志 self.title .. 
 function LogPaper:updateLogs ()
-  self.content = self.title .. '\n\t\t' .. self.mainContent[self.mainIndex]
+  local title, content = MyStoryHelper:getMainStoryTitleAndTip()
+  self.content = title .. '\n\t\t' .. content
   self.isChange = false
 end
 
@@ -55,14 +49,4 @@ function LogPaper:hasItem (playerid)
     local r2 = Backpack:hasItemByBackpackBar(playerid, BACKPACK_TYPE.INVENTORY, self.id) -- 存储栏
     return r2 == ErrorCode.OK
   end
-end
-
--- 剧情前进
-function LogPaper:forward (isBranch)
-  if (isBranch) then
-    self.branchIndex = self.branchIndex + 1
-  else
-    self.mainIndex = self.mainIndex + 1
-  end
-  self.isChange = true
 end

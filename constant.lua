@@ -15,8 +15,9 @@ yexiaolongActorId = 10 -- 叶小龙id
 -- 山寨人物
 qiuzhangActorId = 8 -- 酋长id
 
--- 道具id
-logPaperId = 4106 -- 江湖日志id
-
 -- 怪物id
 wolfActorId = 11 -- 恶狼id
+
+-- 道具id
+coinId = 4101 -- 铜板id
+logPaperId = 4106 -- 江湖日志id

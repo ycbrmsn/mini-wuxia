@@ -123,7 +123,7 @@ function MyActorHelper:playerClickActor (objid, toobjid)
     -- 生物停下来看向玩家
     myActor:wantStayForAWhile()
     local x, y, z = ActorHelper:getPosition(objid)
-    myActor:runTo({ x = x, y = y, z = z })
+    myActor.action:runTo({ x = x, y = y, z = z })
   end
 end
 

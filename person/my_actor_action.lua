@@ -65,12 +65,12 @@ function MyActorAction:execute ()
   if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
     want.currentRestTime = want.currentRestTime - 1
     if (want.style == 'sleep') then
-      CreatureHelper:setWalkSpeed(self.myActor.objid, 0)
+      self.myActor:setWalkSpeed(0)
       self:runTo(want.lookPos)
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
-      CreatureHelper:setWalkSpeed(self.myActor.objid, -1)
+      self.myActor:setWalkSpeed(-1)
       if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
         self:transmitTo(want.toPos)
         self.myActor.cantMoveTime = 0
@@ -79,6 +79,8 @@ function MyActorAction:execute ()
       end
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
 
+    elseif (want.style == 'freeTime') then -- 自由活动
+      self.myActor:setWalkSpeed(-1)
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()

@@ -141,7 +141,6 @@ end
 function MyActorActionHelper:updateActionState (myActor)
   if (myActor.wants) then
     local style = myActor.wants[1].style
-    LogHelper:debug('生物想' .. style)
     if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing' or style == 'sleep') then
       myActor:enableMove(true)
       MyActorHelper:closeAI(myActor.objid)
