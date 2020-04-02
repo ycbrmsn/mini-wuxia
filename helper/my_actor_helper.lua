@@ -132,19 +132,7 @@ function MyActorHelper:actorCollide (objid, toobjid)
   if (actor1) then -- 生物是特定生物
     if (ActorHelper:isPlayer(toobjid)) then -- 是玩家
       actor1:wantStayForAWhile()
-      local want = actor1.wants[1]
-      local style = want.style
-      if (style == 'move' or style == 'patrol' or style == 'freeInArea') then
-        local x, y, z = ActorHelper:getPosition(toobjid)
-        local dis1 = WorldHelper:calcDistance({ x = actor1.x, y = actor1.y, z = actor1.z}, want.toPos)
-        local dis2 = WorldHelper:calcDistance({ x = x, y = y, z = z }, want.toPos)
-        local nickname = PlayerHelper:getNickname(toobjid)
-        if (dis1 < dis2) then
-          actor1.action:speak(nickname .. '，你撞到我啦', toobjid)
-        else
-          actor1.action:speak(nickname .. '，你挡着我的路了', toobjid)
-        end
-      end
+      actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
     else
       local actor2 = MyActorHelper:getActorByObjid(toobjid)
       if (actor2) then

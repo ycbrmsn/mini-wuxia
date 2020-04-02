@@ -23,6 +23,25 @@ function PositionHelper:getDoorPositions ()
   return self.doorPositions
 end
 
+-- 第二人是不是在第一人前面
+function PositionHelper:isTwoInFrontOfOne (objid1, objid2)
+  local curPlaceDir = ActorHelper:getCurPlaceDir(objid1)
+  local x1, y1, z1 = ActorHelper:getPosition(objid1)
+  local x2, y2, z2 = ActorHelper:getPosition(objid2)
+  -- 获取的方向是反的，不知道是不是bug
+  if (curPlaceDir == FACE_DIRECTION.DIR_NEG_X) then -- 东
+    return x2 > x1
+  elseif (curPlaceDir == FACE_DIRECTION.DIR_POS_X) then -- 西
+    return x2 < x1
+  elseif (curPlaceDir == FACE_DIRECTION.DIR_NEG_Z) then -- 北
+    return z2 > z1
+  elseif (curPlaceDir == FACE_DIRECTION.DIR_POS_Z) then -- 南
+    return z2 < z1
+  else
+    return false
+  end
+end
+
 -- 位置字符串
 function PositionHelper:posToString (pos)
   if (pos) then

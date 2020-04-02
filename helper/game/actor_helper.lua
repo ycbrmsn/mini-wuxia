@@ -112,3 +112,12 @@ function ActorHelper:playAct (objid, actid)
     return Actor:playAct(p.objid, p.actid)
   end, { objid = objid, actid = actid }, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取当前朝向
+function ActorHelper:getCurPlaceDir (objid)
+  local onceFailMessage = '获取当前朝向失败一次'
+  local finillyFailMessage = StringHelper:concat('获取当前朝向失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Actor:getCurPlaceDir(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end

@@ -72,3 +72,11 @@ function Wenyu:goToBed ()
   end
 end
 
+function Wenyu:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  if (isPlayerInFront) then
+    self.action:speak(nickname .. '，你又挡我的路', playerid)
+  else
+    self.action:speak(nickname .. '，你又撞我', playerid)
+  end
+end

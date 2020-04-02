@@ -260,3 +260,7 @@ function MyActor:initActor (initPosition)
   -- 清除木围栏
   AreaHelper:clearAllWoodenFence(areaid)
 end
+
+function MyActor:collidePlayer (playerid, isPlayerInFront)
+  -- body
+end
