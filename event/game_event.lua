@@ -101,9 +101,9 @@ end
 local atSecond = function (eventArgs)
   if (eventArgs.second == 1) then
     LogHelper:call(function ()
-      initMyActors(7)
       initDoorAreas()
       MyAreaHelper:initAreas()
+      initMyActors(7)
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end)

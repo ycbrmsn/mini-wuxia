@@ -59,15 +59,7 @@ local clickBlock = function (eventArgs)
   -- LogHelper:debug('PositionHelper: ' .. type(PositionHelper))
 
 
-  -- CreatureHelper:setAIActive(jiangfeng.objid, false)  
-
   -- ActorHelper:tryNavigationToPos (jiangfeng.objid, eventArgs.x, eventArgs.y, eventArgs.z, true)
-  
-  -- if (wenyu:playAct(100103)) then
-  --   LogHelper:debug('动作成功')
-  -- else
-  --   LogHelper:debug('动作失败')
-  -- end
 end
 
 -- 参数 eventobjid toobjid itemid itemnum
@@ -105,9 +97,19 @@ local playerAddItem = function (eventArgs)
   end, { itemid = itemid, itemnum = itemnum })
 end
 
+-- 参数 eventobjid, toobjid
+local playerDamageActor = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  local toobjid = eventArgs['toobjid']
+  LogHelper:call(function (p)
+    MyPlayerHelper:playerDamageActor(p.objid, p.toobjid)
+  end, { objid = objid, toobjid = toobjid })
+end
+
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
 ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩家离开区域
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
 ScriptSupportEvent:registerEvent([=[Player.UseItem]=], playerUseItem) -- 玩家使用物品
 ScriptSupportEvent:registerEvent([=[Player.ClickActor]=], playerClickActor) -- 玩家点击生物
 ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家新增道具
+ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
