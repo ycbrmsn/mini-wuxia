@@ -5,21 +5,7 @@ local playerEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug('玩家进入区域' .. areaid)
-  MyAreaHelper:playerEnterArea (objid, areaid)
-  if (areaid == myStories[1].areaid) then -- 文羽通知事件
-    AreaHelper:destroyArea(areaid)
-    -- LogHelper:info('玩家进入区域' .. areaid .. ',然后销毁' .. myStories[1].createPos.x)
-    wenyu:setPosition(myStories[1].createPos.x, myStories[1].createPos.y, myStories[1].createPos.z)
-    -- Chat:sendSystemMsg('生物创建成功')
-    wenyu:wantMove('notice', { myStories[1].movePos })
-    local content = StringHelper:join(allPlayers, '、', 'nickname')
-    local subject = '你'
-    if (#allPlayers > 1) then 
-      subject = '你们'
-    end
-    content = content .. '，' .. subject .. '在家吗？我有一个好消息要告诉' .. subject .. '。'
-    wenyu.action:speak(content)
-  end
+  MyAreaHelper:playerEnterArea(objid, areaid)
 end
 
 -- 参数 eventobjid, areaid
@@ -93,8 +79,8 @@ local playerAddItem = function (eventArgs)
   local itemnum = eventArgs['itemnum']
   -- LogHelper:info(objid, ',', toobjid, ',', itemid, ',', itemnum)
   LogHelper:call(function (p)
-    MyStoryHelper:playerAddItem(p.itemid, p.itemnum)
-  end, { itemid = itemid, itemnum = itemnum })
+    MyStoryHelper:playerAddItem(p.objid, p.itemid, p.itemnum)
+  end, { objid = objid, itemid = itemid, itemnum = itemnum })
 end
 
 -- 参数 eventobjid, toobjid

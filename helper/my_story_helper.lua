@@ -4,12 +4,6 @@ MyStoryHelper = {
   mainProgress = 1
 }
 
--- function MyStoryHelper:initStories ()
---   for i, v in ipairs(myStories) do
---     v.maxProgress = #v.tips
---   end
--- end
-
 -- 剧情前进
 function MyStoryHelper:forward (isBranch)
   if (isBranch) then -- 支线，暂未设计
@@ -48,7 +42,7 @@ function MyStoryHelper:getMainStoryTitleAndTip ()
 end
 
 -- 推进剧情相关的事件
-function MyStoryHelper:playerAddItem (itemid, itemnum)
+function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
   if (itemid == coinId) then -- 获得铜板
     local mainIndex = self:getMainStoryIndex()
     if (mainIndex == 1) then -- 剧情一
@@ -56,5 +50,28 @@ function MyStoryHelper:playerAddItem (itemid, itemnum)
         self:forward()
       end
     end
+  elseif (itemid == tokenId) then -- 风颖城通行令牌
+    PlayerHelper:setItemDisableThrow(objid, itemid)
+    self:forward()
+    self:finishNoticeEvent(objid)
   end
+end
+
+-- 文羽通知事件
+function MyStoryHelper:noticeEvent (areaid)
+  AreaHelper:destroyArea(areaid)
+    wenyu:setPosition(myStories[1].createPos.x, myStories[1].createPos.y, myStories[1].createPos.z)
+    wenyu:wantMove('notice', { myStories[1].movePos })
+    local content = StringHelper:join(allPlayers, '、', 'nickname')
+    local subject = '你'
+    if (#allPlayers > 1) then 
+      subject = '你们'
+    end
+    content = content .. '，' .. subject .. '在家吗？我有一个好消息要告诉' .. subject .. '。'
+    wenyu.action:speak(content)
+end
+
+function MyStoryHelper:finishNoticeEvent (objid)
+  local hour = WorldHelper:getHours()
+
 end

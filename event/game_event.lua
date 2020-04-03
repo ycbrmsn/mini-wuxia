@@ -99,20 +99,21 @@ function initDoorAreas ()
 end
 
 local atSecond = function (eventArgs)
-  if (eventArgs.second == 1) then
-    LogHelper:call(function ()
+  local second = eventArgs['second']
+  LogHelper:call(function (p)
+    MyTimeHelper:updateTime(p.second)
+
+    if (p.second == 1) then
       initDoorAreas()
       MyAreaHelper:initAreas()
       initMyActors(7)
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
-    end)
-  end
-  if (eventArgs.second == 2) then
-    LogHelper:call(function ()
-      
-    end)
-  end
+    end
+
+    MyTimeHelper:runFn(p.second)
+  end, { second = second })
+  
 end
 
 ScriptSupportEvent:registerEvent([=[Game.AnyPlayer.EnterGame]=], playerEnterGame) -- 玩家进入游戏
