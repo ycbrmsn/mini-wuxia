@@ -21,3 +21,4 @@ wolfActorId = 11 -- 恶狼id
 -- 道具id
 coinId = 4101 -- 铜板id
 logPaperId = 4106 -- 江湖日志id
+tokenId = 4111 -- 风颖城通行令牌id
