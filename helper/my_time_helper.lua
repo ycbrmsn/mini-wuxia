@@ -1,14 +1,34 @@
 -- 我的时间工具类
 MyTimeHelper = {
+  hour = nil,
   time = 0,
   fns = {}, -- second -> { { f, p }, { f, p }, ... }
   fnIntervals = {}, -- second -> { objid = { t, f, p }, objid = { t, f, p }, ... }
   fnCanRuns = {} -- second -> { objid = t, objid = t, ... }
 }
 
+function MyTimeHelper:updateHour (hour)
+  self.hour = hour
+end
+
 -- 更新时间
 function MyTimeHelper:updateTime (second)
   self.time = second
+end
+
+function MyTimeHelper:setHour (hour)
+  if (WorldHelper:setHours(hour)) then
+    self.hour = hour
+    return true
+  end
+  return false
+end
+
+function MyTimeHelper:getHour ()
+  if (not(self.hour)) then
+    self.hour = WorldHelper:getHours()
+  end
+  return self.hour
 end
 
 -- 添加方法
@@ -22,7 +42,7 @@ function MyTimeHelper:addFn (f, time, p)
 end
 
 -- 运行方法，然后删除
-function MyTimeHelper:runFn (time)
+function MyTimeHelper:runFnAfterSecond (time)
   local fs = self.fns[time]
   if (fs) then
     for i, v in ipairs(fs) do
@@ -33,7 +53,7 @@ function MyTimeHelper:runFn (time)
 end
 
 -- 参数为：函数、秒、函数的参数table
-function MyTimeHelper:runFnAfterSecond (f, second, p)
+function MyTimeHelper:callFnAfterSecond (f, second, p)
   if (type(f) ~= 'function') then
     return
   end
@@ -62,7 +82,7 @@ function MyTimeHelper:getLastFnIntervalTime (objid, t, second)
     local fnIs = self.fnIntervals[i]
     if (fnIs) then
       local arr = fnIs[objid]
-      if (arr and arr[0] == t) then
+      if (arr and arr[1] == t) then
         return i
       end
     end
@@ -70,8 +90,17 @@ function MyTimeHelper:getLastFnIntervalTime (objid, t, second)
   return nil
 end
 
+function MyTimeHelper:setFnInterval (objid, t, f, time, p)
+  local o = self.fnIntervals[time]
+  if (not(o)) then
+    o = {}
+    self.fnIntervals[time] = o
+  end
+  o[objid] = { t, f, p }
+end
+
 -- 至少间隔多少秒执行一次，如果当前符合条件，则执行；不符合，则记录下来，时间到了执行
-function MyTimeHelper:runFnInterval (objid, t, f, second, p)
+function MyTimeHelper:callFnInterval (objid, t, f, second, p)
   if (not(objid)) then
     return
   end
@@ -80,16 +109,19 @@ function MyTimeHelper:runFnInterval (objid, t, f, second, p)
   end
   t = t or 'default'
   second = second or 1
+  p = p or {}
   p.objid = objid
-  local time
+  local time, result
   local lastTime = self:getLastFnIntervalTime(objid, t, second)
   if (lastTime) then
     time = lastTime + second
   else
     time = self.time
-    LogHelper:call(f, p)
+    result = f(p)
+    -- LogHelper:call(f, p)
   end
-  self.fnIntervals[time][objid] = { t, f, p }
+  self:setFnInterval(objid, t, f, time, p)
+  return result
 end
 
 -- 查询最近间隔内的执行时间，如果没找到，则返回nil
@@ -107,7 +139,7 @@ function MyTimeHelper:getLastFnCanRunTime (objid, t, second)
 end
 
 -- 如果方法能执行则标记，然后执行；否则不执行
-function MyTimeHelper:runFnCanRun (objid, t, f, second, p)
+function MyTimeHelper:callFnCanRun (objid, t, f, second, p)
   if (not(objid)) then
     return
   end
@@ -121,4 +153,30 @@ function MyTimeHelper:runFnCanRun (objid, t, f, second, p)
     self.fnCanRuns[self.time][objid] = t
     LogHelper:call(f, p)
   end
+end
+
+function MyTimeHelper:callIntervalUntilSuccess ()
+  return function (param)
+    local result = self:callFnInterval(param.objid, param.t, param.f, param.second, param.p)
+    if (type(result) == 'nil') then -- 说明近期执行过，还会再次执行
+      -- do nothing
+    elseif (result) then -- 说明执行成功
+      -- do nothing
+    else -- 说明执行失败，则准备再次执行
+      MyTimeHelper:setFnInterval(param.objid, param.t, MyTimeHelper:callIntervalUntilSuccess(), MyTimeHelper.time + second, param)
+    end
+  end
+end
+
+function MyTimeHelper:initActor (myActor)
+  local param = {
+    objid = myActor.objid,
+    t = 'initActor',
+    f = function (myActor)
+      myActor:init()
+    end,
+    second = 10,
+    p = myActor
+  }
+  self:callIntervalUntilSuccess()(param)
 end

@@ -1,5 +1,5 @@
 -- 恶狼
-Wolf = MyActor:new(wolfActorId)
+Wolf = MyActor:new(MyConstant.WOLF_ACTOR_ID)
 
 function Wolf:new ()
   local o = {

@@ -1,5 +1,5 @@
 -- 江渔
-Jiangyu = MyActor:new(jiangyuActorId)
+Jiangyu = MyActor:new(MyConstant.JIANGYU_ACTOR_ID)
 
 function Jiangyu:new ()
   local o = jiangfeng:new()
@@ -32,8 +32,9 @@ function Jiangyu:wantAtHour (hour)
 end
 
 -- 初始化
-function Jiangyu:init (hour)
+function Jiangyu:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 7 and hour < 9) then
     self:defaultWant()
   elseif (hour >= 9 and hour < 18) then

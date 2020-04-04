@@ -1,5 +1,5 @@
 -- 王大力
-Wangdali = MyActor:new(wangdaliActorId)
+Wangdali = MyActor:new(MyConstant.WANGDALI_ACTOR_ID)
 
 function Wangdali:new ()
   local o = {
@@ -44,8 +44,9 @@ function Wangdali:wantAtHour (hour)
 end
 
 -- 初始化
-function Wangdali:init (hour)
+function Wangdali:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 7 and hour < 19) then
     self:goOutDoor()
   else

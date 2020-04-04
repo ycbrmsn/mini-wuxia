@@ -50,14 +50,14 @@ end
 
 -- 推进剧情相关的事件
 function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
-  if (itemid == coinId) then -- 获得铜板
+  if (itemid == MyConstant.COIN_ID) then -- 获得铜板
     local mainIndex = self:getMainStoryIndex()
     if (mainIndex == 1) then -- 剧情一
       if (itemnum == 3 or itemnum == 7) then
         self:forward()
       end
     end
-  elseif (itemid == tokenId) then -- 风颖城通行令牌
+  elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
     PlayerHelper:setItemDisableThrow(objid, itemid)
     self:forward()
     self:finishNoticeEvent(objid)

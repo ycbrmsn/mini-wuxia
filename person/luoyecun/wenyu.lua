@@ -1,5 +1,5 @@
 -- 文羽
-Wenyu = MyActor:new(wenyuActorId)
+Wenyu = MyActor:new(MyConstant.WENYU_ACTOR_ID)
 
 function Wenyu:new ()
   local o = {
@@ -44,8 +44,9 @@ function Wenyu:wantAtHour (hour)
 end
 
 -- 初始化
-function Wenyu:init (hour)
+function Wenyu:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 7 and hour < 19) then
     self:wantFreeTime()
   elseif (hour >= 19 and hour < 22) then

@@ -121,7 +121,7 @@ end
 function MyActorAction:expressAfterSecond (targetuin, startStr, finishStr, second, ...)
   local content = StringHelper:concat(...)
   local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
-  MyTimeHelper:runFnAfterSecond (function (p)
+  MyTimeHelper:callFnAfterSecond (function (p)
     ChatHelper:sendSystemMsg(p.message, p.targetuin)
   end, second, { targetuin = targetuin, message = message })
 end

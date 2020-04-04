@@ -1,6 +1,6 @@
 -- 江湖日志类
 local data = {
-  id = logPaperId,
+  id = MyConstant.LOG_PAPER_ID,
   title = '江湖经历:',
   content = '',
   isChange = true -- 日志是否改变

@@ -1,5 +1,5 @@
 -- 花小楼
-Huaxiaolou = MyActor:new(huaxiaolouActorId)
+Huaxiaolou = MyActor:new(MyConstant.HUAXIAOLOU_ACTOR_ID)
 
 function Huaxiaolou:new ()
   local o = {
@@ -22,7 +22,7 @@ function Huaxiaolou:wantAtHour (hour)
 end
 
 -- 初始化
-function Huaxiaolou:init (hour)
+function Huaxiaolou:init ()
   self:initActor(self.initPosition)
 end
 

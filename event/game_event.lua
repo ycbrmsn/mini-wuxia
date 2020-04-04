@@ -40,7 +40,10 @@ end
 -- 参数 hour
 local atHour = function (eventArgs)
   local hour = eventArgs['hour']
-  MyActorHelper:atHour(hour)
+  LogHelper:call(function (p)
+    MyTimeHelper:updateHour(p.hour)
+    MyActorHelper:atHour(p.hour)
+  end, { hour = hour })
 end
 
 function init ()
@@ -48,7 +51,7 @@ function init ()
 end
 
 function initHours (hour)
-  WorldHelper:setHours(hour)
+  MyTimeHelper:setHour(hour)
 end
 
 function initMyActors (hour)
@@ -60,16 +63,21 @@ function initMyActors (hour)
   yangwanli = Yangwanli:new()
   huaxiaolou = Huaxiaolou:new()
   yexiaolong = Yexiaolong:new()
-  wenyu:init(hour)
-  jiangfeng:init(hour)
-  jiangyu:init(hour)
-  wangdali:init(hour)
-  miaolan:init(hour)
-  yangwanli:init(hour)
-  huaxiaolou:init(hour)
-  yexiaolong:init(hour)
+  wenyu:init()
+  jiangfeng:init()
+  jiangyu:init()
+  wangdali:init()
+  miaolan:init()
+  yangwanli:init()
+  huaxiaolou:init()
+  yexiaolong:init()
   LogHelper:info('创建人物完成')
   MyStoryHelper:init()
+  for i = 1, 10 do
+    MyTimeHelper:callFnInterval(wenyu.objid, 'speak', function (p)
+      wenyu.action:speakToAllAfterSecond(p.time, p.time)
+    end, 2, { time = i })
+  end
 end
 
 function initDoorAreas ()
@@ -86,6 +94,8 @@ local atSecond = function (eventArgs)
   local second = eventArgs['second']
   LogHelper:call(function (p)
     MyTimeHelper:updateTime(p.second)
+    MyTimeHelper:runFnAfterSecond(p.second)
+    MyTimeHelper:runFnInterval(p.second)
 
     if (p.second == 1) then
       initDoorAreas()
@@ -94,9 +104,6 @@ local atSecond = function (eventArgs)
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
-
-    MyTimeHelper:runFn(p.second)
-    MyTimeHelper:runFnInterval(p.second)
   end, { second = second })
   
 end

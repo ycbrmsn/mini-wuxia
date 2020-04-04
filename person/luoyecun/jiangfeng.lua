@@ -1,5 +1,5 @@
 -- 江枫
-Jiangfeng = MyActor:new(jiangfengActorId)
+Jiangfeng = MyActor:new(MyConstant.JIANGFENG_ACTOR_ID)
 
 function Jiangfeng:new ()
   local o = {
@@ -43,8 +43,9 @@ function Jiangfeng:wantAtHour (hour)
 end
 
 -- 初始化
-function Jiangfeng:init (hour)
+function Jiangfeng:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 6 and hour < 7) then
     self:goHome()
   elseif (hour >= 7 and hour < 19) then

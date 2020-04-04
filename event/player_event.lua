@@ -4,7 +4,7 @@
 local playerEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
-  LogHelper:info('玩家进入区域' .. areaid)
+  -- LogHelper:info('玩家进入区域' .. areaid)
   LogHelper:call(function (p)
     MyAreaHelper:playerEnterArea(p.objid, p.areaid)
   end, { objid = objid, areaid = areaid })

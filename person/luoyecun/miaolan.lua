@@ -1,5 +1,5 @@
 -- 苗兰
-Miaolan = MyActor:new(miaolanActorId)
+Miaolan = MyActor:new(MyConstant.MIAOLAN_ACTOR_ID)
 
 function Miaolan:new ()
   local o = {
@@ -38,8 +38,9 @@ function Miaolan:wantAtHour (hour)
 end
 
 -- 初始化
-function Miaolan:init (hour)
+function Miaolan:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 7 and hour < 19) then
     self:goToSell()
   elseif (hour >= 19 and hour < 22) then

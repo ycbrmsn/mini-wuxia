@@ -1,5 +1,5 @@
 -- 叶小龙
-Yexiaolong = MyActor:new(yexiaolongActorId)
+Yexiaolong = MyActor:new(MyConstant.YEXIAOLONG_ACTOR_ID)
 
 function Yexiaolong:new ()
   local o = {
@@ -32,8 +32,9 @@ function Yexiaolong:wantAtHour (hour)
 end
 
 -- 初始化
-function Yexiaolong:init (hour)
+function Yexiaolong:init ()
   self:initActor(self.initPosition)
+  local hour = MyTimeHelper:getHour()
   if (hour >= 7 and hour < 22) then
     self:wantFreeInArea({ self.homeAreaPositions })
   else
