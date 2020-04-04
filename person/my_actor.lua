@@ -138,7 +138,7 @@ end
 
 -- 生物想巡逻
 function MyActor:wantPatrol (think, positions, isNegDir, index, restTime)
-  -- LogHelper:debug(self:getActorName() .. '想巡逻')
+  -- LogHelper:debug(self:getName() .. '想巡逻')
   MyActorHelper:closeAI(self.objid)
   self.think = think
   local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
@@ -221,7 +221,7 @@ function MyActor:wantAtHour (hour)
   -- 各个生物重写此方法内容
 end
 
-function MyActor:getActorName ()
+function MyActor:getName ()
   if (not(self.actorname)) then
     self.actorname = CreatureHelper:getActorName(self.objid)
   end
@@ -266,12 +266,14 @@ function MyActor:initActor (initPosition)
   -- if (self.objid) then
     self.action = MyActorAction:new(self)
     MyActorHelper:addPerson(self) -- 生物加入集合中
+    local areaid = AreaHelper:getAreaByPos(initPosition)
+    -- 清除木围栏
+    AreaHelper:clearAllWoodenFence(areaid)
+    return true
   else
-    self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
+    -- self:newActor(initPosition.x, initPosition.y, initPosition.z, true)
+    return false
   end
-  local areaid = AreaHelper:getAreaByPos(initPosition)
-  -- 清除木围栏
-  AreaHelper:clearAllWoodenFence(areaid)
 end
 
 function MyActor:collidePlayer (playerid, isPlayerInFront)

@@ -46,12 +46,19 @@ function Yexiaolong:goToBed ()
 end
 
 function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname
+  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  if (mainIndex == 1 and mainProgress < 4) then
+    nickname = '年轻人'
+  else
+    nickname = PlayerHelper:getNickname(playerid)
+  end
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak('年轻人，你撞我是想试试你的实力吗？', playerid)
+    self.action:speak(playerid, nickname, '，你撞我是想试试你的实力吗？')
   elseif (self.think == 'free') then
-    self.action:speak('年轻人，找我有事吗？', playerid)
+    self.action:speak(playerid, nickname, '，找我有事吗？')
   elseif (self.think == 'sleep') then
-    self.action:speak('年轻人，我要睡觉了，不要惹我哟。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，不要惹我哟。')
   end
 end

@@ -29,5 +29,5 @@ end
 
 function Huaxiaolou:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
-  self.action:speak(nickname .. '，你撞我我也不给你好吃的。', playerid)
+  self.action:speak(playerid, nickname, '，你撞我我也不给你好吃的。')
 end

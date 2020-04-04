@@ -35,7 +35,7 @@ end
 function Jiangyu:init (hour)
   self:initActor(self.initPosition)
   if (hour >= 7 and hour < 9) then
-    self:goHome()
+    self:defaultWant()
   elseif (hour >= 9 and hour < 18) then
     self:goToBed()
   elseif (hour >= 18 and hour < 19) then
@@ -54,7 +54,7 @@ end
 -- 回家
 function Jiangyu:goHome ()
   self:wantMove('goHome', self.doorPositions)
-  self:wantFreeInArea({ self.homeAreaPositions })
+  self:nextWantFreeInArea({ self.homeAreaPositions })
 end
 
 function Jiangyu:goToBed ()
@@ -64,28 +64,28 @@ end
 function Jiangyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，你撞我好玩吗？', playerid)
+    self.action:speak(playerid, nickname, '，你撞我好玩吗？')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，找我有什么事吗？', playerid)
+    self.action:speak(playerid, nickname, '，找我有什么事吗？')
   elseif (self.think == 'toPatrol') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我要去巡逻了，让开哟。', playerid)
+      self.action:speak(playerid, nickname, '，我要去巡逻了，让开哟。')
     else
-      self.action:speak(nickname .. '，我要去巡逻了，别蹭我。', playerid)
+      self.action:speak(playerid, nickname, '，我要去巡逻了，别蹭我。')
     end
   elseif (self.think == 'patrol') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我在巡逻，别站在我前面。', playerid)
+      self.action:speak(playerid, nickname, '，我在巡逻，别站在我前面。')
     else
-      self.action:speak(nickname .. '，我在巡逻，不要影响我。', playerid)
+      self.action:speak(playerid, nickname, '，我在巡逻，不要影响我。')
     end
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，累死了，别挡着我回家的路。', playerid)
+      self.action:speak(playerid, nickname, '，累死了，别挡着我回家的路。')
     else
-      self.action:speak(nickname .. '，累死了，不要降低我回家的速度。', playerid)
+      self.action:speak(playerid, nickname, '，累死了，不要降低我回家的速度。')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，让开哟。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，让开哟。')
   end
 end

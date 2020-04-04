@@ -34,3 +34,12 @@ function PlayerHelper:setItemAttAction (objid, itemid, attrtype, switch)
     return Player:setItemAttAction(p.objid, p.itemid, p.attrtype, p.switch)
   end, { objid = objid, itemid = itemid, attrtype = attrtype, switch = switch }, onceFailMessage, finillyFailMessage)
 end
+
+-- 设置玩家位置
+function PlayerHelper:setPosition (objid, x, y, z)
+  local onceFailMessage = '设置玩家位置失败一次'
+  local finillyFailMessage = StringHelper:concat('设置玩家位置失败，参数：objid=', objid, ', x=', x, ', y=', y, ', z=', z)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setPosition(p.objid, p.x, p.y, p.z)
+  end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+end

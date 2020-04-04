@@ -65,7 +65,7 @@ end
 -- 回家
 function Jiangfeng:goHome ()
   self:wantMove('goHome', self.doorPositions)
-  self:wantFreeInArea({ self.homeAreaPositions })
+  self:nextWantFreeInArea({ self.homeAreaPositions })
 end
 
 function Jiangfeng:goToBed ()
@@ -75,28 +75,28 @@ end
 function Jiangfeng:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，撞人是不对的哦。', playerid)
+    self.action:speak(playerid, nickname, '，撞人是不对的哦。')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，找我有事吗？', playerid)
+    self.action:speak(playerid, nickname, '，找我有事吗？')
   elseif (self.think == 'toPatrol') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我要去巡逻了，不要挡住路。', playerid)
+      self.action:speak(playerid, nickname, '，我要去巡逻了，不要挡住路。')
     else
-      self.action:speak(nickname .. '，我要去巡逻了，不要干扰我。', playerid)
+      self.action:speak(playerid, nickname, '，我要去巡逻了，不要干扰我。')
     end
   elseif (self.think == 'patrol') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我在巡逻呢，不要挡路。', playerid)
+      self.action:speak(playerid, nickname, '，我在巡逻呢，不要挡路。')
     else
-      self.action:speak(nickname .. '，我在巡逻呢，不要闹。', playerid)
+      self.action:speak(playerid, nickname, '，我在巡逻呢，不要闹。')
     end
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我刚巡逻完，累死了，正要回家呢。不要挡路。', playerid)
+      self.action:speak(playerid, nickname, '，我刚巡逻完，累死了，正要回家呢。不要挡路。')
     else
-      self.action:speak(nickname .. '，我刚巡逻完，累死了，正要回家呢。不要闹。', playerid)
+      self.action:speak(playerid, nickname, '，我刚巡逻完，累死了，正要回家呢。不要闹。')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，不要闹。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，不要闹。')
   end
 end

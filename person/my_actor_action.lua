@@ -92,12 +92,54 @@ function MyActorAction:execute ()
   end
 end
 
+-- 生物表达
+function MyActorAction:express (targetuin, startStr, finishStr, ...)
+  local content = StringHelper:concat(...)
+  local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
+  ChatHelper:sendSystemMsg(message, targetuin)
+end
+
 -- 生物说话
-function MyActorAction:speak (content, targetuin)
-  ChatHelper:sendSystemMsg(self.myActor:getActorName() .. '：#W' .. content, targetuin)
+function MyActorAction:speak (targetuin, ...)
+  self:express(targetuin, '：#W', '', ...)
+end
+
+function MyActorAction:speakToAll (...)
+  self:speak(nil, ...)
 end
 
 -- 生物心想
-function MyActorAction:speakInHeart (content, targetuin)
-  ChatHelper:sendSystemMsg(self.myActor:getActorName() .. '：#W（' .. content .. '）', targetuin)
+function MyActorAction:speakInHeart (targetuin, ...)
+  self:express(targetuin, '：#W（', '#W）', ...)
+end
+
+function MyActorAction:speakInHeartToAll (targetuin, ...)
+  self:speakInHeart(nil, ...)
+end
+
+-- 生物几秒后表达
+function MyActorAction:expressAfterSecond (targetuin, startStr, finishStr, second, ...)
+  local content = StringHelper:concat(...)
+  local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
+  MyTimeHelper:runFnAfterSecond (function (p)
+    ChatHelper:sendSystemMsg(p.message, p.targetuin)
+  end, second, { targetuin = targetuin, message = message })
+end
+
+-- 生物几秒后说话
+function MyActorAction:speakAfterSecond (targetuin, second, ...)
+  self:expressAfterSecond(targetuin, '：#W', '', second, ...)
+end
+
+function MyActorAction:speakToAllAfterSecond (second, ...)
+  self:speakAfterSecond(nil, second, ...)
+end
+
+-- 生物几秒后心想
+function MyActorAction:speakInHeartAfterSecond (targetuin, second, ...)
+  self:expressAfterSecond(targetuin, '：#W（', '#W）', second, ...)
+end
+
+function MyActorAction:speakInHeartToAllAfterSecond (second, ...)
+  self:speakInHeartAfterSecond(nil, second, ...)
 end

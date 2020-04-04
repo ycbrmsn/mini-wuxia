@@ -1,7 +1,5 @@
 -- 游戏事件
 
-allPlayers = {}
-
 -- 参数 eventobjid, toobjid
 local playerEnterGame = function (eventArgs)
   local objid = eventArgs['eventobjid']
@@ -12,21 +10,15 @@ local playerEnterGame = function (eventArgs)
   if (not(logPaper:hasItem())) then
     logPaper:newItem(objid, 1, true)
   end
-  local nickname = PlayerHelper:getNickname(objid)
-  table.insert(allPlayers, { objid = objid, nickname = nickname })
+  MyPlayerHelper:addPlayer(objid)
 end
 
 -- 参数 eventobjid, toobjid
 local playerLeaveGame = function (eventArgs)
   -- Chat:sendSystemMsg('离开游戏')
   local objid = eventArgs['eventobjid']
-  -- 从allPlayers中清除数据
-  for i, v in ipairs(allPlayers) do
-    if (v.objid == objid) then
-      table.remove(allPlayers, i)
-      break
-    end
-  end
+  -- 从players中清除数据
+  MyPlayerHelper:removePlayer(objid)
 end
 
 -- 无参数
@@ -53,7 +45,6 @@ end
 
 function init ()
   logPaper = LogPaper:new()
-  initStoryAreas(logPaper)
 end
 
 function initHours (hour)
@@ -78,14 +69,7 @@ function initMyActors (hour)
   huaxiaolou:init(hour)
   yexiaolong:init(hour)
   LogHelper:info('创建人物完成')
-end
-
-function initStoryAreas (logPaper)
-  if (logPaper.mainIndex == 1) then -- 剧情1
-    local areaid = AreaHelper:createAreaRectByRange(myStories[1].posBeg, myStories[1].posEnd)
-    myStories[1].areaid = areaid
-    -- Area:fillBlock(myStories[1].areaid, 200, 1)
-  end
+  MyStoryHelper:init()
 end
 
 function initDoorAreas ()
@@ -112,6 +96,7 @@ local atSecond = function (eventArgs)
     end
 
     MyTimeHelper:runFn(p.second)
+    MyTimeHelper:runFnInterval(p.second)
   end, { second = second })
   
 end

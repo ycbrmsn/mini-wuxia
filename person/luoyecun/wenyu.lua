@@ -77,18 +77,18 @@ end
 function Wenyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，不要撞我嘛。', playerid)
+    self.action:speak(playerid, nickname, '，不要撞我嘛。')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，要不要来玩丫？', playerid)
+    self.action:speak(playerid, nickname, '，要不要来玩丫？')
   elseif (self.think == 'notice') then
-    self.action:speak(nickname .. '，有好消息告诉你哦。', playerid)
+    self.action:speak(playerid, nickname, '，有好消息告诉你哦。')
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我要回家了。不要站在路前面，好嘛。', playerid)
+      self.action:speak(playerid, nickname, '，我要回家了。不要站在路前面，好嘛。')
     else
-      self.action:speak(nickname .. '，我要回家了。明天再玩吧。', playerid)
+      self.action:speak(playerid, nickname, '，我要回家了。明天再玩吧。')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，明天再玩吧。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，明天再玩吧。')
   end
 end

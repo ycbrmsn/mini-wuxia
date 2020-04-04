@@ -55,16 +55,16 @@ end
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，你怎么能撞老人家呢？', playerid)
+    self.action:speak(playerid, nickname, '，你怎么能撞老人家呢？')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，找我有事吗？', playerid)
+    self.action:speak(playerid, nickname, '，找我有事吗？')
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我要回家。不要挡住老人家的路啊。', playerid)
+      self.action:speak(playerid, nickname, '，我要回家。不要挡住老人家的路啊。')
     else
-      self.action:speak(nickname .. '，有事去我屋里说。不要随便撞人啊', playerid)
+      self.action:speak(playerid, nickname, '，有事去我屋里说。不要随便撞人啊')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，不要打搅我。要尊老知不知道。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，不要打搅我。要尊老知不知道。')
   end
 end

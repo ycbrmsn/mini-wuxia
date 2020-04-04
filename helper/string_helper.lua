@@ -1,5 +1,7 @@
 -- 字符串工具类
-StringHelper = {}
+StringHelper = {
+  hourName = { '子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时' }
+}
 
 --[[
 utf-8编码规则
@@ -119,11 +121,28 @@ end
 
 -- 拼接所有参数
 function StringHelper:concat (...)
-  local str = ''
   local num = select("#", ...)
-  for i = 1, num do
-    local arg = select(i, ...)
-    str = str .. self:toString(arg)
+  if (num == 1) then
+    return self:toString(select(1, ...))
+  else
+    local str = ''
+    for i = 1, num do
+      local arg = select(i, ...)
+      str = str .. self:toString(arg)
+    end
+    return str
   end
-  return str
+end
+
+-- 根据小时获得时辰名称
+function StringHelper:getHourName (hour)
+  if (hour < 1 or hour >= 23) then
+    return self.hourName[1]
+  else
+    for i = 2, 12 do
+      if (hour >= i * 2 - 3 and hour < i * 2 - 1) then
+        return self.hourName[i]
+      end
+    end
+  end
 end

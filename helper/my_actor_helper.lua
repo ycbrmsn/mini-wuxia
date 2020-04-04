@@ -53,10 +53,10 @@ function MyActorHelper:enterArea (objid, areaid)
     local want = myActor.wants[1]
     if (want.toAreaId == areaid) then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
       if (want.style == 'move') then -- 如果是仅仅前往，则变更想法，并且停下来
-        -- LogHelper:debug(myActor:getActorName() .. '进入了终点区域' .. areaid)
+        -- LogHelper:debug(myActor:getName() .. '进入了终点区域' .. areaid)
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         local pos = MyActorActionHelper:getNextPos(want)
-        -- LogHelper:debug(myActor:getActorName(), pos)
+        -- LogHelper:debug(myActor:getName(), pos)
         if (pos) then -- 有下一个行动位置
           want.toPos = pos
           MyActorActionHelper:createToPos(want)
@@ -71,7 +71,7 @@ function MyActorHelper:enterArea (objid, areaid)
           elseif (nextWant.style == 'freeInArea') then
             nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
             MyActorActionHelper:createToPos(nextWant)
-            -- LogHelper:debug(myActor:getActorName() .. '开始闲逛')
+            -- LogHelper:debug(myActor:getName() .. '开始闲逛')
           elseif (nextWant.style == 'wait') then
             local restTime = nextWant.restTime
             table.remove(myActor.wants, 1)
@@ -130,7 +130,7 @@ end
 
 function MyActorHelper:actorCollide (objid, toobjid)
   local actor1 = MyActorHelper:getActorByObjid(objid)
-  -- LogHelper:info('碰撞了', actor1:getActorName())
+  -- LogHelper:info('碰撞了', actor1:getName())
   if (actor1) then -- 生物是特定生物
     if (ActorHelper:isPlayer(toobjid)) then -- 是玩家
       if (actor1.wants and actor1.wants[1].style == 'sleeping') then

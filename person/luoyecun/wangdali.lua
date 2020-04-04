@@ -73,16 +73,16 @@ end
 function Wangdali:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，你撞我做什么?', playerid)
+    self.action:speak(playerid, nickname, '，你撞我做什么?')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，你想买点装备吗？', playerid)
+    self.action:speak(playerid, nickname, '，你想买点装备吗？')
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(nickname .. '，我要回家了，不要挡路。有事进屋里再说。', playerid)
+      self.action:speak(playerid, nickname, '，我要回家了，不要挡路。有事进屋里再说。')
     else
-      self.action:speak(nickname .. '，你怎么能撞人呢。算了，天色不早了，我先回家了。', playerid)
+      self.action:speak(playerid, nickname, '，你怎么能撞人呢。算了，天色不早了，我先回家了。')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，有事明天再说。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，有事明天再说。')
   end
 end

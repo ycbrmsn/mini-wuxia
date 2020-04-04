@@ -67,14 +67,14 @@ end
 function Miaolan:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(nickname .. '，要爱护身体，不要撞来撞去。', playerid)
+    self.action:speak(playerid, nickname, '，要爱护身体，不要撞来撞去。')
   elseif (self.think == 'free') then
-    self.action:speak(nickname .. '，这么晚过来，你受伤了吗？', playerid)
+    self.action:speak(playerid, nickname, '，这么晚过来，你受伤了吗？')
   elseif (self.think == 'toSell') then
-    self.action:speak('我要去卖药了。', playerid)
+    self.action:speak('我要去卖药了。')
   elseif (self.think == 'sell') then
-    self.action:speak(nickname .. '，要抓点药吗？', playerid)
+    self.action:speak(playerid, nickname, '，要抓点药吗？')
   elseif (self.think == 'sleep') then
-    self.action:speak(nickname .. '，我要睡觉了，不要闹。', playerid)
+    self.action:speak(playerid, nickname, '，我要睡觉了，不要闹。')
   end
 end
