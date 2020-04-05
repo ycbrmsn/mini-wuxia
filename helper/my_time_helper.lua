@@ -3,8 +3,8 @@ MyTimeHelper = {
   hour = nil,
   time = 0,
   fns = {}, -- second -> { { f, p }, { f, p }, ... }
-  fnIntervals = {}, -- second -> { objid = { t, f, p }, objid = { t, f, p }, ... }
-  fnCanRuns = {} -- second -> { objid = t, objid = t, ... }
+  fnIntervals = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
+  fnCanRuns = {} -- second -> { objid = { t, t }, objid = { t, t } ... }
 }
 
 function MyTimeHelper:updateHour (hour)
@@ -65,12 +65,14 @@ end
 function MyTimeHelper:runFnInterval (time)
   local fs = self.fnIntervals[time]
   if (fs) then
-    for k, v in pairs(fs) do
-      v[2](v[3])
+    for oid, ts in pairs(fs) do
+      for k, v in pairs(ts) do
+        v[1](v[2])
+      end
     end
   end
   -- 清除较长时间间隔的数据
-  local longIntervalTime = time - 10
+  local longIntervalTime = time - 20
   if (self.fnIntervals[longIntervalTime]) then
     self.fnIntervals[longIntervalTime] = nil
   end
@@ -78,11 +80,11 @@ end
 
 -- 获取最近的间隔时间，如果间隔内找不到，则返回nil
 function MyTimeHelper:getLastFnIntervalTime (objid, t, second)
-  for i = self.time, self.time - second, -1 do
+  for i = self.time, self.time - second + 1, -1 do
     local fnIs = self.fnIntervals[i]
     if (fnIs) then
-      local arr = fnIs[objid]
-      if (arr and arr[1] == t) then
+      local ts = fnIs[objid]
+      if (ts and ts[t]) then
         return i
       end
     end
@@ -96,7 +98,14 @@ function MyTimeHelper:setFnInterval (objid, t, f, time, p)
     o = {}
     self.fnIntervals[time] = o
   end
-  o[objid] = { t, f, p }
+  if (not(o[objid])) then
+    o[objid] = {}
+  end
+  if (f) then
+    o[objid][t] = { f, p }
+  else
+    o[objid][t] = nil
+  end
 end
 
 -- 至少间隔多少秒执行一次，如果当前符合条件，则执行；不符合，则记录下来，时间到了执行
@@ -126,16 +135,29 @@ end
 
 -- 查询最近间隔内的执行时间，如果没找到，则返回nil
 function MyTimeHelper:getLastFnCanRunTime (objid, t, second)
-  for i = self.time, self.time - second, -1 do
+  for i = self.time, self.time - second + 1, -1 do
     local fns = self.fnCanRuns[i]
     if (fns) then
-      local tt = fns[objid]
-      if (tt and tt == t) then
-        return i
+      local arr = fns[objid]
+      for i, v in ipairs(arr) do
+        if (v == t) then
+          return i
+        end
       end
     end
   end
   return nil
+end
+
+function MyTimeHelper:addLastFnCanRunTime (objid, t)
+  if (not(self.fnCanRuns[self.time])) then
+    self.fnCanRuns[self.time] = {}
+    self.fnCanRuns[self.time][objid] = { t }
+  elseif (not(self.fnCanRuns[self.time][objid])) then
+    self.fnCanRuns[self.time][objid] = { t }
+  else
+    table.insert(self.fnCanRuns[self.time][objid], t)
+  end
 end
 
 -- 如果方法能执行则标记，然后执行；否则不执行
@@ -150,20 +172,22 @@ function MyTimeHelper:callFnCanRun (objid, t, f, second, p)
   second = second or 0
   local lastTime = self:getLastFnCanRunTime(objid, t, second)
   if (not(lastTime)) then -- 没找到则标记，然后执行
-    self.fnCanRuns[self.time][objid] = t
+    self:addLastFnCanRunTime(objid, t)
     LogHelper:call(f, p)
   end
 end
 
 function MyTimeHelper:callIntervalUntilSuccess ()
   return function (param)
-    local result = self:callFnInterval(param.objid, param.t, param.f, param.second, param.p)
+    MyTimeHelper:setFnInterval(param.objid, param.t, nil, self.time)
+    local result = MyTimeHelper:callFnInterval(param.objid, param.t, param.f, param.second, param.p)
     if (type(result) == 'nil') then -- 说明近期执行过，还会再次执行
-      -- do nothing
+      -- LogHelper:info(param.objid, ': nil')
     elseif (result) then -- 说明执行成功
-      -- do nothing
+      -- LogHelper:info('true')
     else -- 说明执行失败，则准备再次执行
-      MyTimeHelper:setFnInterval(param.objid, param.t, MyTimeHelper:callIntervalUntilSuccess(), MyTimeHelper.time + second, param)
+      MyTimeHelper:setFnInterval(param.objid, param.t, MyTimeHelper:callIntervalUntilSuccess(), MyTimeHelper.time + param.second, param)
+      -- LogHelper:info(param.objid, ': false')
     end
   end
 end
@@ -173,7 +197,7 @@ function MyTimeHelper:initActor (myActor)
     objid = myActor.objid,
     t = 'initActor',
     f = function (myActor)
-      myActor:init()
+      return myActor:init()
     end,
     second = 10,
     p = myActor

@@ -45,13 +45,16 @@ end
 
 -- 初始化
 function Wangdali:init ()
-  self:initActor(self.initPosition)
-  local hour = MyTimeHelper:getHour()
-  if (hour >= 7 and hour < 19) then
-    self:goOutDoor()
-  else
-    self:goHome()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    local hour = MyTimeHelper:getHour()
+    if (hour >= 7 and hour < 19) then
+      self:goOutDoor()
+    else
+      self:goHome()
+    end
   end
+  return initSuc
 end
 
 -- 外出

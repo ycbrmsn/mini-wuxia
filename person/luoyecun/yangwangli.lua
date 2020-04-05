@@ -34,13 +34,16 @@ end
 
 -- 初始化
 function Yangwanli:init ()
-  self:initActor(self.initPosition)
-  local hour = MyTimeHelper:getHour()
-  if (hour >= 7 and hour < 22) then
-    self:wantFreeInArea({ self.homeAreaPositions })
-  else
-    self:goToBed()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    local hour = MyTimeHelper:getHour()
+    if (hour >= 7 and hour < 22) then
+      self:wantFreeInArea({ self.homeAreaPositions })
+    else
+      self:goToBed()
+    end
   end
+  return initSuc
 end
 
 -- 回家

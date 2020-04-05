@@ -23,9 +23,9 @@ end
 
 -- 初始化
 function Huaxiaolou:init ()
-  self:initActor(self.initPosition)
+  local initSuc = self:initActor(self.initPosition)
+  return initSuc
 end
-
 
 function Huaxiaolou:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)

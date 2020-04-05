@@ -39,15 +39,18 @@ end
 
 -- 初始化
 function Miaolan:init ()
-  self:initActor(self.initPosition)
-  local hour = MyTimeHelper:getHour()
-  if (hour >= 7 and hour < 19) then
-    self:goToSell()
-  elseif (hour >= 19 and hour < 22) then
-    self:goSecondFloor()
-  else
-    self:goToBed()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    local hour = MyTimeHelper:getHour()
+    if (hour >= 7 and hour < 19) then
+      self:goToSell()
+    elseif (hour >= 19 and hour < 22) then
+      self:goSecondFloor()
+    else
+      self:goToBed()
+    end
   end
+  return initSuc
 end
 
 -- 卖东西

@@ -18,9 +18,9 @@ end
 
 -- 显示飘窗信息
 function MyPlayerHelper:showToast (objid, info)
-  MyTimeHelper:runFnInterval(objid, 'toast', function (p)
+  MyTimeHelper:callFnInterval(objid, 'toast', function (p)
     PlayerHelper:notifyGameInfo2Self(p.objid, p.info)
-  end, 3, { info = info })
+  end, 2, { info = info })
 end
 
 -- 玩家造成伤害

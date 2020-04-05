@@ -33,17 +33,20 @@ end
 
 -- 初始化
 function Jiangyu:init ()
-  self:initActor(self.initPosition)
-  local hour = MyTimeHelper:getHour()
-  if (hour >= 7 and hour < 9) then
-    self:defaultWant()
-  elseif (hour >= 9 and hour < 18) then
-    self:goToBed()
-  elseif (hour >= 18 and hour < 19) then
-    self:goHome()
-  else
-    self:toPatrol()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    local hour = MyTimeHelper:getHour()
+    if (hour >= 7 and hour < 9) then
+      self:defaultWant()
+    elseif (hour >= 9 and hour < 18) then
+      self:goToBed()
+    elseif (hour >= 18 and hour < 19) then
+      self:goHome()
+    else
+      self:toPatrol()
+    end
   end
+  return initSuc
 end
 
 -- 去巡逻
