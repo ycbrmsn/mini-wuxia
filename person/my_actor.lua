@@ -111,6 +111,7 @@ end
 
 -- 生物想向指定位置移动
 function MyActor:wantMove (think, positions, isNegDir, index, restTime)
+  MyAreaHelper:removeToArea(self)
   MyActorHelper:closeAI(self.objid)
   self.think = think
   local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
@@ -121,6 +122,7 @@ end
 
 -- 生物想原地不动
 function MyActor:wantDontMove (think)
+  MyAreaHelper:removeToArea(self)
   think = think or 'dontMove'
   self.think = think
   self.wants = { MyActorActionHelper:getDontMoveData(think) }
@@ -138,6 +140,7 @@ end
 
 -- 生物想巡逻
 function MyActor:wantPatrol (think, positions, isNegDir, index, restTime)
+  MyAreaHelper:removeToArea(self)
   -- LogHelper:debug(self:getName() .. '想巡逻')
   MyActorHelper:closeAI(self.objid)
   self.think = think
@@ -149,6 +152,7 @@ end
 
 -- 生物想自由活动
 function MyActor:wantFreeTime (think)
+  MyAreaHelper:removeToArea(self)
   think = think or 'free'
   MyActorHelper:openAI(self.objid)
   self.think = think
@@ -157,6 +161,7 @@ end
 
 -- 生物想在区域内自由活动，think可选
 function MyActor:wantFreeInArea (think, posPairs)
+  MyAreaHelper:removeToArea(self)
   if (not(posPairs)) then
     posPairs = think
     think = 'free'
@@ -176,6 +181,7 @@ end
 
 -- 生物想不做事
 function MyActor:wantDoNothing (think)
+  MyAreaHelper:removeToArea(self)
   think = think or 'doNothing'
   MyActorHelper:closeAI(self.objid)
   self.think = think
@@ -183,6 +189,7 @@ function MyActor:wantDoNothing (think)
 end
 
 function MyActor:wantGoToSleep (bedTailPosition, lookPos)
+  MyAreaHelper:removeToArea(self)
   self:wantMove('sleep', { bedTailPosition })
   self:nextWantSleep('sleep', lookPos)
 end
