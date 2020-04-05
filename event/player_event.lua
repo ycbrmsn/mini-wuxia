@@ -20,10 +20,23 @@ end
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
-  -- local myPlayer = MyPlayerHelper:getPlayer(objid)
-  -- myPlayer:enableMove(false)
-  -- wenyu:goHome()
-  -- LogHelper:debug('点击方块')
+  local myPlayer = MyPlayerHelper:getPlayer(objid)
+  yexiaolong:setPosition(eventArgs.x, eventArgs.y, eventArgs.z)
+  yexiaolong:wantMove('goToCollege', myStories[2].movePositions1)
+  MyTimeHelper:callFnAfterSecond (function (p)
+    MyPlayerHelper:everyPlayerRunTo(myStories[2].movePositions2, function (v)
+      MyStoryHelper:teacherLeaveForAWhile(v)
+  end, p.myPlayer)
+  end, 3, { myPlayer = myPlayer })
+  
+  -- local eventPosition2 = { x = 0, y = 8, z = 275 }
+  -- MyPlayerHelper:everyPlayerEnableMove(true)
+  -- MyPlayerHelper:everyPlayerRunTo(eventPosition2.x, eventPosition2.y, eventPosition2.z)
+  ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+  MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+  -- local eventPosition1 = { x = 0, y = 8, z = 280 }
+  -- yexiaolong:wantMove('goToCollege', { eventPosition1 })
+
   -- local data = BlockHelper:getBlockData(eventArgs.x, eventArgs.y, eventArgs.z)
   -- LogHelper:debug('men' .. data)
 
@@ -32,23 +45,9 @@ local clickBlock = function (eventArgs)
   -- local areaid = AreaHelper:getAreaByPos({ x = eventArgs.x, y = eventArgs.y, z = eventArgs.z })
   -- local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   
-  -- local objids = AreaHelper:getAreaCreatures(areaid)
-  -- LogHelper:debug(objids)
   -- wenyu.lastBedHeadPosition = wenyu.currentBedHeadPosition
   -- yexiaolong:setPosition(eventArgs.x, eventArgs.y + 1, eventArgs.z)
   -- yexiaolong:goToBed()
-
-  -- jiangfeng:newActor(eventArgs.x, eventArgs.y, eventArgs.z, true)
-  -- jiangfeng:wantMove('', PositionHelper:getJiangfengMovetoPatrolPositions())
-  -- jiangfeng:wantPatrol('', PositionHelper:getJiangfengPatrolPositions())
-  
-
-  -- jiangfeng:wantMove('', PositionHelper:getJiangfengMovetoPatrolPositions())
-  -- jiangfeng:nextWantPatrol('', PositionHelper:getJiangfengPatrolPositions())
-
-  -- LogHelper:debug('MyActorActionHelper: ' .. type(MyActorActionHelper))
-  -- LogHelper:debug('PositionHelper: ' .. type(PositionHelper))
-
 
   -- ActorHelper:tryNavigationToPos (jiangfeng.objid, eventArgs.x, eventArgs.y, eventArgs.z, true)
 end

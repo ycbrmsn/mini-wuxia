@@ -41,7 +41,11 @@ function MyAreaHelper:playerEnterWolfMountain (objid)
 end
 
 function MyAreaHelper:playerEnterArea (objid, areaid)
-  if (areaid == self.wolfAreas[3]) then -- 进入恶狼谷
+  local myPlayer = MyPlayerHelper:getPlayer(objid)
+  if (areaid == myPlayer.toAreaId) then -- 玩家前往地点
+    AreaHelper:destroyArea(areaid)
+    myPlayer.action:runAction()
+  elseif (areaid == self.wolfAreas[3]) then -- 进入恶狼谷
     self:playerEnterWolfMountain(objid)
   elseif (areaid == myStories[1].areaid) then -- 文羽通知事件
     MyStoryHelper:noticeEvent(areaid)

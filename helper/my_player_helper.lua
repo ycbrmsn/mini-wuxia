@@ -25,6 +25,10 @@ function MyPlayerHelper:getPlayer (objid)
   return nil
 end
 
+function MyPlayerHelper:getHostPlayer ()
+  return self:getAllPlayers()[1]
+end
+
 -- 显示飘窗信息
 function MyPlayerHelper:showToast (objid, info)
   MyTimeHelper:callFnInterval(objid, 'toast', function (p)
@@ -70,5 +74,23 @@ end
 function MyPlayerHelper:everyPlayerNotify (info)
   for i, v in ipairs(self:getAllPlayers()) do
     PlayerHelper:notifyGameInfo2Self(v.objid, info)
+  end
+end
+
+function MyPlayerHelper:everyPlayerEnableMove (enable)
+  for i, v in ipairs(self:getAllPlayers()) do
+    v:enableMove(enable)
+  end
+end
+
+function MyPlayerHelper:everyPlayerRunTo (positions, callback, param)
+  for i, v in ipairs(self:getAllPlayers()) do
+    v.action:runTo(positions, callback, param)
+  end
+end
+
+function MyPlayerHelper:everyPlayerAddBuff(buffid, bufflv, customticks)
+  for i, v in ipairs(self:getAllPlayers()) do
+    ActorHelper:addBuff(v.objid, buffid, bufflv, customticks)
   end
 end

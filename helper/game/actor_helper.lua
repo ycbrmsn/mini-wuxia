@@ -21,6 +21,10 @@ ActorHelper = {
     BEAT = 18, -- 受击
     FREE2 = 19, -- 休闲
     JUMP = 20 -- 跳
+  },
+  BUFF = {
+    FASTER_RUN = 4, -- 疾跑
+    NIGHT_LOOK = 16 -- 夜视
   }
 }
 
@@ -120,4 +124,13 @@ function ActorHelper:getCurPlaceDir (objid)
   return CommonHelper:callOneResultMethod(function (p)
     return Actor:getCurPlaceDir(p.objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end
+
+-- 增加指定BUFF
+function ActorHelper:addBuff (objid, buffid, bufflv, customticks)
+  local onceFailMessage = '增加指定BUFF失败一次'
+  local finillyFailMessage = StringHelper:concat('增加指定BUFF失败，参数：objid=', objid, ', buffid=', buffid, ', bufflv=', bufflv, ', customticks=', customticks)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:addBuff(p.objid, p.buffid, p.bufflv, p.customticks)
+  end, { objid = objid, buffid = buffid, bufflv = bufflv, customticks = customticks }, onceFailMessage, finillyFailMessage)
 end

@@ -1,4 +1,4 @@
- -- 我的剧情工具类
+-- 我的剧情工具类
 MyStoryHelper = {
   mainIndex = 1,
   mainProgress = 1,
@@ -149,14 +149,53 @@ end
 -- 前往学院
 function MyStoryHelper:goToCollege ()
   MyPlayerHelper:everyPlayerNotify('到了约定的时间了')
+  MyPlayerHelper:everyPlayerEnableMove(false)
   -- 初始化所有人位置
-  local playerPosition = { x = 0, y = 7, z = 16 }
-  local yexiaolongPosition = { x = 0, y = 7, z = 20 }
-  yexiaolong:setPosition(yexiaolongPosition.x, yexiaolongPosition.y, yexiaolongPosition.z)
-  for i, v in ipairs(MyPlayerHelper.players) do
-    PlayerHelper:setPosition(v.objid, playerPosition.x, playerPosition.y, playerPosition.z)
-  end
+  yexiaolong:wantMove('goToCollege', { myStories[2].yexiaolongInitPosition[2] })
+  yexiaolong:setPosition(myStories[2].yexiaolongInitPosition[1].x, myStories[2].yexiaolongInitPosition[1].y, myStories[2].yexiaolongInitPosition[1].z)
+  MyPlayerHelper:setEveryPlayerPosition(myStories[2].playerInitPosition.x, myStories[2].playerInitPosition.y, myStories[2].playerInitPosition.z)
   -- 说话
   yexiaolong.action:speakToAllAfterSecond(1, '不错，所有人都到齐了。那我们出发吧。')
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond (3, '出发咯!')
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(4, '出发咯!')
+  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  hostPlayer.action:speakToAllAfterSecond(6, '不过，先生，我们的马车在哪里？')
+  yexiaolong.action:speakToAllAfterSecond(9, '嗯，这个嘛……')
+  yexiaolong.action:speakInHeartToAllAfterSecond (11, '没想到村里的东西这么好吃。一不小心把盘缠给花光了……')
+  yexiaolong.action:speakToAllAfterSecond(14, '咳咳。还没有进入学院，就想着这些让人懒惰工具。这怎么能行？')
+  yexiaolong.action:speakToAllAfterSecond(17, '去学院学习可不是享福的。基本功不能落下。现在，让我们跑起来。出发！')
+
+  MyTimeHelper:callFnAfterSecond (function (p)
+    yexiaolong:wantMove('goToCollege', myStories[2].movePositions1)
+  end, 17)
+
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(19, '!!!')
+
+  MyTimeHelper:callFnAfterSecond (function (p)
+    MyPlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
+    for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
+      if (i == 1) then
+        v.action:runTo(myStories[2].movePositions2, function (v)
+          MyStoryHelper:teacherLeaveForAWhile(v)
+        end, v)
+      else
+        v.action:runTo(myStories[2].movePositions2)
+      end
+    end
+    ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+    MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+  end, 20)
+  
+  if (#MyPlayerHelper:getAllPlayers() > 1) then
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(21, '先生，等等我们。')
+  else
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(21, '先生，等等我。')
+  end
+
+  MyTimeHelper:callFnAfterSecond (function (p)
+    self:forward('跑步去学院')
+  end, 21)
+end
+
+function MyStoryHelper:teacherLeaveForAWhile (myPlayer)
+  myPlayer.action:speakToAll('先生，怎么停下来了')
 end

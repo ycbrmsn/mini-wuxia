@@ -3,7 +3,8 @@ MyPlayer = {
   objid = nil,
   nickname = nil,
   action = nil,
-  wants = nil
+  wants = nil,
+  moveMotion = nil
 }
 
 function MyPlayer:new (objid)
@@ -25,4 +26,12 @@ end
 
 function MyPlayer:enableMove (enable)
   return PlayerHelper:setPlayerEnableMove(self.objid, enable)
+end
+
+function MyPlayer:getPosition ()
+  return ActorHelper:getPosition(self.objid)
+end
+
+function MyPlayer:setPosition (x, y, z)
+  return ActorHelper:setPosition(self.objid, x, y, z)
 end

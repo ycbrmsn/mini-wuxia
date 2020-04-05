@@ -59,7 +59,7 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   local nickname
   local mainIndex = MyStoryHelper:getMainStoryIndex()
   local mainProgress = MyStoryHelper:getMainStoryProgress()
-  if (mainIndex == 1 and mainProgress < 4) then
+  if (mainIndex == 1 and mainProgress < 5) then
     nickname = '年轻人'
   else
     nickname = PlayerHelper:getNickname(playerid)
