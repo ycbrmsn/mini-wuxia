@@ -22,3 +22,7 @@ function MyPlayer:getName ()
   end
   return self.nickname
 end
+
+function MyPlayer:enableMove (enable)
+  return PlayerHelper:setPlayerEnableMove(self.objid, enable)
+end

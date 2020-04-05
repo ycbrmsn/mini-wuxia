@@ -24,10 +24,13 @@ end
 
 -- 在几点想做什么
 function Yexiaolong:wantAtHour (hour)
-  if (hour == 7) then
-    self:wantFreeInArea({ self.homeAreaPositions })
-  elseif (hour == 22) then
-    self:goToBed()
+  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  if (mainIndex == 1) then
+    if (hour == 7) then
+      self:wantFreeInArea({ self.homeAreaPositions })
+    elseif (hour == 22) then
+      self:goToBed()
+    end
   end
 end
 
@@ -35,11 +38,14 @@ end
 function Yexiaolong:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    local hour = MyTimeHelper:getHour()
-    if (hour >= 7 and hour < 22) then
-      self:wantFreeInArea({ self.homeAreaPositions })
-    else
-      self:goToBed()
+    local mainIndex = MyStoryHelper:getMainStoryIndex()
+    if (mainIndex == 1) then
+      local hour = MyTimeHelper:getHour()
+      if (hour >= 7 and hour < 22) then
+        self:wantFreeInArea({ self.homeAreaPositions })
+      else
+        self:goToBed()
+      end
     end
   end
   return initSuc

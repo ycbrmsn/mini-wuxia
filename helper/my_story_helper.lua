@@ -2,7 +2,8 @@
 MyStoryHelper = {
   mainIndex = 1,
   mainProgress = 1,
-  progressNames = {}
+  progressNames = {},
+  storyRemainDays = 0 -- 当前剧情剩余天数
 }
 
 -- 剧情前进
@@ -44,6 +45,10 @@ function MyStoryHelper:getMainStoryProgress ()
   return self.mainProgress
 end
 
+function MyStoryHelper:getMainStoryRemainDays ()
+  return self.storyRemainDays
+end
+
 -- 获得主线剧情信息
 function MyStoryHelper:getMainStoryInfo ()
   return myStories[self:getMainStoryIndex()]
@@ -53,6 +58,24 @@ end
 function MyStoryHelper:getMainStoryTitleAndTip ()
   local story = self:getMainStoryInfo()
   return story.title, story.tips[self:getMainStoryProgress()]
+end
+
+function MyStoryHelper:reduceRemainDay ()
+  if (self.storyRemainDays > 0) then
+    self.storyRemainDays = self.storyRemainDays - 1
+  end
+end
+
+function MyStoryHelper:run (hour)
+  if (hour == 0) then
+    self:reduceRemainDay()
+  end
+  if (hour == 9) then
+    if (self.storyRemainDays == 0 and self.mainIndex == 1 and self.mainProgress == #myStories[1].tips) then
+      self:forward('出发，前往学院')
+      self:goToCollege()
+    end
+  end
 end
 
 function MyStoryHelper:init ()
@@ -97,27 +120,43 @@ end
 
 -- 结束通知事件
 function MyStoryHelper:finishNoticeEvent (objid)
+  -- 设置对话人物不可移动
+  local myPlayer = MyPlayerHelper:getPlayer(objid)
+  myPlayer:enableMove(false)
+  yexiaolong:enableMove(false)
+  yexiaolong:wantStayForAWhile(100)
+  -- 开始对话
   yexiaolong.action:speakToAll('你顺利地通过了考验，不错。嗯……')
-  yexiaolong.action:speakInHeartToAllAfterSecond(2, '我的任务是至少招一名学员，应该可以了。')
+  yexiaolong.action:speakInHeartToAllAfterSecond(3, '我的任务是至少招一名学员，应该可以了。')
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
   if (hour < 9) then
-    yexiaolong.action:speakToAllAfterSecond(4, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
+    self.storyRemainDays = 0
+    yexiaolong.action:speakToAllAfterSecond(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
   else
-    yexiaolong.action:speakToAllAfterSecond(4, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
+    self.storyRemainDays = 1
+    yexiaolong.action:speakToAllAfterSecond(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
+  myPlayer.action:speakToAllAfterSecond (8, '好的。')
+  yexiaolong.action:speakToAllAfterSecond(10, '嗯，那去准备吧。')
+  MyTimeHelper:callFnAfterSecond (function (p)
+    p.myPlayer:enableMove(true)
+    yexiaolong:wantStayForAWhile(1)
+    yexiaolong:enableMove(true)
+  end, 10, { myPlayer = myPlayer })
 end
 
 -- 前往学院
 function MyStoryHelper:goToCollege ()
+  MyPlayerHelper:everyPlayerNotify('到了约定的时间了')
   -- 初始化所有人位置
-  local playerPosition = { x = 0, y = 0, z = 0 }
-  local yexiaolongPosition = { x = 0, y = 0, z = 0 }
+  local playerPosition = { x = 0, y = 7, z = 16 }
+  local yexiaolongPosition = { x = 0, y = 7, z = 20 }
   yexiaolong:setPosition(yexiaolongPosition.x, yexiaolongPosition.y, yexiaolongPosition.z)
   for i, v in ipairs(MyPlayerHelper.players) do
     PlayerHelper:setPosition(v.objid, playerPosition.x, playerPosition.y, playerPosition.z)
   end
   -- 说话
-  yexiaolong:speakToAllAfterSecond(1, '不错，所有人都到齐了。那我们出发吧。')
-
+  yexiaolong.action:speakToAllAfterSecond(1, '不错，所有人都到齐了。那我们出发吧。')
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond (3, '出发咯!')
 end

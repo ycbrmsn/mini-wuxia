@@ -6,6 +6,16 @@ function PlayerHelper:setItemDisableThrow (objid, itemid)
   return self:setItemAttAction(objid, itemid, PLAYERATTR.ITEM_DISABLE_THROW, true)
 end
 
+-- 设置玩家是否可以移动
+function PlayerHelper:setPlayerEnableMove (objid, enable)
+  return self:setActionAttrState(objid, PLAYERATTR.ENABLE_MOVE, enable)
+end
+
+-- 设置玩家是否可被杀死
+function PlayerHelper:setPlayerEnableBeKilled (objid, enable)
+  return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED, enable)
+end
+
 -- 封装原始接口
 
 -- 获取玩家昵称
@@ -43,3 +53,13 @@ function PlayerHelper:setPosition (objid, x, y, z)
     return Player:setPosition(p.objid, p.x, p.y, p.z)
   end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
 end
+
+-- 设置玩家行为属性状态
+function PlayerHelper:setActionAttrState (objid, actionattr, switch)
+  local onceFailMessage = '设置玩家行为属性状态失败一次'
+  local finillyFailMessage = StringHelper:concat('设置玩家行为属性状态失败，参数：objid=', objid, ', actionattr=', actionattr, ', switch=', switch)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setActionAttrState(p.objid, p.actionattr, p.switch)
+  end, { objid = objid, actionattr = actionattr, switch = switch }, onceFailMessage, finillyFailMessage)
+end
+

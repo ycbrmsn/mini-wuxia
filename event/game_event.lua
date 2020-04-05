@@ -40,8 +40,10 @@ end
 -- 参数 hour
 local atHour = function (eventArgs)
   local hour = eventArgs['hour']
+  -- LogHelper:info('atHour: ', hour)
   LogHelper:call(function (p)
     MyTimeHelper:updateHour(p.hour)
+    MyStoryHelper:run(p.hour)
     MyActorHelper:atHour(p.hour)
   end, { hour = hour })
 end
@@ -70,11 +72,12 @@ function initMyActors ()
   -- MyTimeHelper:initActor(miaolan)
   LogHelper:info('创建人物完成')
   MyStoryHelper:init()
-  -- for i = 1, 10 do
-  --   -- MyTimeHelper:callFnInterval(wenyu.objid, 'speak', function (p)
+  -- for i = 1, 2 do
+  --   MyTimeHelper:callFnInterval(wenyu.objid, 'speak', function (p)
   --     -- wenyu.action:speakToAllAfterSecond(i, i)
-  --     MyPlayerHelper:showToast(807364131, i)
-  --   -- end, 2, { time = i })
+  --     -- MyPlayerHelper:showToast(807364131, i)
+  --     MyTimeHelper:setHour(7 + p.time)
+  --   end, 3, { time = i })
   -- end
 end
 

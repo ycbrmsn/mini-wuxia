@@ -19,6 +19,9 @@ end
 
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  -- local myPlayer = MyPlayerHelper:getPlayer(objid)
+  -- myPlayer:enableMove(false)
   -- wenyu:goHome()
   -- LogHelper:debug('点击方块')
   -- local data = BlockHelper:getBlockData(eventArgs.x, eventArgs.y, eventArgs.z)

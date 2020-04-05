@@ -16,6 +16,15 @@ function MyPlayerHelper:removePlayer (objid)
   end
 end
 
+function MyPlayerHelper:getPlayer (objid)
+  for i, v in ipairs(self:getAllPlayers()) do
+    if (v.objid == objid) then
+      return v
+    end
+  end
+  return nil
+end
+
 -- 显示飘窗信息
 function MyPlayerHelper:showToast (objid, info)
   MyTimeHelper:callFnInterval(objid, 'toast', function (p)
@@ -55,5 +64,11 @@ end
 function MyPlayerHelper:everyPlayerSpeakToAllAfterSecond (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
     v.action:speakToAllAfterSecond(second, ...)
+  end
+end
+
+function MyPlayerHelper:everyPlayerNotify (info)
+  for i, v in ipairs(self:getAllPlayers()) do
+    PlayerHelper:notifyGameInfo2Self(v.objid, info)
   end
 end

@@ -192,15 +192,13 @@ function MyTimeHelper:callIntervalUntilSuccess ()
   end
 end
 
+-- 定时重复执行直到f返回true
+function MyTimeHelper:repeatUtilSuccess (objid, t, f, second, p)
+  self:callIntervalUntilSuccess()({ objid = objid, t = t, f = f, second = second, p = p })
+end
+
 function MyTimeHelper:initActor (myActor)
-  local param = {
-    objid = myActor.objid,
-    t = 'initActor',
-    f = function (myActor)
-      return myActor:init()
-    end,
-    second = 10,
-    p = myActor
-  }
-  self:callIntervalUntilSuccess()(param)
+  self:repeatUtilSuccess(myActor.objid, 'initActor', function (myActor)
+    return myActor:init()
+  end, 10, myActor)
 end
