@@ -1,14 +1,19 @@
  -- 我的剧情工具类
 MyStoryHelper = {
   mainIndex = 1,
-  mainProgress = 1
+  mainProgress = 1,
+  progressNames = {}
 }
 
 -- 剧情前进
-function MyStoryHelper:forward (isBranch)
+function MyStoryHelper:forward (progressName, isBranch)
+  if (self:isProgressNameExist(progressName)) then
+    return
+  end
   if (isBranch) then -- 支线，暂未设计
     
   else
+    table.insert(self.progressNames, progressName)
     self.mainProgress = self.mainProgress + 1
     if (self.mainProgress > #myStories[self.mainIndex].tips) then
       self.mainIndex = self.mainIndex + 1
@@ -19,6 +24,15 @@ function MyStoryHelper:forward (isBranch)
     logPaper = LogPaper:new()
   end
   logPaper.isChange = true
+end
+
+function MyStoryHelper:isProgressNameExist (progressName)
+  for i, v in ipairs(self.progressNames) do
+    if (v == progressName) then
+      return true
+    end
+  end
+  return false
 end
 
 -- 获得主线剧情序号
@@ -53,13 +67,15 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
   if (itemid == MyConstant.COIN_ID) then -- 获得铜板
     local mainIndex = self:getMainStoryIndex()
     if (mainIndex == 1) then -- 剧情一
-      if (itemnum == 3 or itemnum == 7) then
-        self:forward()
+      if (itemnum == 3) then
+        self:forward('文羽通知学院招生')
+      elseif (itemnum == 7) then
+        self:forward('村长告知先生位置')
       end
     end
   elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
     PlayerHelper:setItemDisableThrow(objid, itemid)
-    self:forward()
+    self:forward('得到风颖城通行令牌')
     self:finishNoticeEvent(objid)
   end
 end
@@ -76,18 +92,19 @@ function MyStoryHelper:noticeEvent (areaid)
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu.action:speakToAll(content)
+  self:forward('文羽找我有事')
 end
 
 -- 结束通知事件
 function MyStoryHelper:finishNoticeEvent (objid)
   yexiaolong.action:speakToAll('你顺利地通过了考验，不错。嗯……')
-  yexiaolong.action:speakInHeartToAllAfterSecond(1, '我的任务是至少招一名学员，应该可以了。')
+  yexiaolong.action:speakInHeartToAllAfterSecond(2, '我的任务是至少招一名学员，应该可以了。')
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
   if (hour < 9) then
-    yexiaolong.action:speakToAllAfterSecond(2, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
+    yexiaolong.action:speakToAllAfterSecond(4, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
   else
-    yexiaolong.action:speakToAllAfterSecond(2, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
+    yexiaolong.action:speakToAllAfterSecond(4, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
 end
 
