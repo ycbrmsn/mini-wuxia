@@ -235,5 +235,31 @@ function MyStoryHelper:teacherLeaveForAWhile (myPlayer)
 end
 
 function MyStoryHelper:meetBandits (hostPlayer)
-  LogHelper:info('此树是我栽')
+  qiangdaoXiaotoumu:enableMove(false)
+  qiangdaoLouluo:enableMove(false)
+  qiangdaoXiaotoumu:setPositions(myStories[2].xiaotoumuPosition)
+  qiangdaoLouluo:setPositions(myStories[2].louluoPositions)
+
+  MyTimeHelper:callFnAfterSecond(function (p)
+    MyPlayerHelper:everyPlayerEnableMove(false)
+  end, 2)
+
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(2, '!!!')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(4, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
+  qiangdaoLouluo.action:speakToAllAfterSecond(6, '买路财，老大。')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(8, '你个笨蛋，山野村民，身上能有什么值钱的东西。')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(11, '不过，这是去往风颖城的道路。如果没有通行令，可是进不了城的。')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(14, '如果我们有了通行令，找机会抢几个城里的大户……')
+  qiangdaoLouluo.action:speakToAllAfterSecond(16, '高啊，老大。')
+  qiangdaoLouluo.action:speakToAllAfterSecond(18, '小子，留下令牌来。')
+  hostPlayer.action:speakInHeartToAllAfterSecond(20, '看样子只能拼了。')
+  hostPlayer.action:speakToAllAfterSecond(22, '想要你们就来拿吧！')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(24, '看来是遇到不要命的了。大伙们一起上。')
+
+  MyTimeHelper:callFnAfterSecond(function (p)
+    qiangdaoXiaotoumu:enableMove(true)
+    qiangdaoLouluo:enableMove(true)
+    MyPlayerHelper:everyPlayerEnableMove(true)
+    self:forward('消灭强盗')
+  end, 24)
 end

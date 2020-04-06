@@ -20,6 +20,7 @@ end
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
+  -- qiangdaoXiaotoumu:setPositions(myStories[2].xiaotoumuPosition)
   -- LogHelper:call(function (p)
   --   PlayerHelper:rotateCamera(p.objid, 90, 90)
   --   LogHelper:info('ok')

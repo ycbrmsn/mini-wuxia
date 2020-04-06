@@ -51,7 +51,21 @@ function QiangdaoLouluo:setPositions (positions)
 end
 
 function QiangdaoLouluo:enableMove (enable)
-  for i, v in ipairs(self.monsters) do
-    ActorHelper:setEnableMoveState(v, enable)
+  local speed
+  if (enable) then
+    speed = -1
+  else
+    speed = 0
   end
+  for i, v in ipairs(self.monsters) do
+    -- ActorHelper:setEnableMoveState(v, enable)
+    CreatureHelper:setWalkSpeed(v, speed)
+  end
+end
+
+function QiangdaoLouluo:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '强盗喽罗'
+  end
+  return self.actorname
 end

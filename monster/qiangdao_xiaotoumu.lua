@@ -51,7 +51,21 @@ function QiangdaoXiaotoumu:setPositions (positions)
 end
 
 function QiangdaoXiaotoumu:enableMove (enable)
-  for i, v in ipairs(self.monsters) do
-    ActorHelper:setEnableMoveState(v, enable)
+  local speed
+  if (enable) then
+    speed = -1
+  else
+    speed = 0
   end
+  for i, v in ipairs(self.monsters) do
+    -- ActorHelper:setEnableMoveState(v, enable)
+    CreatureHelper:setWalkSpeed(v, speed)
+  end
+end
+
+function QiangdaoXiaotoumu:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '强盗小头目'
+  end
+  return self.actorname
 end
