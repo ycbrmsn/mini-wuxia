@@ -34,5 +34,5 @@ function MonsterHelper:initMonsters ()
   for i, v in ipairs(monsters) do
     MyTimeHelper:initActor(v)
   end
-  LogHelper:info('初始化怪物结束')
+  LogHelper:debug('初始化怪物结束')
 end

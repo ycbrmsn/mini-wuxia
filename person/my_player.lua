@@ -33,5 +33,9 @@ function MyPlayer:getPosition ()
 end
 
 function MyPlayer:setPosition (x, y, z)
-  return ActorHelper:setPosition(self.objid, x, y, z)
+  if (type(x) == 'table') then
+    return ActorHelper:setPosition(self.objid, x.x, x.y, x.z)
+  else
+    return ActorHelper:setPosition(self.objid, x, y, z)
+  end
 end

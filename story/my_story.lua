@@ -1,72 +1,41 @@
--- 剧情
-myStories = {
-  {
-    title = '序章',
-    name = '学院招生通知',
-    desc = '文羽前来通知我说风颖城的武术学院开始招生了',
-    tips = {
-      '今天又是晴朗的一天。这么好的天气，出门去逛逛吧。',
-      '好像听到文羽在叫我。我得去问问他到底发生了什么。',
-      '文羽告诉我风颖城的武术学院又要开始招生了，让我去问问村长。记得村长家在村中央，门对面就是喷泉。',
-      '村长说学院的先生在客栈，不知道我能不能入先生的法眼呢。客栈我知道，就在喷泉旁边，有竹栅栏围着的。',
-      '我得到了先生的认可。等时间到了，我就要向着学院出发了。我可以四处逛逛，或者回家睡一觉。'
-    },
-    posBeg = { x = 31, y = 8, z = 1 },
-    posEnd = { x = 31, y = 9, z = 1 },
-    createPos = { x = 28, y = 7, z = -28 },
-    movePos = { x = 31, y = 8, z = 1 }
-  },
-  {
-    title = '前往学院',
-    name = '前往学院',
-    desc = '先生带着我向学院出发了',
-    tips = {
-      '终于到了出发的时间了。我好激动。',
-      '先生带着我向学院出发了。只是，没想到是要用跑的。',
-      '时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。'
-      -- '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
-      -- '终于到风颖城了。我得去学院报到了。'
-    },
-    yexiaolongInitPosition = {
-      { x = 0, y = 7, z = 23 },
-      { x = 0, y = 7, z = 20 }
-    },
-    playerInitPosition = { x = 0, y = 7, z = 16 },
-    movePositions1 = {
-      { x = 0, y = 7, z = 70 },
-      { x = 0, y = 7, z = 130 },
-      { x = 0, y = 7, z = 190 },
-      { x = 0, y = 7, z = 250 },
-      { x = 0, y = 7, z = 280 }
-    },
-    movePositions2 = {
-      { x = 0, y = 7, z = 65 },
-      { x = 0, y = 7, z = 125 },
-      { x = 0, y = 7, z = 185 },
-      { x = 0, y = 7, z = 245 },
-      { x = 0, y = 7, z = 275 }
-    },
-    leaveForAWhilePositions = {
-      { x = 10, y = 7, z = 280 },
-      { x = 24, y = 7, z = 230 }
-    },
-    eventPositions = {
-      { x = 0, y = 7, z = 320 }
-    },
-    xiaotoumuPosition = {
-      { x = 0, y = 7, z = 330 }
-    },
-    louluoPositions = {
-      { x = -2, y = 7, z = 332 },
-      { x = 2, y = 7, z = 332 },
-      { x = 4, y = 7, z = 330 },
-      { x = -4, y = 7, z = 330 },
-      { x = 6, y = 7, z = 328 },
-      { x = -6, y = 7, z = 328 },
-      { x = 8, y = 7, z = 326 },
-      { x = -8, y = 7, z = 326 },
-      { x = 10, y = 7, z = 324 },
-      { x = -10, y = 7, z = 324 }
-    }
+-- 剧情类
+MyStory = {
+  data = {
+    title = nil,
+    name = nil,
+    desc = nil,
+    tips = nil
   }
-} -- 存放所有剧情
+}
+
+function MyStory:new ()
+  local o = {}
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function MyStory:setData (data)
+  if (not(data)) then
+    LogHelper:debug('剧情数据为空')
+  elseif (not(data.title)) then
+    LogHelper:debug('剧情标题为空')
+  elseif (not(data.name)) then
+    LogHelper:debug(data.title, '剧情名称为空')
+  elseif (not(data.desc)) then
+    LogHelper:debug(data.title, '剧情描述为空')
+  elseif (not(data.tips)) then
+    LogHelper:debug(data.title, '剧情提示为空')
+  end
+  self.data = data
+end
+
+function MyStory:getData ()
+  local data = {
+    title = self.data.title,
+    name = self.data.name,
+    desc = self.data.desc,
+    tips = self.data.tips
+  }
+  return data
+end

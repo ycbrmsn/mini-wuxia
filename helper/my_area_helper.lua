@@ -41,44 +41,13 @@ function MyAreaHelper:playerEnterWolfMountain (objid)
 end
 
 function MyAreaHelper:playerEnterArea (objid, areaid)
+  MyStoryHelper:playerEnterArea(objid, areaid)
   local myPlayer = MyPlayerHelper:getPlayer(objid)
-  if (areaid == myPlayer.toAreaId) then -- 玩家前往地点
+  if (areaid == myPlayer.toAreaId) then -- 玩家自动前往地点
     AreaHelper:destroyArea(areaid)
     myPlayer.action:runAction()
   elseif (areaid == self.wolfAreas[3]) then -- 进入恶狼谷
     self:playerEnterWolfMountain(objid)
-  elseif (areaid == myStories[1].areaid) then -- 文羽通知事件
-    MyStoryHelper:noticeEvent(areaid)
-  elseif (areaid == self.playerInHomeAreaId) then -- 主角进入家中
-    local mainIndex = MyStoryHelper:getMainStoryIndex()
-    local mainProgress = MyStoryHelper:getMainStoryProgress()
-    if (mainIndex == 1 and mainProgress == #myStories[1].tips and not(myStories[1].isFasterTime)) then -- 主角回家休息
-      -- 时间快速流逝
-      myStories[1].isFasterTime = true
-      MyTimeHelper:repeatUtilSuccess(666, 'fasterTime', function ()
-        local storyRemainDays = MyStoryHelper:getMainStoryRemainDays()
-        local hour = MyTimeHelper:getHour()
-        if (storyRemainDays > 0) then
-          -- if (hour < 23) then
-          --   hour = hour + 1
-          -- else
-          --   hour = 0
-          -- end
-          hour = 0
-          MyTimeHelper:setHour(hour)
-          return false
-        else
-          if (hour < 8) then
-            hour = hour + 1
-            MyTimeHelper:setHour(hour)
-            return false
-          else
-            MyTimeHelper:setHour(9)
-            return true
-          end
-        end
-      end, 1)
-    end
   end
 end
 

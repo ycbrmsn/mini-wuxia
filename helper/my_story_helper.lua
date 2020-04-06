@@ -3,7 +3,8 @@ MyStoryHelper = {
   mainIndex = 1,
   mainProgress = 1,
   progressNames = {},
-  storyRemainDays = 0 -- 当前剧情剩余天数
+  storyRemainDays = 0, -- 当前剧情剩余天数
+  stories = {}
 }
 
 -- 剧情前进
@@ -16,7 +17,7 @@ function MyStoryHelper:forward (progressName, isBranch)
   else
     table.insert(self.progressNames, progressName)
     self.mainProgress = self.mainProgress + 1
-    if (self.mainProgress > #myStories[self.mainIndex].tips) then
+    if (self.mainProgress > #self.stories[self.mainIndex].tips) then
       self.mainIndex = self.mainIndex + 1
       self.mainProgress = 1
     end
@@ -51,7 +52,7 @@ end
 
 -- 获得主线剧情信息
 function MyStoryHelper:getMainStoryInfo ()
-  return myStories[self:getMainStoryIndex()]
+  return self.stories[self:getMainStoryIndex()]
 end
 
 -- 获得剧情标题和内容
@@ -66,23 +67,25 @@ function MyStoryHelper:reduceRemainDay ()
   end
 end
 
+function MyStoryHelper:getStory (index)
+  index = index or self.mainIndex
+  return self.stories[index]
+end
+
 function MyStoryHelper:run (hour)
   if (hour == 0) then
     self:reduceRemainDay()
   end
   if (hour == 9) then
-    if (self.storyRemainDays == 0 and self.mainIndex == 1 and self.mainProgress == #myStories[1].tips) then
+    if (self.storyRemainDays == 0 and self.mainIndex == 1 and self.mainProgress == #self.stories[1].tips) then
       self:forward('出发，前往学院')
-      self:goToCollege()
+      Story2:goToCollege()
     end
   end
 end
 
 function MyStoryHelper:init ()
-  if (self:getMainStoryIndex() == 1) then -- 剧情1
-    local areaid = AreaHelper:createAreaRectByRange(myStories[1].posBeg, myStories[1].posEnd)
-    myStories[1].areaid = areaid
-  end
+  self.stories = { Story1:init(), Story2:init() }
 end
 
 -- 推进剧情相关的事件
@@ -99,167 +102,14 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
   elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
     PlayerHelper:setItemDisableThrow(objid, itemid)
     self:forward('得到风颖城通行令牌')
-    self:finishNoticeEvent(objid)
+    Story1:finishNoticeEvent(objid)
   end
 end
 
--- 文羽通知事件
-function MyStoryHelper:noticeEvent (areaid)
-  AreaHelper:destroyArea(areaid)
-  wenyu:setPosition(myStories[1].createPos.x, myStories[1].createPos.y, myStories[1].createPos.z)
-  wenyu:wantMove('notice', { myStories[1].movePos })
-  local content = StringHelper:join(MyPlayerHelper:getAllPlayerNames(), '、')
-  local subject = '你'
-  if (#MyPlayerHelper:getAllPlayers() > 1) then 
-    subject = '你们'
+function MyStoryHelper:playerEnterArea (objid, areaid)
+  if (areaid == self:getStory(1).areaid) then -- 文羽通知事件
+    Story1:noticeEvent(areaid)
+  elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
+    Story1:fasterTime()
   end
-  content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
-  wenyu.action:speakToAll(content)
-  self:forward('文羽找我有事')
-end
-
--- 结束通知事件
-function MyStoryHelper:finishNoticeEvent (objid)
-  -- 设置对话人物不可移动
-  local myPlayer = MyPlayerHelper:getPlayer(objid)
-  myPlayer:enableMove(false)
-  yexiaolong:enableMove(false)
-  yexiaolong:wantStayForAWhile(100)
-  -- 开始对话
-  yexiaolong.action:speakToAll('你顺利地通过了考验，不错。嗯……')
-  yexiaolong.action:speakInHeartToAllAfterSecond(3, '我的任务是至少招一名学员，应该可以了。')
-  local hour = WorldHelper:getHours()
-  local hourName = StringHelper:getHourName(hour)
-  if (hour < 9) then
-    self.storyRemainDays = 0
-    yexiaolong.action:speakToAllAfterSecond(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
-  else
-    self.storyRemainDays = 1
-    yexiaolong.action:speakToAllAfterSecond(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
-  end
-  myPlayer.action:speakToAllAfterSecond (8, '好的。')
-  yexiaolong.action:speakToAllAfterSecond(10, '嗯，那去准备吧。')
-  MyTimeHelper:callFnAfterSecond (function (p)
-    p.myPlayer:enableMove(true)
-    yexiaolong:wantStayForAWhile(1)
-    yexiaolong:enableMove(true)
-  end, 10, { myPlayer = myPlayer })
-end
-
--- 前往学院
-function MyStoryHelper:goToCollege ()
-  LogHelper:info('everyPlayerNotify')
-  MyPlayerHelper:everyPlayerNotify('到了约定的时间了')
-  MyPlayerHelper:everyPlayerEnableMove(false)
-  -- 初始化所有人位置
-  yexiaolong:wantMove('goToCollege', { myStories[2].yexiaolongInitPosition[2] })
-  yexiaolong:setPosition(myStories[2].yexiaolongInitPosition[1].x, myStories[2].yexiaolongInitPosition[1].y, myStories[2].yexiaolongInitPosition[1].z)
-  for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
-    v:setPosition(myStories[2].playerInitPosition.x, myStories[2].playerInitPosition.y, myStories[2].playerInitPosition.z)
-    PlayerHelper:rotateCamera(v.objid, ActorHelper.FACE_YAW.SOUTH, 0)
-  end
-  -- 说话
-  yexiaolong.action:speakToAllAfterSecond(1, '不错，所有人都到齐了。那我们出发吧。')
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(4, '出发咯!')
-  local hostPlayer = MyPlayerHelper:getHostPlayer()
-  hostPlayer.action:speakToAllAfterSecond(6, '不过，先生，我们的马车在哪里？')
-  yexiaolong.action:speakToAllAfterSecond(9, '嗯，这个嘛……')
-  yexiaolong.action:speakInHeartToAllAfterSecond(11, '没想到村里的东西这么好吃。一不小心把盘缠给花光了……')
-  yexiaolong.action:speakToAllAfterSecond(14, '咳咳。还没有进入学院，就想着这些让人懒惰工具。这怎么能行？')
-  yexiaolong.action:speakToAllAfterSecond(17, '去学院学习可不是享福的。基本功不能落下。现在，让我们跑起来。出发！')
-
-  MyTimeHelper:callFnAfterSecond (function (p)
-    yexiaolong:wantMove('goToCollege', myStories[2].movePositions1)
-  end, 17)
-
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(19, '!!!')
-
-  MyTimeHelper:callFnAfterSecond(function (p)
-    MyPlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
-    for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
-      if (i == 1) then
-        v.action:runTo(myStories[2].movePositions2, function (v)
-          MyStoryHelper:teacherLeaveForAWhile(v)
-        end, v)
-      else
-        v.action:runTo(myStories[2].movePositions2)
-      end
-    end
-    ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-    MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-  end, 20)
-  
-  if (#MyPlayerHelper:getAllPlayers() > 1) then
-    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(21, '先生，等等我们。')
-  else
-    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(21, '先生，等等我。')
-  end
-
-  MyTimeHelper:callFnAfterSecond(function (p)
-    self:forward('跑步去学院')
-  end, 21)
-end
-
-function MyStoryHelper:teacherLeaveForAWhile (myPlayer)
-  MyTimeHelper:callFnAfterSecond(function (p)
-    MyPlayerHelper:everyPlayerEnableMove(false)
-  end, 1)
-  myPlayer.action:speakToAll('先生，怎么停下来了？')
-  yexiaolong.action:speakToAllAfterSecond(2, '……')
-  myPlayer.action:speakToAllAfterSecond(4, '先生？')
-  yexiaolong.action:speakToAllAfterSecond(6, '……')
-  MyTimeHelper:callFnAfterSecond(function (p)
-    yexiaolong:setFaceYaw(ActorHelper.FACE_YAW.SOUTH)
-    yexiaolong.action:speakToAll('人有三急，我突然想去出恭。你们先跑着，我去去就来。')
-  end, 8)
-  MyTimeHelper:callFnAfterSecond(function (p)
-    myPlayer.action:speakToAll('好的。')
-    yexiaolong:wantMove('leaveForAWhile', myStories[2].leaveForAWhilePositions)
-  end, 9)
-  
-  MyTimeHelper:callFnAfterSecond(function (p)
-    MyPlayerHelper:everyPlayerEnableMove(true)
-
-    for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
-      if (i == 1) then
-        v.action:runTo(myStories[2].eventPositions, function (v)
-          MyStoryHelper:meetBandits(v)
-        end, v)
-      else
-        v.action:runTo(myStories[2].eventPositions)
-      end
-    end
-
-    MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond(2, '这里树真多啊！')
-  end, 11)
-end
-
-function MyStoryHelper:meetBandits (hostPlayer)
-  qiangdaoXiaotoumu:enableMove(false)
-  qiangdaoLouluo:enableMove(false)
-  qiangdaoXiaotoumu:setPositions(myStories[2].xiaotoumuPosition)
-  qiangdaoLouluo:setPositions(myStories[2].louluoPositions)
-
-  MyTimeHelper:callFnAfterSecond(function (p)
-    MyPlayerHelper:everyPlayerEnableMove(false)
-  end, 2)
-
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(2, '!!!')
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(4, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
-  qiangdaoLouluo.action:speakToAllAfterSecond(6, '买路财，老大。')
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(8, '你个笨蛋，山野村民，身上能有什么值钱的东西。')
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(11, '不过，这是去往风颖城的道路。如果没有通行令，可是进不了城的。')
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(14, '如果我们有了通行令，找机会抢几个城里的大户……')
-  qiangdaoLouluo.action:speakToAllAfterSecond(16, '高啊，老大。')
-  qiangdaoLouluo.action:speakToAllAfterSecond(18, '小子，留下令牌来。')
-  hostPlayer.action:speakInHeartToAllAfterSecond(20, '看样子只能拼了。')
-  hostPlayer.action:speakToAllAfterSecond(22, '想要你们就来拿吧！')
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(24, '看来是遇到不要命的了。大伙们一起上。')
-
-  MyTimeHelper:callFnAfterSecond(function (p)
-    qiangdaoXiaotoumu:enableMove(true)
-    qiangdaoLouluo:enableMove(true)
-    MyPlayerHelper:everyPlayerEnableMove(true)
-    self:forward('消灭强盗')
-  end, 24)
 end

@@ -70,7 +70,7 @@ function initMyActors ()
     MyTimeHelper:initActor(v)
   end
   -- MyTimeHelper:initActor(miaolan)
-  LogHelper:info('创建人物完成')
+  LogHelper:debug('创建人物完成')
   MyStoryHelper:init()
   -- for i = 1, 2 do
   --   MyTimeHelper:callFnInterval(wenyu.objid, 'speak', function (p)
@@ -108,7 +108,7 @@ local atSecond = function (eventArgs)
     end
 
     -- if (p.second == 5) then
-    --   MyStoryHelper:goToCollege()
+    --   Story2:goToCollege()
     -- end
   end, { second = second })
   

@@ -106,7 +106,11 @@ end
 
 -- 设置生物位置
 function MyActor:setPosition (x, y, z)
-  return ActorHelper:setPosition(self.objid, x, y, z)
+  if (type(x) == 'table') then
+    return ActorHelper:setPosition(self.objid, x.x, x.y, x.z)
+  else
+    return ActorHelper:setPosition(self.objid, x, y, z)
+  end
 end
 
 function MyActor:getFaceYaw ()
@@ -265,7 +269,7 @@ function MyActor:setWalkSpeed (speed)
       end
     end
   else -- 取不到速度，那么设置速度也不会成功，就不做了
-    LogHelper:info('设置速度失败')
+    LogHelper:debug('设置速度失败')
     return false
   end
 end
