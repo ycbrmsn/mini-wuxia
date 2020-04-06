@@ -109,6 +109,14 @@ function MyActor:setPosition (x, y, z)
   return ActorHelper:setPosition(self.objid, x, y, z)
 end
 
+function MyActor:getFaceYaw ()
+  return ActorHelper:getFaceYaw(self.objid)
+end
+
+function MyActor:setFaceYaw (yaw)
+  return ActorHelper:setFaceYaw(self.objid, yaw)
+end
+
 -- 生物想向指定位置移动
 function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   MyAreaHelper:removeToArea(self)

@@ -63,3 +63,11 @@ function PlayerHelper:setActionAttrState (objid, actionattr, switch)
   end, { objid = objid, actionattr = actionattr, switch = switch }, onceFailMessage, finillyFailMessage)
 end
 
+-- 旋转玩家镜头
+function PlayerHelper:rotateCamera (objid, yaw, pitch)
+  local onceFailMessage = '旋转玩家镜头失败一次'
+  local finillyFailMessage = StringHelper:concat('旋转玩家镜头失败，参数：objid=', objid, ', yaw=', yaw, ', pitch=', pitch)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:rotateCamera(p.objid, p.yaw, p.pitch)
+  end, { objid = objid, yaw = yaw, pitch = pitch }, onceFailMessage, finillyFailMessage)
+end

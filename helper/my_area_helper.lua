@@ -59,11 +59,12 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
         local storyRemainDays = MyStoryHelper:getMainStoryRemainDays()
         local hour = MyTimeHelper:getHour()
         if (storyRemainDays > 0) then
-          if (hour < 23) then
-            hour = hour + 1
-          else
-            hour = 0
-          end
+          -- if (hour < 23) then
+          --   hour = hour + 1
+          -- else
+          --   hour = 0
+          -- end
+          hour = 0
           MyTimeHelper:setHour(hour)
           return false
         else

@@ -105,6 +105,10 @@ local atSecond = function (eventArgs)
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
+
+    if (p.second == 5) then
+      MyStoryHelper:goToCollege()
+    end
   end, { second = second })
   
 end

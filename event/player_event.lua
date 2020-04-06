@@ -20,20 +20,24 @@ end
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
-  local myPlayer = MyPlayerHelper:getPlayer(objid)
-  yexiaolong:setPosition(eventArgs.x, eventArgs.y, eventArgs.z)
-  yexiaolong:wantMove('goToCollege', myStories[2].movePositions1)
-  MyTimeHelper:callFnAfterSecond (function (p)
-    MyPlayerHelper:everyPlayerRunTo(myStories[2].movePositions2, function (v)
-      MyStoryHelper:teacherLeaveForAWhile(v)
-  end, p.myPlayer)
-  end, 3, { myPlayer = myPlayer })
+  -- LogHelper:call(function (p)
+  --   PlayerHelper:rotateCamera(p.objid, 90, 90)
+  --   LogHelper:info('ok')
+  -- end, {objid = objid})
+  -- local myPlayer = MyPlayerHelper:getPlayer(objid)
+  -- yexiaolong:setPosition(eventArgs.x, eventArgs.y, eventArgs.z)
+  -- yexiaolong:wantMove('goToCollege', myStories[2].movePositions1)
+  -- MyTimeHelper:callFnAfterSecond (function (p)
+  --   MyPlayerHelper:everyPlayerRunTo(myStories[2].movePositions2, function (v)
+  --     MyStoryHelper:teacherLeaveForAWhile(v)
+  -- end, p.myPlayer)
+  -- end, 3, { myPlayer = myPlayer })
   
   -- local eventPosition2 = { x = 0, y = 8, z = 275 }
   -- MyPlayerHelper:everyPlayerEnableMove(true)
   -- MyPlayerHelper:everyPlayerRunTo(eventPosition2.x, eventPosition2.y, eventPosition2.z)
-  ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-  MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+  -- ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+  -- MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
   -- local eventPosition1 = { x = 0, y = 8, z = 280 }
   -- yexiaolong:wantMove('goToCollege', { eventPosition1 })
 

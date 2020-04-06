@@ -25,6 +25,12 @@ ActorHelper = {
   BUFF = {
     FASTER_RUN = 4, -- 疾跑
     NIGHT_LOOK = 16 -- 夜视
+  },
+  FACE_YAW = {
+    EAST = -90,
+    WEST = 90,
+    SOUTH = 0,
+    NORTH = 180
   }
 }
 
@@ -133,4 +139,22 @@ function ActorHelper:addBuff (objid, buffid, bufflv, customticks)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Actor:addBuff(p.objid, p.buffid, p.bufflv, p.customticks)
   end, { objid = objid, buffid = buffid, bufflv = bufflv, customticks = customticks }, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置actor原地旋转偏移角度
+function ActorHelper:setFaceYaw (objid, yaw)
+  local onceFailMessage = '设置actor原地旋转偏移角度失败一次'
+  local finillyFailMessage = StringHelper:concat('设置actor原地旋转偏移角度失败，参数：objid=', objid, ', yaw=', yaw)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:setFaceYaw(p.objid, p.yaw)
+  end, { objid = objid, yaw = yaw }, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取actor原地旋转偏移角度
+function ActorHelper:getFaceYaw (objid)
+  local onceFailMessage = '获取actor原地旋转偏移角度失败一次'
+  local finillyFailMessage = StringHelper:concat('获取actor原地旋转偏移角度失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Actor:getFaceYaw(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
 end

@@ -71,6 +71,12 @@ function MyPlayerHelper:everyPlayerSpeakToAllAfterSecond (second, ...)
   end
 end
 
+function MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond (second, ...)
+  for i, v in ipairs(self:getAllPlayers()) do
+    v.action:speakInHeartAfterSecond(v.objid, second, ...)
+  end
+end
+
 function MyPlayerHelper:everyPlayerNotify (info)
   for i, v in ipairs(self:getAllPlayers()) do
     PlayerHelper:notifyGameInfo2Self(v.objid, info)
