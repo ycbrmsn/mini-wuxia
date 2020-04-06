@@ -34,7 +34,7 @@ function CreatureHelper:setWalkSpeed (objid, speed)
   end, { objid = objid, speed = speed }, onceFailMessage, finillyFailMessage)
 end
 
--- 获取生物的actorid，当调用此接口获取的生物距离玩家较远时，接口会调用失败
+-- 获取生物的actorid
 function CreatureHelper:getActorID (objid)
   local onceFailMessage = '获取生物的actorid失败一次'
   local finillyFailMessage = StringHelper:concat('获取生物的actorid失败，参数：objid=', objid)

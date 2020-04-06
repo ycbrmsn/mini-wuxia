@@ -102,6 +102,7 @@ local atSecond = function (eventArgs)
       initDoorAreas()
       MyAreaHelper:initAreas()
       initMyActors()
+      MonsterHelper:init()
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
