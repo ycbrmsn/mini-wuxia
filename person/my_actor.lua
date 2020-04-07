@@ -121,6 +121,26 @@ function MyActor:setFaceYaw (yaw)
   return ActorHelper:setFaceYaw(self.objid, yaw)
 end
 
+function MyActor:setFacePitch (pitch)
+  return ActorHelper:setFacePitch(self.objid, pitch)
+end
+
+-- 看向某人/某处
+function MyActor:lookAt (objid)
+  local x, y, z
+  if (type(objid) == 'table') then
+    x, y, z = objid.x, objid.y, objid.z
+  else
+    x, y, z = ActorHelper:getEyePosition(objid)
+  end
+  local x0, y0, z0 = ActorHelper:getEyePosition(self.objid)
+  local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
+  local faceYaw = MathHelper:getActorFaceYaw(myVector3)
+  local facePitch = MathHelper:getActorFacePitch(myVector3)
+  self:setFaceYaw(faceYaw)
+  self:setFacePitch(facePitch)
+end
+
 function MyActor:goToBed ()
   self:wantGoToSleep(self.bedData)
 end

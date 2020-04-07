@@ -20,8 +20,9 @@ end
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
+  -- wenyu:wantDoNothing()
+  -- wenyu:lookAt(MyPlayerHelper:getHostPlayer().objid)
   -- local story2 = MyStoryHelper:getStory(2)
-  -- qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPosition)
   -- LogHelper:call(function (p)
   --   wenyu:exchangeBed()
   --   yexiaolong:goToBed()
@@ -35,8 +36,6 @@ local clickBlock = function (eventArgs)
   -- end, p.myPlayer)
   -- end, 3, { myPlayer = myPlayer })
   
-  -- local eventPosition2 = { x = 0, y = 8, z = 275 }
-  -- MyPlayerHelper:everyPlayerEnableMove(true)
   -- MyPlayerHelper:everyPlayerRunTo(eventPosition2.x, eventPosition2.y, eventPosition2.z)
   -- ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
   -- MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)

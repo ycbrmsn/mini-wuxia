@@ -67,6 +67,7 @@ function MyActorHelper:enterArea (objid, areaid)
           myActor.think = nextWant.think
           if (nextWant.style == 'move' or nextWant.style == 'patrol') then
             MyActorActionHelper:createToPos(nextWant)
+            myActor.action:execute()
             -- LogHelper:debug('开始巡逻')
           elseif (nextWant.style == 'freeInArea') then
             nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)

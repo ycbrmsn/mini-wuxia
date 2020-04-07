@@ -158,3 +158,21 @@ function ActorHelper:getFaceYaw (objid)
     return Actor:getFaceYaw(p.objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取眼睛位置
+function ActorHelper:getEyePosition (objid)
+  local onceFailMessage = '获取眼睛位置失败一次'
+  local finillyFailMessage = StringHelper:concat('获取眼睛位置失败，参数：objid=', objid)
+  return CommonHelper:callThreeResultMethod(function (p)
+    return Actor:getEyePosition(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置actor视角仰望角度
+function ActorHelper:setFacePitch (objid, pitch)
+  local onceFailMessage = '设置actor视角仰望角度失败一次'
+  local finillyFailMessage = StringHelper:concat('设置actor视角仰望角度失败，参数：objid=', objid, ', pitch=', pitch)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:setFacePitch(p.objid, p.pitch)
+  end, { objid = objid, pitch = pitch }, onceFailMessage, finillyFailMessage)
+end
