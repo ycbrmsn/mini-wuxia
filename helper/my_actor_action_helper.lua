@@ -2,6 +2,7 @@
 MyActorActionHelper = {}
 
 --[[  移动行为数据，参数:
+      think想法,
       positions位置数组，即{{ x = x, y = y, z = z }, { x = x, y = y, z = z }},
       isNegDir是否是负向行动，默认是否,
       index位置序数，从1~#t，默认是1，负向则是负方向的第一个,
@@ -48,8 +49,8 @@ function MyActorActionHelper:getDoNothingData (think)
   return { style = 'doNothing', restTime = 0, currentRestTime = 0, think = think }
 end
 
-function MyActorActionHelper:getSleepData (think, lookPos)
-  return { style = 'sleep', restTime = 0, currentRestTime = 0, lookPos = lookPos, think = think }
+function MyActorActionHelper:getSleepData (think, faceYaw)
+  return { style = 'sleep', restTime = 0, currentRestTime = 0, faceYaw = faceYaw, think = think }
 end
 
 function MyActorActionHelper:getWaitData (think, restTime)

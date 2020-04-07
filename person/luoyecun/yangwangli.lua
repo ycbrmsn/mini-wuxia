@@ -5,8 +5,10 @@ function Yangwanli:new ()
   local o = {
     objid = 4315385574,
     initPosition = { x = -12, y = 8, z = -11 }, -- 屋内
-    bedTailPosition = { x = -7, y = 9, z = -11 }, -- 床尾位置
-    bedTailPointPosition = { x = -10, y = 9, z = -11 }, -- 床尾指向位置
+    bedData = {
+      { x = -7, y = 9, z = -11 }, -- 床尾位置
+      ActorHelper.FACE_YAW.WEST -- 床尾朝向西
+    },
     homeAreaPositions = {
       { x = -18, y = 9, z = -19 }, -- 屋门口边上
       { x = -7, y = 9, z = -11 } -- 床
@@ -49,11 +51,6 @@ end
 -- 回家
 function Yangwanli:goHome ()
   self:wantMove('goHome', { self.doorPosition }) -- 门外
-end
-
--- 睡觉
-function Yangwanli:goToBed ()
-  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
 end
 
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)

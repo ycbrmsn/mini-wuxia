@@ -6,8 +6,10 @@ function Jiangyu:new ()
   o.objid = 4313483879
   o.actorid = self.actorid
   o.initPosition = { x = 10, y = 8, z = -14 }
-  o.bedTailPosition = { x = 12, y = 9, z = -13 } -- 床尾位置
-  o.bedTailPointPosition = { x = 12, y = 9, z = -11 } -- 床尾指向位置
+  o.bedData = {
+    { x = 12, y = 9, z = -13 }, -- 床尾位置
+    ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+  }
   setmetatable(o, self)
   self.__index = self
   return o
@@ -59,10 +61,6 @@ end
 function Jiangyu:goHome ()
   self:wantMove('goHome', self.doorPositions)
   self:nextWantFreeInArea({ self.homeAreaPositions })
-end
-
-function Jiangyu:goToBed ()
-  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
 end
 
 function Jiangyu:collidePlayer (playerid, isPlayerInFront)

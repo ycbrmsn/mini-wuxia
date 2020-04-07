@@ -5,12 +5,16 @@ function Wenyu:new ()
   local o = {
     objid = 4315385572,
     initPosition = { x = 24, y = 8, z = -10 }, -- 屋内
-    bedTailPosition1 = { x = 20, y = 9, z = -9 }, -- 床尾位置1
-    bedTailPointPosition1 = { x = 24, y = 9, z = -9 }, -- 床尾指向位置1
-    bedTailPosition2 = { x = 20, y = 9, z = -12 }, -- 床尾位置2
-    bedTailPointPosition2 = { x = 24, y = 9, z = -12 }, -- 床尾指向位置2
-    lastBedHeadPosition = nil, -- 上一次睡的床尾位置
-    currentBedHeadPosition = nil, -- 当前睡的床尾位置
+    bedData1 = {
+      { x = 20, y = 9, z = -9 }, -- 床尾位置1
+      ActorHelper.FACE_YAW.EAST -- 床尾朝向东
+    },
+    bedData2 = {
+      { x = 20, y = 9, z = -12 }, -- 床尾位置2
+      ActorHelper.FACE_YAW.EAST -- 床尾朝向东
+    },
+    lastBedData = nil, -- 上一次睡的床尾位置
+    currentBedData = nil, -- 当前睡的床尾位置
     homeAreaPositions1 = {
       { x = 28, y = 8, z = -23 }, -- 壁炉旁
       { x = 25, y = 8, z = -13 } -- 转角处
@@ -34,7 +38,7 @@ end
 -- 在几点想做什么
 function Wenyu:wantAtHour (hour)
   if (hour == 7) then
-    self.lastBedHeadPosition = self.currentBedHeadPosition
+    self:exchangeBed()
     self:wantFreeTime()
   elseif (hour == 19) then
     self:goHome()
@@ -65,16 +69,20 @@ function Wenyu:goHome ()
   self:nextWantFreeInArea({ self.homeAreaPositions1, self.homeAreaPositions2 })
 end
 
+function Wenyu:exchangeBed ()
+  self.lastBedData = self.currentBedData
+end
+
 -- 睡觉
 function Wenyu:goToBed ()
-  if (self.lastBedHeadPosition and self.lastBedHeadPosition == self.bedTailPosition1) then
+  if (self.lastBedData and self.lastBedData == self.bedData1) then
     -- 睡二号床
-    self:wantGoToSleep(self.bedTailPosition2, self.bedTailPointPosition2)
-    self.currentBedHeadPosition = self.bedTailPosition2
+    self:wantGoToSleep(self.bedData2)
+    self.currentBedData = self.bedData2
   else
     -- 睡一号床
-    self:wantGoToSleep(self.bedTailPosition1, self.bedTailPointPosition1)
-    self.currentBedHeadPosition = self.bedTailPosition1
+    self:wantGoToSleep(self.bedData1)
+    self.currentBedData = self.bedData1
   end
 end
 

@@ -5,8 +5,10 @@ function Jiangfeng:new ()
   local o = {
     objid = 4313483881,
     initPosition = { x = 8, y = 8, z = -18 },
-    bedTailPosition = { x = 6, y = 9, z = -13 }, -- 床尾位置
-    bedTailPointPosition = { x = 6, y = 9, z = -11 }, -- 床尾指向位置
+    bedData = {
+      { x = 6, y = 9, z = -13 }, -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+    },
     patrolPositions = {
       { x = 10, y = 11, z = 12 }, -- 落叶松旁的城上
       { x = -10, y = 11, z = 12 } -- 庄稼地旁的城上
@@ -70,10 +72,6 @@ end
 function Jiangfeng:goHome ()
   self:wantMove('goHome', self.doorPositions)
   self:nextWantFreeInArea({ self.homeAreaPositions })
-end
-
-function Jiangfeng:goToBed ()
-  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
 end
 
 function Jiangfeng:collidePlayer (playerid, isPlayerInFront)

@@ -121,6 +121,10 @@ function MyActor:setFaceYaw (yaw)
   return ActorHelper:setFaceYaw(self.objid, yaw)
 end
 
+function MyActor:goToBed ()
+  self:wantGoToSleep(self.bedData)
+end
+
 -- 生物想向指定位置移动
 function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   MyAreaHelper:removeToArea(self)
@@ -200,10 +204,10 @@ function MyActor:wantDoNothing (think)
   self.wants = { MyActorActionHelper:getDoNothingData(think) }
 end
 
-function MyActor:wantGoToSleep (bedTailPosition, lookPos)
+function MyActor:wantGoToSleep (bedData)
   MyAreaHelper:removeToArea(self)
-  self:wantMove('sleep', { bedTailPosition })
-  self:nextWantSleep('sleep', lookPos)
+  self:wantMove('sleep', { bedData[1] })
+  self:nextWantSleep('sleep', bedData[2])
 end
 
 -- 生物接下来想巡逻
@@ -226,9 +230,9 @@ function MyActor:nextWantDoNothing (think)
   table.insert(self.wants, MyActorActionHelper:getDoNothingData(think))
 end
 
-function MyActor:nextWantSleep (think, lookPos)
+function MyActor:nextWantSleep (think, faceYaw)
   self:nextWantWait(think, 2)
-  table.insert(self.wants, MyActorActionHelper:getSleepData(think, lookPos))
+  table.insert(self.wants, MyActorActionHelper:getSleepData(think, faceYaw))
 end
 
 function MyActor:nextWantWait (think, second)

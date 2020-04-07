@@ -65,8 +65,9 @@ function MyActorAction:execute ()
   if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
     want.currentRestTime = want.currentRestTime - 1
     if (want.style == 'sleep') then
-      self.myActor:setWalkSpeed(0)
-      self:runTo(want.lookPos)
+      self.myActor:setFaceYaw(want.faceYaw)
+      -- self.myActor:setWalkSpeed(0)
+      -- self:runTo(want.lookPos)
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea') then -- 如果生物想移动/巡逻，则让生物移动/巡逻

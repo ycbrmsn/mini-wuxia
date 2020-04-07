@@ -5,7 +5,10 @@ function Wangdali:new ()
   local o = {
     objid = 4315385568,
     initPosition = { x = -30, y = 9, z = -45 }, -- 屋内
-    bedTailPosition = { x = -26, y = 10, z = -47 }, -- 床尾位置
+    bedData = {
+      { x = -26, y = 10, z = -47 }, -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+    },
     bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
     movePositions = {
       { x = -30, y = 9, z = -45 }, -- 屋内
@@ -71,7 +74,7 @@ end
 
 -- 铁匠这个模型没有此动作
 function Wangdali:goToBed ()
-  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
+  
 end
 
 function Wangdali:collidePlayer (playerid, isPlayerInFront)

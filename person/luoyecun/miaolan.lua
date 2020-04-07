@@ -5,8 +5,10 @@ function Miaolan:new ()
   local o = {
     objid = 4314184974,
     initPosition = { x = -34, y = 8, z = -13 }, -- 药店柜台后
-    bedTailPosition = { x = -30, y = 14, z = -15 }, -- 床尾位置
-    bedTailPointPosition = { x = -30, y = 14, z = -20 }, -- 床尾指向位置
+    bedData = {
+      { x = -30, y = 14, z = -15 }, -- 床尾位置
+      ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
+    },
     secondFloorPosition = { x = -29, y = 13, z = -14 }, -- 二楼床旁边
     secondFloorPositions1 = {
       { x = -26, y = 14, z = -15 }, -- 楼梯口
@@ -62,10 +64,6 @@ end
 -- 上二楼
 function Miaolan:goSecondFloor ()
   self:wantFreeInArea({ self.secondFloorPositions1, self.secondFloorPositions2 })
-end
-
-function Miaolan:goToBed ()
-  self:wantGoToSleep(self.bedTailPosition, self.bedTailPointPosition)
 end
 
 function Miaolan:collidePlayer (playerid, isPlayerInFront)
