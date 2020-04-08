@@ -20,6 +20,9 @@ end
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
+  LogHelper:call(function (p)
+    MyBlockHelper:check(p.eventArgs)
+  end, { eventArgs = eventArgs })
   -- wenyu:wantDoNothing()
   -- wenyu:lookAt(MyPlayerHelper:getHostPlayer().objid)
   -- local story2 = MyStoryHelper:getStory(2)
@@ -35,25 +38,15 @@ local clickBlock = function (eventArgs)
   --     MyStoryHelper:teacherLeaveForAWhile(v)
   -- end, p.myPlayer)
   -- end, 3, { myPlayer = myPlayer })
-  
-  -- MyPlayerHelper:everyPlayerRunTo(eventPosition2.x, eventPosition2.y, eventPosition2.z)
-  -- ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-  -- MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-  -- local eventPosition1 = { x = 0, y = 8, z = 280 }
-  -- yexiaolong:wantMove('goToCollege', { eventPosition1 })
+  -- LogHelper:debug(Block:getBlockID(eventArgs.x, eventArgs.y + 1, eventArgs.z))
+  -- Block:setBlockAllForNotify(eventArgs.x, eventArgs.y, eventArgs.z, 932)
+  -- Block:placeBlock(931, eventArgs.x, eventArgs.y + 1, eventArgs.z)
+  -- Block:placeBlock(932, eventArgs.x + 1, eventArgs.y + 1, eventArgs.z)
 
   -- local data = BlockHelper:getBlockData(eventArgs.x, eventArgs.y, eventArgs.z)
-  -- LogHelper:debug('men' .. data)
+  -- LogHelper:debug('data: ', data)
 
-  -- LogHelper:debug('销毁江枫')
   -- ActorHelper:clearActorWithId(jiangfeng.actorid)
-  -- local areaid = AreaHelper:getAreaByPos({ x = eventArgs.x, y = eventArgs.y, z = eventArgs.z })
-  -- local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
-  
-  -- wenyu.lastBedHeadPosition = wenyu.currentBedHeadPosition
-  -- yexiaolong:setPosition(eventArgs.x, eventArgs.y + 1, eventArgs.z)
-  -- yexiaolong:goToBed()
-
   -- ActorHelper:tryNavigationToPos (jiangfeng.objid, eventArgs.x, eventArgs.y, eventArgs.z, true)
 end
 

@@ -86,3 +86,30 @@ function BlockHelper:setBlockAll (x, y, z, blockid, data)
     return Block:setBlockAll(p.x, p.y, p.z, p.blockid, p.data)
   end, { x = x, y = y, z = z, blockid = blockid, data = data }, onceFailMessage, finillyFailMessage)
 end
+
+-- 设置blockalldata更新当前位置方块
+function BlockHelper:setBlockAllForNotify (x, y, z, blockid)
+  local onceFailMessage = '设置blockalldata更新当前位置方块失败一次'
+  local finillyFailMessage = StringHelper:concat('设置blockalldata更新当前位置方块失败，参数：x=', x, ', y=', y, ', z=', z, ', blockid=', blockid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Block:setBlockAllForNotify(p.x, p.y, p.z, p.blockid)
+  end, { x = x, y = y, z = z, blockid = blockid}, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取block对应id
+function BlockHelper:getBlockID (x, y, z)
+  local onceFailMessage = '获取block对应id失败一次'
+  local finillyFailMessage = StringHelper:concat('获取block对应id失败，参数：x=', x, ', y=', y, ', z=', z)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Block:getBlockID(p.x, p.y, p.z)
+  end, { x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+end
+
+-- 替换方块
+function BlockHelper:replaceBlock (blockid, x, y, z, face)
+  local onceFailMessage = '替换方块失败一次'
+  local finillyFailMessage = StringHelper:concat('替换方块失败，参数：blockid=', blockid, ', x=', x, ', y=', y, ', z=', z, ', face=', face)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Block:replaceBlock(p.blockid, p.x, p.y, p.z, p.face)
+  end, { blockid = blockid, x = x, y = y, z = z, face = face}, onceFailMessage, finillyFailMessage)
+end
