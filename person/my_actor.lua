@@ -142,7 +142,22 @@ function MyActor:lookAt (objid)
 end
 
 function MyActor:goToBed ()
-  self:wantGoToSleep(self.bedData)
+  self:nextWantGoToSleep(self.bedData)
+end
+
+function MyActor:putOutCandleAndGoToBed ()
+  local index = 1
+  for i, v in ipairs(self.candles) do
+    if (v.isLit) then
+      if (index == 1) then
+        self:toggleCandle(v.pos, false, true)
+      else
+        self:toggleCandle(v.pos, false)
+      end
+      index = index + 1
+    end
+  end
+  self:goToBed()
 end
 
 -- 生物想向指定位置移动
@@ -153,7 +168,17 @@ function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
   -- 创建当前前往区域
-  MyActorActionHelper:createToPos(want)
+  MyActorActionHelper:createMoveToPos(want)
+end
+
+function MyActor:wantApproach (think, positions, isNegDir, index, restTime)
+  MyAreaHelper:removeToArea(self)
+  MyActorHelper:closeAI(self.objid)
+  self.think = think
+  local want = MyActorActionHelper:getApproachData(think, positions, isNegDir, index, restTime)
+  self.wants = { want }
+  -- 创建当前前往区域
+  MyActorActionHelper:createApproachToPos(want)
 end
 
 -- 生物想原地不动
@@ -183,7 +208,7 @@ function MyActor:wantPatrol (think, positions, isNegDir, index, restTime)
   local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
   -- 创建当前前往区域
-  MyActorActionHelper:createToPos(want)
+  MyActorActionHelper:createMoveToPos(want)
 end
 
 -- 生物想自由活动
@@ -207,7 +232,7 @@ function MyActor:wantFreeInArea (think, posPairs)
   local want = MyActorActionHelper:setFreeInArea(think, self, posPairs)
   want.toPos = MyActorActionHelper:getFreeInAreaPos(self.freeInAreaIds)
   -- 创建当前前往区域
-  MyActorActionHelper:createToPos(want)
+  MyActorActionHelper:createMoveToPos(want)
 end
 
 -- 生物默认想法，可重写
@@ -228,6 +253,31 @@ function MyActor:wantGoToSleep (bedData)
   MyAreaHelper:removeToArea(self)
   self:wantMove('sleep', { bedData[1] })
   self:nextWantSleep('sleep', bedData[2])
+end
+
+function MyActor:toggleCandle (myPosition, isLitCandle, isNow)
+  local think
+  if (isLitCandle) then
+    think = 'lightCandle'
+  else
+    think = 'putOutCandle'
+  end
+  if (isNow) then
+    self:wantApproach(think, { myPosition })
+  else
+    self:nextWantApproach(think, { myPosition })
+  end
+  self:nextWantToggleCandle(think, isLitCandle)
+end
+
+function MyActor:nextWantMove (think, positions, isNegDir, index, restTime)
+  local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
+  table.insert(self.wants, want)
+end
+
+function MyActor:nextWantApproach (think, positions, isNegDir, index, restTime)
+  local want = MyActorActionHelper:getApproachData(think, positions, isNegDir, index, restTime)
+  table.insert(self.wants, want)
 end
 
 -- 生物接下来想巡逻
@@ -257,6 +307,15 @@ end
 
 function MyActor:nextWantWait (think, second)
   table.insert(self.wants, MyActorActionHelper:getWaitData(think, second))
+end
+
+function MyActor:nextWantGoToSleep (bedData)
+  self:nextWantMove('sleep', { bedData[1] })
+  self:nextWantSleep('sleep', bedData[2])
+end
+
+function MyActor:nextWantToggleCandle (think, isLitCandle)
+  table.insert(self.wants, MyActorActionHelper:getToggleCandleData(think, isLitCandle))
 end
 
 -- 生物固定时间点想做什么

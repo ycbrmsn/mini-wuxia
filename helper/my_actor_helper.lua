@@ -52,32 +52,52 @@ function MyActorHelper:enterArea (objid, areaid)
   if (myActor and myActor.wants) then -- 找到了一个actor，并且这个actor有想法
     local want = myActor.wants[1]
     if (want.toAreaId == areaid) then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
-      if (want.style == 'move') then -- 如果是仅仅前往，则变更想法，并且停下来
+      if (want.style == 'move' or want.style == 'approach') then -- 如果是仅仅前往，则变更想法，并且停下来
         -- LogHelper:debug(myActor:getName() .. '进入了终点区域' .. areaid)
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         local pos = MyActorActionHelper:getNextPos(want)
         -- LogHelper:debug(myActor:getName(), pos)
         if (pos) then -- 有下一个行动位置
           want.toPos = pos
-          MyActorActionHelper:createToPos(want)
+          MyActorActionHelper:createMoveToPos(want)
+          myActor.action:execute()
           -- LogHelper:debug('向下一个位置出发')
         elseif (myActor.wants[2]) then
           table.remove(myActor.wants, 1)
           local nextWant = myActor.wants[1]
+          LogHelper:debug('没有下一个：', nextWant.style)
           myActor.think = nextWant.think
           if (nextWant.style == 'move' or nextWant.style == 'patrol') then
-            MyActorActionHelper:createToPos(nextWant)
+            MyActorActionHelper:createMoveToPos(nextWant)
             myActor.action:execute()
             -- LogHelper:debug('开始巡逻')
           elseif (nextWant.style == 'freeInArea') then
             nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
-            MyActorActionHelper:createToPos(nextWant)
+            MyActorActionHelper:createMoveToPos(nextWant)
             -- LogHelper:debug(myActor:getName() .. '开始闲逛')
           elseif (nextWant.style == 'wait') then
             local restTime = nextWant.restTime
             table.remove(myActor.wants, 1)
             nextWant = myActor.wants[1]
             nextWant.currentRestTime = restTime
+            LogHelper:debug('wait')
+          elseif (nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle') then
+            nextWant.toPos = want.toPos
+            -- 2秒后看，攻击，移除想法
+            MyTimeHelper:callFnAfterSecond (function (p)
+              myActor:lookAt(want.toPos)
+              myActor.action:playAttack()
+            end, 2, { pos = want.toPos, myActor = myActor })
+            -- 3秒后蜡烛台变化
+            MyTimeHelper:callFnAfterSecond (function (p)
+              MyBlockHelper:handleCandle(p.pos, p.isLit)
+              table.remove(myActor.wants, 1)
+              local nextWant = myActor.wants[1]
+              if (nextWant.style == 'move' or nextWant.style == 'approach') then
+                MyActorActionHelper:createMoveToPos(nextWant)
+                myActor.action:execute()
+              end
+            end, 3, { pos = want.toPos, isLit = nextWant.style == 'lightCandle', myActor = myActor })
           end
         else
           myActor:defaultWant()
@@ -88,12 +108,12 @@ function MyActorHelper:enterArea (objid, areaid)
         want.currentRestTime = want.restTime
         want.toPos = MyActorActionHelper:getNextPos(want)
         -- LogHelper:debug('下一个位置' .. type(want.toPos))
-        MyActorActionHelper:createToPos(want)
+        MyActorActionHelper:createMoveToPos(want)
       elseif (want.style == 'freeInArea') then -- 区域内自由移动
         AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
-        MyActorActionHelper:createToPos(want)
+        MyActorActionHelper:createMoveToPos(want)
       else -- 其他情况，不明
         -- do nothing
       end

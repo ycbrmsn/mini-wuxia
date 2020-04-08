@@ -18,6 +18,12 @@ function MyActorActionHelper:getMoveData (think, positions, isNegDir, index, res
   return data
 end
 
+function MyActorActionHelper:getApproachData (think, positions, isNegDir, index, restTime)
+  local data = self:getMoveData(think, positions, isNegDir, index, restTime)
+  data.style = 'approach'
+  return data
+end
+
 -- 不移动行为数据
 function MyActorActionHelper:getDontMoveData (think)
   return { style = 'dontMove', restTime = 0, currentRestTime = 0, think = think }
@@ -58,6 +64,16 @@ function MyActorActionHelper:getWaitData (think, restTime)
   return { style = 'wait', restTime = restTime, currentRestTime = 0, think = think }
 end
 
+function MyActorActionHelper:getToggleCandleData (think, isLitCandle)
+  local style
+  if (isLitCandle) then
+    style = 'lightCandle'
+  else
+    style = 'putOutCandle'
+  end
+  return { style = style, restTime = 0, currentRestTime = 0, think = think }
+end
+
 -- 获取前往位置
 function MyActorActionHelper:getToPos (positions, isNegDir, index)
   if (isNegDir) then 
@@ -68,8 +84,13 @@ function MyActorActionHelper:getToPos (positions, isNegDir, index)
 end
 
 -- 创建前往位置
-function MyActorActionHelper:createToPos (want)
+function MyActorActionHelper:createMoveToPos (want)
   local areaid = AreaHelper:createMovePosArea(want.toPos)
+  want.toAreaId = areaid
+end
+
+function MyActorActionHelper:createApproachToPos (want)
+  local areaid = AreaHelper:createApproachPosArea(want.toPos)
   want.toAreaId = areaid
 end
 

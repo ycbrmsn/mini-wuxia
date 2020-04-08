@@ -22,6 +22,11 @@ local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function (p)
     MyBlockHelper:check(p.eventArgs)
+    -- wenyu:toggleCandle(wenyu.candles[1], true)
+    wenyu:putOutCandleAndGoToBed()
+    for k, v in pairs(MyBlockHelper.candles) do
+      LogHelper:debug('candle: ', v.pos:toString())
+    end
   end, { eventArgs = eventArgs })
   -- wenyu:wantDoNothing()
   -- wenyu:lookAt(MyPlayerHelper:getHostPlayer().objid)

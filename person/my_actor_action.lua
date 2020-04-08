@@ -70,7 +70,7 @@ function MyActorAction:execute ()
       -- self:runTo(want.lookPos)
     end
   else
-    if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
+    if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
       self.myActor:setWalkSpeed(-1)
       if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
         self:transmitTo(want.toPos)
@@ -87,6 +87,9 @@ function MyActorAction:execute ()
       self:playSleep()
     elseif (want.style == 'wake') then
       self.myActor:goToBed()
+    elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
+      self.myActor:lookAt(want.toPos)
+      LogHelper:debug('lookat')
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end

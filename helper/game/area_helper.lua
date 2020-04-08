@@ -1,6 +1,7 @@
 -- 区域工具类
 AreaHelper = {
-  movePosDim = { x = 0, y = 0, z = 0 },
+  movePosDim = { x = 0, y = 0, z = 0 }, -- 移动地点尺寸
+  approachPosDim = { x = 1, y = 0, z = 1 }, -- 靠近地点尺寸
   allDoorAreas = {}
 }
 
@@ -9,9 +10,9 @@ function AreaHelper:createMovePosArea (pos)
   return self:createAreaRect(pos, self.movePosDim)
 end
 
--- 创建门区域
-function AreaHelper:createDoorPosArea (pos)
-  return self:createMovePosArea(pos)
+-- 创建靠近区域
+function AreaHelper:createApproachPosArea (pos)
+  return self:createAreaRect(pos, self.approachPosDim)
 end
 
 -- 创建初始化生物区域

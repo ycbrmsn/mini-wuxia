@@ -13,6 +13,10 @@ function Wenyu:new ()
       { x = 20, y = 9, z = -12 }, -- 床尾位置2
       ActorHelper.FACE_YAW.EAST -- 床尾朝向东
     },
+    candles = {
+      MyBlockHelper:addCandle(25, 9, -22), -- 门口蜡烛台
+      MyBlockHelper:addCandle(23, 9, -12) -- 里屋蜡烛台
+    },
     lastBedData = nil, -- 上一次睡的床尾位置
     currentBedData = nil, -- 当前睡的床尾位置
     homeAreaPositions1 = {
@@ -73,15 +77,39 @@ function Wenyu:exchangeBed ()
   self.lastBedData = self.currentBedData
 end
 
+function MyActor:putOutCandleAndGoToBed ()
+  local index = 1
+  for i, v in ipairs(self.candles) do
+    LogHelper:debug(v.isLit)
+    if (v.isLit) then
+      if (index == 1) then
+        self:toggleCandle(v.pos, false, true)
+      else
+        self:toggleCandle(v.pos, false)
+      end
+      index = index + 1
+    end
+  end
+  self:goToBed(index == 1)
+end
+
 -- 睡觉
-function Wenyu:goToBed ()
+function Wenyu:goToBed (isNow)
   if (self.lastBedData and self.lastBedData == self.bedData1) then
     -- 睡二号床
-    self:wantGoToSleep(self.bedData2)
+    if (isNow) then
+      self:wantGoToSleep(self.bedData2)
+    else
+      self:nextWantGoToSleep(self.bedData2)
+    end
     self.currentBedData = self.bedData2
   else
     -- 睡一号床
-    self:wantGoToSleep(self.bedData1)
+    if (isNow) then
+      self:wantGoToSleep(self.bedData1)
+    else
+      self:nextWantGoToSleep(self.bedData1)
+    end
     self.currentBedData = self.bedData1
   end
 end

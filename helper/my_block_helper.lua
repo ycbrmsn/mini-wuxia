@@ -3,21 +3,31 @@ MyBlockHelper = {
   candles = {} -- 保存所有蜡烛台
 }
 
--- 指定位置处的蜡烛台加入集合
-function MyBlockHelper:addCandle (myPosition, blockid)
-  local candle = MyCandle:new(myPosition, blockid)
-  self.candles[myPosition:toNumber()] = candle
+-- 指定位置处的蜡烛台加入集合，参数为（myPosition, blockid）或者 如下
+function MyBlockHelper:addCandle (x, y, z, blockid)
+  local myPosition
+  if (type(x) == 'number') then
+    myPosition = MyPosition:new(x, y, z)
+  else
+    myPosition = x
+    blockid = y
+  end
+  local myPos = myPosition:floor()
+  local candle = MyCandle:new(myPos, blockid)
+  self.candles[myPos:toNumber()] = candle
   return candle
 end
 
 -- 查询指定位置处的蜡烛台
 function MyBlockHelper:getCandle (myPosition)
-  return self.candles[myPosition:toNumber()]
+  local myPos = myPosition:floor()
+  return self.candles[myPos:toNumber()]
 end
 
 -- 从集合中删除指定位置的蜡烛台
 function MyBlockHelper:removeCandle (myPosition)
-  self.candles[myPosition:toNumber()] = nil
+  local myPos = myPosition:floor()
+  self.candles[myPos:toNumber()] = nil
 end
 
 -- 检查指定位置处是否是蜡烛台
@@ -28,7 +38,9 @@ function MyBlockHelper:checkIsCandle (myPosition)
     if (not(candle)) then
       candle = self:addCandle(myPosition, blockid)
     end
-    candle:toggle()
+    return true, candle
+  else
+    return false
   end
 end
 
@@ -40,8 +52,21 @@ function MyBlockHelper:checkIfRemoveCandle (myPosition, blockid)
 end
 
 function MyBlockHelper:check (myPosition)
+  self:handleCandle(myPosition)
+end
+
+function MyBlockHelper:handleCandle (myPosition, isLit)
   if (not(MyPosition:isPosition(myPosition))) then
     myPosition = MyPosition:new(myPosition)
   end
-  MyBlockHelper:checkIsCandle(myPosition)
+  local isCandle, candle = self:checkIsCandle(myPosition)
+  if (isCandle) then
+    if (type(isLit) == 'nil') then
+      candle:toggle()
+    elseif (isLit) then
+      candle:light()
+    else
+      candle:putOut()
+    end
+  end
 end
