@@ -116,8 +116,8 @@ end
 
 -- 播放动作
 function ActorHelper:playAct (objid, actid)
-  local onceFailMessage = '清除生物失败一次'
-  local finillyFailMessage = StringHelper:concat('清除生物失败，参数：objid=', objid, ', actid=', actid)
+  local onceFailMessage = '播放动作失败一次'
+  local finillyFailMessage = StringHelper:concat('播放动作失败，参数：objid=', objid, ', actid=', actid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Actor:playAct(p.objid, p.actid)
   end, { objid = objid, actid = actid }, onceFailMessage, finillyFailMessage)
@@ -175,4 +175,13 @@ function ActorHelper:setFacePitch (objid, pitch)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Actor:setFacePitch(p.objid, p.pitch)
   end, { objid = objid, pitch = pitch }, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取眼睛高度
+function ActorHelper:getEyeHeight (objid)
+  local onceFailMessage = '获取眼睛高度失败一次'
+  local finillyFailMessage = StringHelper:concat('获取眼睛高度失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Actor:getEyeHeight(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
 end

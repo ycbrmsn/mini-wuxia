@@ -134,9 +134,11 @@ function MyActor:lookAt (objid)
   if (type(objid) == 'table') then
     x, y, z = objid.x, objid.y, objid.z
   else
-    x, y, z = ActorHelper:getEyePosition(objid)
+    x, y, z = ActorHelper:getPosition(objid)
+    y = y + ActorHelper:getEyeHeight(objid) - 1
   end
-  local x0, y0, z0 = ActorHelper:getEyePosition(self.objid)
+  local x0, y0, z0 = ActorHelper:getPosition(self.objid)
+  y0 = y0 + ActorHelper:getEyeHeight(self.objid) - 1 -- 生物位置y是地面上一格，所以要减1
   local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
   local faceYaw = MathHelper:getActorFaceYaw(myVector3)
   local facePitch = MathHelper:getActorFacePitch(myVector3)
@@ -276,6 +278,26 @@ function MyActor:wantDoNothing (think)
   MyActorHelper:closeAI(self.objid)
   self.think = think
   self.wants = { MyActorActionHelper:getDoNothingData(think) }
+end
+
+function MyActor:wantLookAt (think, myPosition, restTime)
+  think = think or 'lookAt'
+  MyActorHelper:closeAI(self.objid)
+  self.think = think
+  local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
+  if (self:isWantsExist()) then
+    if (self.wants[1].style == 'lookAt') then
+      self.wants[1] = want
+    else
+      table.insert(self.wants, 1, want)
+    end
+  else
+    self.wants = { want }
+  end
+  -- self:setWalkSpeed(0)
+  -- MyTimeHelper:callFnAfterSecond (function (p)
+  --   ActorHelper:playAct(p.objid, ActorHelper.ACT.STAND)
+  -- end, 3, { objid = self.objid })
 end
 
 function MyActor:wantGoToSleep (bedData)

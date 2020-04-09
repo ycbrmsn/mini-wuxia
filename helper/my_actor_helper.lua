@@ -148,9 +148,10 @@ function MyActorHelper:playerClickActor (objid, toobjid)
   local myActor = self:getActorByObjid(toobjid)
   if (myActor) then
     -- 生物停下来看向玩家
-    myActor:wantStayForAWhile()
-    local x, y, z = ActorHelper:getPosition(objid)
-    myActor.action:runTo({ x = x, y = y, z = z })
+    -- myActor:wantStayForAWhile()
+    -- local x, y, z = ActorHelper:getPosition(objid)
+    -- myActor.action:runTo({ x = x, y = y, z = z })
+    myActor:wantLookAt('click', objid)
   end
 end
 
@@ -163,7 +164,9 @@ function MyActorHelper:actorCollide (objid, toobjid)
         actor1.wants[1].style = 'wake'
       end
       actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
-      actor1:wantStayForAWhile()
+      actor1.action:runTo(MyPosition:new(actor1:getPosition()))
+      actor1:wantLookAt('collide', toobjid)
+      -- actor1:wantStayForAWhile()
       -- LogHelper:info('执行了')
     else
       local actor2 = MyActorHelper:getActorByObjid(toobjid)

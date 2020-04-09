@@ -74,6 +74,15 @@ function MyActorActionHelper:getToggleCandleData (think, isLitCandle)
   return { style = style, restTime = 0, currentRestTime = 0, think = think }
 end
 
+function MyActorActionHelper:getLookAtData (think, myPosition, restTime)
+  restTime = restTime or 5
+  if (type(myPosition) == 'number') then
+    return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, objid = myPosition, think = think }
+  else
+    return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, pos = myPosition, think = think }
+  end
+end
+
 -- 获取前往位置
 function MyActorActionHelper:getToPos (positions, isNegDir, index)
   if (isNegDir) then 

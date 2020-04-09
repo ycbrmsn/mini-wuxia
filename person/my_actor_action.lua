@@ -26,11 +26,8 @@ function MyActorAction:isForceMove ()
 end
 
 -- 跑到指定地点
-function MyActorAction:runTo (pos, objid)
-  if (not(objid)) then
-    objid = self.myActor.objid
-  end
-  return ActorHelper:tryMoveToPos(objid, pos.x + 0.5, pos.y, pos.z + 0.5)
+function MyActorAction:runTo (pos)
+  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
 -- 传送到指定地点
@@ -61,13 +58,18 @@ function MyActorAction:execute ()
     self.myActor:defaultWant()
   end
   want = self.myActor.wants[1]
-  -- LogHelper:debug('action: ' .. want.currentRestTime)
   if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
     want.currentRestTime = want.currentRestTime - 1
     if (want.style == 'sleep') then
       self.myActor:setFaceYaw(want.faceYaw)
       -- self.myActor:setWalkSpeed(0)
       -- self:runTo(want.lookPos)
+    elseif (want.style == 'lookAt') then
+      if (want.pos) then
+        self.myActor:lookAt(want.pos)
+      elseif (want.objid) then
+        self.myActor:lookAt(want.objid)
+      end
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
@@ -89,7 +91,10 @@ function MyActorAction:execute ()
       self.myActor:goToBed()
     elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
       self.myActor:lookAt(want.toPos)
-      -- LogHelper:debug('lookat')
+    elseif (want.style == 'lookAt') then
+      if (self.myActor.wants[2]) then
+        MyActorHelper:handleNextWant(self.myActor)
+      end
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end

@@ -28,8 +28,18 @@ local startGame = function ()
 end
 
 -- 无参数
-local loadGame = function ()
-  LogHelper:debug('启动游戏')
+local runGame = function ()
+  for k, v in pairs(MyActorHelper.actors) do
+    LogHelper:call(function (myActor)
+      if (myActor.wants and myActor.wants[1] and myActor.wants[1].style == 'lookAt') then
+        if (myActor.wants[1].pos) then
+          myActor:lookAt(myActor.wants[1].pos)
+        elseif (myActor.wants[1].objid) then
+          myActor:lookAt(myActor.wants[1].objid)
+        end
+      end
+    end, v)
+  end
 end
 
 -- 无参数
@@ -125,7 +135,7 @@ end
 ScriptSupportEvent:registerEvent([=[Game.AnyPlayer.EnterGame]=], playerEnterGame) -- 玩家进入游戏
 ScriptSupportEvent:registerEvent([=[Game.AnyPlayer.LeaveGame]=], playerLeaveGame) -- 玩家离开游戏
 ScriptSupportEvent:registerEvent([=[Game.Start]=], startGame) -- 开始游戏
-ScriptSupportEvent:registerEvent([=[Game.Load]=], loadGame) -- 启动游戏
 ScriptSupportEvent:registerEvent([=[Game.End]=], endGame) -- 结束游戏
 ScriptSupportEvent:registerEvent([=[Game.Hour]=], atHour) -- 世界时间到[n]点
+ScriptSupportEvent:registerEvent([=[Game.Run]=], runGame) -- 游戏运行时
 ScriptSupportEvent:registerEvent([=[Game.RunTime]=], atSecond) -- 世界时间到[n]秒
