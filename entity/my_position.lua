@@ -33,5 +33,5 @@ function MyPosition:toNumber ()
 end
 
 function MyPosition:toString ()
-  return StringHelper:concat('{ x = ', self.x, ', y = ', self.y, ', z = ', self.z, ' }')
+  return StringHelper:concat('{x=', self.x, ',y=', self.y, ',z=', self.z, '}')
 end

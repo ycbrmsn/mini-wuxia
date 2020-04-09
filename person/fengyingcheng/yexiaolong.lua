@@ -9,6 +9,9 @@ function Yexiaolong:new ()
       { x = 28, y = 10, z = -35 }, -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
     },
+    candles = {
+      MyBlockHelper:addCandle(25, 10, -38) -- 客栈中蜡烛台
+    },
     homeAreaPositions = {
       { x = 27, y = 10, z = -38 }, -- 衣柜旁
       { x = 25, y = 10, z = -34 } -- 柜子上
@@ -30,8 +33,11 @@ function Yexiaolong:wantAtHour (hour)
   if (mainIndex == 1) then
     if (hour == 7) then
       self:wantFreeInArea({ self.homeAreaPositions })
+    elseif (hour == 19) then
+      self:lightCandle(true)
+      self:nextWantFreeInArea({ self.homeAreaPositions })
     elseif (hour == 22) then
-      self:goToBed()
+      self:putOutCandleAndGoToBed()
     end
   end
 end
@@ -43,10 +49,13 @@ function Yexiaolong:init ()
     local mainIndex = MyStoryHelper:getMainStoryIndex()
     if (mainIndex == 1) then
       local hour = MyTimeHelper:getHour()
-      if (hour >= 7 and hour < 22) then
+      if (hour >= 7 and hour < 19) then
         self:wantFreeInArea({ self.homeAreaPositions })
+      elseif (hour >= 19 and hour < 22) then
+        self:lightCandle(true)
+        self:nextWantFreeInArea({ self.homeAreaPositions })
       else
-        self:goToBed()
+        self:putOutCandleAndGoToBed()
       end
     end
   end
@@ -64,9 +73,9 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   end
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self.action:speak(playerid, nickname, '，你撞我是想试试你的实力吗？')
-  elseif (self.think == 'free') then
-    self.action:speak(playerid, nickname, '，找我有事吗？')
   elseif (self.think == 'sleep') then
     self.action:speak(playerid, nickname, '，我要睡觉了，不要惹我哟。')
+  else
+    self.action:speak(playerid, nickname, '，找我有事吗？')
   end
 end

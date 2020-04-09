@@ -9,6 +9,10 @@ function Yangwanli:new ()
       { x = -7, y = 9, z = -11 }, -- 床尾位置
       ActorHelper.FACE_YAW.WEST -- 床尾朝向西
     },
+    candles = {
+      MyBlockHelper:addCandle(-18, 9, -10), -- 屋角落蜡烛台
+      MyBlockHelper:addCandle(-11, 9, -14) -- 屋中央蜡烛台
+    },
     homeAreaPositions = {
       { x = -18, y = 9, z = -19 }, -- 屋门口边上
       { x = -7, y = 9, z = -11 } -- 床
@@ -29,8 +33,11 @@ end
 function Yangwanli:wantAtHour (hour)
   if (hour == 7) then
     self:wantFreeInArea({ self.homeAreaPositions })
+  elseif (hour == 19) then
+    self:lightCandle(true)
+    self:nextWantFreeInArea({ self.homeAreaPositions })
   elseif (hour == 22) then
-    self:goToBed()
+    self:putOutCandleAndGoToBed()
   end
 end
 
@@ -39,10 +46,13 @@ function Yangwanli:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
-    if (hour >= 7 and hour < 22) then
+    if (hour >= 7 and hour < 19) then
       self:wantFreeInArea({ self.homeAreaPositions })
+    elseif (hour >= 19 and hour < 22) then
+      self:lightCandle(true)
+      self:nextWantFreeInArea({ self.homeAreaPositions })
     else
-      self:goToBed()
+      self:putOutCandleAndGoToBed()
     end
   end
   return initSuc

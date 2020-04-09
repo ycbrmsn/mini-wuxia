@@ -2,13 +2,21 @@
 Jiangyu = MyActor:new(MyConstant.JIANGYU_ACTOR_ID)
 
 function Jiangyu:new ()
-  local o = jiangfeng:new()
-  o.objid = 4313483879
-  o.actorid = self.actorid
-  o.initPosition = { x = 10, y = 8, z = -14 }
-  o.bedData = {
-    { x = 12, y = 9, z = -13 }, -- 床尾位置
-    ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+  local o = {
+    objid = 4313483879,
+    initPosition = { x = 10, y = 8, z = -14 },
+    bedData = {
+      { x = 12, y = 9, z = -13 }, -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+    },
+    candles = {
+      MyBlockHelper:addCandle(8, 12, 13), -- 最东边蜡烛台
+      MyBlockHelper:addCandle(0, 12, 13), -- 中央蜡烛台
+      MyBlockHelper:addCandle(-8, 12, 13) -- 最西边蜡烛台
+    },
+    patrolPositions = jiangfeng.patrolPositions,
+    doorPositions = jiangfeng.doorPositions,
+    homeAreaPositions = jiangfeng.homeAreaPositions
   }
   setmetatable(o, self)
   self.__index = self
@@ -25,9 +33,9 @@ function Jiangyu:wantAtHour (hour)
   if (hour == 7) then
     self:goHome()
   elseif (hour == 9) then
-    self:goToBed()
+    self:putOutCandleAndGoToBed()
   elseif (hour == 18) then
-    self:goHome()
+    self:defaultWant()
   elseif (hour == 19) then
     self:toPatrol()
   end
@@ -41,9 +49,9 @@ function Jiangyu:init ()
     if (hour >= 7 and hour < 9) then
       self:defaultWant()
     elseif (hour >= 9 and hour < 18) then
-      self:goToBed()
+      self:putOutCandleAndGoToBed()
     elseif (hour >= 18 and hour < 19) then
-      self:goHome()
+      self:defaultWant()
     else
       self:toPatrol()
     end
@@ -54,12 +62,14 @@ end
 -- 去巡逻
 function Jiangyu:toPatrol ()
   self:wantMove('toPatrol', { self.patrolPositions[1] })
+  self:lightCandle()
   self:nextWantPatrol('patrol', self.patrolPositions)
 end
 
 -- 回家
 function Jiangyu:goHome ()
-  self:wantMove('goHome', self.doorPositions)
+  self:putOutCandle(true, { self.candles[3], self.candles[2], self.candles[1] })
+  self:nextWantMove('goHome', self.doorPositions)
   self:nextWantFreeInArea({ self.homeAreaPositions })
 end
 

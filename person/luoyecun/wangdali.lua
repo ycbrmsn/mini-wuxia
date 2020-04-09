@@ -9,6 +9,9 @@ function Wangdali:new ()
       { x = -26, y = 10, z = -47 }, -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
+    candles = {
+      MyBlockHelper:addCandle(-32, 10, -42) -- 蜡烛台
+    },
     bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
     movePositions = {
       { x = -30, y = 9, z = -45 }, -- 屋内
@@ -69,6 +72,7 @@ end
 -- 回家
 function Wangdali:goHome ()
   self:wantMove('goHome', { self.doorPosition })
+  self:lightCandle()
   self:nextWantFreeInArea({ self.homePositions })
 end
 

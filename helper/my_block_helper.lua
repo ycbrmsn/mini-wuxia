@@ -14,20 +14,20 @@ function MyBlockHelper:addCandle (x, y, z, blockid)
   end
   local myPos = myPosition:floor()
   local candle = MyCandle:new(myPos, blockid)
-  self.candles[myPos:toNumber()] = candle
+  self.candles[myPos:toString()] = candle
   return candle
 end
 
 -- 查询指定位置处的蜡烛台
 function MyBlockHelper:getCandle (myPosition)
   local myPos = myPosition:floor()
-  return self.candles[myPos:toNumber()]
+  return self.candles[myPos:toString()]
 end
 
 -- 从集合中删除指定位置的蜡烛台
 function MyBlockHelper:removeCandle (myPosition)
   local myPos = myPosition:floor()
-  self.candles[myPos:toNumber()] = nil
+  self.candles[myPos:toString()] = nil
 end
 
 -- 检查指定位置处是否是蜡烛台

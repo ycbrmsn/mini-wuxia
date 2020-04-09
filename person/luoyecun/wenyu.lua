@@ -47,7 +47,7 @@ function Wenyu:wantAtHour (hour)
   elseif (hour == 19) then
     self:goHome()
   elseif (hour == 22) then
-    self:goToBed()
+    self:putOutCandleAndGoToBed()
   end
 end
 
@@ -61,7 +61,7 @@ function Wenyu:init ()
     elseif (hour >= 19 and hour < 22) then
       self:goHome()
     else
-     self:goToBed() 
+     self:putOutCandleAndGoToBed() 
     end
   end
   return initSuc
@@ -70,6 +70,7 @@ end
 -- 回家
 function Wenyu:goHome ()
   self:wantMove('goHome', { self.doorPosition }) -- 门口
+  self:lightCandle()
   self:nextWantFreeInArea({ self.homeAreaPositions1, self.homeAreaPositions2 })
 end
 

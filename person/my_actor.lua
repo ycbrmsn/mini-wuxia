@@ -72,6 +72,9 @@ function MyActor:updatePosition ()
   if (x) then
     -- self.pos.x, self.pos.y, self.pos.z = x, y, z -- 如此修改的父类数据，所有类数据相同
     self:updateCantMoveTime(x, y, z)
+    -- if (self:getName() == '王大力') then
+    --   LogHelper:debug('x=', x, ',y=', y, ',z=', z)
+    -- end
     self.x, self.y, self.z = x, y, z
   else
     self:recoverActor()
@@ -141,15 +144,36 @@ function MyActor:lookAt (objid)
   self:setFacePitch(facePitch)
 end
 
-function MyActor:goToBed ()
-  self:nextWantGoToSleep(self.bedData)
+function MyActor:goToBed (isNow)
+  if (isNow) then
+    self:wantGoToSleep(self.bedData)
+  else
+    self:nextWantGoToSleep(self.bedData)
+  end
 end
 
-function MyActor:putOutCandleAndGoToBed ()
+function MyActor:lightCandle (isNow, candles)
+  candles = candles or self.candles
   local index = 1
-  for i, v in ipairs(self.candles) do
+  for i, v in ipairs(candles) do
+    if (not(v.isLit)) then
+      if (index == 1 and isNow) then
+        self:toggleCandle(v.pos, true, true)
+      else
+        self:toggleCandle(v.pos, true)
+      end
+      index = index + 1
+    end
+  end
+  return index
+end
+
+function MyActor:putOutCandle (isNow, candles)
+  candles = candles or self.candles
+  local index = 1
+  for i, v in ipairs(candles) do
     if (v.isLit) then
-      if (index == 1) then
+      if (index == 1 and isNow) then
         self:toggleCandle(v.pos, false, true)
       else
         self:toggleCandle(v.pos, false)
@@ -157,7 +181,12 @@ function MyActor:putOutCandleAndGoToBed ()
       index = index + 1
     end
   end
-  self:goToBed()
+  return index
+end
+
+function MyActor:putOutCandleAndGoToBed (candles)
+  local index = self:putOutCandle(true, candles)
+  self:goToBed(index == 1)
 end
 
 -- 生物想向指定位置移动
@@ -270,34 +299,58 @@ function MyActor:toggleCandle (myPosition, isLitCandle, isNow)
   self:nextWantToggleCandle(think, isLitCandle)
 end
 
+function MyActor:isWantsExist ()
+  return self.wants and #self.wants > 0
+end
+
 function MyActor:nextWantMove (think, positions, isNegDir, index, restTime)
-  local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
-  table.insert(self.wants, want)
+  if (self:isWantsExist()) then
+    local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
+    table.insert(self.wants, want)
+  else
+    self:wantMove(think, positions, isNegDir, index, restTime)
+  end
 end
 
 function MyActor:nextWantApproach (think, positions, isNegDir, index, restTime)
-  local want = MyActorActionHelper:getApproachData(think, positions, isNegDir, index, restTime)
-  table.insert(self.wants, want)
+  if (self:isWantsExist()) then
+    local want = MyActorActionHelper:getApproachData(think, positions, isNegDir, index, restTime)
+    table.insert(self.wants, want)
+  else
+    self:wantApproach(think, positions, isNegDir, index, restTime)
+  end
 end
 
 -- 生物接下来想巡逻
 function MyActor:nextWantPatrol (think, positions, isNegDir, index, restTime)
-  local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
-  table.insert(self.wants, want)
+  if (self:isWantsExist()) then
+    local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
+    table.insert(self.wants, want)
+  else
+    self:wantPatrol(think, positions, isNegDir, index, restTime)
+  end
 end
 
 -- 生物接下来想在区域内自由活动
 function MyActor:nextWantFreeInArea (think, posPairs)
-  if (not(posPairs)) then
-    posPairs = think
-    think = 'free'
+  if (self:isWantsExist()) then
+    if (not(posPairs)) then
+      posPairs = think
+      think = 'free'
+    end
+    MyActorActionHelper:setFreeInArea(think, self, posPairs, true)
+  else
+    self:wantFreeInArea(think, posPairs)
   end
-  MyActorActionHelper:setFreeInArea(think, self, posPairs, true)
 end
 
 function MyActor:nextWantDoNothing (think)
-  think = think or 'doNothing'
-  table.insert(self.wants, MyActorActionHelper:getDoNothingData(think))
+  if (self:isWantsExist()) then
+    think = think or 'doNothing'
+    table.insert(self.wants, MyActorActionHelper:getDoNothingData(think))
+  else
+    self:wantDoNothing(think)
+  end
 end
 
 function MyActor:nextWantSleep (think, faceYaw)
@@ -310,8 +363,12 @@ function MyActor:nextWantWait (think, second)
 end
 
 function MyActor:nextWantGoToSleep (bedData)
-  self:nextWantMove('sleep', { bedData[1] })
-  self:nextWantSleep('sleep', bedData[2])
+  if (self:isWantsExist()) then
+    self:nextWantMove('sleep', { bedData[1] })
+    self:nextWantSleep('sleep', bedData[2])
+  else
+    self:wantGoToSleep(bedData)
+  end
 end
 
 function MyActor:nextWantToggleCandle (think, isLitCandle)

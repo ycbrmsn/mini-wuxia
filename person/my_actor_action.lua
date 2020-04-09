@@ -22,7 +22,7 @@ function MyActorAction:isForceMove ()
   if (want.currentRestTime > 0) then -- 如果在休息，也不是
     return false
   end
-  return (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea')
+  return (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach')
 end
 
 -- 跑到指定地点
@@ -89,7 +89,7 @@ function MyActorAction:execute ()
       self.myActor:goToBed()
     elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
       self.myActor:lookAt(want.toPos)
-      LogHelper:debug('lookat')
+      -- LogHelper:debug('lookat')
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end

@@ -9,6 +9,9 @@ function Jiangfeng:new ()
       { x = 6, y = 9, z = -13 }, -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
+    candles = {
+      MyBlockHelper:addCandle(9, 9, -11) -- 蜡烛台
+    },
     patrolPositions = {
       { x = 10, y = 11, z = 12 }, -- 落叶松旁的城上
       { x = -10, y = 11, z = 12 } -- 庄稼地旁的城上
@@ -34,13 +37,13 @@ end
 -- 在几点想做什么
 function Jiangfeng:wantAtHour (hour)
   if (hour == 6) then
-    self:goHome()
+    self:defaultWant()
   elseif (hour == 7) then
     self:toPatrol()
   elseif (hour == 19) then
     self:goHome()
   elseif (hour == 21) then
-    self:goToBed()
+    self:putOutCandleAndGoToBed()
   end
 end
 
@@ -50,13 +53,13 @@ function Jiangfeng:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 6 and hour < 7) then
-      self:goHome()
+      self:defaultWant()
     elseif (hour >= 7 and hour < 19) then
       self:toPatrol()
     elseif (hour >= 19 and hour < 21) then
       self:goHome()
     else
-      self:goToBed()
+      self:putOutCandleAndGoToBed()
     end
   end
   return initSuc
@@ -71,6 +74,7 @@ end
 -- 回家
 function Jiangfeng:goHome ()
   self:wantMove('goHome', self.doorPositions)
+  self:lightCandle()
   self:nextWantFreeInArea({ self.homeAreaPositions })
 end
 

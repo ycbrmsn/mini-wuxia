@@ -94,7 +94,7 @@ function MyActorHelper:handleNextWant (myActor)
   local want = myActor.wants[1]
   table.remove(myActor.wants, 1)
   local nextWant = myActor.wants[1]
-  LogHelper:debug('下一个行为：', nextWant.style)
+  -- LogHelper:debug('下一个行为：', nextWant.style)
   myActor.think = nextWant.think
   if (nextWant.style == 'move' or nextWant.style == 'patrol') then
     MyActorActionHelper:createMoveToPos(nextWant)
@@ -112,7 +112,7 @@ function MyActorHelper:handleNextWant (myActor)
     table.remove(myActor.wants, 1)
     nextWant = myActor.wants[1]
     nextWant.currentRestTime = restTime
-    LogHelper:debug('wait')
+    -- LogHelper:debug('wait')
   elseif (nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle') then
     nextWant.toPos = want.toPos
     -- 2秒后看，攻击，移除想法
