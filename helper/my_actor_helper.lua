@@ -63,42 +63,7 @@ function MyActorHelper:enterArea (objid, areaid)
           myActor.action:execute()
           -- LogHelper:debug('向下一个位置出发')
         elseif (myActor.wants[2]) then
-          table.remove(myActor.wants, 1)
-          local nextWant = myActor.wants[1]
-          LogHelper:debug('没有下一个：', nextWant.style)
-          myActor.think = nextWant.think
-          if (nextWant.style == 'move' or nextWant.style == 'patrol') then
-            MyActorActionHelper:createMoveToPos(nextWant)
-            myActor.action:execute()
-            -- LogHelper:debug('开始巡逻')
-          elseif (nextWant.style == 'freeInArea') then
-            nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
-            MyActorActionHelper:createMoveToPos(nextWant)
-            -- LogHelper:debug(myActor:getName() .. '开始闲逛')
-          elseif (nextWant.style == 'wait') then
-            local restTime = nextWant.restTime
-            table.remove(myActor.wants, 1)
-            nextWant = myActor.wants[1]
-            nextWant.currentRestTime = restTime
-            LogHelper:debug('wait')
-          elseif (nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle') then
-            nextWant.toPos = want.toPos
-            -- 2秒后看，攻击，移除想法
-            MyTimeHelper:callFnAfterSecond (function (p)
-              myActor:lookAt(want.toPos)
-              myActor.action:playAttack()
-            end, 2, { pos = want.toPos, myActor = myActor })
-            -- 3秒后蜡烛台变化
-            MyTimeHelper:callFnAfterSecond (function (p)
-              MyBlockHelper:handleCandle(p.pos, p.isLit)
-              table.remove(myActor.wants, 1)
-              local nextWant = myActor.wants[1]
-              if (nextWant.style == 'move' or nextWant.style == 'approach') then
-                MyActorActionHelper:createMoveToPos(nextWant)
-                myActor.action:execute()
-              end
-            end, 3, { pos = want.toPos, isLit = nextWant.style == 'lightCandle', myActor = myActor })
-          end
+          self:handleNextWant(myActor)
         else
           myActor:defaultWant()
           myActor:wantStayForAWhile()
@@ -122,6 +87,46 @@ function MyActorHelper:enterArea (objid, areaid)
     end
   else -- 没有找到actor，或者该actor没有想法，则不做什么
     -- do nothing
+  end
+end
+
+function MyActorHelper:handleNextWant (myActor)
+  local want = myActor.wants[1]
+  table.remove(myActor.wants, 1)
+  local nextWant = myActor.wants[1]
+  LogHelper:debug('下一个行为：', nextWant.style)
+  myActor.think = nextWant.think
+  if (nextWant.style == 'move' or nextWant.style == 'patrol') then
+    MyActorActionHelper:createMoveToPos(nextWant)
+    myActor.action:execute()
+    -- LogHelper:debug('开始移动')
+  elseif (nextWant.style == 'approach') then
+    MyActorActionHelper:createApproachToPos(nextWant)
+    myActor.action:execute()
+  elseif (nextWant.style == 'freeInArea') then
+    nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
+    MyActorActionHelper:createMoveToPos(nextWant)
+    -- LogHelper:debug(myActor:getName() .. '开始闲逛')
+  elseif (nextWant.style == 'wait') then
+    local restTime = nextWant.restTime
+    table.remove(myActor.wants, 1)
+    nextWant = myActor.wants[1]
+    nextWant.currentRestTime = restTime
+    LogHelper:debug('wait')
+  elseif (nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle') then
+    nextWant.toPos = want.toPos
+    -- 2秒后看，攻击，移除想法
+    MyTimeHelper:callFnAfterSecond (function (p)
+      p.myActor:lookAt(p.pos)
+      p.myActor.action:playAttack()
+    end, 2, { pos = want.toPos, myActor = myActor })
+    -- 3秒后蜡烛台变化，并执行下一个动作
+    MyTimeHelper:callFnAfterSecond (function (p)
+      MyBlockHelper:handleCandle(p.pos, p.isLit)
+      if (p.myActor.wants[2]) then
+        self:handleNextWant(p.myActor)
+      end
+    end, 3, { pos = want.toPos, isLit = nextWant.style == 'lightCandle', myActor = myActor })
   end
 end
 

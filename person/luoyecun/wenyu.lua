@@ -80,7 +80,6 @@ end
 function MyActor:putOutCandleAndGoToBed ()
   local index = 1
   for i, v in ipairs(self.candles) do
-    LogHelper:debug(v.isLit)
     if (v.isLit) then
       if (index == 1) then
         self:toggleCandle(v.pos, false, true)

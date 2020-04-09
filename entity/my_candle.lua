@@ -32,21 +32,18 @@ end
 
 -- 点燃
 function MyCandle:light ()
-  LogHelper:debug('lightCandle')
   self.isLit = true
   return BlockHelper:setBlockAllForNotify(self.pos.x, self.pos.y, self.pos.z, self.BLOCK_ID.LIT_CANDLE)
 end
 
 -- 熄灭
 function MyCandle:putOut ()
-  LogHelper:debug('putOutCandle', self.pos.x, '-', self.pos.y, '-', self.pos.z, '-', self.BLOCK_ID.CANDLE)
   self.isLit = false
   return BlockHelper:setBlockAllForNotify(self.pos.x, self.pos.y, self.pos.z, self.BLOCK_ID.CANDLE)
 end
 
 -- 切换
 function MyCandle:toggle ()
-  LogHelper:debug('toggleCandle')
   if (self.isLit) then
     self:putOut()
   else
