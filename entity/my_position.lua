@@ -1,4 +1,4 @@
--- 位置实体类
+-- 位置类
 MyPosition = {
   TYPE = 'POS'
 }
@@ -25,6 +25,13 @@ end
 
 function MyPosition:isPosition (pos)
   return pos and pos.TYPE and pos.TYPE == self.TYPE
+end
+
+function MyPosition:equals (myPosition)
+  if (type(myPosition) ~= 'table') then
+    return false
+  end
+  return myPosition.x == self.x and myPosition.y == self.y and myPosition.z == self.z
 end
 
 -- 从右起每四位代表一个坐标值

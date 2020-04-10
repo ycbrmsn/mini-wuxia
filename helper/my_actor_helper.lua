@@ -29,6 +29,10 @@ function MyActorHelper:delPersonByActorid (actorid)
   end
 end
 
+function MyActorHelper:getAllActors ()
+  return self.actors
+end
+
 -- 根据objid查询actor
 function MyActorHelper:getActorByObjid (objid)
   return self.actors[objid]
@@ -150,7 +154,7 @@ function MyActorHelper:playerClickActor (objid, toobjid)
     if (myActor.wants and myActor.wants[1].style == 'sleeping') then
       myActor.wants[1].style = 'wake'
     end
-    myActor.action:runTo(MyPosition:new(myActor:getPosition()))
+    myActor.action:stopRun()
     myActor:wantLookAt('click', objid)
     myActor:playClickAct()
   end
@@ -164,7 +168,7 @@ function MyActorHelper:actorCollide (objid, toobjid)
       if (actor1.wants and actor1.wants[1].style == 'sleeping') then
         actor1.wants[1].style = 'wake'
       end
-      actor1.action:runTo(MyPosition:new(actor1:getPosition()))
+      actor1.action:stopRun()
       actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
       actor1:wantLookAt('collide', toobjid)
       -- actor1:wantStayForAWhile()

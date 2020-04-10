@@ -9,9 +9,9 @@ function Yangwanli:new ()
       { x = -7, y = 9, z = -11 }, -- 床尾位置
       ActorHelper.FACE_YAW.WEST -- 床尾朝向西
     },
-    candles = {
-      MyBlockHelper:addCandle(-18, 9, -10), -- 屋角落蜡烛台
-      MyBlockHelper:addCandle(-11, 9, -14) -- 屋中央蜡烛台
+    candlePositions = {
+      MyPosition:new(-18, 9, -10), -- 屋角落蜡烛台
+      MyPosition:new(-11, 9, -14) -- 屋中央蜡烛台
     },
     homeAreaPositions = {
       { x = -18, y = 9, z = -19 }, -- 屋门口边上
@@ -34,7 +34,7 @@ function Yangwanli:wantAtHour (hour)
   if (hour == 7) then
     self:wantFreeInArea({ self.homeAreaPositions })
   elseif (hour == 19) then
-    self:lightCandle(true)
+    self:lightCandle(nil, true)
     self:nextWantFreeInArea({ self.homeAreaPositions })
   elseif (hour == 22) then
     self:putOutCandleAndGoToBed()
@@ -47,12 +47,11 @@ function Yangwanli:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 7 and hour < 19) then
-      self:wantFreeInArea({ self.homeAreaPositions })
+      self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
-      self:lightCandle(true)
-      self:nextWantFreeInArea({ self.homeAreaPositions })
+      self:wantAtHour(19)
     else
-      self:putOutCandleAndGoToBed()
+      self:wantAtHour(22)
     end
   end
   return initSuc
@@ -98,5 +97,22 @@ function Yangwanli:collidePlayer (playerid, isPlayerInFront)
       self.action:speak(playerid, nickname, '，我去熄蜡烛了，有事等下再说。')
       self.action:playFree2(2)
     end
+  end
+end
+
+function Yangwanli:candleEvent (myPlayer, candle)
+  local nickname = myPlayer:getName()
+  if (self.think == 'sleep' and candle.isLit) then
+    self.action:stopRun()
+    if (self.wants[1].style == 'sleeping') then
+      self.action:speak(myPlayer.objid, nickname, '，老人家在睡觉，你点蜡烛做什么!')
+    else
+      self.action:speak(myPlayer.objid, nickname, '，老人家要睡觉了，你还点蜡烛做什么!')
+    end
+    self:wantLookAt('sleep', myPlayer.objid, 4)
+    self.action:playAngry(1)
+    MyTimeHelper:callFnAfterSecond (function (p)
+      self:wantAtHour(22)
+    end, 3)
   end
 end

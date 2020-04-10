@@ -82,6 +82,7 @@ function initMyActors ()
   huaxiaolou = Huaxiaolou:new()
   LogHelper:debug('初始化花小楼完成')
   yexiaolong = Yexiaolong:new()
+  LogHelper:debug('初始化叶小龙完成')
   local myActors = { wenyu, jiangfeng, jiangyu, wangdali, miaolan, yangwanli, huaxiaolou, yexiaolong }
   for i, v in ipairs(myActors) do
     MyTimeHelper:initActor(v)

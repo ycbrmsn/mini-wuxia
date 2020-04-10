@@ -154,15 +154,16 @@ function MyActor:goToBed (isNow)
   end
 end
 
-function MyActor:lightCandle (isNow, candles)
-  candles = candles or self.candles
+function MyActor:lightCandle (think, isNow, candlePositions)
+  candlePositions = candlePositions or self.candlePositions
   local index = 1
-  for i, v in ipairs(candles) do
-    if (not(v.isLit)) then
+  for i, v in ipairs(candlePositions) do
+    local candle = MyBlockHelper:getCandle(v)
+    if (not(candle) or not(candle.isLit)) then
       if (index == 1 and isNow) then
-        self:toggleCandle(v.pos, true, true)
+        self:toggleCandle(think, v, true, true)
       else
-        self:toggleCandle(v.pos, true)
+        self:toggleCandle(think, v, true)
       end
       index = index + 1
     end
@@ -170,15 +171,16 @@ function MyActor:lightCandle (isNow, candles)
   return index
 end
 
-function MyActor:putOutCandle (isNow, candles)
-  candles = candles or self.candles
+function MyActor:putOutCandle (think, isNow, candlePositions)
+  candlePositions = candlePositions or self.candlePositions
   local index = 1
-  for i, v in ipairs(candles) do
-    if (v.isLit) then
+  for i, v in ipairs(candlePositions) do
+    local candle = MyBlockHelper:getCandle(v)
+    if (not(candle) or candle.isLit) then
       if (index == 1 and isNow) then
-        self:toggleCandle(v.pos, false, true)
+        self:toggleCandle(think, v, false, true)
       else
-        self:toggleCandle(v.pos, false)
+        self:toggleCandle(think, v, false)
       end
       index = index + 1
     end
@@ -186,8 +188,8 @@ function MyActor:putOutCandle (isNow, candles)
   return index
 end
 
-function MyActor:putOutCandleAndGoToBed (candles)
-  local index = self:putOutCandle(true, candles)
+function MyActor:putOutCandleAndGoToBed (candlePositions)
+  local index = self:putOutCandle(true, candlePositions)
   self:goToBed(index == 1)
 end
 
@@ -227,7 +229,7 @@ function MyActor:wantStayForAWhile(second)
     self:defaultWant()
   end
   self.wants[1].currentRestTime = second
-  self:setWalkSpeed(0)
+  self.action:stopRun()
 end
 
 -- 生物想巡逻
@@ -306,12 +308,13 @@ function MyActor:wantGoToSleep (bedData)
   self:nextWantSleep('sleep', bedData[2])
 end
 
-function MyActor:toggleCandle (myPosition, isLitCandle, isNow)
-  local think
-  if (isLitCandle) then
-    think = 'lightCandle'
-  else
-    think = 'putOutCandle'
+function MyActor:toggleCandle (think, myPosition, isLitCandle, isNow)
+  if (not(think)) then
+    if (isLitCandle) then
+      think = 'lightCandle'
+    else
+      think = 'putOutCandle'
+    end
   end
   if (isNow) then
     self:wantApproach(think, { myPosition })
@@ -406,6 +409,11 @@ function MyActor:playClickAct ()
   self.action:playFree2(2)
 end
 
+function MyActor:candleEvent (myPlayer, candle)
+  local nickname = myPlayer:getName()
+  self.action:speak(myPlayer.objid, nickname, '，你搞啥呢')
+end
+
 function MyActor:getName ()
   if (not(self.actorname)) then
     self.actorname = CreatureHelper:getActorName(self.objid)
@@ -452,6 +460,12 @@ function MyActor:initActor (initPosition)
     self.action = MyActorAction:new(self)
     MyActorHelper:addPerson(self) -- 生物加入集合中
     local areaid = AreaHelper:getAreaByPos(initPosition)
+    -- 加入蜡烛台数据
+    if (self.candlePositions and #self.candlePositions > 0) then
+      for i, v in ipairs(self.candlePositions) do
+        MyBlockHelper:addCandle(v)
+      end
+    end
     -- 清除木围栏
     AreaHelper:clearAllWoodenFence(areaid)
     return true

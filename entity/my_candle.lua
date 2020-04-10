@@ -30,6 +30,15 @@ function MyCandle:isBlockCandle (blockid)
   return blockid == self.BLOCK_ID.CANDLE or blockid == self.BLOCK_ID.LIT_CANDLE, blockid
 end
 
+-- 是否是同一个
+function MyCandle:isSameOne (myPosition)
+  if (type(myPosition) == 'table') then
+    return myPosition.x == self.pos.x and myPosition.y == self.pos.y and myPosition.z == self.pos.z
+  else
+    return false
+  end
+end
+
 -- 点燃
 function MyCandle:light ()
   self.isLit = true

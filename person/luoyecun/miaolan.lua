@@ -9,9 +9,9 @@ function Miaolan:new ()
       { x = -30, y = 14, z = -15 }, -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
     },
-    candles = {
-      MyBlockHelper:addCandle(-32, 9, -15), -- 楼下蜡烛台
-      MyBlockHelper:addCandle(-28, 14, -14) -- 楼上蜡烛台
+    candlePositions = {
+      MyPosition:new(-32, 9, -15), -- 楼下蜡烛台
+      MyPosition:new(-28, 14, -14) -- 楼上蜡烛台
     },
     secondFloorPosition = { x = -29, y = 13, z = -14 }, -- 二楼床旁边
     secondFloorPositions1 = {
@@ -49,11 +49,11 @@ function Miaolan:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 7 and hour < 19) then
-      self:goToSell()
+      self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
-      self:goSecondFloor()
+      self:wantAtHour(19)
     else
-      self:putOutCandleAndGoToBed()
+      self:wantAtHour(22)
     end
   end
   return initSuc
@@ -67,7 +67,7 @@ end
 
 -- 上二楼
 function Miaolan:goSecondFloor ()
-  self:lightCandle(true, { self.candles[2] })
+  self:lightCandle(nil, true, { self.candlePositions[2] })
   self:nextWantFreeInArea({ self.secondFloorPositions1, self.secondFloorPositions2 })
 end
 

@@ -13,9 +13,9 @@ function Wenyu:new ()
       { x = 20, y = 9, z = -12 }, -- 床尾位置2
       ActorHelper.FACE_YAW.EAST -- 床尾朝向东
     },
-    candles = {
-      MyBlockHelper:addCandle(25, 9, -22), -- 门口蜡烛台
-      MyBlockHelper:addCandle(23, 9, -12) -- 里屋蜡烛台
+    candlePositions = {
+      MyPosition:new(25, 9, -22), -- 门口蜡烛台
+      MyPosition:new(23, 9, -12) -- 里屋蜡烛台
     },
     lastBedData = nil, -- 上一次睡的床尾位置
     currentBedData = nil, -- 当前睡的床尾位置
@@ -57,11 +57,11 @@ function Wenyu:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 7 and hour < 19) then
-      self:wantFreeTime()
+      self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
-      self:goHome()
+      self:wantAtHour(19)
     else
-     self:putOutCandleAndGoToBed() 
+      self:wantAtHour(22)
     end
   end
   return initSuc
@@ -80,12 +80,13 @@ end
 
 function MyActor:putOutCandleAndGoToBed ()
   local index = 1
-  for i, v in ipairs(self.candles) do
-    if (v.isLit) then
+  for i, v in ipairs(self.candlePositions) do
+    local candle = MyBlockHelper:getCandle(v)
+    if (not(candle) or candle.isLit) then
       if (index == 1) then
-        self:toggleCandle(v.pos, false, true)
+        self:toggleCandle('sleep', v, false, true)
       else
-        self:toggleCandle(v.pos, false)
+        self:toggleCandle('sleep', v, false)
       end
       index = index + 1
     end

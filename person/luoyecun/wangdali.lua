@@ -9,8 +9,8 @@ function Wangdali:new ()
       { x = -26, y = 10, z = -47 }, -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
-    candles = {
-      MyBlockHelper:addCandle(-32, 10, -42) -- 蜡烛台
+    candlePositions = {
+      MyPosition:new(-32, 10, -42) -- 蜡烛台
     },
     bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
     movePositions = {
@@ -55,9 +55,9 @@ function Wangdali:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 7 and hour < 19) then
-      self:goOutDoor()
+      self:wantAtHour(7)
     else
-      self:goHome()
+      self:wantAtHour(19)
     end
   end
   return initSuc
@@ -65,7 +65,8 @@ end
 
 -- 外出
 function Wangdali:goOutDoor ()
-  self:wantMove('goOut', self.movePositions)
+  self:putOutCandle(nil, true)
+  self:nextWantMove('goOut', self.movePositions)
   self:nextWantFreeInArea({ self.outDoorPositions })
 end
 

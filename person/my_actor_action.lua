@@ -35,6 +35,10 @@ function MyActorAction:transmitTo (pos)
   return self.myActor:setPosition(pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
+function MyActorAction:stopRun ()
+  self:runTo(MyPosition:new(self.myActor:getPosition()))
+end
+
 function MyActorAction:playHi (afterSeconds)
   if (afterSeconds) then
     MyTimeHelper:callFnAfterSecond (function (p)

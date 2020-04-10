@@ -51,8 +51,31 @@ function MyBlockHelper:checkIfRemoveCandle (myPosition, blockid)
   end
 end
 
-function MyBlockHelper:check (myPosition)
-  self:handleCandle(myPosition)
+function MyBlockHelper:check (myPosition, objid)
+  local candle = self:handleCandle(myPosition)
+  if (candle) then
+    local myActor = self:getWhoseCandle(myPosition)
+    if (myActor) then
+      local myPlayer = MyPlayerHelper:getPlayer(objid)
+      myActor:candleEvent(myPlayer, candle)
+    end
+  end
+end
+
+function MyBlockHelper:getWhoseCandle (myPosition)
+  local index = 1
+  myPosition = myPosition:floor()
+  for k, v in pairs(MyActorHelper:getAllActors()) do
+    if (v.candlePositions and #v.candlePositions > 0) then
+      for kk, vv in pairs(v.candlePositions) do
+        index = index + 1
+        if (vv:equals(myPosition)) then
+          return v
+        end
+      end
+    end
+  end
+  return nil
 end
 
 function MyBlockHelper:handleCandle (myPosition, isLit)
@@ -69,4 +92,5 @@ function MyBlockHelper:handleCandle (myPosition, isLit)
       candle:putOut()
     end
   end
+  return candle
 end

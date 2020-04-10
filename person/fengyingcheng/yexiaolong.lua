@@ -9,8 +9,8 @@ function Yexiaolong:new ()
       { x = 28, y = 10, z = -35 }, -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
     },
-    candles = {
-      MyBlockHelper:addCandle(25, 10, -38) -- 客栈中蜡烛台
+    candlePositions = {
+      MyPosition:new(25, 10, -38) -- 客栈中蜡烛台
     },
     homeAreaPositions = {
       { x = 27, y = 10, z = -38 }, -- 衣柜旁
@@ -34,7 +34,7 @@ function Yexiaolong:wantAtHour (hour)
     if (hour == 7) then
       self:wantFreeInArea({ self.homeAreaPositions })
     elseif (hour == 19) then
-      self:lightCandle(true)
+      self:lightCandle(nil, true)
       self:nextWantFreeInArea({ self.homeAreaPositions })
     elseif (hour == 22) then
       self:putOutCandleAndGoToBed()
@@ -50,12 +50,11 @@ function Yexiaolong:init ()
     if (mainIndex == 1) then
       local hour = MyTimeHelper:getHour()
       if (hour >= 7 and hour < 19) then
-        self:wantFreeInArea({ self.homeAreaPositions })
+        self:wantAtHour(7)
       elseif (hour >= 19 and hour < 22) then
-        self:lightCandle(true)
-        self:nextWantFreeInArea({ self.homeAreaPositions })
+        self:wantAtHour(19)
       else
-        self:putOutCandleAndGoToBed()
+        self:wantAtHour(22)
       end
     end
   end

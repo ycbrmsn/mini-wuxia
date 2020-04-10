@@ -9,10 +9,10 @@ function Jiangyu:new ()
       { x = 12, y = 9, z = -13 }, -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
-    candles = {
-      MyBlockHelper:addCandle(8, 12, 13), -- 最东边蜡烛台
-      MyBlockHelper:addCandle(0, 12, 13), -- 中央蜡烛台
-      MyBlockHelper:addCandle(-8, 12, 13) -- 最西边蜡烛台
+    candlePositions = {
+      MyPosition:new(8, 12, 13), -- 最东边蜡烛台
+      MyPosition:new(0, 12, 13), -- 中央蜡烛台
+      MyPosition:new(-8, 12, 13) -- 最西边蜡烛台
     },
     patrolPositions = jiangfeng.patrolPositions,
     doorPositions = jiangfeng.doorPositions,
@@ -47,13 +47,13 @@ function Jiangyu:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 7 and hour < 9) then
-      self:defaultWant()
+      self:wantAtHour(7)
     elseif (hour >= 9 and hour < 18) then
-      self:putOutCandleAndGoToBed()
+      self:wantAtHour(9)
     elseif (hour >= 18 and hour < 19) then
-      self:defaultWant()
+      self:wantAtHour(18)
     else
-      self:toPatrol()
+      self:wantAtHour(19)
     end
   end
   return initSuc
@@ -68,7 +68,7 @@ end
 
 -- 回家
 function Jiangyu:goHome ()
-  self:putOutCandle(true, { self.candles[3], self.candles[2], self.candles[1] })
+  self:putOutCandle(nil, true, { self.candlePositions[3], self.candlePositions[2], self.candlePositions[1] })
   self:nextWantMove('goHome', self.doorPositions)
   self:nextWantFreeInArea({ self.homeAreaPositions })
 end

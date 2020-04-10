@@ -21,13 +21,14 @@ end
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function (p)
-    MyBlockHelper:check(p.eventArgs)
+    local myPosition = MyPosition:new(p.eventArgs)
+    MyBlockHelper:check(myPosition, p.objid)
     -- wenyu:toggleCandle(wenyu.candles[1], true)
     -- yexiaolong:putOutCandleAndGoToBed()
     -- for k, v in pairs(MyBlockHelper.candles) do
     --   LogHelper:debug('candle: ', v.pos:toString(), ',', v.isLit)
     -- end
-  end, { eventArgs = eventArgs })
+  end, { eventArgs = eventArgs, objid = objid })
   -- wenyu:wantDoNothing()
   -- wenyu:lookAt(MyPlayerHelper:getHostPlayer().objid)
   -- local story2 = MyStoryHelper:getStory(2)

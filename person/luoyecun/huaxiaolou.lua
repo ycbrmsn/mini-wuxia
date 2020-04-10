@@ -5,10 +5,10 @@ function Huaxiaolou:new ()
   local o = {
     objid = 4301071935,
     initPosition = { x = 10, y = 9, z = -43 },
-    candles = {
-      MyBlockHelper:addCandle(11, 10, -41), -- 柜台上的蜡烛台
-      MyBlockHelper:addCandle(18, 10, -43), -- 大厅中的蜡烛台
-      MyBlockHelper:addCandle(28, 10, -40) -- 走廊上的蜡烛台
+    candlePositions = {
+      MyPosition:new(11, 10, -41), -- 柜台上的蜡烛台
+      MyPosition:new(18, 10, -43), -- 大厅中的蜡烛台
+      MyPosition:new(28, 10, -40) -- 走廊上的蜡烛台
     }
   }
   setmetatable(o, self)
@@ -24,16 +24,16 @@ end
 -- 在几点想做什么
 function Huaxiaolou:wantAtHour (hour)
   if (hour == 6) then
-    self:lightCandle(true)
+    self:lightCandle(nil, true)
     self:goToSell()
   elseif (hour == 7) then
-    self:putOutCandle(true)
+    self:putOutCandle(nil, true)
     self:goToSell()
   elseif (hour == 19) then
-    self:lightCandle(true)
+    self:lightCandle(nil, true)
     self:goToSell()
   elseif (hour == 22) then
-    self:putOutCandle(true, { self.candles[3] })
+    self:putOutCandle(nil, true, { self.candlePositions[3] })
     self:goToSell()
   end
 end
@@ -44,17 +44,13 @@ function Huaxiaolou:init ()
   if (initSuc) then
     local hour = MyTimeHelper:getHour()
     if (hour >= 6 and hour < 7) then
-      self:lightCandle(true)
-      self:goToSell()
+      self:wantAtHour(6)
     elseif (hour >= 7 and hour < 19) then
-      self:putOutCandle(true)
-      self:goToSell()
+      self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
-      self:lightCandle(true)
-      self:goToSell()
+      self:wantAtHour(19)
     else
-      self:putOutCandle(true, { self.candles[3] })
-      self:goToSell()
+      self:wantAtHour(22)
     end
   end
   return initSuc
