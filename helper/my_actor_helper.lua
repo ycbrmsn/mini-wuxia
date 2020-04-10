@@ -155,7 +155,7 @@ function MyActorHelper:playerClickActor (objid, toobjid)
       myActor.wants[1].style = 'wake'
     end
     myActor.action:stopRun()
-    myActor:wantLookAt('click', objid)
+    myActor:wantLookAt(nil, objid)
     myActor:playClickAct()
   end
 end
@@ -170,7 +170,7 @@ function MyActorHelper:actorCollide (objid, toobjid)
       end
       actor1.action:stopRun()
       actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
-      actor1:wantLookAt('collide', toobjid)
+      actor1:wantLookAt(nil, toobjid)
       -- actor1:wantStayForAWhile()
       -- LogHelper:info('执行了')
     else

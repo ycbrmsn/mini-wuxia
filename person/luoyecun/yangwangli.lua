@@ -41,18 +41,22 @@ function Yangwanli:wantAtHour (hour)
   end
 end
 
+function Yangwanli:doItNow ()
+  local hour = MyTimeHelper:getHour()
+  if (hour >= 7 and hour < 19) then
+    self:wantAtHour(7)
+  elseif (hour >= 19 and hour < 22) then
+    self:wantAtHour(19)
+  else
+    self:wantAtHour(22)
+  end
+end
+
 -- 初始化
 function Yangwanli:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    local hour = MyTimeHelper:getHour()
-    if (hour >= 7 and hour < 19) then
-      self:wantAtHour(7)
-    elseif (hour >= 19 and hour < 22) then
-      self:wantAtHour(19)
-    else
-      self:wantAtHour(22)
-    end
+    self:doItNow()
   end
   return initSuc
 end
@@ -112,7 +116,7 @@ function Yangwanli:candleEvent (myPlayer, candle)
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playAngry(1)
     MyTimeHelper:callFnAfterSecond (function (p)
-      self:wantAtHour(22)
+      self:doItNow()
     end, 3)
   end
 end

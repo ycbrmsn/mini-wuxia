@@ -283,23 +283,21 @@ function MyActor:wantDoNothing (think)
 end
 
 function MyActor:wantLookAt (think, myPosition, restTime)
-  think = think or 'lookAt'
   MyActorHelper:closeAI(self.objid)
-  self.think = think
-  local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
   if (self:isWantsExist()) then
+    think = think or self.think
+    local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
     if (self.wants[1].style == 'lookAt') then
       self.wants[1] = want
     else
       table.insert(self.wants, 1, want)
     end
   else
+    think = think or 'lookAt'
+    local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
     self.wants = { want }
   end
-  -- self:setWalkSpeed(0)
-  -- MyTimeHelper:callFnAfterSecond (function (p)
-  --   ActorHelper:playAct(p.objid, ActorHelper.ACT.STAND)
-  -- end, 3, { objid = self.objid })
+  self.think = think
 end
 
 function MyActor:wantGoToSleep (bedData)

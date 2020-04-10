@@ -42,21 +42,25 @@ function Yexiaolong:wantAtHour (hour)
   end
 end
 
+function Yexiaolong:doItNow ()
+  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  if (mainIndex == 1) then
+    local hour = MyTimeHelper:getHour()
+    if (hour >= 7 and hour < 19) then
+      self:wantAtHour(7)
+    elseif (hour >= 19 and hour < 22) then
+      self:wantAtHour(19)
+    else
+      self:wantAtHour(22)
+    end
+  end
+end
+
 -- 初始化
 function Yexiaolong:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    local mainIndex = MyStoryHelper:getMainStoryIndex()
-    if (mainIndex == 1) then
-      local hour = MyTimeHelper:getHour()
-      if (hour >= 7 and hour < 19) then
-        self:wantAtHour(7)
-      elseif (hour >= 19 and hour < 22) then
-        self:wantAtHour(19)
-      else
-        self:wantAtHour(22)
-      end
-    end
+    self:doItNow()
   end
   return initSuc
 end
@@ -76,5 +80,29 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
     self.action:speak(playerid, nickname, '，我要睡觉了，不要惹我哟。')
   else
     self.action:speak(playerid, nickname, '，找我有事吗？')
+  end
+end
+
+function Yexiaolong:candleEvent (myPlayer, candle)
+  local nickname
+  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  if (mainIndex == 1 and mainProgress < 5) then
+    nickname = '年轻人'
+  else
+    nickname = myPlayer:getName()
+  end
+  if (self.think == 'sleep' and candle.isLit) then
+    self.action:stopRun()
+    if (self.wants[1].style == 'sleeping') then
+      self.action:speak(myPlayer.objid, nickname, '，你想吃棍子吗？不要碰蜡烛。')
+    else
+      self.action:speak(myPlayer.objid, nickname, '，我要睡觉了，离蜡烛远点。')
+    end
+    self:wantLookAt('sleep', myPlayer.objid, 4)
+    self.action:playAngry(1)
+    MyTimeHelper:callFnAfterSecond (function (p)
+      self:doItNow()
+    end, 3)
   end
 end

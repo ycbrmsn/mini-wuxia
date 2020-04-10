@@ -49,16 +49,20 @@ function Wangdali:wantAtHour (hour)
   end
 end
 
+function Wangdali:doItNow ()
+  local hour = MyTimeHelper:getHour()
+  if (hour >= 7 and hour < 19) then
+    self:wantAtHour(7)
+  else
+    self:wantAtHour(19)
+  end
+end
+
 -- 初始化
 function Wangdali:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    local hour = MyTimeHelper:getHour()
-    if (hour >= 7 and hour < 19) then
-      self:wantAtHour(7)
-    else
-      self:wantAtHour(19)
-    end
+    self:doItNow()
   end
   return initSuc
 end
@@ -72,9 +76,14 @@ end
 
 -- 回家
 function Wangdali:goHome ()
-  self:wantMove('goHome', { self.doorPosition })
-  self:lightCandle()
-  self:nextWantFreeInArea({ self.homePositions })
+  if (self.think == 'atHome') then
+    self:lightCandle(nil, true)
+    self:nextWantFreeInArea('atHome', { self.homePositions })
+  else
+    self:wantMove('goHome', { self.doorPosition })
+    self:lightCandle()
+    self:nextWantFreeInArea('atHome', { self.homePositions })
+  end
 end
 
 -- 铁匠这个模型没有此动作
@@ -86,7 +95,7 @@ function Wangdali:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self.action:speak(playerid, nickname, '，你撞我做什么?')
-  elseif (self.think == 'free') then
+  elseif (self.think == 'free' or self.think == 'atHome') then
     self.action:speak(playerid, nickname, '，你想买点装备吗？')
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
@@ -96,5 +105,17 @@ function Wangdali:collidePlayer (playerid, isPlayerInFront)
     end
   elseif (self.think == 'sleep') then
     self.action:speak(playerid, nickname, '，我要睡觉了，有事明天再说。')
+  end
+end
+
+function Wangdali:candleEvent (myPlayer, candle)
+  local nickname = myPlayer:getName()
+  if (self.think == 'atHome') then
+    self.action:stopRun()
+    self.action:speak(myPlayer.objid, nickname, '，别关灯。')
+    self:wantLookAt(nil, myPlayer.objid, 4)
+    MyTimeHelper:callFnAfterSecond (function (p)
+      self:doItNow()
+    end, 3)
   end
 end

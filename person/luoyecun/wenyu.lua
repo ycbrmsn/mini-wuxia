@@ -51,18 +51,22 @@ function Wenyu:wantAtHour (hour)
   end
 end
 
+function Wenyu:doItNow ()
+  local hour = MyTimeHelper:getHour()
+  if (hour >= 7 and hour < 19) then
+    self:wantAtHour(7)
+  elseif (hour >= 19 and hour < 22) then
+    self:wantAtHour(19)
+  else
+    self:wantAtHour(22)
+  end
+end
+
 -- 初始化
 function Wenyu:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    local hour = MyTimeHelper:getHour()
-    if (hour >= 7 and hour < 19) then
-      self:wantAtHour(7)
-    elseif (hour >= 19 and hour < 22) then
-      self:wantAtHour(19)
-    else
-      self:wantAtHour(22)
-    end
+    self:doItNow()
   end
   return initSuc
 end
@@ -153,5 +157,22 @@ function Wenyu:collidePlayer (playerid, isPlayerInFront)
       self.action:speak(playerid, nickname, '，你要帮我熄蜡烛吗？')
       self.action:playFree2(2)
     end
+  end
+end
+
+function Wenyu:candleEvent (myPlayer, candle)
+  local nickname = myPlayer:getName()
+  if (self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit) then
+    self.action:stopRun()
+    if (self.wants[1].style == 'sleeping') then
+      self.action:speak(myPlayer.objid, nickname, '，我在睡觉呢，不要点蜡烛啦。')
+    else
+      self.action:speak(myPlayer.objid, nickname, '，我要睡觉了，不要点蜡烛啦。')
+    end
+    self:wantLookAt('sleep', myPlayer.objid, 4)
+    self.action:playFree2(1)
+    MyTimeHelper:callFnAfterSecond (function (p)
+      self:doItNow()
+    end, 3)
   end
 end
