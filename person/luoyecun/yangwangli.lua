@@ -62,20 +62,41 @@ end
 function Yangwanli:goHome ()
   self:wantMove('goHome', { self.doorPosition }) -- 门外
 end
-
+-- free提一提背上酒壶 free2扔酒壶喝酒 poss喝酒
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self.action:speak(playerid, nickname, '，你怎么能撞老人家呢？')
+    self.action:playFree(2)
   elseif (self.think == 'free') then
     self.action:speak(playerid, nickname, '，找我有事吗？')
+    self.action:playFree2(2) -- 扔酒壶
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
       self.action:speak(playerid, nickname, '，我要回家。不要挡住老人家的路啊。')
+      self.action:playFree(2)
     else
       self.action:speak(playerid, nickname, '，有事去我屋里说。不要随便撞人啊')
+      self.action:playFree(2)
     end
   elseif (self.think == 'sleep') then
     self.action:speak(playerid, nickname, '，我要睡觉了，不要打搅我。要尊老知不知道。')
+    self.action:playAngry(2)
+  elseif (self.think == 'lightCandle') then
+    if (isPlayerInFront) then
+      self.action:speak(playerid, nickname, '，不要挡着老人家点蜡烛。')
+      self.action:playFree2(2)
+    else
+      self.action:speak(playerid, nickname, '，不要影响我去点蜡烛，多危险知道不？')
+      self.action:playFree2(2)
+    end
+  elseif (self.think == 'putOutCandle') then
+    if (isPlayerInFront) then
+      self.action:speak(playerid, nickname, '，让一让，老人家要熄蜡烛去了。')
+      self.action:playFree2(2)
+    else
+      self.action:speak(playerid, nickname, '，我去熄蜡烛了，有事等下再说。')
+      self.action:playFree2(2)
+    end
   end
 end

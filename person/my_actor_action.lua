@@ -35,20 +35,94 @@ function MyActorAction:transmitTo (pos)
   return self.myActor:setPosition(pos.x + 0.5, pos.y, pos.z + 0.5)
 end
 
-function MyActorAction:playDown ()
-  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
+function MyActorAction:playHi (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.HI)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.HI)
+  end
 end
 
-function MyActorAction:playSleep ()
-  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
+function MyActorAction:playDown (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
+  end
 end
 
-function MyActorAction:playSit ()
-  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
+function MyActorAction:playSleep (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
+  end
 end
 
-function MyActorAction:playAttack ()
-  return ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
+function MyActorAction:playSit (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
+  end
+end
+
+function MyActorAction:playAttack (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
+  end
+end
+
+function MyActorAction:playFree (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE)
+  end
+end
+
+function MyActorAction:playFree2 (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE2)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE2)
+  end
+end
+
+function MyActorAction:playPoss (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.POSE)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.POSE)
+  end
+end
+
+function MyActorAction:playAngry (afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ANGRY)
+    end, afterSeconds)
+  else
+    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ANGRY)
+  end
 end
 
 -- 生物行动
@@ -88,7 +162,7 @@ function MyActorAction:execute ()
       want.style = 'sleeping'
       self:playSleep()
     elseif (want.style == 'wake') then
-      self.myActor:goToBed()
+      self.myActor:putOutCandleAndGoToBed()
     elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
       self.myActor:lookAt(want.toPos)
     elseif (want.style == 'lookAt') then

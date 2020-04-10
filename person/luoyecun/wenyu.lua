@@ -118,17 +118,39 @@ function Wenyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self.action:speak(playerid, nickname, '，不要撞我嘛。')
+    self.action:playFree(2)
   elseif (self.think == 'free') then
     self.action:speak(playerid, nickname, '，要不要来玩丫？')
+    self.action:playFree2(2)
   elseif (self.think == 'notice') then
     self.action:speak(playerid, nickname, '，有好消息告诉你哦。')
+    self.action:playHi(2)
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
       self.action:speak(playerid, nickname, '，我要回家了。不要站在路前面，好嘛。')
+      self.action:playFree2(2)
     else
       self.action:speak(playerid, nickname, '，我要回家了。明天再玩吧。')
+      self.action:playFree2(2)
     end
   elseif (self.think == 'sleep') then
     self.action:speak(playerid, nickname, '，我要睡觉了，明天再玩吧。')
+    self.action:playFree2(2)
+  elseif (self.think == 'lightCandle') then
+    if (isPlayerInFront) then
+      self.action:speak(playerid, nickname, '，我看不清路了，要去点蜡烛。')
+      self.action:playFree2(2)
+    else
+      self.action:speak(playerid, nickname, '，你要帮我点蜡烛吗？')
+      self.action:playFree2(2)
+    end
+  elseif (self.think == 'putOutCandle') then
+    if (isPlayerInFront) then
+      self.action:speak(playerid, nickname, '，让一让嘛，我要熄蜡烛去了。')
+      self.action:playFree2(2)
+    else
+      self.action:speak(playerid, nickname, '，你要帮我熄蜡烛吗？')
+      self.action:playFree2(2)
+    end
   end
 end

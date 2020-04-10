@@ -402,6 +402,10 @@ function MyActor:wantAtHour (hour)
   -- 各个生物重写此方法内容
 end
 
+function MyActor:playClickAct ()
+  self.action:playFree2(2)
+end
+
 function MyActor:getName ()
   if (not(self.actorname)) then
     self.actorname = CreatureHelper:getActorName(self.objid)
