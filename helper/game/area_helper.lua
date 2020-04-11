@@ -113,3 +113,8 @@ function AreaHelper:getAreaRectRange (areaid)
     return Area:getAreaRectRange(p.areaid)
   end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
 end
+
+-- 位置是否在区域内
+function AreaHelper:posInArea (pos, areaid)
+  return Area:posInArea(pos, areaid) == ErrorCode.OK
+end

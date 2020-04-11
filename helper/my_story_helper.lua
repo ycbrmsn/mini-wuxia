@@ -113,3 +113,9 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
     Story1:fasterTime()
   end
 end
+
+function MyStoryHelper:playerLeaveArea (objid, areaid)
+  if (areaid == self:getStory(2).areaid and self.mainIndex == 2 and self.mainProgress == 3) then -- 跑出强盗区域
+    Story2:comeBack(objid, areaid)
+  end
+end

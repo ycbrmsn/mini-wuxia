@@ -15,6 +15,9 @@ local playerLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug('玩家离开区域' .. areaid)
+  LogHelper:call(function (p)
+    MyAreaHelper:playerLeaveArea(eventArgs.eventobjid, eventArgs.areaid)
+  end)
 end
 
 -- 参数 eventobjid, blockid, x, y, z

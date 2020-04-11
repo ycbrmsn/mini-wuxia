@@ -8,7 +8,8 @@ MyPlayer = {
   level = 1,
   totalLevel = 1,
   exp = 0,
-  levelExp = 100
+  levelExp = 100,
+  positions = nil
 }
 
 function MyPlayer:new (objid)
@@ -19,6 +20,17 @@ function MyPlayer:new (objid)
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+function MyPlayer:updatePositions ()
+  if (not(self.positions)) then
+    self.positions = {}
+  end
+  local myPosition = MyPosition:new(self:getPosition())
+  table.insert(self.positions, 1, myPosition)
+  if (#self.positions > 3) then
+    table.remove(self.positions)
+  end
 end
 
 function MyPlayer:getName ()

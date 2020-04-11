@@ -51,6 +51,10 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
   end
 end
 
+function MyAreaHelper:playerLeaveArea (objid, areaid)
+  MyStoryHelper:playerLeaveArea(objid, areaid)
+end
+
 function MyAreaHelper:creatureEnterArea (objid)
   
 end

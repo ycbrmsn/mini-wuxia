@@ -116,6 +116,7 @@ local atSecond = function (eventArgs)
     MyTimeHelper:updateTime(p.second)
     MyTimeHelper:runFnAfterSecond(p.second)
     MyTimeHelper:runFnInterval(p.second)
+    MyPlayerHelper:updateEveryPlayerPositions()
 
     if (p.second == 1) then
       initDoorAreas()
@@ -126,7 +127,9 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    if (p.second == 5) then
+    if (p.second == 3) then
+      MyStoryHelper.mainIndex = 2
+      MyStoryHelper.mainProgress = 1
       Story2:goToCollege()
     end
   end, { second = second })

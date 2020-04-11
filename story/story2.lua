@@ -53,9 +53,16 @@ function Story2:init ()
       { x = -8, y = 7, z = 326 },
       { x = 10, y = 7, z = 324 },
       { x = -10, y = 7, z = 324 }
-    }
+    },
+    killXiaotoumuNum = 0,
+    killLouluoNum = 0
   }
   self:setData(data)
+
+  if (MyStoryHelper:getMainStoryIndex() <= 2) then -- 剧情2
+    local areaid = AreaHelper:getAreaByPos(data.eventPositions[1])
+    data.areaid = areaid
+  end
   return data
 end
 
@@ -72,7 +79,7 @@ function Story2:goToCollege ()
     PlayerHelper:rotateCamera(v.objid, ActorHelper.FACE_YAW.SOUTH, 0)
   end
   -- 说话
-  local waitSeconds = 1
+  local waitSeconds = 2
   local hostPlayer = MyPlayerHelper:getHostPlayer()
   yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不错，所有人都到齐了。那我们出发吧。')
   yexiaolong.action:playHi(waitSeconds)
@@ -91,9 +98,7 @@ function Story2:goToCollege ()
 
   waitSeconds = waitSeconds + 3
   yexiaolong.action:speakToAllAfterSecond(waitSeconds, '嗯，这个嘛……')
-  MyPlayerHelper:everyPlayerDoSomeThing(function (p)
-    p.action:playThink()
-  end, waitSeconds)
+  yexiaolong.action:playThink(waitSeconds)
 
   waitSeconds = waitSeconds + 2
   yexiaolong.action:speakInHeartToAllAfterSecond(waitSeconds, '没想到村里的东西这么好吃。一不小心把盘缠给花光了……')
@@ -150,7 +155,7 @@ end
 -- 先生暂时离开
 function Story2:teacherLeaveForAWhile (myPlayer)
   local story2 = MyStoryHelper:getStory(2)
-  myPlayer.action:speakToAll('先生，怎么停下来了？')
+  myPlayer.action:speakToAll('先生，要到了吗？')
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function (p)
@@ -267,9 +272,54 @@ function Story2:meetBandits (hostPlayer)
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function (p)
+    MyPlayerHelper:everyPlayerNotify('注意，你不能离此地过远')
     qiangdaoXiaotoumu:setAIActive(true)
     qiangdaoLouluo:setAIActive(true)
     MyPlayerHelper:everyPlayerEnableMove(true)
     MyStoryHelper:forward('消灭强盗')
   end, waitSeconds)
+end
+
+function Story2:showMessage (objid)
+  local story2 = MyStoryHelper:getStory(2)
+  local actorid = CreatureHelper:getActorID(objid)
+  local isRight = false
+  if (qiangdaoLouluo.actorid == actorid) then
+    story2.killLouluoNum = story2.killLouluoNum + 1
+    isRight = true
+  elseif (qiangdaoXiaotoumu.actorid == actorid) then
+    story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
+    isRight = true
+  end
+  if (isRight) then
+    local remainXiaolouluoNum = #story2.louluoPositions - story2.killLouluoNum
+    local remainXiaotoumuNum = #story2.xiaotoumuPosition - story2.killXiaotoumuNum
+    if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
+      local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
+      ChatHelper:sendSystemMsg(msg)
+    else
+      self:wipeOutQiangdao()
+    end
+  end
+end
+
+function Story2:comeBack (playerid, areaid)
+  MyPlayerHelper:showToast(playerid, '你不能跑得太远')
+  local player = MyPlayerHelper:getPlayer(playerid)
+  local pos = MyPosition:new(player:getPosition())
+  if (pos.x < -29) then
+    pos.x = -26
+  elseif (pos.x > 27) then
+    pos.x = 24
+  end
+  if (pos.z < 298) then
+    pos.z = 301
+  elseif (pos.z > 359) then
+    pos.z = 356
+  end
+  player:setPosition(pos)
+end
+
+function Story2:wipeOutQiangdao ()
+  ChatHelper:sendSystemMsg('你消灭了强盗')
 end
