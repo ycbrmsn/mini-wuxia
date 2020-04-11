@@ -65,9 +65,32 @@ function MyPlayerHelper:getAllPlayerNames ()
   return names
 end
 
+function MyPlayerHelper:everyPlayerDoSomeThing (f, afterSeconds)
+  if (not(f)) then
+    return
+  end
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function ()
+      for i, v in ipairs(self:getAllPlayers()) do
+        f(v)
+      end
+    end, afterSeconds)
+  else
+    for i, v in ipairs(self:getAllPlayers()) do
+      f(v)
+    end
+  end
+end
+
 function MyPlayerHelper:setEveryPlayerPosition (x, y, z)
   for i, v in ipairs(self:getAllPlayers()) do
     v:setPosition(x, y, z)
+  end
+end
+
+function MyPlayerHelper:everyPlayerSpeakAfterSecond (second, ...)
+  for i, v in ipairs(self:getAllPlayers()) do
+    v.action:speakAfterSecond(v.objid, second, ...)
   end
 end
 

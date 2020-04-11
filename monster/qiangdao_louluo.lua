@@ -5,7 +5,7 @@ function QiangdaoLouluo:new ()
   local o = {
     expData = {
       level = 6,
-      exp = 20
+      exp = 25
     },
     objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
     initPosition = { x = 22, y = 7, z = 37 },
@@ -64,6 +64,20 @@ function QiangdaoLouluo:enableMove (enable)
   for i, v in ipairs(self.monsters) do
     -- ActorHelper:setEnableMoveState(v, enable)
     CreatureHelper:setWalkSpeed(v, speed)
+  end
+end
+
+function QiangdaoLouluo:setAIActive (isActive, monsters)
+  monsters = monsters or self.monsters
+  for i, v in ipairs(monsters) do
+    CreatureHelper:setAIActive(v, isActive)
+  end
+end
+
+function QiangdaoLouluo:lookAt (objid, monsters)
+  monsters = monsters or self.monsters
+  for i, v in ipairs(monsters) do
+    MonsterHelper:lookAt(v, objid)
   end
 end
 

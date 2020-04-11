@@ -126,9 +126,9 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    -- if (p.second == 5) then
-    --   Story2:goToCollege()
-    -- end
+    if (p.second == 5) then
+      Story2:goToCollege()
+    end
   end, { second = second })
   
 end

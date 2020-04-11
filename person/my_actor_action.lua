@@ -40,92 +40,64 @@ function MyActorAction:stopRun ()
 end
 
 function MyActorAction:playHi (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.HI)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.HI)
-  end
+  self:playAct(ActorHelper.ACT.HI, afterSeconds)
 end
 
 function MyActorAction:playDown (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.DOWN)
-  end
+  self:playAct(ActorHelper.ACT.DOWN, afterSeconds)
 end
 
 function MyActorAction:playSleep (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SLEEP)
-  end
+  self:playAct(ActorHelper.ACT.SLEEP, afterSeconds)
 end
 
 function MyActorAction:playSit (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.SIT)
-  end
+  self:playAct(ActorHelper.ACT.SIT, afterSeconds)
 end
 
 function MyActorAction:playAttack (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ATTACK)
-  end
+  self:playAct(ActorHelper.ACT.ATTACK, afterSeconds)
 end
 
 function MyActorAction:playFree (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE)
-  end
+  self:playAct(ActorHelper.ACT.FREE, afterSeconds)
 end
 
 function MyActorAction:playFree2 (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE2)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.FREE2)
-  end
+  self:playAct(ActorHelper.ACT.FREE2, afterSeconds)
 end
 
 function MyActorAction:playPoss (afterSeconds)
-  if (afterSeconds) then
-    MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.POSE)
-    end, afterSeconds)
-  else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.POSE)
-  end
+  self:playAct(ActorHelper.ACT.POSE, afterSeconds)
 end
 
 function MyActorAction:playAngry (afterSeconds)
+  self:playAct(ActorHelper.ACT.ANGRY, afterSeconds)
+end
+
+function MyActorAction:playThink (afterSeconds)
+  self:playAct(ActorHelper.ACT.THINK, afterSeconds)
+end
+
+function MyActorAction:playDie (afterSeconds)
+  self:playAct(ActorHelper.ACT.DIE, afterSeconds)
+end
+
+function MyActorAction:playStand (afterSeconds)
+  self:playAct(ActorHelper.ACT.STAND, afterSeconds)
+end
+
+function MyActorAction:playHappy (afterSeconds)
+  self:playAct(ActorHelper.ACT.HAPPY, afterSeconds)
+end
+
+function MyActorAction:playAct (act, afterSeconds)
   if (afterSeconds) then
     MyTimeHelper:callFnAfterSecond (function (p)
-      ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ANGRY)
+      ActorHelper:playAct(self.myActor.objid, act)
     end, afterSeconds)
   else
-    ActorHelper:playAct(self.myActor.objid, ActorHelper.ACT.ANGRY)
+    ActorHelper:playAct(self.myActor.objid, act)
   end
 end
 
