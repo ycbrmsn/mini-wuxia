@@ -407,6 +407,10 @@ function MyActor:playClickAct ()
   self.action:playFree2(2)
 end
 
+function MyActor:playerClickEvent (objid)
+  self:playClickAct()
+end
+
 function MyActor:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
   self.action:speak(myPlayer.objid, nickname, '，你搞啥呢')

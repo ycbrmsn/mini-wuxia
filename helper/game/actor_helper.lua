@@ -31,6 +31,9 @@ ActorHelper = {
     WEST = 90,
     SOUTH = 0,
     NORTH = 180
+  },
+  BODY_EFFECT = {
+    TREAT = 1235
   }
 }
 
@@ -184,4 +187,13 @@ function ActorHelper:getEyeHeight (objid)
   return CommonHelper:callOneResultMethod(function (p)
     return Actor:getEyeHeight(p.objid)
   end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end
+
+-- 在指定玩家身上播放特效
+function ActorHelper:playBodyEffectById (objid, particleId, scale)
+  local onceFailMessage = '在指定玩家身上播放特效失败一次'
+  local finillyFailMessage = StringHelper:concat('在指定玩家身上播放特效失败，参数：objid=', objid, ',particleId=', particleId, ',scale=', scale)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:playBodyEffectById(p.objid, p.particleId, p.scale)
+  end, { objid = objid, particleId = particleId, scale = scale }, onceFailMessage, finillyFailMessage)
 end

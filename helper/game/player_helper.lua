@@ -1,5 +1,12 @@
 -- 玩家工具类
-PlayerHelper = {}
+PlayerHelper = {
+  PLAYERATTR = {
+    MAX_HP = 1,
+    CUR_HP = 2,
+    MAX_HUNGER = 5,
+    CUR_HUNGER = 6
+  }
+}
 
 -- 设置道具不可丢弃
 function PlayerHelper:setItemDisableThrow (objid, itemid)
@@ -14,6 +21,18 @@ end
 -- 设置玩家是否可被杀死
 function PlayerHelper:setPlayerEnableBeKilled (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED, enable)
+end
+
+function PlayerHelper:getHp (objid)
+  return self:getAttr(objid, PLAYERATTR.CUR_HP)
+end
+
+function PlayerHelper:getMaxHp (objid)
+  return self:getAttr(objid, PLAYERATTR.MAX_HP)
+end
+
+function PlayerHelper:setHp (objid, hp)
+  return self:setAttr(objid, PLAYERATTR.CUR_HP, hp)
 end
 
 -- 封装原始接口
@@ -70,4 +89,22 @@ function PlayerHelper:rotateCamera (objid, yaw, pitch)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Player:rotateCamera(p.objid, p.yaw, p.pitch)
   end, { objid = objid, yaw = yaw, pitch = pitch }, onceFailMessage, finillyFailMessage)
+end
+
+-- 玩家属性获取
+function PlayerHelper:getAttr (objid, attrtype)
+  local onceFailMessage = '玩家属性获取失败一次'
+  local finillyFailMessage = StringHelper:concat('玩家属性获取失败，参数：objid=', objid, ', attrtype=', attrtype)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Player:getAttr(p.objid, p.attrtype)
+  end, { objid = objid, attrtype = attrtype }, onceFailMessage, finillyFailMessage)
+end
+
+-- 玩家属性设置
+function PlayerHelper:setAttr (objid, attrtype, val)
+  local onceFailMessage = '玩家属性设置失败一次'
+  local finillyFailMessage = StringHelper:concat('玩家属性设置失败，参数：objid=', objid, ', attrtype=', attrtype, ', val=', val)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setAttr(p.objid, p.attrtype, p.val)
+  end, { objid = objid, attrtype = attrtype, val = val }, onceFailMessage, finillyFailMessage)
 end

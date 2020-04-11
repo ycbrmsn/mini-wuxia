@@ -156,7 +156,7 @@ function MyActorHelper:playerClickActor (objid, toobjid)
     end
     myActor.action:stopRun()
     myActor:wantLookAt(nil, objid)
-    myActor:playClickAct()
+    myActor:playerClickEvent(objid)
   end
 end
 

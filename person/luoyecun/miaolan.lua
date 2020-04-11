@@ -115,3 +115,26 @@ function Miaolan:candleEvent (myPlayer, candle)
     end, 3)
   end
 end
+
+function Miaolan:playerClickEvent (objid)
+  local myPlayer = MyPlayerHelper:getPlayer(objid)
+  local hp = PlayerHelper:getHp(objid)
+  local maxHp = PlayerHelper:getMaxHp(objid)
+  if (hp < maxHp) then
+    MyTimeHelper:callFnCanRun (objid, '苗兰疗伤', function ()
+      self.action:speak(objid, myPlayer:getName(), '，你受伤了。来我给你治疗一下。')
+      self.action:playAttack()
+      self.action:playAttack(1)
+      self.action:playAttack(2)
+      MyTimeHelper:callFnAfterSecond (function (p)
+        ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.TREAT, 1)
+        PlayerHelper:setHp(objid, maxHp)
+        myPlayer.action:speak(objid, '谢谢苗大夫，我觉得舒服多了。')
+        self.action:speakAfterSecond(objid, 1, '不用谢。要爱护身体哦。')
+        myPlayer.action:speakAfterSecond(objid, 2, '我知道了。')
+      end, 3)
+    end, 5)
+  else
+    self:playClickAct()
+  end
+end
