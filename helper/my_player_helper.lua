@@ -47,6 +47,12 @@ function MyPlayerHelper:playerDamageActor (objid, toobjid)
   end
 end
 
+function MyPlayerHelper:playerDefeatActor (playerid, objid)
+  local exp = MonsterHelper:getExp(playerid, objid)
+  local player = self:getPlayer(playerid)
+  player:gainExp(exp)
+end
+
 function MyPlayerHelper:getAllPlayers ()
   return self.players
 end

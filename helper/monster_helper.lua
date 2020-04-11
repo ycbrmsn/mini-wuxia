@@ -36,3 +36,27 @@ function MonsterHelper:initMonsters ()
   end
   LogHelper:debug('初始化怪物结束')
 end
+
+function MonsterHelper:getExp (playerid, objid)
+  local actorid = CreatureHelper:getActorID(objid)
+  if (not(actorid)) then
+    return 0
+  end
+  local monsterModels = { wolf, qiangdaoLouluo, qiangdaoXiaotoumu }
+  for i, v in ipairs(monsterModels) do
+    if (v.actorid == actorid) then
+      return self:calExp(playerid, v.expData)
+    end
+  end
+  return 0
+end
+
+function MonsterHelper:calExp (playerid, expData)
+  local player = MyPlayerHelper:getPlayer(playerid)
+  local levelDiffer = player.totalLevel - expData.level
+  if (levelDiffer <= 0) then
+    return expData.exp
+  else
+    return math.ceil(expData.exp / math.pow(2, levelDiffer))
+  end
+end

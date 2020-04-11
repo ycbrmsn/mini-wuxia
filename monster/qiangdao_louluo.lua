@@ -3,6 +3,10 @@ QiangdaoLouluo = MyActor:new(MyConstant.QIANGDAO_LOULUO_ACTOR_ID)
 
 function QiangdaoLouluo:new ()
   local o = {
+    expData = {
+      level = 6,
+      exp = 20
+    },
     objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
     initPosition = { x = 22, y = 7, z = 37 },
     toPosition = { x = -363, y = 7, z = 556 },

@@ -31,8 +31,25 @@ function PlayerHelper:getMaxHp (objid)
   return self:getAttr(objid, PLAYERATTR.MAX_HP)
 end
 
+function PlayerHelper:getLevel (objid)
+  return self:getAttr(objid, PLAYERATTR.LEVEL)
+end
+
 function PlayerHelper:setHp (objid, hp)
   return self:setAttr(objid, PLAYERATTR.CUR_HP, hp)
+end
+
+function PlayerHelper:setMaxHp (objid, hp)
+  return self:setAttr(objid, PLAYERATTR.MAX_HP, hp)
+end
+
+function PlayerHelper:addAttr (objid, attrtype, addVal)
+  local curVal = self:getAttr(objid, attrtype)
+  self:setAttr(objid, attrtype, curVal + addVal)
+end
+
+function PlayerHelper:recoverAttr (objid, attrtype)
+  return self:setAttr(objid, attrtype + 1, self:getAttr(objid, attrtype))
 end
 
 -- 封装原始接口
