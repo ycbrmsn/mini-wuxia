@@ -87,3 +87,27 @@ function MonsterHelper:playAct (objid, act, afterSeconds)
     ActorHelper:playAct(objid, act)
   end
 end
+
+function MonsterHelper:actorDie (objid, toobjid)
+  local actorid = CreatureHelper:getActorID(objid)
+  local pos = MyPosition:new(ActorHelper:getPosition(objid))
+  local monsterModels = { wolf, qiangdaoXiaotoumu, qiangdaoLouluo }
+  for i, v in ipairs(monsterModels) do
+    if (v.actorid == actorid) then
+      self:createFallOff(v, pos)
+      break
+    end
+  end
+end
+
+function MonsterHelper:createFallOff (monster, pos)
+  if (monster.fallOff and #monster.fallOff > 0) then
+    for i, v in ipairs(monster.fallOff) do
+      local r = math.random(1, 100)
+      if (v[3] > r) then
+        local num = math.random(1, v[2])
+        WorldHelper:spawnItem(pos.x, pos.y, pos.z, v[1], num)
+      end
+    end
+  end
+end

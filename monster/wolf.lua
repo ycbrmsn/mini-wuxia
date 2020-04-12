@@ -7,6 +7,10 @@ function Wolf:new ()
       level = 3,
       exp = 20
     },
+    fallOff = {
+      { 12518, 1, 20 }, -- 生鸡腿
+      { MyConstant.COIN_ID, 1, 20 } -- 铜板
+    },
     initPosition1 = { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置
     initPosition2 = { x = 192, y = 7, z = -18 }, -- 恶狼区域2位置
     ravinePosition = { x = 122, y = 7, z = 1} -- 恶狼谷口位置

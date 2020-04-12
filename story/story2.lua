@@ -228,13 +228,17 @@ function Story2:meetBandits (hostPlayer)
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ATTACK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
+  qiangdaoXiaotoumu.action:speakInHeartToAllAfterSecond(waitSeconds, '又是穷鬼……')
+  MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.THINK, waitSeconds)
+
+  waitSeconds = waitSeconds + 2
   qiangdaoLouluo.action:speakToAllAfterSecond(waitSeconds, '买路财，老大。')
   MyTimeHelper:callFnAfterSecond(function ()
     MonsterHelper:lookAt(xiaolouluoId, xiaotoumuId)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '你个笨蛋，山野村民，身上能有什么钱财。')
+  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '你个笨蛋，山野村民，身上能有什么财。')
   MyTimeHelper:callFnAfterSecond(function ()
     MonsterHelper:lookAt(xiaotoumuId, xiaolouluoId)
     MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ANGRY)
@@ -303,10 +307,8 @@ function Story2:showMessage (objid)
   end
 end
 
-function Story2:comeBack (playerid, areaid)
-  MyPlayerHelper:showToast(playerid, '你不能跑得太远')
-  local player = MyPlayerHelper:getPlayer(playerid)
-  local pos = MyPosition:new(player:getPosition())
+function Story2:comeBack (objid, areaid)
+  local pos = MyPosition:new(ActorHelper:getPosition(objid))
   if (pos.x < -29) then
     pos.x = -26
   elseif (pos.x > 27) then
@@ -317,7 +319,10 @@ function Story2:comeBack (playerid, areaid)
   elseif (pos.z > 359) then
     pos.z = 356
   end
-  player:setPosition(pos)
+  if (ActorHelper:isPlayer(objid)) then
+    MyPlayerHelper:showToast(objid, '你不能跑得太远')
+  end
+  ActorHelper:setPosition(objid, pos.x, pos.y, pos.z)
 end
 
 function Story2:wipeOutQiangdao ()

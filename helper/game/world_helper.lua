@@ -76,3 +76,12 @@ end
 function WorldHelper:calcDistance (pos1, pos2)
   return World:calcDistance(pos1, pos2)
 end
+
+-- 在指定位置生成道具
+function WorldHelper:spawnItem (x, y, z, itemId, itemCnt)
+  local onceFailMessage = '在指定位置生成道具失败一次'
+  local finillyFailMessage = StringHelper:concat('在指定位置生成道具失败，参数：x=', x, ',y=', y, ',z=', z, ',itemId=', itemId, ',itemCnt=', itemCnt)
+  return CommonHelper:callOneResultMethod(function (p)
+    return World:spawnItem(p.x, p.y, p.z, p.itemId, p.actorCnt)
+  end, { x = x, y = y, z = z, itemId = itemId, itemCnt = itemCnt }, onceFailMessage, finillyFailMessage)
+end

@@ -119,3 +119,12 @@ function MyStoryHelper:playerLeaveArea (objid, areaid)
     Story2:comeBack(objid, areaid)
   end
 end
+
+function MyStoryHelper:actorLeaveArea (objid, areaid)
+  if (areaid == self:getStory(2).areaid and self.mainIndex == 2 and self.mainProgress == 3) then
+    local actorid = CreatureHelper:getActorID(objid)
+    if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
+      Story2:comeBack(objid, areaid)
+    end
+  end
+end

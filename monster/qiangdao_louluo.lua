@@ -7,6 +7,11 @@ function QiangdaoLouluo:new ()
       level = 6,
       exp = 25
     },
+    fallOff = {
+      { 12502, 1, 20 }, -- 小麦面包
+      { 11001, 1, 20 }, -- 木斧头
+      { MyConstant.COIN_ID, 3, 20 } -- 铜板
+    },
     objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
     initPosition = { x = 22, y = 7, z = 37 },
     toPosition = { x = -363, y = 7, z = 556 },
