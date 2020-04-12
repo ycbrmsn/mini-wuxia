@@ -13,6 +13,10 @@ function MyAreaHelper:removeToArea (myActor)
   end
 end
 
+function MyAreaHelper:isAirArea (pos)
+  return BlockHelper:isAirBlock(pos.x, pos.y, pos.z) and BlockHelper:isAirBlock(pos.x, pos.y + 1, pos.z)
+end
+
 function MyAreaHelper:initAreas ()
   self:initWolfAreas()
   self.playerInHomeAreaId = AreaHelper:getAreaByPos(self.playerInHomePos)

@@ -96,10 +96,10 @@ function MyPlayerHelper:updateEveryPlayerPositions ()
   end)
 end
 
-function MyPlayerHelper:setEveryPlayerPosition (x, y, z)
-  for i, v in ipairs(self:getAllPlayers()) do
-    v:setPosition(x, y, z)
-  end
+function MyPlayerHelper:setEveryPlayerPosition (x, y, z, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    player:setPosition(x, y, z)
+  end, afterSeconds)
 end
 
 function MyPlayerHelper:everyPlayerSpeakAfterSecond (second, ...)
@@ -120,26 +120,26 @@ function MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond (second, ...)
   end
 end
 
-function MyPlayerHelper:everyPlayerNotify (info)
-  for i, v in ipairs(self:getAllPlayers()) do
-    PlayerHelper:notifyGameInfo2Self(v.objid, info)
-  end
+function MyPlayerHelper:everyPlayerNotify (info, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    PlayerHelper:notifyGameInfo2Self(player.objid, info)
+  end, afterSeconds)
 end
 
-function MyPlayerHelper:everyPlayerEnableMove (enable)
-  for i, v in ipairs(self:getAllPlayers()) do
-    v:enableMove(enable)
-  end
+function MyPlayerHelper:everyPlayerEnableMove (enable, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    player:enableMove(enable)
+  end, afterSeconds)
 end
 
-function MyPlayerHelper:everyPlayerRunTo (positions, callback, param)
-  for i, v in ipairs(self:getAllPlayers()) do
-    v.action:runTo(positions, callback, param)
-  end
+function MyPlayerHelper:everyPlayerRunTo (positions, callback, param, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    player.action:runTo(positions, callback, param)
+  end, afterSeconds)
 end
 
-function MyPlayerHelper:everyPlayerAddBuff(buffid, bufflv, customticks)
-  for i, v in ipairs(self:getAllPlayers()) do
-    ActorHelper:addBuff(v.objid, buffid, bufflv, customticks)
-  end
+function MyPlayerHelper:everyPlayerAddBuff(buffid, bufflv, customticks, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    ActorHelper:addBuff(player.objid, buffid, bufflv, customticks)
+  end, afterSeconds)
 end

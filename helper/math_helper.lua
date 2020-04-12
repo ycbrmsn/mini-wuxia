@@ -9,6 +9,14 @@ function MathHelper:getActorFaceYaw (myVector3)
   return tempAngle
 end
 
+function MathHelper:getPlayerFaceYaw (myVector3)
+  local tempAngle = self:getTwoVector2Angle(0, 1, myVector3.x, myVector3.z)
+  if (myVector3.x < 0) then
+    tempAngle = -tempAngle
+  end
+  return tempAngle
+end
+
 function MathHelper:getActorFacePitch (myVector3)
   local tempAngle = self:getTwoVector3Angle(myVector3.x, 0, myVector3.z, myVector3:get())
   if (myVector3.y > 0) then

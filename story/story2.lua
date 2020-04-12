@@ -3,15 +3,15 @@ Story2 = MyStory:new()
 
 function Story2:init ()
   local data = {
-    title = '前往学院',
+    title = '启程',
     name = '前往学院',
     desc = '先生带着我向学院出发了',
     tips = {
       '终于到了出发的时间了。我好激动。',
       '先生带着我向学院出发了。只是，没想到是要用跑的。',
-      '时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。'
-      -- '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
-      -- '终于到风颖城了。我得去学院报到了。'
+      '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
+      '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
+      '先生先离开了。风颖城，我来了。'
     },
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
@@ -55,7 +55,16 @@ function Story2:init ()
       { x = -10, y = 7, z = 324 }
     },
     killXiaotoumuNum = 0,
-    killLouluoNum = 0
+    killLouluoNum = 0,
+    toCollegePositions = {
+      { x = 0, y = 7, z = 359 },
+      { x = 0, y = 7, z = 420 },
+      { x = -36, y = 7, z = 458 },
+      { x = -36, y = 7, z = 500 },
+      { x = -6, y = 7, z = 525 },
+      { x = -6, y = 7, z = 580 },
+      { x = -16, y = 7, z = 600 }
+    }
   }
   self:setData(data)
 
@@ -74,10 +83,10 @@ function Story2:goToCollege ()
   -- 初始化所有人位置
   yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
   yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
-  for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
-    v:setPosition(story2.playerInitPosition)
-    PlayerHelper:rotateCamera(v.objid, ActorHelper.FACE_YAW.SOUTH, 0)
-  end
+  MyPlayerHelper:everyPlayerDoSomeThing(function (p)
+    p:setPosition(story2.playerInitPosition)
+    PlayerHelper:rotateCamera(p.objid, ActorHelper.FACE_YAW.SOUTH, 0)
+  end)
   -- 说话
   local waitSeconds = 2
   local hostPlayer = MyPlayerHelper:getHostPlayer()
@@ -109,13 +118,15 @@ function Story2:goToCollege ()
 
   waitSeconds = waitSeconds + 3
   yexiaolong.action:speakToAllAfterSecond(waitSeconds, '去学院学习可不是享福的。基本功不能落下。现在，让我们跑起来。出发！')
+
+  waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond (function (p)
     ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
     yexiaolong:wantMove('goToCollege', p.story2.movePositions1)
   end, waitSeconds, { story2 = story2 })
 
   waitSeconds = waitSeconds + 1
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '!!!')
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
   MyPlayerHelper:everyPlayerDoSomeThing(function (p)
     p.action:playDown()
   end, waitSeconds)
@@ -221,7 +232,7 @@ function Story2:meetBandits (hostPlayer)
     qiangdaoXiaotoumu:lookAt(hostPlayer.objid)
     qiangdaoLouluo:lookAt(hostPlayer.objid)
   end, waitSeconds)
-  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '!!!')
+  MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
 
   waitSeconds = waitSeconds + 2
   qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
@@ -326,5 +337,98 @@ function Story2:comeBack (objid, areaid)
 end
 
 function Story2:wipeOutQiangdao ()
-  ChatHelper:sendSystemMsg('你消灭了强盗')
+  local story2 = MyStoryHelper:getStory(2)
+  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  MyStoryHelper:forward('终于消灭了强盗')
+  MyPlayerHelper:everyPlayerEnableMove(false)
+  yexiaolong.action:speakInHeartToAll('算算时间，应该清理地差不多了。去看看怎么样了。')
+
+  local waitSeconds = 2
+  MyTimeHelper:callFnAfterSecond(function ()
+    local pos = self:getAirPosition()
+    yexiaolong:setPosition(pos)
+    yexiaolong:wantLookAt(nil, hostPlayer.objid, 3)
+    yexiaolong.action:playFree(1)
+  end, waitSeconds)
+
+  waitSeconds = waitSeconds + 1
+  MyPlayerHelper:everyPlayerDoSomeThing (function (p)
+    p:wantLookAt(yexiaolong.objid, 3)
+  end, waitSeconds)
+
+  waitSeconds = waitSeconds + 1
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不错。')
+
+  waitSeconds = waitSeconds + 2
+  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生，我消灭了这些可恶的强盗耶。你也觉得我不错吧。')
+  hostPlayer.action:playHappy(waitSeconds)
+
+  waitSeconds = waitSeconds + 2
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '……我是说这些强盗不错。')
+
+  waitSeconds = waitSeconds + 2
+  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '！！！')
+  hostPlayer.action:playDown(waitSeconds)
+
+  waitSeconds = waitSeconds + 2
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '我之前还在想，如果考验只是杀几条狼。那不是就招了个猎户嘛。')
+
+  waitSeconds = waitSeconds + 3
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '这样的话，回去之后肯定又会被小高嘲笑了。不错不错。')
+
+  waitSeconds = waitSeconds + 3
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '路见不平的少年英雄。哈哈……')
+  yexiaolong.action:playHappy(waitSeconds)
+
+  waitSeconds = waitSeconds + 3
+  MyPlayerHelper:everyPlayerDoSomeThing (function (p)
+    p.action:speakInHeart(p.objid, '路见不平？好像刚刚路上确实有几个坑。')
+    p.action:playThink()
+  end, waitSeconds)
+
+  waitSeconds = waitSeconds + 3
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
+
+  waitSeconds = waitSeconds + 3
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '进城后你可以先四处逛逛。记得来学院报到。学院在东北方。')
+
+  waitSeconds = waitSeconds + 3
+  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生，我们不一起进城吗？')
+  hostPlayer.action:playThink(waitSeconds)
+
+  waitSeconds = waitSeconds + 2
+  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
+
+  waitSeconds = waitSeconds + 2
+  MyTimeHelper:callFnAfterSecond(function ()
+    yexiaolong:wantMove('goToCollege', story2.toCollegePositions)
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢走。')
+  end, waitSeconds)
+
+  waitSeconds = waitSeconds + 2
+  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
+  MyPlayerHelper:everyPlayerEnableMove(true, waitSeconds)
+
+  MyStoryHelper:forward('前往风颖城')
+  -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
+end
+
+function Story2:getAirPosition ()
+  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  local pos = MyPosition:new(hostPlayer:getPosition())
+  for i = 6, 1, -1 do
+    pos.x = pos.x + i
+    if (MyAreaHelper:isAirArea(pos)) then
+      return pos
+    else
+      pos.x = pos.x - i
+    end
+    pos.z = pos.z + i
+    if (MyAreaHelper:isAirArea(pos)) then
+      return pos
+    else
+      pos.z = pos.z - i
+    end
+  end
+  return pos
 end

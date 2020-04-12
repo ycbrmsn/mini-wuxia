@@ -113,3 +113,8 @@ function BlockHelper:replaceBlock (blockid, x, y, z, face)
     return Block:replaceBlock(p.blockid, p.x, p.y, p.z, p.face)
   end, { blockid = blockid, x = x, y = y, z = z, face = face}, onceFailMessage, finillyFailMessage)
 end
+
+-- 是否是气体方块
+function BlockHelper:isAirBlock (x, y, z)
+  return Block:isAirBlock(x, y, z) == ErrorCode.OK
+end

@@ -40,6 +40,11 @@ local runGame = function ()
       end
     end, v)
   end
+  MyPlayerHelper:everyPlayerDoSomeThing(function (player)
+    if (player.wants and player.wants[1] and player.wants[1].style == 'lookAt') then
+      player:lookAt(player.wants[1].dst)
+    end
+  end)
 end
 
 -- 无参数

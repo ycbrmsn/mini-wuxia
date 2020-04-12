@@ -172,7 +172,7 @@ function MyActorAction:speakInHeart (targetuin, ...)
   self:express(targetuin, '：#W（', '#W）', ...)
 end
 
-function MyActorAction:speakInHeartToAll (targetuin, ...)
+function MyActorAction:speakInHeartToAll (...)
   self:speakInHeart(nil, ...)
 end
 
