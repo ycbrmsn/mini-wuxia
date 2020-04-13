@@ -4,7 +4,9 @@ MyPlayerHelper = {
 }
 
 function MyPlayerHelper:addPlayer (objid)
-  table.insert(self:getAllPlayers(), MyPlayer:new(objid))
+  local player = MyPlayer:new(objid)
+  table.insert(self:getAllPlayers(), player)
+  return player
 end
 
 function MyPlayerHelper:removePlayer (objid)
@@ -27,6 +29,17 @@ end
 
 function MyPlayerHelper:getHostPlayer ()
   return self:getAllPlayers()[1]
+end
+
+function MyPlayerHelper:initPlayer (objid)
+  PlayerHelper:setPlayerEnableBeKilled(objid, false)
+  local player = self:addPlayer(objid)
+  local hostPlayer = self:getHostPlayer()
+  if (player == hostPlayer) then
+    player:setPosition(29, 9, 7)
+  else
+    player:setPosition(hostPlayer:getPosition())
+  end
 end
 
 -- 显示飘窗信息

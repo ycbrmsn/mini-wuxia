@@ -197,3 +197,12 @@ function ActorHelper:playBodyEffectById (objid, particleId, scale)
     return Actor:playBodyEffectById(p.objid, p.particleId, p.scale)
   end, { objid = objid, particleId = particleId, scale = scale }, onceFailMessage, finillyFailMessage)
 end
+
+-- 给actor附加一个速度
+function ActorHelper:appendSpeed (objid, x, y, z)
+  local onceFailMessage = '给actor附加一个速度失败一次'
+  local finillyFailMessage = StringHelper:concat('给actor附加一个速度失败，参数：objid=', objid, ',x=', x, ',y=', y, ',z=', z)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:appendSpeed(p.objid, p.x, p.y, p.z)
+  end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+end

@@ -40,7 +40,7 @@ function Story2:init ()
     eventPositions = {
       { x = 0, y = 7, z = 320 }
     },
-    xiaotoumuPosition = {
+    xiaotoumuPositions = {
       { x = 0, y = 7, z = 330 }
     },
     louluoPositions = {
@@ -55,6 +55,8 @@ function Story2:init ()
       { x = 10, y = 7, z = 324 },
       { x = -10, y = 7, z = 324 }
     },
+    xiaotoumus = {},
+    xiaolouluos = {},
     killXiaotoumuNum = 0,
     killLouluoNum = 0,
     toCollegePositions = {
@@ -65,7 +67,7 @@ function Story2:init ()
       { x = -6, y = 7, z = 525 },
       { x = -6, y = 7, z = 580 },
       { x = -16, y = 7, z = 600 }
-    }
+    },
   }
   self:setData(data)
 
@@ -84,9 +86,11 @@ function Story2:goToCollege ()
   -- 初始化所有人位置
   yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
   yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
+  local idx = 1
   MyPlayerHelper:everyPlayerDoSomeThing(function (p)
-    p:setPosition(story2.playerInitPosition)
-    PlayerHelper:rotateCamera(p.objid, ActorHelper.FACE_YAW.SOUTH, 0)
+    p:setPosition(self:getInitPosition(idx))
+    p:wantLookAt(yexiaolong, 5)
+    idx = idx + 1
   end)
   -- 说话
   local waitSeconds = 2
@@ -164,6 +168,19 @@ function Story2:goToCollege ()
   MyPlayerHelper:everyPlayerSpeakAfterSecond(waitSeconds, '呼呼。这条路真长啊。不知道还要跑多久。')
 end
 
+function Story2:getInitPosition (index)
+  local story2 = MyStoryHelper:getStory(2)
+  local pos = MyPosition:new(story2.playerInitPosition)
+  if (index > 1) then
+    local temp = math.floor(index / 2)
+    if (math.mod(index, 2) == 0) then
+      temp = temp * -1
+    end
+    pos.x = pos.x + temp
+  end
+  return pos
+end
+
 -- 先生暂时离开
 function Story2:teacherLeaveForAWhile (myPlayer)
   local story2 = MyStoryHelper:getStory(2)
@@ -220,10 +237,7 @@ end
 -- 遭遇强盗
 function Story2:meetBandits (hostPlayer)
   local story2 = MyStoryHelper:getStory(2)
-  qiangdaoXiaotoumu:setAIActive(false)
-  qiangdaoLouluo:setAIActive(false)
-  qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPosition)
-  qiangdaoLouluo:setPositions(story2.louluoPositions)
+  self:initQiangdao()
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
   local xiaolouluoId = qiangdaoLouluo.monsters[1]
 
@@ -301,15 +315,32 @@ function Story2:showMessage (objid)
   local actorid = CreatureHelper:getActorID(objid)
   local isRight = false
   if (qiangdaoLouluo.actorid == actorid) then
+    for i, v in ipairs(story2.xiaolouluos) do
+      if (v.objid == objid) then
+        v.killed = true
+        break
+      end
+    end
     story2.killLouluoNum = story2.killLouluoNum + 1
     isRight = true
   elseif (qiangdaoXiaotoumu.actorid == actorid) then
+    for i, v in ipairs(story2.xiaotoumus) do
+      if (v.objid == objid) then
+        v.killed = true
+        break
+      end
+    end
     story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
     isRight = true
+    if (story2.killXiaotoumuNum > 0) then
+      MyTimeHelper:callFnAfterSecond(function ()
+        self:killXiaotoumuEvent()
+      end, 1)
+    end
   end
   if (isRight) then
     local remainXiaolouluoNum = #story2.louluoPositions - story2.killLouluoNum
-    local remainXiaotoumuNum = #story2.xiaotoumuPosition - story2.killXiaotoumuNum
+    local remainXiaotoumuNum = #story2.xiaotoumuPositions - story2.killXiaotoumuNum
     if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
       local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
       ChatHelper:sendSystemMsg(msg)
@@ -321,20 +352,28 @@ end
 
 function Story2:comeBack (objid, areaid)
   local pos = MyPosition:new(ActorHelper:getPosition(objid))
+  local x, y, z = 0, 0, 0
   if (pos.x < -29) then
     pos.x = -26
+    x = 1
   elseif (pos.x > 27) then
     pos.x = 24
+    x = -1
   end
   if (pos.z < 298) then
     pos.z = 301
+    z = 1
   elseif (pos.z > 359) then
     pos.z = 356
+    z = -1
   end
   if (ActorHelper:isPlayer(objid)) then
     MyPlayerHelper:showToast(objid, '你不能跑得太远')
+    -- local player = MyPlayerHelper:getPlayer(objid)
+    -- PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
   end
-  ActorHelper:setPosition(objid, pos.x, pos.y, pos.z)
+  ActorHelper:appendSpeed(objid, x, y, z)
+  ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
 end
 
 function Story2:wipeOutQiangdao ()
@@ -440,4 +479,38 @@ function Story2:getAirPosition ()
     end
   end
   return pos
+end
+
+function Story2:killXiaotoumuEvent ()
+  local story2 = MyStoryHelper:getStory(2)
+  if (story2.killLouluoNum < #story2.louluoPositions) then -- 还有喽罗
+    qiangdaoLouluo:speak(0, '他杀了老大！干掉他！')
+    for i, v in ipairs(story2.xiaolouluos) do
+      if (not(v.killed)) then
+        CreatureHelper:setAIActive(v.objid, false)
+      end
+    end
+    MyTimeHelper:callFnAfterSecond(function ()
+      for i, v in ipairs(story2.xiaolouluos) do
+        if (not(v.killed)) then
+          CreatureHelper:setAIActive(v.objid, true)
+          ActorHelper:addBuff(v.objid, 17, 3, 6000) -- 强力攻击3级
+        end
+      end
+    end, 1)
+  end
+end
+
+function Story2:initQiangdao ()
+  local story2 = MyStoryHelper:getStory(2)
+  qiangdaoXiaotoumu:setAIActive(false)
+  qiangdaoLouluo:setAIActive(false)
+  qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPositions)
+  qiangdaoLouluo:setPositions(story2.louluoPositions)
+  for i, v in ipairs(qiangdaoXiaotoumu.monsters) do
+    table.insert(story2.xiaotoumus, { objid = v, killed = false })
+  end
+  for i, v in ipairs(qiangdaoLouluo.monsters) do
+    table.insert(story2.xiaolouluos, { objid = v, killed = false })
+  end
 end

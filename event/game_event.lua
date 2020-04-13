@@ -1,6 +1,6 @@
 -- 游戏事件
 
--- 参数 eventobjid, toobjid
+-- eventobjid, toobjid
 local playerEnterGame = function (eventArgs)
   local objid = eventArgs['eventobjid']
   if (type(logPaper) == 'nil') then -- 说明是第一个进入游戏的玩家，即房主，则初始化一些数据
@@ -10,16 +10,13 @@ local playerEnterGame = function (eventArgs)
   if (not(logPaper:hasItem())) then
     logPaper:newItem(objid, 1, true)
   end
-  PlayerHelper:setPlayerEnableBeKilled(objid, false)
-  MyPlayerHelper:addPlayer(objid)
+  MyPlayerHelper:initPlayer(objid)
 end
 
--- 参数 eventobjid, toobjid
+-- eventobjid, toobjid
 local playerLeaveGame = function (eventArgs)
-  -- Chat:sendSystemMsg('离开游戏')
-  local objid = eventArgs['eventobjid']
   -- 从players中清除数据
-  MyPlayerHelper:removePlayer(objid)
+  MyPlayerHelper:removePlayer(eventArgs.eventobjid)
 end
 
 -- 无参数
@@ -74,13 +71,9 @@ end
 
 function initMyActors ()
   wenyu = Wenyu:new()
-  -- LogHelper:debug('初始化文羽完成')
   jiangfeng = Jiangfeng:new()
-  -- LogHelper:debug('初始化江枫完成')
   jiangyu = Jiangyu:new()
-  -- LogHelper:debug('初始化江渔完成')
   wangdali = Wangdali:new()
-  -- LogHelper:debug('初始化王大力完成')
   miaolan = Miaolan:new()
   -- LogHelper:debug('初始化苗兰完成')
   yangwanli = Yangwanli:new()
@@ -133,11 +126,11 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    if (p.second == 3) then
-      MyStoryHelper.mainIndex = 2
-      MyStoryHelper.mainProgress = 1
-      Story2:goToCollege()
-    end
+    -- if (p.second == 30) then
+    --   MyStoryHelper.mainIndex = 2
+    --   MyStoryHelper.mainProgress = 1
+    --   Story2:goToCollege()
+    -- end
   end, { second = second })
   
 end

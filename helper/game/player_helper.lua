@@ -125,3 +125,12 @@ function PlayerHelper:setAttr (objid, attrtype, val)
     return Player:setAttr(p.objid, p.attrtype, p.val)
   end, { objid = objid, attrtype = attrtype, val = val }, onceFailMessage, finillyFailMessage)
 end
+
+-- 设置玩家队伍（数据变了，但是好像没起作用）
+function PlayerHelper:setTeam (objid, teamid)
+  local onceFailMessage = '设置玩家队伍失败一次'
+  local finillyFailMessage = StringHelper:concat('设置玩家队伍失败，参数：objid=', objid, ', teamid=', teamid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setTeam(p.objid, p.teamid)
+  end, { objid = objid, teamid = teamid }, onceFailMessage, finillyFailMessage)
+end

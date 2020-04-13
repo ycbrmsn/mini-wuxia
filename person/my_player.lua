@@ -15,8 +15,8 @@ MyPlayer = {
 function MyPlayer:new (objid)
   local o = { 
     objid = objid,
-    action = MyPlayerAction:new(self)
   }
+  o.action = MyPlayerAction:new(o)
   setmetatable(o, self)
   self.__index = self
   return o
@@ -85,7 +85,22 @@ function MyPlayer:getName ()
 end
 
 function MyPlayer:enableMove (enable)
-  return PlayerHelper:setPlayerEnableMove(self.objid, enable)
+  if (enable) then
+    PlayerHelper:notifyGameInfo2Self(self.objid, '恢复移动')
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.WALK_SPEED, -1)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.RUN_SPEED, -1)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.SNEAK_SPEED, -1)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.SWIN_SPEED, -1)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.JUMP_POWER, -1)
+  else
+    PlayerHelper:notifyGameInfo2Self(self.objid, '当前不可移动')
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.WALK_SPEED, 0)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.RUN_SPEED, 0)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.SNEAK_SPEED, 0)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.SWIN_SPEED, 0)
+    PlayerHelper:setAttr(self.objid, PLAYERATTR.JUMP_POWER, 0)
+  end
+  -- return PlayerHelper:setPlayerEnableMove(self.objid, enable)
 end
 
 function MyPlayer:getPosition ()
@@ -94,9 +109,9 @@ end
 
 function MyPlayer:setPosition (x, y, z)
   if (type(x) == 'table') then
-    return ActorHelper:setPosition(self.objid, x.x, x.y, x.z)
+    return PlayerHelper:setPosition(self.objid, x.x + 0.5, x.y, x.z + 0.5)
   else
-    return ActorHelper:setPosition(self.objid, x, y, z)
+    return PlayerHelper:setPosition(self.objid, x + 0.5, y, z + 0.5)
   end
 end
 
