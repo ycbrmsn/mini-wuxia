@@ -11,7 +11,8 @@ function Story2:init ()
       '先生带着我向学院出发了。只是，没想到是要用跑的。',
       '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
       '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
-      '先生先离开了。风颖城，我来了。'
+      '时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。'
+      -- '先生先离开了。风颖城，我来了。'
     },
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
@@ -90,7 +91,7 @@ function Story2:goToCollege ()
   -- 说话
   local waitSeconds = 2
   local hostPlayer = MyPlayerHelper:getHostPlayer()
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不错，所有人都到齐了。那我们出发吧。')
+  yexiaolong:speak(waitSeconds, '不错，所有人都到齐了。那我们出发吧。')
   yexiaolong.action:playHi(waitSeconds)
   MyTimeHelper:callFnAfterSecond(function ()
     yexiaolong:wantLookAt('goToCollege', hostPlayer.objid, 3)
@@ -103,21 +104,21 @@ function Story2:goToCollege ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '不过，先生，我们的马车在哪里？')
+  hostPlayer:speak(waitSeconds, '不过，先生，我们的马车在哪里？')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '嗯，这个嘛……')
+  yexiaolong:speak(waitSeconds, '嗯，这个嘛……')
   yexiaolong.action:playThink(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong.action:speakInHeartToAllAfterSecond(waitSeconds, '没想到村里的东西这么好吃。一不小心把盘缠给花光了……')
+  yexiaolong:thinks(waitSeconds, '没想到村里的东西这么好吃。一不小心把盘缠给花光了……')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '咳咳。还没有进入学院，就想着这些会让人懒惰的工具。这怎么能成？')
+  yexiaolong:speak(waitSeconds, '咳咳。还没有进入学院，就想着这些会让人懒惰的工具。这怎么能成？')
   yexiaolong.action:playFree2(waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '去学院学习可不是享福的。基本功不能落下。现在，让我们跑起来。出发！')
+  yexiaolong:speak(waitSeconds, '去学院学习可不是享福的。基本功不能落下。现在，让我们跑起来。出发！')
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond (function (p)
@@ -166,29 +167,29 @@ end
 -- 先生暂时离开
 function Story2:teacherLeaveForAWhile (myPlayer)
   local story2 = MyStoryHelper:getStory(2)
-  myPlayer.action:speakToAll('先生，要到了吗？')
+  myPlayer:speak(0, '先生，要到了吗？')
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function (p)
     MyPlayerHelper:everyPlayerEnableMove(false)
   end, waitSeconds)
   myPlayer.action:playThink(waitSeconds)
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '……')
+  yexiaolong:speak(waitSeconds, '……')
 
   waitSeconds = waitSeconds + 2
-  myPlayer.action:speakToAllAfterSecond(waitSeconds, '先生？')
+  myPlayer:speak(waitSeconds, '先生？')
 
   waitSeconds = waitSeconds + 2
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '……')
+  yexiaolong:speak(waitSeconds, '……')
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function (p)
     yexiaolong:setFaceYaw(ActorHelper.FACE_YAW.SOUTH)
-    yexiaolong.action:speakToAll('人有三急，我突然想去出恭。你们先跑着，我去去就来。')
+    yexiaolong:speak(0, '人有三急，我突然想去出恭。你们先跑着，我去去就来。')
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 1
-  myPlayer.action:speakToAllAfterSecond(waitSeconds, '好的。')
+  myPlayer:speak(waitSeconds, '好的。')
   myPlayer.action:playFree(waitSeconds)
 
   waitSeconds = waitSeconds + 1
@@ -235,39 +236,39 @@ function Story2:meetBandits (hostPlayer)
   MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
+  qiangdaoXiaotoumu:speak(waitSeconds, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ATTACK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu.action:speakInHeartToAllAfterSecond(waitSeconds, '又是穷鬼……')
+  qiangdaoXiaotoumu:thinks(waitSeconds, '又是穷鬼……')
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.THINK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoLouluo.action:speakToAllAfterSecond(waitSeconds, '买路财，老大。')
+  qiangdaoLouluo:speak(waitSeconds, '买路财，老大。')
   MyTimeHelper:callFnAfterSecond(function ()
     MonsterHelper:lookAt(xiaolouluoId, xiaotoumuId)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '你个笨蛋，山野村民，身上能有什么财。')
+  qiangdaoXiaotoumu:speak(waitSeconds, '你个笨蛋，山野村民，身上能有什么财。')
   MyTimeHelper:callFnAfterSecond(function ()
     MonsterHelper:lookAt(xiaotoumuId, xiaolouluoId)
     MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ANGRY)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '不过，这是去往风颖城的道路。如果没有通行令，可是进不了城的。')
+  qiangdaoXiaotoumu:speak(waitSeconds, '不过，这是去往风颖城的道路。如果没有通行令，可是进不了城的。')
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.FREE2, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '如果我们有了通行令，找个机会混进城抢几个城里的大户……')
+  qiangdaoXiaotoumu:speak(waitSeconds, '如果我们有了通行令，找个机会混进城抢几个城里的大户……')
 
   waitSeconds = waitSeconds + 2
-  qiangdaoLouluo.action:speakToAllAfterSecond(waitSeconds, '高啊，老大。')
+  qiangdaoLouluo:speak(waitSeconds, '高啊，老大。')
   MonsterHelper:playAct(xiaolouluoId, ActorHelper.ACT.HAPPY, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoLouluo.action:speakToAllAfterSecond(waitSeconds, '小子，留下令牌来。')
+  qiangdaoLouluo:speak(waitSeconds, '小子，留下令牌来。')
   MyTimeHelper:callFnAfterSecond(function ()
     MonsterHelper:lookAt(xiaolouluoId, hostPlayer.objid)
     MonsterHelper:lookAt(xiaotoumuId, hostPlayer.objid)
@@ -275,14 +276,14 @@ function Story2:meetBandits (hostPlayer)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakInHeartToAllAfterSecond(waitSeconds, '看样子只能拼了。')
+  hostPlayer:thinks(waitSeconds, '看样子只能拼了。')
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '想要你们就来拿吧！')
+  hostPlayer:speak(waitSeconds, '想要你们就来拿吧！')
   hostPlayer.action:playAngry(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu.action:speakToAllAfterSecond(waitSeconds, '看来是遇到不要命的了。大伙们一起上。')
+  qiangdaoXiaotoumu:speak(waitSeconds, '看来是遇到不要命的了。大伙们一起上。')
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ATTACK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
@@ -341,7 +342,7 @@ function Story2:wipeOutQiangdao ()
   local hostPlayer = MyPlayerHelper:getHostPlayer()
   MyStoryHelper:forward('终于消灭了强盗')
   MyPlayerHelper:everyPlayerEnableMove(false)
-  yexiaolong.action:speakInHeartToAll('算算时间，应该清理地差不多了。去看看怎么样了。')
+  yexiaolong:thinks(0, '算算时间，应该清理地差不多了。去看看怎么样了。')
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function ()
@@ -357,27 +358,27 @@ function Story2:wipeOutQiangdao ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 1
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不错。')
+  yexiaolong:speak(waitSeconds, '不错。')
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生，我消灭了这些可恶的强盗耶。你也觉得我不错吧。')
+  hostPlayer:speak(waitSeconds, '先生，我消灭了这些可恶的强盗耶。你也觉得我不错吧。')
   hostPlayer.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '……我是说这些强盗不错。')
+  yexiaolong:speak(waitSeconds, '……我是说这些强盗不错。')
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '！！！')
+  hostPlayer:speak(waitSeconds, '！！！')
   hostPlayer.action:playDown(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '我之前还在想，如果考验只是杀几条狼。那不是就招了个猎户嘛。')
+  yexiaolong:speak(waitSeconds, '我之前还在想，如果考验只是杀几条狼。那不是就招了个猎户嘛。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '这样的话，回去之后肯定又会被小高嘲笑了。不错不错。')
+  yexiaolong:speak(waitSeconds, '这样的话，回去之后肯定又会被小高嘲笑了。不错不错。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '路见不平的少年英雄。哈哈……')
+  yexiaolong:speak(waitSeconds, '路见不平的少年英雄。哈哈……')
   yexiaolong.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 3
@@ -387,17 +388,23 @@ function Story2:wipeOutQiangdao ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
+  yexiaolong:speak(waitSeconds, '刚刚路上捡了把小剑，挺适合你现在用的。就给你好了。')
+  MyPlayerHelper:everyPlayerDoSomeThing (function (p)
+    Backpack:addItem(p.objid, 12003, 1) -- 短剑
+  end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '进城后你可以先四处逛逛。记得来学院报到。学院在东北方。')
+  yexiaolong:speak(waitSeconds, '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
 
   waitSeconds = waitSeconds + 3
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生，我们不一起进城吗？')
+  yexiaolong:speak(waitSeconds, '进城后你可以先四处逛逛。记得来学院报到。学院在东北方。')
+
+  waitSeconds = waitSeconds + 3
+  hostPlayer:speak(waitSeconds, '先生，我们不一起进城吗？')
   hostPlayer.action:playThink(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong.action:speakToAllAfterSecond(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
+  yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
@@ -406,11 +413,13 @@ function Story2:wipeOutQiangdao ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  hostPlayer.action:speakToAllAfterSecond(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
+  hostPlayer:speak(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
   MyPlayerHelper:everyPlayerEnableMove(true, waitSeconds)
 
-  MyStoryHelper:forward('前往风颖城')
-  -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
+  MyTimeHelper:callFnAfterSecond(function ()
+    MyStoryHelper:forward('前往风颖城')
+    ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
+  end, waitSeconds)
 end
 
 function Story2:getAirPosition ()

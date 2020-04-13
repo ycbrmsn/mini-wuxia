@@ -146,6 +146,50 @@ function MyActor:lookAt (objid)
   self:setFacePitch(facePitch)
 end
 
+function MyActor:speak (afterSeconds, ...)
+  if (afterSeconds > 0) then
+    self.action:speakToAllAfterSecond(afterSeconds, ...)
+  else
+    self.action:speakToAll(...)
+  end
+end
+
+function MyActor:speakTo (playerids, afterSeconds, ...)
+  if (type(playerids) == 'number') then
+    if (afterSeconds > 0) then
+      self.action:speakAfterSecond(playerids, afterSeconds, ...)
+    else
+      self.action:speak(playerids, ...)
+    end
+  elseif (type(playerids) == 'table') then
+    for i, v in ipairs(playerids) do
+      self:speakTo(v)
+    end
+  end
+end
+
+function MyActor:thinks (afterSeconds, ...)
+  if (afterSeconds > 0) then
+    self.action:speakInHeartToAllAfterSecond(afterSeconds, ...)
+  else
+    self.action:speakInHeartToAll(...)
+  end
+end
+
+function MyActor:thinkTo (playerids, afterSeconds, ...)
+  if (type(playerids) == 'number') then
+    if (afterSeconds > 0) then
+      self.action:speakInHeartAfterSecond(playerids, afterSeconds, ...)
+    else
+      self.action:speakInHeart(playerids, ...)
+    end
+  elseif (type(playerids) == 'table') then
+    for i, v in ipairs(playerids) do
+      self:thinkTo(v)
+    end
+  end
+end
+
 function MyActor:goToBed (isNow)
   if (isNow) then
     self:wantGoToSleep(self.bedData)

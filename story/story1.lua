@@ -40,7 +40,7 @@ function Story1:noticeEvent (areaid)
     subject = '你们'
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
-  wenyu.action:speakToAll(content)
+  wenyu:speak(0, content)
   MyStoryHelper:forward('文羽找我有事')
 end
 
@@ -80,21 +80,21 @@ function Story1:finishNoticeEvent (objid)
   yexiaolong:enableMove(false)
   yexiaolong:wantStayForAWhile(100)
   -- 开始对话
-  yexiaolong.action:speakToAll('你顺利地通过了考验，不错。嗯……')
-  yexiaolong.action:speakInHeartToAllAfterSecond(3, '我的任务是至少招一名学员，应该可以了。')
+  yexiaolong:speak(0, '你顺利地通过了考验，不错。嗯……')
+  yexiaolong:thinks(3, '我的任务是至少招一名学员，应该可以了。')
   yexiaolong.action:playThink(3)
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
   if (hour < 9) then
     MyStoryHelper.storyRemainDays = 0
-    yexiaolong.action:speakToAllAfterSecond(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
+    yexiaolong:speak(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
   else
     MyStoryHelper.storyRemainDays = 1
-    yexiaolong.action:speakToAllAfterSecond(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
+    yexiaolong:speak(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
   yexiaolong.action:playStand(6)
-  myPlayer.action:speakToAllAfterSecond (8, '好的。')
-  yexiaolong.action:speakToAllAfterSecond(10, '嗯，那去准备吧。')
+  myPlayer:speak(8, '好的。')
+  yexiaolong:speak(10, '嗯，那去准备吧。')
   yexiaolong.action:playHi(10)
   MyTimeHelper:callFnAfterSecond (function (p)
     p.myPlayer:enableMove(true)

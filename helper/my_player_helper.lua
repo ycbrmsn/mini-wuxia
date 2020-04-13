@@ -51,14 +51,6 @@ function MyPlayerHelper:playerDefeatActor (playerid, objid)
   local exp = MonsterHelper:getExp(playerid, objid)
   local player = self:getPlayer(playerid)
   player:gainExp(exp)
-  self:storyEvents(objid)
-end
-
-function MyPlayerHelper:storyEvents (objid)
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
-  if (mainIndex == 2) then
-    Story2:showMessage(objid)
-  end
 end
 
 function MyPlayerHelper:getAllPlayers ()

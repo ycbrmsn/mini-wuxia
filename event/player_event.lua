@@ -80,6 +80,16 @@ local playerDefeatActor = function (eventArgs)
   end)
 end
 
+-- eventobjid, toobjid
+local playerBeHurt = function (eventArgs)
+  LogHelper:call(function (p)
+    local hp = PlayerHelper:getHp(eventArgs.eventobjid)
+    if (hp == 1) then
+      MyStoryHelper:playerBadHurt(eventArgs.eventobjid)
+    end
+  end)
+end
+
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
 ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩家离开区域
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
@@ -89,3 +99,4 @@ ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家�
 ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
 -- ScriptSupportEvent:registerEvent([=[Player.ChangeAttr]=], playerChangeAttr) -- 属性变化
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标
+ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 打败目标

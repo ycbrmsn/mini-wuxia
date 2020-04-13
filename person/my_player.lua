@@ -22,6 +22,50 @@ function MyPlayer:new (objid)
   return o
 end
 
+function MyPlayer:speak (afterSeconds, ...)
+  if (afterSeconds > 0) then
+    self.action:speakToAllAfterSecond(afterSeconds, ...)
+  else
+    self.action:speakToAll(...)
+  end
+end
+
+function MyPlayer:speakTo (playerids, afterSeconds, ...)
+  if (type(playerids) == 'number') then
+    if (afterSeconds > 0) then
+      self.action:speakAfterSecond(playerids, afterSeconds, ...)
+    else
+      self.action:speak(playerids, ...)
+    end
+  elseif (type(playerids) == 'table') then
+    for i, v in ipairs(playerids) do
+      self:speakTo(v)
+    end
+  end
+end
+
+function MyPlayer:thinks (afterSeconds, ...)
+  if (afterSeconds > 0) then
+    self.action:speakInHeartToAllAfterSecond(afterSeconds, ...)
+  else
+    self.action:speakInHeartToAll(...)
+  end
+end
+
+function MyPlayer:thinkTo (playerids, afterSeconds, ...)
+  if (type(playerids) == 'number') then
+    if (afterSeconds > 0) then
+      self.action:speakInHeartAfterSecond(playerids, afterSeconds, ...)
+    else
+      self.action:speakInHeart(playerids, ...)
+    end
+  elseif (type(playerids) == 'table') then
+    for i, v in ipairs(playerids) do
+      self:thinkTo(v)
+    end
+  end
+end
+
 function MyPlayer:updatePositions ()
   if (not(self.positions)) then
     self.positions = {}

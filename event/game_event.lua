@@ -10,6 +10,7 @@ local playerEnterGame = function (eventArgs)
   if (not(logPaper:hasItem())) then
     logPaper:newItem(objid, 1, true)
   end
+  PlayerHelper:setPlayerEnableBeKilled(objid, false)
   MyPlayerHelper:addPlayer(objid)
 end
 

@@ -1,6 +1,6 @@
 -- 生物事件
 
--- 参数 eventobjid, areaid
+-- eventobjid, areaid
 local actorEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
@@ -10,7 +10,7 @@ local actorEnterArea = function (eventArgs)
   end, { objid = objid, areaid = areaid })
 end
 
--- 参数 eventobjid, areaid
+-- eventobjid, areaid
 local actorLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
@@ -20,7 +20,7 @@ local actorLeaveArea = function (eventArgs)
   end, { objid = objid, areaid = areaid })
 end
 
--- 参数 eventobjid, toobjid
+-- eventobjid, toobjid
 local actorCollide = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
@@ -33,10 +33,11 @@ end
 local actorDie = function (eventArgs)
   LogHelper:call(function (p)
     MonsterHelper:actorDie(p.objid, p.toobjid)
+    MyStoryHelper:actorDieEvent(objid)
   end, { objid = eventArgs.eventobjid, toobjid = eventArgs.toobjid })
 end
 
--- 参数 timerid, timername
+-- timerid, timername
 local changeTimer = function (eventArgs)
   local timerid = eventArgs['timerid']
   local timername = eventArgs['timername']

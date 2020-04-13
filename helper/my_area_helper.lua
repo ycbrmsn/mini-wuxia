@@ -29,9 +29,20 @@ function MyAreaHelper:initWolfAreas()
   self.wolfAreas[3] = AreaHelper:getAreaByPos(wolf.ravinePosition)
 end
 
--- 玩家进入恶狼谷，先给个提示，然后检查两个区域内的恶狼数量，少于10只则补充到10只
+-- 玩家进入恶狼谷
 function MyAreaHelper:playerEnterWolfMountain (objid)
   PlayerHelper:notifyGameInfo2Self(objid, '恶狼谷')
+  self:createWolves()
+  MyTimeHelper:callFnAfterSecond(function ()
+    self:createWolves()
+  end, 30)
+  MyTimeHelper:callFnAfterSecond(function ()
+    self:createWolves()
+  end, 60)
+end
+
+-- 检查两个区域内的恶狼数量，少于10只则补充到10只
+function MyAreaHelper:createWolves ()
   local objids1 = AreaHelper:getAllCreaturesInAreaId(self.wolfAreas[1])
   local objids2 = AreaHelper:getAllCreaturesInAreaId(self.wolfAreas[2])
   if (objids1 and objids2) then
