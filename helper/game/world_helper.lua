@@ -1,5 +1,8 @@
 -- 世界工具类
 WorldHelper = {
+  PARTICLE_ID = {
+    BOOM16 = 1186 -- 爆炸16特效
+  },
   closeDoorSoundId = 10652, -- 关门的声音id
   openDoorSoundId = 10653, -- 开门的声音id
   volume = 100,
@@ -14,6 +17,15 @@ end
 -- 在指定位置上播放关门的声音
 function WorldHelper:playCloseDoorSoundOnPos (pos)
   return self:playSoundEffectOnPos(pos, self.closeDoorSoundId)
+end
+
+-- 击退特效
+function WorldHelper:playRepelEffect (pos)
+  return self:playParticalEffect(pos.x, pos.y, pos.z, self.PARTICLE_ID.BOOM16, 1)
+end
+
+function WorldHelper:stopRepelEffect (pos)
+  return self:stopEffectOnPosition(pos.x, pos.y, pos.z, self.PARTICLE_ID.BOOM16)
 end
 
 -- 封装原始接口
@@ -84,4 +96,22 @@ function WorldHelper:spawnItem (x, y, z, itemId, itemCnt)
   return CommonHelper:callOneResultMethod(function (p)
     return World:spawnItem(p.x, p.y, p.z, p.itemId, p.actorCnt)
   end, { x = x, y = y, z = z, itemId = itemId, itemCnt = itemCnt }, onceFailMessage, finillyFailMessage)
+end
+
+-- 在指定位置播放特效
+function WorldHelper:playParticalEffect (x, y, z, particleId, scale)
+  local onceFailMessage = '在指定位置播放特效失败一次'
+  local finillyFailMessage = StringHelper:concat('在指定位置播放特效失败，参数：x=', x, ',y=', y, ',z=', z, ',particleId=', particleId, ',scale=', scale)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return World:playParticalEffect(p.x, p.y, p.z, p.particleId, p.scale)
+  end, { x = x, y = y, z = z, particleId = particleId, scale = scale }, onceFailMessage, finillyFailMessage)
+end
+
+-- 停止指定位置的特效
+function WorldHelper:stopEffectOnPosition (x, y, z, particleId)
+  local onceFailMessage = '停止指定位置的特效失败一次'
+  local finillyFailMessage = StringHelper:concat('停止指定位置的特效失败，参数：x=', x, ',y=', y, ',z=', z, ',particleId=', particleId)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return World:stopEffectOnPosition(p.x, p.y, p.z, p.particleId)
+  end, { x = x, y = y, z = z, particleId = particleId }, onceFailMessage, finillyFailMessage)
 end

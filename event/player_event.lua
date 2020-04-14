@@ -44,9 +44,6 @@ local playerClickActor = function (eventArgs)
   local toobjid = eventArgs['toobjid']
   -- local actorid = CreatureHelper:getActorID(toobjid)
   LogHelper:call(function (p)
-    -- LogHelper:debug(ActorHelper:getEyeHeight(toobjid))
-    -- local myActor = MyActorHelper:getActorByObjid(p.toobjid)
-    -- LogHelper:info(myActor:getName(), '的想法是：', myActor.wants[1].style)
     MyActorHelper:playerClickActor(p.objid, p.toobjid)
   end, { objid = objid, toobjid = toobjid })
   

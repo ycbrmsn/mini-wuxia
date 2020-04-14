@@ -108,15 +108,29 @@ end
 -- 三维向量
 MyVector3 = {}
 
+-- 参数：六个number/三个number/两个table/一个table
 function MyVector3:new (x0, y0, z0, x1, y1, z1)
-  local o = {
-    x = x1 - x0,
-    y = y1 - y0,
-    z = z1 - z0
-  }
+  local o
+  if (x1) then
+    o = { x = x1 - x0, y = y1 - y0, z = z1 - z0 }
+  elseif (z0) then
+    o = { x = x0, y = y0, z = z0 }
+  elseif (y0) then
+    o = { x = y0.x - x0.x, y = y0.y - x0.y, z = y0.z - x0.z }
+  else
+    o = { x = x0.x, y = x0.y, z = x0. z }
+  end
   setmetatable(o, self)
   self.__index = self
   return o
+end
+
+function MyVector3:mul (s)
+  return self:new(0, 0, 0, self.x * s, self.y * s, self.z * s)
+end
+
+function MyVector3:getLength ()
+  return math.sqrt(math.pow(self.x, 2) + math.pow(self.y, 2) + math.pow(self.z, 2))
 end
 
 function MyVector3:get ()

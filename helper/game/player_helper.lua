@@ -147,3 +147,12 @@ function PlayerHelper:playAct (objid, actid)
     return Player:playAct(p.objid, p.actid)
   end, { objid = objid, actid = actid }, onceFailMessage, finillyFailMessage)
 end
+
+-- 改变玩家视角模式
+function PlayerHelper:changeViewMode (objid, viewmode, islock)
+  local onceFailMessage = '改变玩家视角模式失败一次'
+  local finillyFailMessage = StringHelper:concat('改变玩家视角模式失败，参数：objid=', objid, ',viewmode=', viewmode, ',islock=', islock)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:changeViewMode(p.objid, p.viewmode, p.islock)
+  end, { objid = objid, viewmode = viewmode, islock = islock }, onceFailMessage, finillyFailMessage)
+end

@@ -53,3 +53,10 @@ function MathHelper:getDistancePosition (myPosition, angle, distance)
   local z = myPosition.z - distance * math.cos(math.rad(angle))
   return MyPosition:new(x, y, z)
 end
+
+-- 获得一个方向速度，用于击退效果
+function MathHelper:getSpeedVector3 (srcPos, dstPos, speed)
+  local vector3 = MyVector3:new(srcPos, dstPos)
+  local ratio = speed / vector3:getLength()
+  return vector3:mul(ratio)
+end

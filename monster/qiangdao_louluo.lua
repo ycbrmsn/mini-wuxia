@@ -4,7 +4,7 @@ QiangdaoLouluo = MyActor:new(MyConstant.QIANGDAO_LOULUO_ACTOR_ID)
 function QiangdaoLouluo:new ()
   local o = {
     expData = {
-      level = 6,
+      level = 5,
       exp = 25
     },
     fallOff = {

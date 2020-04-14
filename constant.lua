@@ -13,6 +13,8 @@ MyConstant = {
 
   -- 风颖城人物
   YEXIAOLONG_ACTOR_ID = 10, -- 叶小龙ID
+  FENGXIAN_ACTOR_ID = 13, -- 风贤
+  QIANBINGWEI_ACTOR_ID = 14, -- 千兵卫
 
   -- 山寨人物
   QIANGDAO_LOULUO_ACTOR_ID = 8, -- 强盗喽啰ID
@@ -23,6 +25,7 @@ MyConstant = {
 
   -- 道具ID
   COIN_ID = 4101, -- 铜板ID
+  POTION_ID = 4102, -- 回血药剂
   LOG_PAPER_ID = 4106, -- 江湖日志ID
   TOKEN_ID = 4111 -- 风颖城通行令牌ID
 }

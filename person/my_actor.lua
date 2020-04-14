@@ -459,12 +459,15 @@ function MyActor:wantAtHour (hour)
   -- 各个生物重写此方法内容
 end
 
-function MyActor:playClickAct ()
+-- 一般重写此方法
+function MyActor:playerClickEvent (objid)
   self.action:playFree2(2)
 end
 
-function MyActor:playerClickEvent (objid)
-  self:playClickAct()
+function MyActor:defaultPlayerClickEvent (objid)
+  self.action:stopRun()
+  self:wantLookAt(nil, objid)
+  self:playerClickEvent(objid)
 end
 
 function MyActor:candleEvent (myPlayer, candle)
@@ -535,4 +538,10 @@ end
 
 function MyActor:collidePlayer (playerid, isPlayerInFront)
   -- body
+end
+
+function MyActor:defaultCollidePlayerEvent (playerid, isPlayerInFront)
+  self.action:stopRun()
+  self:collidePlayer(playerid, isPlayerInFront)
+  self:wantLookAt(nil, playerid)
 end

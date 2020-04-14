@@ -46,6 +46,10 @@ function MyActorHelper:openAI (objid)
   return CreatureHelper:setAIActive(objid, true)
 end
 
+function MyActorHelper:getMyPosition (objid)
+  return MyPosition:new(ActorHelper:getPosition(objid))
+end
+
 -- actor进入区域
 function MyActorHelper:enterArea (objid, areaid)
   local myActor = self:getActorByObjid(objid)
@@ -155,9 +159,7 @@ function MyActorHelper:playerClickActor (objid, toobjid)
     if (myActor.wants and myActor.wants[1].style == 'sleeping') then
       myActor.wants[1].style = 'wake'
     end
-    myActor.action:stopRun()
-    myActor:wantLookAt(nil, objid)
-    myActor:playerClickEvent(objid)
+    myActor:defaultPlayerClickEvent(objid)
   end
 end
 
@@ -169,11 +171,7 @@ function MyActorHelper:actorCollide (objid, toobjid)
       if (actor1.wants and actor1.wants[1].style == 'sleeping') then
         actor1.wants[1].style = 'wake'
       end
-      actor1.action:stopRun()
-      actor1:collidePlayer(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
-      actor1:wantLookAt(nil, toobjid)
-      -- actor1:wantStayForAWhile()
-      -- LogHelper:info('执行了')
+      actor1:defaultCollidePlayerEvent(toobjid, PositionHelper:isTwoInFrontOfOne(objid, toobjid))
     else
       local actor2 = MyActorHelper:getActorByObjid(toobjid)
       if (actor2) then

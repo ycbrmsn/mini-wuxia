@@ -83,6 +83,15 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   end
 end
 
+function Yexiaolong:defaultCollidePlayerEvent (playerid, isPlayerInFront)
+  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  if (mainIndex ~= 2) then
+    self.action:stopRun()
+    self:collidePlayer(playerid, isPlayerInFront)
+    self:wantLookAt(nil, playerid)
+  end
+end
+
 function Yexiaolong:candleEvent (myPlayer, candle)
   local nickname
   local mainIndex = MyStoryHelper:getMainStoryIndex()
