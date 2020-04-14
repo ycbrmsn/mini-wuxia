@@ -100,18 +100,37 @@ function MyPlayer:enableMove (enable)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.SWIN_SPEED, 0)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.JUMP_POWER, 0)
   end
-  -- return PlayerHelper:setPlayerEnableMove(self.objid, enable)
+end
+
+function MyPlayer:enableBeAttacked (enable)
+  return PlayerHelper:setPlayerEnableBeAttacked(self.objid, enable)
 end
 
 function MyPlayer:getPosition ()
   return ActorHelper:getPosition(self.objid)
 end
 
+function MyPlayer:getMyPosition ()
+  return MyPosition:new(self:getPosition())
+end
+
 function MyPlayer:setPosition (x, y, z)
   if (type(x) == 'table') then
-    return PlayerHelper:setPosition(self.objid, x.x + 0.5, x.y, x.z + 0.5)
+    return PlayerHelper:setPosition(self.objid, x.x, x.y, x.z)
   else
-    return PlayerHelper:setPosition(self.objid, x + 0.5, y, z + 0.5)
+    return PlayerHelper:setPosition(self.objid, x, y, z)
+  end
+end
+
+function MyPlayer:setDistancePosition (objid, distance)
+  if (ActorHelper:isPlayer(objid)) then
+    -- todo
+    LogHelper:debug('距离玩家位置计算尚未实现')
+  else
+    local pos = MyPosition:new(ActorHelper:getPosition(objid))
+    local angle = ActorHelper:getFaceYaw(objid)
+    local dstPos = MathHelper:getDistancePosition(pos, angle, distance)
+    self:setPosition(dstPos)
   end
 end
 

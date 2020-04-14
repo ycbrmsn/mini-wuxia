@@ -116,6 +116,18 @@ function MyActor:setPosition (x, y, z)
   end
 end
 
+function MyActor:setDistancePosition (objid, distance)
+  if (ActorHelper:isPlayer(objid)) then
+    -- todo
+    LogHelper:debug('距离玩家位置计算尚未实现')
+  else
+    local pos = MyPosition:new(ActorHelper:getPosition(objid))
+    local angle = ActorHelper:getFaceYaw(objid)
+    local dstPos = MathHelper:getDistancePosition(pos, angle, distance)
+    self:setPosition(dstPos)
+  end
+end
+
 function MyActor:getFaceYaw ()
   return ActorHelper:getFaceYaw(self.objid)
 end

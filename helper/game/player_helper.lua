@@ -23,6 +23,10 @@ function PlayerHelper:setPlayerEnableBeKilled (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED, enable)
 end
 
+function PlayerHelper:setPlayerEnableBeAttacked (objid, enable)
+  return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEATTACKED, enable)
+end
+
 function PlayerHelper:getHp (objid)
   return self:getAttr(objid, PLAYERATTR.CUR_HP)
 end
@@ -133,4 +137,13 @@ function PlayerHelper:setTeam (objid, teamid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Player:setTeam(p.objid, p.teamid)
   end, { objid = objid, teamid = teamid }, onceFailMessage, finillyFailMessage)
+end
+
+-- 玩家播放动画
+function PlayerHelper:playAct (objid, actid)
+  local onceFailMessage = '玩家播放动画失败一次'
+  local finillyFailMessage = StringHelper:concat('玩家播放动画失败，参数：objid=', objid, ', actid=', actid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:playAct(p.objid, p.actid)
+  end, { objid = objid, actid = actid }, onceFailMessage, finillyFailMessage)
 end

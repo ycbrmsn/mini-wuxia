@@ -36,7 +36,7 @@ function MyPlayerHelper:initPlayer (objid)
   local player = self:addPlayer(objid)
   local hostPlayer = self:getHostPlayer()
   if (player == hostPlayer) then
-    player:setPosition(29, 9, 7)
+    player:setPosition(29.5, 9, 7.5)
   else
     player:setPosition(hostPlayer:getPosition())
   end

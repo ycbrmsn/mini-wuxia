@@ -133,7 +133,7 @@ function MyStoryHelper:playerBadHurt (objid)
   if (self.mainIndex == 1) then -- 在落叶村受重伤
 
   elseif (self.mainIndex == 2 and self.mainProgress == 3) then -- 杀强盗受重伤
-    ChatHelper:sendSystemMsg('你身受重伤。该部分剧情作者正在制作中。请继续战斗。', objid)
+    Story2:playerBadHurt(objid)
   end
 end
 

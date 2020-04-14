@@ -38,8 +38,8 @@ function LogHelper:error (...)
 end
 
 function LogHelper:call (f, p)
-  -- xpcall(f, function (err)
-  --   self:error(err)
-  -- end, p)
-  f(p)
+  xpcall(f, function (err)
+    self:error(err)
+  end, p)
+  -- f(p)
 end

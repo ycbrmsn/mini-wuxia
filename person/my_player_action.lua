@@ -35,3 +35,13 @@ function MyPlayerAction:runAction ()
     ActorHelper:tryNavigationToPos(self.myActor.objid, pos.x, pos.y, pos.z, false)
   end
 end
+
+function MyPlayerAction:playAct (act, afterSeconds)
+  if (afterSeconds) then
+    MyTimeHelper:callFnAfterSecond (function (p)
+      PlayerHelper:playAct(self.myActor.objid, act)
+    end, afterSeconds)
+  else
+    PlayerHelper:playAct(self.myActor.objid, act)
+  end
+end

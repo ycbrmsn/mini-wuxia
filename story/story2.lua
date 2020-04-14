@@ -311,43 +311,45 @@ function Story2:meetBandits (hostPlayer)
 end
 
 function Story2:showMessage (objid)
-  local story2 = MyStoryHelper:getStory(2)
   local actorid = CreatureHelper:getActorID(objid)
-  local isRight = false
-  if (qiangdaoLouluo.actorid == actorid) then
-    for i, v in ipairs(story2.xiaolouluos) do
-      if (v.objid == objid) then
-        v.killed = true
-        break
+  MyTimeHelper:callFnAfterSecond(function ()
+    local story2 = MyStoryHelper:getStory(2)
+    local isRight = false
+    if (qiangdaoLouluo.actorid == actorid) then
+      for i, v in ipairs(story2.xiaolouluos) do
+        if (v.objid == objid) then
+          v.killed = true
+          break
+        end
+      end
+      story2.killLouluoNum = story2.killLouluoNum + 1
+      isRight = true
+    elseif (qiangdaoXiaotoumu.actorid == actorid) then
+      for i, v in ipairs(story2.xiaotoumus) do
+        if (v.objid == objid) then
+          v.killed = true
+          break
+        end
+      end
+      story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
+      isRight = true
+      if (story2.killXiaotoumuNum > 0) then
+        MyTimeHelper:callFnAfterSecond(function ()
+          self:killXiaotoumuEvent()
+        end, 1)
       end
     end
-    story2.killLouluoNum = story2.killLouluoNum + 1
-    isRight = true
-  elseif (qiangdaoXiaotoumu.actorid == actorid) then
-    for i, v in ipairs(story2.xiaotoumus) do
-      if (v.objid == objid) then
-        v.killed = true
-        break
+    if (isRight) then
+      local remainXiaolouluoNum = #story2.louluoPositions - story2.killLouluoNum
+      local remainXiaotoumuNum = #story2.xiaotoumuPositions - story2.killXiaotoumuNum
+      if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
+        local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
+        ChatHelper:sendSystemMsg(msg)
+      else
+        self:wipeOutQiangdao()
       end
     end
-    story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
-    isRight = true
-    if (story2.killXiaotoumuNum > 0) then
-      MyTimeHelper:callFnAfterSecond(function ()
-        self:killXiaotoumuEvent()
-      end, 1)
-    end
-  end
-  if (isRight) then
-    local remainXiaolouluoNum = #story2.louluoPositions - story2.killLouluoNum
-    local remainXiaotoumuNum = #story2.xiaotoumuPositions - story2.killXiaotoumuNum
-    if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
-      local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
-      ChatHelper:sendSystemMsg(msg)
-    else
-      self:wipeOutQiangdao()
-    end
-  end
+  end, 1)
 end
 
 function Story2:comeBack (objid, areaid)
@@ -513,4 +515,58 @@ function Story2:initQiangdao ()
   for i, v in ipairs(qiangdaoLouluo.monsters) do
     table.insert(story2.xiaolouluos, { objid = v, killed = false })
   end
+end
+
+function Story2:playerBadHurt (objid)
+  local story2 = MyStoryHelper:getStory(2)
+  local player = MyPlayerHelper:getPlayer(objid)
+  player:enableBeAttacked(false)
+  yexiaolong:thinks(0, player:getName(), '看起来好像快不行了。果然还是太勉强了吗？')
+
+  local waitSeconds = 3
+  yexiaolong:speak(waitSeconds, '住手！')
+  for i, v in ipairs(story2.xiaolouluos) do
+    if (not(v.killed)) then
+      CreatureHelper:setAIActive(v.objid, false)
+    end
+  end
+  for i, v in ipairs(story2.xiaotoumus) do
+    if (not(v.killed)) then
+      CreatureHelper:setAIActive(v.objid, false)
+    end
+  end
+
+  MyTimeHelper:callFnAfterSecond(function ()
+    local playerPos = player:getMyPosition()
+    local areaid = AreaHelper:createAreaRect(playerPos, { x = 4, y = 2, z = 4 })
+    local ids = AreaHelper:getAllCreaturesInAreaId(areaid)
+    local monsters = {}
+    if (ids and #ids > 0) then
+      MyPlayerHelper:everyPlayerDoSomeThing(function (p)
+        p:wantLookAt(yexiaolong.objid, 20)
+      end)
+      for i, v in ipairs(ids) do
+        local mPos = MyPosition:new(ActorHelper:getPosition(v))
+        table.insert(monsters, { v, WorldHelper:calcDistance(playerPos, mPos) })
+      end
+      table.sort(monsters, function (a, b)
+        return a[2] < b[2]
+      end)
+      local ws = 0
+      for i, v in ipairs(monsters) do
+        ws = ws + 2
+        MyTimeHelper:callFnAfterSecond(function ()
+          yexiaolong:setDistancePosition(v[1], -1.5)
+          yexiaolong:lookAt(v[1])
+          yexiaolong.action:playAttack()
+        end, ws)
+        MyTimeHelper:callFnAfterSecond(function ()
+          ActorHelper:killSelf(v[1])
+        end, ws + 1)
+      end
+
+      ws = ws + 1
+      yexiaolong:speak(ws, '高手就是这么寂寞。')
+    end
+  end, waitSeconds)
 end

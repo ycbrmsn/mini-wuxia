@@ -206,3 +206,12 @@ function ActorHelper:appendSpeed (objid, x, y, z)
     return Actor:appendSpeed(p.objid, p.x, p.y, p.z)
   end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
 end
+
+-- 杀死自己
+function ActorHelper:killSelf (objid)
+  local onceFailMessage = '杀死自己失败一次'
+  local finillyFailMessage = StringHelper:concat('杀死自己失败，参数：objid=', objid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:killSelf(p.objid)
+  end, { objid = objid }, onceFailMessage, finillyFailMessage)
+end

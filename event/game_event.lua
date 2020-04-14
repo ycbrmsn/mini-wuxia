@@ -82,7 +82,7 @@ function initMyActors ()
   -- LogHelper:debug('初始化花小楼完成')
   yexiaolong = Yexiaolong:new()
   -- LogHelper:debug('初始化叶小龙完成')
-  local myActors = { wenyu, jiangfeng, jiangyu, wangdali, miaolan, yangwanli, huaxiaolou, yexiaolong }
+  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong }
   for i, v in ipairs(myActors) do
     MyTimeHelper:initActor(v)
     -- LogHelper:debug('创建', v:getName(), '完成')
@@ -126,11 +126,11 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    -- if (p.second == 30) then
-    --   MyStoryHelper.mainIndex = 2
-    --   MyStoryHelper.mainProgress = 1
-    --   Story2:goToCollege()
-    -- end
+    if (p.second == 3) then
+      MyStoryHelper.mainIndex = 2
+      MyStoryHelper.mainProgress = 1
+      Story2:goToCollege()
+    end
   end, { second = second })
   
 end

@@ -45,3 +45,11 @@ end
 function MathHelper:getVector3Length (x, y, z)
   return math.sqrt(math.pow(x, 2) + math.pow(y, 2) + math.pow(z, 2))
 end
+
+-- 距离位置多远的另一个位置
+function MathHelper:getDistancePosition (myPosition, angle, distance)
+  local x = myPosition.x - distance * math.sin(math.rad(angle))
+  local y = myPosition.y
+  local z = myPosition.z - distance * math.cos(math.rad(angle))
+  return MyPosition:new(x, y, z)
+end
