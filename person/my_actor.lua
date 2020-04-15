@@ -339,6 +339,7 @@ function MyActor:wantDoNothing (think)
 end
 
 function MyActor:wantLookAt (think, myPosition, restTime)
+  restTime = restTime or 5
   MyActorHelper:closeAI(self.objid)
   if (self:isWantsExist()) then
     think = think or self.think
@@ -347,11 +348,20 @@ function MyActor:wantLookAt (think, myPosition, restTime)
       self.wants[1] = want
     else
       table.insert(self.wants, 1, want)
+      if (self.wants[2].style == 'freeTime') then
+        MyTimeHelper:callFnLastRun(self.objid, 'wantLookAt', function ()
+          MyActorHelper:openAI(self.objid)
+        end, restTime)
+      end
     end
   else
     think = think or 'lookAt'
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
     self.wants = { want }
+    -- 没有想法，则开启AI
+    MyTimeHelper:callFnLastRun(self.objid, 'wantLookAt', function ()
+      MyActorHelper:openAI(self.objid)
+    end, restTime)
   end
   self.think = think
 end

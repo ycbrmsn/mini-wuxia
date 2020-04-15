@@ -76,13 +76,9 @@ function initMyActors ()
   jiangyu = Jiangyu:new()
   wangdali = Wangdali:new()
   miaolan = Miaolan:new()
-  -- LogHelper:debug('初始化苗兰完成')
   yangwanli = Yangwanli:new()
-  -- LogHelper:debug('初始化杨万里完成')
   huaxiaolou = Huaxiaolou:new()
-  -- LogHelper:debug('初始化花小楼完成')
   yexiaolong = Yexiaolong:new()
-  -- LogHelper:debug('初始化叶小龙完成')
   local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong }
   for i, v in ipairs(myActors) do
     MyTimeHelper:initActor(v)
@@ -91,13 +87,6 @@ function initMyActors ()
   -- MyTimeHelper:initActor(miaolan)
   LogHelper:debug('创建人物完成')
   MyStoryHelper:init()
-  -- for i = 1, 2 do
-  --   MyTimeHelper:callFnInterval(wenyu.objid, 'speak', function (p)
-  --     -- wenyu.action:speakToAllAfterSecond(i, i)
-  --     -- MyPlayerHelper:showToast(807364131, i)
-  --     MyTimeHelper:setHour(7 + p.time)
-  --   end, 3, { time = i })
-  -- end
 end
 
 function initDoorAreas ()
@@ -116,6 +105,7 @@ local atSecond = function (eventArgs)
     MyTimeHelper:updateTime(p.second)
     MyTimeHelper:runFnAfterSecond(p.second)
     MyTimeHelper:runFnInterval(p.second)
+    MyTimeHelper:runFnLastRuns(p.second)
     MyPlayerHelper:updateEveryPlayerPositions()
 
     if (p.second == 1) then

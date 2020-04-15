@@ -4,7 +4,8 @@ MyTimeHelper = {
   time = 0,
   fns = {}, -- second -> { { f, p }, { f, p }, ... }
   fnIntervals = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
-  fnCanRuns = {} -- second -> { objid = { t, t }, objid = { t, t } ... }
+  fnCanRuns = {}, -- second -> { objid = { t, t }, objid = { t, t } ... }
+  fnLastRuns = {} -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
 }
 
 function MyTimeHelper:updateHour (hour)
@@ -201,4 +202,65 @@ function MyTimeHelper:initActor (myActor)
   self:repeatUtilSuccess(myActor.objid, 'initActor', function (myActor)
     return myActor:init()
   end, 10, myActor)
+end
+
+function MyTimeHelper:runFnLastRuns (time)
+  local fs = self.fnLastRuns[time]
+  if (fs) then
+    for oid, ts in pairs(fs) do
+      for k, v in pairs(ts) do
+        v[1](v[2])
+      end
+    end
+  end
+  -- 清除较长时间间隔的数据
+  local longIntervalTime = time - 20
+  if (self.fnLastRuns[longIntervalTime]) then
+    self.fnLastRuns[longIntervalTime] = nil
+  end
+end
+
+-- 删除最后执行时间之前的相同类型的数据
+function MyTimeHelper:delLastFnLastRunTime (objid, t, second)
+  for i = self.time + second - 1, self.time, -1 do
+    local fnIs = self.fnLastRuns[i]
+    if (fnIs) then
+      local ts = fnIs[objid]
+      if (ts and ts[t]) then
+        ts[t] = nil
+      end
+    end
+  end
+end
+
+function MyTimeHelper:setFnLastRun (objid, t, f, time, p)
+  local o = self.fnLastRuns[time]
+  if (not(o)) then
+    o = {}
+    self.fnLastRuns[time] = o
+  end
+  if (not(o[objid])) then
+    o[objid] = {}
+  end
+  if (f) then
+    o[objid][t] = { f, p }
+  else
+    o[objid][t] = nil
+  end
+end
+
+-- 多少秒之后执行一次，记录下来，时间到了执行。如果该时间之前有该类型数据，则删除
+function MyTimeHelper:callFnLastRun (objid, t, f, second, p)
+  if (not(objid)) then
+    return
+  end
+  if (type(f) ~= 'function') then
+    return
+  end
+  t = t or 'default'
+  second = second or 1
+  p = p or {}
+  p.objid = objid
+  self:delLastFnLastRunTime(objid, t, second)
+  self:setFnLastRun(objid, t, f, self.time + second, p)
 end
