@@ -43,6 +43,7 @@ local runGame = function ()
       player:lookAt(player.wants[1].dst)
     end
   end)
+  MonsterHelper:checkWillBeKilledMonster()
 end
 
 -- 无参数
@@ -126,11 +127,11 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    if (p.second == 3) then
-      MyStoryHelper.mainIndex = 2
-      MyStoryHelper.mainProgress = 1
-      Story2:goToCollege()
-    end
+    -- if (p.second == 3) then
+    --   MyStoryHelper.mainIndex = 2
+    --   MyStoryHelper.mainProgress = 1
+    --   Story2:goToCollege()
+    -- end
   end, { second = second })
   
 end

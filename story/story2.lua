@@ -83,13 +83,14 @@ end
 function Story2:goToCollege ()
   local story2 = MyStoryHelper:getStory(2)
   MyPlayerHelper:everyPlayerNotify('约定的时间到了')
+  MyPlayerHelper:changeViewMode()
   MyPlayerHelper:everyPlayerEnableMove(false)
   -- 初始化所有人位置
   yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
   yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
   local idx = 1
   MyPlayerHelper:everyPlayerDoSomeThing(function (p)
-    p:setPosition(self:getInitPosition(idx))
+    p:setPosition(self:getInitPosition(idx, story2.playerInitPosition))
     p:wantLookAt(yexiaolong, 2)
     idx = idx + 1
   end)
@@ -174,9 +175,8 @@ function Story2:goToCollege ()
   MyPlayerHelper:everyPlayerSpeakAfterSecond(waitSeconds, '呼呼。这条路真长啊。不知道还要跑多久。')
 end
 
-function Story2:getInitPosition (index)
-  local story2 = MyStoryHelper:getStory(2)
-  local pos = MyPosition:new(story2.playerInitPosition)
+function Story2:getInitPosition (index, myPosition)
+  local pos = MyPosition:new(myPosition)
   if (index > 1) then
     local temp = math.floor(index / 2)
     if (math.mod(index, 2) == 0) then
@@ -208,7 +208,12 @@ function Story2:teacherLeaveForAWhile (myPlayer)
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function (p)
     yexiaolong:setFaceYaw(ActorHelper.FACE_YAW.SOUTH)
-    yexiaolong:speak(0, '人有三急，我突然想去出恭。你们先跑着，我去去就来。')
+    local playerNum = #MyPlayerHelper:getAllPlayers()
+    if (playerNum == 1) then
+      yexiaolong:speak(0, '人有三急，你先行一步，我去去就来。')
+    else
+      yexiaolong:speak(0, '人有三急，你们先行，我去去就来。')
+    end
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 1
@@ -260,7 +265,7 @@ function Story2:meetBandits (hostPlayer)
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ATTACK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  qiangdaoXiaotoumu:thinks(waitSeconds, '又是穷鬼……')
+  qiangdaoXiaotoumu:thinks(waitSeconds, '又是穷鬼，真伤脑筋……')
   MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.THINK, waitSeconds)
 
   waitSeconds = waitSeconds + 2
@@ -308,6 +313,7 @@ function Story2:meetBandits (hostPlayer)
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function (p)
+    MyPlayerHelper:changeViewMode(nil, VIEWPORTTYPE.MAINVIEW)
     MyPlayerHelper:everyPlayerNotify('注意，你不能离此地过远')
     qiangdaoXiaotoumu:setAIActive(true)
     qiangdaoLouluo:setAIActive(true)
@@ -441,29 +447,42 @@ function Story2:wipeOutQiangdao ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
+  self:endWords(hostPlayer, waitSeconds)
+end
+
+function Story2:endWords (player, waitSeconds)
+  local story2 = MyStoryHelper:getStory(2)
   yexiaolong:speak(waitSeconds, '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
 
   waitSeconds = waitSeconds + 3
   yexiaolong:speak(waitSeconds, '进城后你可以先四处逛逛。记得来学院报到。学院在东北方。')
 
   waitSeconds = waitSeconds + 3
-  hostPlayer:speak(waitSeconds, '先生，我们不一起进城吗？')
-  hostPlayer.action:playThink(waitSeconds)
+  player:speak(waitSeconds, '先生，我们不一起进城吗？')
+  player.action:playThink(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
+  if (story2.standard == 1) then
+    yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
+  else
+    yexiaolong:speak(waitSeconds, '不了，你身上有伤，不易快行。我还有事，要先行一步。我先走了。')
+  end
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     yexiaolong:wantMove('goToCollege', story2.toCollegePositions)
     MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢走。')
+    MyPlayerHelper:everyPlayerDoSomeThing(function (p)
+      p.action:playFree2()
+    end)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  hostPlayer:speak(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
+  MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
   MyPlayerHelper:everyPlayerEnableMove(true, waitSeconds)
 
   MyTimeHelper:callFnAfterSecond(function ()
+    MyPlayerHelper:changeViewMode(nil, VIEWPORTTYPE.MAINVIEW)
     MyStoryHelper:forward('前往风颖城')
     ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
   end, waitSeconds)
@@ -532,25 +551,35 @@ function Story2:playerBadHurt (objid)
   local story2 = MyStoryHelper:getStory(2)
   local player = MyPlayerHelper:getPlayer(objid)
   story2.standard = 2
+  MyPlayerHelper:changeViewMode()
   player:enableBeAttacked(false)
   player:enableMove(false)
   local waitSeconds = 0
-  yexiaolong:thinks(waitSeconds, player:getName(), '看起来好像坚持不住了。')
-
-  waitSeconds = waitSeconds + 2
   yexiaolong:thinks(waitSeconds, '果然还是太勉强了吗？')
 
-  waitSeconds = waitSeconds + 1
+  waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     yexiaolong:speak(0, '住手！')
-    for i, v in ipairs(story2.xiaolouluos) do
-      if (not(v.killed)) then
-        CreatureHelper:setWalkSpeed(v.objid, 0)
-      end
-    end
     for i, v in ipairs(story2.xiaotoumus) do
       if (not(v.killed)) then
-        CreatureHelper:setWalkSpeed(v.objid, 0)
+        MyActorHelper:stopRun(v.objid)
+        if (i == 1) then
+          qiangdaoXiaotoumu:speak(1, '！！！')
+        end
+        MyTimeHelper:callFnAfterSecond(function ()
+          MonsterHelper:lookAt(v.objid, yexiaolong.objid)
+        end, 2)
+      end
+    end
+    for i, v in ipairs(story2.xiaolouluos) do
+      if (not(v.killed)) then
+        MyActorHelper:stopRun(v.objid)
+        if (i == 1) then
+          qiangdaoLouluo:speak(1, '！！！')
+        end
+        MyTimeHelper:callFnAfterSecond(function ()
+          MonsterHelper:lookAt(v.objid, yexiaolong.objid)
+        end, 2)
       end
     end
   end, waitSeconds)
@@ -560,65 +589,106 @@ function Story2:playerBadHurt (objid)
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 4, y = 2, z = 4 })
   local ids = AreaHelper:getAllCreaturesInAreaId(areaid)
   MyTimeHelper:callFnAfterSecond(function ()
-    local pos = player:getMyPosition()
+    local pos = player:getDistancePosition(1.5)
     yexiaolong:setPosition(pos)
+    yexiaolong.action:playFree2()
     WorldHelper:playRepelEffect(pos)
     for i, v in ipairs(ids) do
       local dstPos = MyActorHelper:getMyPosition(v)
       local speed = MathHelper:getSpeedVector3(pos, dstPos, 2)
       ActorHelper:appendSpeed(v, speed.x, speed.y, speed.z)
+      WorldHelper:playAttackEffect(dstPos)
     end
     MyTimeHelper:callFnAfterSecond(function ()
-      local pos1, pos2 = self:getAirPosition()
-      yexiaolong:setPosition(pos1)
-      player:setPosition(pos2)
       WorldHelper:stopRepelEffect(pos)
     end, waitSeconds + 2)
   end, waitSeconds)
 
-  waitSeconds = waitSeconds + 3
+  waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     local num = #MyPlayerHelper:getAllPlayers() * 2
     yexiaolong:speak(0, '这里有', num, '瓶药剂。剩下的交给我吧。')
     Backpack:addItem(player.objid, MyConstant.POTION_ID, num) -- 回血药剂
     yexiaolong:lookAt(player.objid)
-    player:lookAt(yexiaolong.objid)
+    -- player:lookAt(yexiaolong.objid)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     local monsters = {}
-    if (ids and #ids > 0) then
-      MyPlayerHelper:everyPlayerDoSomeThing(function (p)
-        
-      end)
-      for i, v in ipairs(ids) do
-        local mPos = MyPosition:new(ActorHelper:getPosition(v))
-        table.insert(monsters, { v, WorldHelper:calcDistance(playerPos, mPos) })
+    for i, v in ipairs(story2.xiaotoumus) do
+      if (not(v.killed)) then
+        local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
+        table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
       end
+    end
+    for i, v in ipairs(story2.xiaolouluos) do
+      if (not(v.killed)) then
+        local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
+        table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
+      end
+    end
+    if (#monsters > 0) then
       table.sort(monsters, function (a, b)
         return a[2] > b[2]
       end)
       local ws = 0
       for i, v in ipairs(monsters) do
-        ws = ws + 2
+        ws = ws + 1
         MyTimeHelper:callFnAfterSecond(function ()
-          yexiaolong:setDistancePosition(v[1], -1.5)
+          local pos = MyActorHelper:getDistancePosition(v[1], -1.5)
+          yexiaolong:setPosition(pos)
           yexiaolong:lookAt(v[1])
-          yexiaolong.action:playAttack()
+          MonsterHelper:lookAt(v[1], yexiaolong.objid)
+          local attackPos = MyActorHelper:getDistancePosition(v[1], -1)
+          WorldHelper:playAttackEffect(attackPos)
+          WorldHelper:playBeAttackedSoundOnPos(attackPos)
+          local dstPos = MyActorHelper:getMyPosition(v[1])
+          local speed = MathHelper:getSpeedVector3(pos, dstPos, 1)
+          ActorHelper:appendSpeed(v[1], speed.x, speed.y, speed.z)
+          local actorid = CreatureHelper:getActorID(v[1])
+          if (actorid == MyConstant.QIANGDAO_LOULUO_ACTOR_ID) then
+            qiangdaoLouluo:speak(0, '啊！')
+          else
+            qiangdaoXiaotoumu:speak(0, '啊！')
+          end
+          -- yexiaolong.action:playAttack()
+          MonsterHelper:addWillBeKilledMonster(v[1], 0.3)
+          MyTimeHelper:callFnAfterSecond(function ()
+            WorldHelper:stopAttackEffect(attackPos)
+          end, 2)
         end, ws)
-        MyTimeHelper:callFnAfterSecond(function ()
-          ActorHelper:killSelf(v[1])
-        end, ws + 1)
       end
 
       ws = ws + 1
-      yexiaolong:speak(ws, '高手就是这么寂寞。')
-      player:enableMove(true)
+      yexiaolong:speak(ws, '高手，就是这么寂寞。')
+      yexiaolong.action:playHappy(ws)
 
       ws = ws + 2
-      player:lookAt(yexiaolong)
+      local idx = 1
+      MyPlayerHelper:everyPlayerDoSomeThing(function (p)
+        local pos = yexiaolong:getDistancePosition(idx + 1.5)
+        p:setPosition(pos)
+        p:wantLookAt(yexiaolong, 2)
+        if (p ~= player) then
+          p:enableMove(false)
+        end
+        idx = idx + 1
+      end, ws)
+
+      ws = ws + 1
       player:speak(ws, '先生，你好厉害。')
+
+      ws = ws + 2
+      yexiaolong:thinks(ws, '不是我厉害，而是你太菜。')
+
+      ws = ws + 2
+      MyTimeHelper:callFnAfterSecond(function ()
+        MyStoryHelper:forward('终于消灭了强盗')
+        yexiaolong:lookAt(player.objid)
+        yexiaolong:speak(0, '不错，这么快就恢复过来了。')
+        self:endWords(player, 2)
+      end, ws)
     end
   end, waitSeconds)
 end

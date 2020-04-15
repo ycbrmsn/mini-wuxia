@@ -50,6 +50,18 @@ function MyActorHelper:getMyPosition (objid)
   return MyPosition:new(ActorHelper:getPosition(objid))
 end
 
+function MyActorHelper:getDistancePosition (objid, distance)
+  local pos = self:getMyPosition(objid)
+  local angle = ActorHelper:getFaceYaw(objid)
+  return MathHelper:getDistancePosition(pos, angle, distance)
+end
+
+function MyActorHelper:stopRun (objid)
+  self:closeAI(objid)
+  local pos = self:getMyPosition(objid)
+  ActorHelper:tryMoveToPos(objid, pos.x, pos.y, pos.z)
+end
+
 -- actor进入区域
 function MyActorHelper:enterArea (objid, areaid)
   local myActor = self:getActorByObjid(objid)

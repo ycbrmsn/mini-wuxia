@@ -37,6 +37,7 @@ function MyPlayerHelper:initPlayer (objid)
   local hostPlayer = self:getHostPlayer()
   if (player == hostPlayer) then
     player:setPosition(29.5, 9, 7.5)
+    PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
   else
     player:setPosition(hostPlayer:getPosition())
   end
@@ -147,4 +148,19 @@ function MyPlayerHelper:everyPlayerAddBuff(buffid, bufflv, customticks, afterSec
   self:everyPlayerDoSomeThing(function (player)
     ActorHelper:addBuff(player.objid, buffid, bufflv, customticks)
   end, afterSeconds)
+end
+
+function MyPlayerHelper:changeViewMode (objid, viewmode, islock)
+  viewmode = viewmode or VIEWPORTTYPE.BACKVIEW
+  if (not(objid)) then
+    self:everyPlayerDoSomeThing(function (p)
+      PlayerHelper:changeViewMode(p.objid, viewmode, islock)
+    end)
+  elseif (type(objid) == 'number') then
+    PlayerHelper:changeViewMode(objid, viewmode, islock)
+  else
+    for i, v in ipairs(objid) do
+      PlayerHelper:changeViewMode(v, viewmode, islock)
+    end
+  end
 end

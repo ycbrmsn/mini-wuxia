@@ -1,31 +1,57 @@
 -- 世界工具类
 WorldHelper = {
   PARTICLE_ID = {
+    BOOM1 = 1007,
     BOOM16 = 1186 -- 爆炸16特效
   },
-  closeDoorSoundId = 10652, -- 关门的声音id
-  openDoorSoundId = 10653, -- 开门的声音id
+  SOUND_ID = {
+    BE_ATTACK = 10102, -- 被攻击
+    CLOSE_DOOR = 10652, -- 关门的声音id
+    OPEN_DOOR = 10653 -- 开门的声音id
+  },
   volume = 100,
   pitch = 1
 }
 
 -- 在指定位置上播放开门的声音
 function WorldHelper:playOpenDoorSoundOnPos (pos)
-  return self:playSoundEffectOnPos(pos, self.openDoorSoundId)
+  return self:playSoundEffectOnPos(pos, self.SOUND_ID.OPEN_DOOR)
 end
 
 -- 在指定位置上播放关门的声音
 function WorldHelper:playCloseDoorSoundOnPos (pos)
-  return self:playSoundEffectOnPos(pos, self.closeDoorSoundId)
+  return self:playSoundEffectOnPos(pos, self.SOUND_ID.CLOSE_DOOR)
+end
+
+function WorldHelper:playBeAttackedSoundOnPos (pos)
+  return self:playSoundEffectOnPos(pos, self.SOUND_ID.BE_ATTACK)
+end
+
+-- 攻击特效
+function WorldHelper:playAttackEffect (pos)
+  return self:playEffect(pos, self.PARTICLE_ID.BOOM1)
+end
+
+function WorldHelper:stopAttackEffect (pos)
+  return self:stopEffect(pos, self.PARTICLE_ID.BOOM1)
 end
 
 -- 击退特效
 function WorldHelper:playRepelEffect (pos)
-  return self:playParticalEffect(pos.x, pos.y, pos.z, self.PARTICLE_ID.BOOM16, 1)
+  return self:playEffect(pos, self.PARTICLE_ID.BOOM16)
 end
 
 function WorldHelper:stopRepelEffect (pos)
-  return self:stopEffectOnPosition(pos.x, pos.y, pos.z, self.PARTICLE_ID.BOOM16)
+  return self:stopEffect(pos, self.PARTICLE_ID.BOOM16)
+end
+
+function WorldHelper:playEffect (pos, particleId, scale)
+  scale = scale or 1
+  return self:playParticalEffect(pos.x, pos.y, pos.z, particleId, scale)
+end
+
+function WorldHelper:stopEffect (pos, particleId)
+  return self:stopEffectOnPosition(pos.x, pos.y, pos.z, particleId)
 end
 
 -- 封装原始接口
