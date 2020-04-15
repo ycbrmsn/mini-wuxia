@@ -82,7 +82,7 @@ function Wenyu:exchangeBed ()
   self.lastBedData = self.currentBedData
 end
 
-function MyActor:putOutCandleAndGoToBed ()
+function Wenyu:putOutCandleAndGoToBed ()
   local index = 1
   for i, v in ipairs(self.candlePositions) do
     local candle = MyBlockHelper:getCandle(v)

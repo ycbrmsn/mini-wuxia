@@ -36,7 +36,7 @@ function Jiangyu:wantAtHour (hour)
   elseif (hour == 7) then
     self:goHome()
   elseif (hour == 9) then
-    self:putOutCandleAndGoToBed()
+    self:putOutCandleAndGoToBed(jiangfeng.candlePositions)
   elseif (hour == 18) then
     self:defaultWant()
   elseif (hour == 19) then
@@ -125,19 +125,7 @@ end
 
 function Jiangyu:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'sleep' and candle.isLit) then
-    self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
-      self.action:speak(myPlayer.objid, nickname, '，我在睡觉，离蜡烛远点。')
-    else
-      self.action:speak(myPlayer.objid, nickname, '，我要睡觉了，不要碰我家的蜡烛。')
-    end
-    self:wantLookAt('sleep', myPlayer.objid, 4)
-    self.action:playAngry(1)
-    MyTimeHelper:callFnAfterSecond (function (p)
-      self:doItNow()
-    end, 3)
-  elseif (self.think == 'patrol' and not(candle.isLit)) then
+  if (self.think == 'patrol' and not(candle.isLit)) then
     self.action:stopRun()
     self.action:speak(myPlayer.objid, nickname, '，离蜡烛远点，影响到我巡逻要你好看。')
     self:wantLookAt('patrol', myPlayer.objid, 4)

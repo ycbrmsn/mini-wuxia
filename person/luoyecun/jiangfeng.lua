@@ -125,5 +125,17 @@ function Jiangfeng:candleEvent (myPlayer, candle)
     MyTimeHelper:callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
+  elseif (jiangyu.think == 'sleep' and candle.isLit) then
+    jiangyu.action:stopRun()
+    if (jiangyu.wants[1].style == 'sleeping') then
+      jiangyu.action:speak(myPlayer.objid, nickname, '，我在睡觉，离蜡烛远点。')
+    else
+      jiangyu.action:speak(myPlayer.objid, nickname, '，我要睡觉了，不要碰我家的蜡烛。')
+    end
+    jiangyu:wantLookAt('sleep', myPlayer.objid, 4)
+    jiangyu.action:playAngry(1)
+    MyTimeHelper:callFnAfterSecond (function (p)
+      jiangyu:doItNow()
+    end, 3)
   end
 end

@@ -245,7 +245,7 @@ function MyActor:putOutCandle (think, isNow, candlePositions)
 end
 
 function MyActor:putOutCandleAndGoToBed (candlePositions)
-  local index = self:putOutCandle(true, candlePositions)
+  local index = self:putOutCandle('putOutCandle', true, candlePositions)
   self:goToBed(index == 1)
 end
 
