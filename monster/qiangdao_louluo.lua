@@ -3,6 +3,7 @@ QiangdaoLouluo = MyActor:new(MyConstant.QIANGDAO_LOULUO_ACTOR_ID)
 
 function QiangdaoLouluo:new ()
   local o = {
+    objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
     expData = {
       level = 5,
       exp = 25
@@ -12,10 +13,16 @@ function QiangdaoLouluo:new ()
       { 11001, 1, 20 }, -- 木斧头
       { MyConstant.COIN_ID, 3, 20 } -- 铜板
     },
-    objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
     initPosition = { x = 22, y = 7, z = 37 },
     toPosition = { x = -363, y = 7, z = 556 },
-    monsters = {}
+    monsters = {},
+    monsterPositions = {
+      { x = 229, y = 8, z = 49 },
+      { x = 255, y = 8, z = 45 },
+      { x = 243, y = 14, z = -4 }
+    },
+    monsterAreas = {},
+    encampmentPosition = { x = 235, y = 8, z = 65}
   }
   setmetatable(o, self)
   self.__index = self
@@ -23,6 +30,7 @@ function QiangdaoLouluo:new ()
 end
 
 function QiangdaoLouluo:init ()
+  self.areaid = AreaHelper:getAreaByPos(self.encampmentPosition)
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
@@ -91,4 +99,24 @@ function QiangdaoLouluo:getName ()
     self.actorname = '强盗喽罗'
   end
   return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function QiangdaoLouluo:generateMonsters (num)
+  num = num or 5
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    for i, v in ipairs(self.monsterAreas) do
+      local objids = AreaHelper:getAllCreaturesInAreaId(v)
+      if (not(objids) or #objids < num) then
+        for i = 1, num - #objids do
+          local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+          self:newMonster(pos.x, pos.y, pos.z, 1)
+        end
+      end
+    end
+    return false
+  end, 60)
 end

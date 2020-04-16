@@ -3,6 +3,7 @@ QiangdaoXiaotoumu = MyActor:new(MyConstant.QIANGDAO_XIAOTOUMU_ACTOR_ID)
 
 function QiangdaoXiaotoumu:new ()
   local o = {
+    objid = MyConstant.QIANGDAO_XIAOTOUMU_ACTOR_ID,
     expData = {
       level = 7,
       exp = 40
@@ -12,10 +13,15 @@ function QiangdaoXiaotoumu:new ()
       { 11002, 1, 20 }, -- 石斧头
       { MyConstant.COIN_ID, 10, 20 } -- 铜板
     },
-    objid = MyConstant.QIANGDAO_XIAOTOUMU_ACTOR_ID,
     initPosition = { x = 20, y = 7, z = 45 },
     toPosition = { x = -363, y = 7, z = 556 },
-    monsters = {}
+    monsters = {},
+    monsterPositions = {
+      { x = 229, y = 8, z = 49 },
+      { x = 255, y = 8, z = 45 },
+      { x = 243, y = 14, z = -4 }
+    },
+    monsterAreas = {}
   }
   setmetatable(o, self)
   self.__index = self
@@ -91,4 +97,21 @@ function QiangdaoXiaotoumu:getName ()
     self.actorname = '强盗小头目'
   end
   return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function QiangdaoXiaotoumu:generateMonsters (num)
+  num = num or 1
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    for i, v in ipairs(self.monsterAreas) do
+      local objids = AreaHelper:getAllCreaturesInAreaId(v)
+      if (not(objids) or #objids < num) then
+        self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - #objids)
+      end
+    end
+    return false
+  end, 60)
 end

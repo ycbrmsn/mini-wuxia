@@ -3,6 +3,7 @@ Wolf = MyActor:new(MyConstant.WOLF_ACTOR_ID)
 
 function Wolf:new ()
   local o = {
+    objid = MyConstant.WOLF_ACTOR_ID,
     expData = {
       level = 3,
       exp = 20
@@ -11,8 +12,11 @@ function Wolf:new ()
       { 12518, 1, 20 }, -- 生鸡腿
       { MyConstant.COIN_ID, 1, 20 } -- 铜板
     },
-    initPosition1 = { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置
-    initPosition2 = { x = 192, y = 7, z = -18 }, -- 恶狼区域2位置
+    monsterPositions = {
+      { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置
+      { x = 192, y = 7, z = -18 } -- 恶狼区域2位置
+    },
+    monsterAreas = {},
     ravinePosition = { x = 122, y = 7, z = 1} -- 恶狼谷口位置
   }
   setmetatable(o, self)
@@ -20,16 +24,34 @@ function Wolf:new ()
   return o
 end
 
-function Wolf:createInPosition1 (num)
-  self:newMonster(self.initPosition1.x, self.initPosition1.y, self.initPosition1.z, num)
+function Wolf:init ()
+  self.areaid = AreaHelper:getAreaByPos(self.ravinePosition)
+  return true
 end
 
-function Wolf:createInPosition2 (num)
-  self:newMonster(self.initPosition2.x, self.initPosition2.y, self.initPosition2.z, num)
+function Wolf:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '恶狼'
+  end
+  return self.actorname
 end
 
--- 跑到出生位置
-function Wolf:runToInit (objid)
-  MyActorHelper:openAI(objid)
-  self.action:runTo(self.initPosition, objid)
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function Wolf:generateMonsters (num)
+  num = num or 10
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    for i, v in ipairs(self.monsterAreas) do
+      local objids = AreaHelper:getAllCreaturesInAreaId(v)
+      if (not(objids) or #objids < num) then
+        for i = 1, num - #objids do
+          local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+          self:newMonster(pos.x, pos.y, pos.z, 1)
+        end
+      end
+    end
+    return false
+  end, 60)
 end
