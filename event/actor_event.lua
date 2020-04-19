@@ -37,6 +37,12 @@ local actorDie = function (eventArgs)
   end, { objid = eventArgs.eventobjid, toobjid = eventArgs.toobjid })
 end
 
+-- eventobjid, blockid, x, y, z
+local blockTrigger = function (eventArgs)
+  MyBlockHelper:checkCityGates(eventArgs)
+  LogHelper:debug('方块触发', eventArgs)
+end
+
 -- timerid, timername
 local changeTimer = function (eventArgs)
   local timerid = eventArgs['timerid']
@@ -51,4 +57,5 @@ ScriptSupportEvent:registerEvent([=[Actor.AreaIn]=], actorEnterArea) -- 生物�
 ScriptSupportEvent:registerEvent([=[Actor.AreaOut]=], actorLeaveArea) -- 生物离开区域
 ScriptSupportEvent:registerEvent([=[Actor.Collide]=], actorCollide) -- 生物发生碰撞
 ScriptSupportEvent:registerEvent([=[Actor.Die]=], actorDie) -- 生物死亡
+ScriptSupportEvent:registerEvent([=[Block.Trigger]=], blockTrigger) -- 方块被触发
 ScriptSupportEvent:registerEvent([=[minitimer.change]=], changeTimer) -- 计时器发生变化

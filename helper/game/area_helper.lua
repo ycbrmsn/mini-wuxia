@@ -118,3 +118,12 @@ end
 function AreaHelper:posInArea (pos, areaid)
   return Area:posInArea(pos, areaid) == ErrorCode.OK
 end
+
+-- 替换方块类型为新的方块类型
+function AreaHelper:replaceAreaBlock (areaid, srcblockid, destblockid, face)
+  local onceFailMessage = '替换方块类型为新的方块类型失败一次'
+  local finillyFailMessage = StringHelper:concat('替换方块类型为新的方块类型失败，参数：areaid=', areaid, ',srcblockid=', srcblockid, ',destblockid=', destblockid, ',face=', face)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Area:replaceAreaBlock(p.areaid, p.srcblockid, p.destblockid, p.face)
+  end, { areaid = areaid, srcblockid = srcblockid, destblockid = destblockid, face = face }, onceFailMessage, finillyFailMessage)
+end

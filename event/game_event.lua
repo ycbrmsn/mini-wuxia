@@ -89,6 +89,7 @@ function initMyActors ()
   guard:init()
   LogHelper:debug('创建人物完成')
   MyStoryHelper:init()
+  MyBlockHelper:init()
 end
 
 function initDoorAreas ()

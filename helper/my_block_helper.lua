@@ -1,7 +1,17 @@
 -- 我的方块工具类
 MyBlockHelper = {
-  candles = {} -- 保存所有蜡烛台
+  candles = {}, -- 保存所有蜡烛台
+  cityGateBlockIds = { 414, 122, 415 }, -- 竖纹、雪堆、电石块
+  cityGates = { -- 开关、电石、电石、区域
+    { MyPosition:new(-41.5, 8.5, 484.5), MyPosition:new(-39.5, 15.5, 480.5), MyPosition:new(-32.5, 5.5, 480.5), MyPosition:new(-35.5, 12.5, 480.5) }
+  }
 }
+
+function MyBlockHelper:init ()
+  for i, v in ipairs(self.cityGates) do
+    table.insert(v, AreaHelper:getAreaByPos(v[4]))
+  end
+end
 
 -- 指定位置处的蜡烛台加入集合，参数为（myPosition, blockid）或者 如下
 function MyBlockHelper:addCandle (x, y, z, blockid)
@@ -93,4 +103,28 @@ function MyBlockHelper:handleCandle (myPosition, isLit)
     end
   end
   return candle
+end
+
+function MyBlockHelper:checkCityGates (args)
+  if (args.blockid == 724) then -- 开关
+    for i, v in ipairs(self.cityGates) do
+      if (v[1]:equals(args)) then -- 找到开关
+        if (BlockHelper:getBlockSwitchStatus(v[1])) then -- 打开
+          if (BlockHelper:getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
+            AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
+            BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
+            BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
+            MyTimeHelper:callFnAfterSecond(function ()
+              AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[2], self.cityGateBlockIds[1], 5)
+            end, 1)
+            LogHelper:debug('做完了')
+          end
+        else
+          BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
+          BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
+        end
+        break
+      end
+    end
+  end
 end

@@ -118,3 +118,12 @@ end
 function BlockHelper:isAirBlock (x, y, z)
   return Block:isAirBlock(x, y, z) == ErrorCode.OK
 end
+
+-- 获取功能方块的开关状态
+function BlockHelper:getBlockSwitchStatus (pos)
+  local onceFailMessage = '获取功能方块的开关状态失败一次'
+  local finillyFailMessage = StringHelper:concat('获取功能方块的开关状态失败，参数：pos=', pos)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Block:getBlockSwitchStatus(p.pos)
+  end, { pos = pos }, onceFailMessage, finillyFailMessage)
+end
