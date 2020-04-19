@@ -16,12 +16,12 @@ MyConstant = {
   FENGXIAN_ACTOR_ID = 13, -- 风贤
   QIANBINGWEI_ACTOR_ID = 14, -- 千兵卫
 
-  -- 山寨人物
-  QIANGDAO_LOULUO_ACTOR_ID = 8, -- 强盗喽啰ID
-  QIANGDAO_XIAOTOUMU_ACTOR_ID = 12, -- 强盗小头目ID
 
   -- 怪物ID
   WOLF_ACTOR_ID = 11, -- 恶狼ID
+  QIANGDAO_LOULUO_ACTOR_ID = 8, -- 强盗喽啰ID
+  QIANGDAO_XIAOTOUMU_ACTOR_ID = 12, -- 强盗小头目ID
+  GUARD_ACTOR_ID = 15, -- 卫兵
 
   -- 道具ID
   COIN_ID = 4101, -- 铜板ID
