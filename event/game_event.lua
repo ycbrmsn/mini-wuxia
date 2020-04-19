@@ -85,6 +85,8 @@ function initMyActors ()
     -- LogHelper:debug('创建', v:getName(), '完成')
   end
   -- MyTimeHelper:initActor(miaolan)
+  guard = Guard:new()
+  guard:init()
   LogHelper:debug('创建人物完成')
   MyStoryHelper:init()
 end

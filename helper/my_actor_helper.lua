@@ -50,6 +50,17 @@ function MyActorHelper:getMyPosition (objid)
   return MyPosition:new(ActorHelper:getPosition(objid))
 end
 
+function MyActorHelper:setPosition (objid, x, y, z)
+  if (type(x) == 'table') then
+    return ActorHelper:setPosition(objid, x.x, x.y, x.z)
+  elseif (type(x) == 'number') then
+    return ActorHelper:setPosition(objid, x, y, z)
+  else
+    LogHelper:debug('设置位置参数类型为：', type(x))
+    return false
+  end
+end
+
 function MyActorHelper:getDistancePosition (objid, distance)
   local pos = self:getMyPosition(objid)
   local angle = ActorHelper:getFaceYaw(objid)
@@ -60,6 +71,21 @@ function MyActorHelper:stopRun (objid)
   self:closeAI(objid)
   local pos = self:getMyPosition(objid)
   ActorHelper:tryMoveToPos(objid, pos.x, pos.y, pos.z)
+end
+
+function MyActorHelper:lookToward (objid, dir)
+  dir = string.upper(dir)
+  local yaw
+  if (dir == 'N') then
+    yaw = ActorHelper.FACE_YAW.NORTH
+  elseif (dir == 'S') then
+    yaw = ActorHelper.FACE_YAW.SOUTH
+  elseif (dir == 'W') then
+    yaw = ActorHelper.FACE_YAW.WEST
+  else
+    yaw = ActorHelper.FACE_YAW.EAST
+  end
+  ActorHelper:setFaceYaw(objid, yaw)
 end
 
 -- actor进入区域

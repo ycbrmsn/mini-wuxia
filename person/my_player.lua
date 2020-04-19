@@ -115,11 +115,7 @@ function MyPlayer:getMyPosition ()
 end
 
 function MyPlayer:setPosition (x, y, z)
-  if (type(x) == 'table') then
-    return PlayerHelper:setPosition(self.objid, x.x, x.y, x.z)
-  else
-    return PlayerHelper:setPosition(self.objid, x, y, z)
-  end
+  return MyActorHelper:setPosition(self.objid, x, y, z)
 end
 
 function MyPlayer:getDistancePosition (distance)

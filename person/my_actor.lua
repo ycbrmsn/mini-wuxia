@@ -11,13 +11,18 @@ MyActor = {
   wants = nil
 }
 
-function MyActor:new (actorid)
+function MyActor:new (actorid, objid)
   if (not(actorid)) then
     LogHelper:error('初始化生物的actorid为：', actorid)
   end
   local o = {
     actorid = actorid
   }
+  if (objid) then
+    o.objid = objid
+    o.action = MyActorAction:new(o)
+    MyActorHelper:addPerson(o) -- 生物加入集合中
+  end
   setmetatable(o, self)
   self.__index = self
   return o
@@ -113,11 +118,7 @@ end
 
 -- 设置生物位置
 function MyActor:setPosition (x, y, z)
-  if (type(x) == 'table') then
-    return ActorHelper:setPosition(self.objid, x.x, x.y, x.z)
-  else
-    return ActorHelper:setPosition(self.objid, x, y, z)
-  end
+  return MyActorHelper:setPosition(self.objid, x, y, z)
 end
 
 function MyActor:getDistancePosition (distance)
