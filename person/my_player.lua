@@ -9,7 +9,8 @@ MyPlayer = {
   totalLevel = 1,
   exp = 0,
   levelExp = 100,
-  positions = nil
+  positions = nil,
+  prevAreaId = nil
 }
 
 function MyPlayer:new (objid)
@@ -184,8 +185,4 @@ function MyPlayer:wantLookAt (objid, seconds)
   MyTimeHelper:callFnContinueRuns(function ()
     self:lookAt(objid)
   end, seconds)
-  -- self.wants = { { style = 'lookAt', dst = objid } }
-  -- MyTimeHelper:callFnAfterSecond(function (p)
-  --   self.wants = nil
-  -- end, seconds)
 end

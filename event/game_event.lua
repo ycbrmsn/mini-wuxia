@@ -101,6 +101,7 @@ local atSecond = function (eventArgs)
       MyAreaHelper:initAreas()
       initMyActors()
       MonsterHelper:init()
+      MyAreaHelper:initShowToastAreas()
       TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end

@@ -17,7 +17,11 @@ function Wolf:new ()
       { x = 192, y = 7, z = -18 } -- 恶狼区域2位置
     },
     monsterAreas = {},
-    ravinePosition = { x = 122, y = 7, z = 1} -- 恶狼谷口位置
+    ravinePositions = {
+      MyPosition:new(122.5, 7.5, 3.5), -- 恶狼谷口位置
+      MyPosition:new(123.5, 7.5, 3.5) -- 恶狼谷口后位置
+    },
+    areaids = {}
   }
   setmetatable(o, self)
   self.__index = self
@@ -25,7 +29,9 @@ function Wolf:new ()
 end
 
 function Wolf:init ()
-  self.areaid = AreaHelper:getAreaByPos(self.ravinePosition)
+  for i, v in ipairs(self.ravinePositions) do
+    table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+  end
   return true
 end
 

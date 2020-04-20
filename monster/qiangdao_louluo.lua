@@ -22,7 +22,11 @@ function QiangdaoLouluo:new ()
       { x = 243, y = 14, z = -4 }
     },
     monsterAreas = {},
-    encampmentPosition = { x = 235, y = 8, z = 65}
+    encampmentPositions = {
+      MyPosition:new(272.5, 8.5, 65.5),
+      MyPosition:new(272.5, 8.5, 64.5)
+    },
+    areaids = {}
   }
   setmetatable(o, self)
   self.__index = self
@@ -30,7 +34,9 @@ function QiangdaoLouluo:new ()
 end
 
 function QiangdaoLouluo:init ()
-  self.areaid = AreaHelper:getAreaByPos(self.encampmentPosition)
+  for i, v in ipairs(self.encampmentPositions) do
+    table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+  end
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
