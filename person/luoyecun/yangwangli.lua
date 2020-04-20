@@ -4,20 +4,20 @@ Yangwanli = MyActor:new(MyConstant.YANGWANLI_ACTOR_ID)
 function Yangwanli:new ()
   local o = {
     objid = 4315385574,
-    initPosition = { x = -12, y = 8, z = -11 }, -- 屋内
+    initPosition = MyPosition:new(-11.5, 8.5, -10.5), -- 屋内
     bedData = {
-      { x = -7, y = 9, z = -11 }, -- 床尾位置
+      MyPosition:new(-6.5, 9.5, -10.5), -- 床尾位置
       ActorHelper.FACE_YAW.WEST -- 床尾朝向西
     },
     candlePositions = {
-      MyPosition:new(-18, 9, -10), -- 屋角落蜡烛台
-      MyPosition:new(-11, 9, -14) -- 屋中央蜡烛台
+      MyPosition:new(-17.5, 9.5, -9.5), -- 屋角落蜡烛台
+      MyPosition:new(-10.5, 9.5, -13.5) -- 屋中央蜡烛台
     },
     homeAreaPositions = {
-      { x = -18, y = 9, z = -19 }, -- 屋门口边上
-      { x = -7, y = 9, z = -11 } -- 床
+      MyPosition:new(-17.5, 9.5, -18.5), -- 屋门口边上
+      MyPosition:new(-6.5, 9.5, -10.5) -- 床
     },
-    doorPosition = { x = -12, y = 8, z = -22 } -- 门外位置
+    doorPosition = MyPosition:new(-11.5, 8.5, -21.5) -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self

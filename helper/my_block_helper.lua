@@ -25,22 +25,22 @@ function MyBlockHelper:addCandle (x, y, z, blockid)
     myPosition = x
     blockid = y
   end
-  local myPos = myPosition:floor()
-  local candle = MyCandle:new(myPos, blockid)
-  self.candles[myPos:toString()] = candle
+  -- local myPos = myPosition:floor()
+  local candle = MyCandle:new(myPosition, blockid)
+  self.candles[myPosition:toString()] = candle
   return candle
 end
 
 -- 查询指定位置处的蜡烛台
 function MyBlockHelper:getCandle (myPosition)
-  local myPos = myPosition:floor()
-  return self.candles[myPos:toString()]
+  -- local myPos = myPosition:floor()
+  return self.candles[myPosition:toString()]
 end
 
 -- 从集合中删除指定位置的蜡烛台
 function MyBlockHelper:removeCandle (myPosition)
-  local myPos = myPosition:floor()
-  self.candles[myPos:toString()] = nil
+  -- local myPos = myPosition:floor()
+  self.candles[myPosition:toString()] = nil
 end
 
 -- 检查指定位置处是否是蜡烛台
@@ -77,7 +77,7 @@ end
 
 function MyBlockHelper:getWhoseCandle (myPosition)
   local index = 1
-  myPosition = myPosition:floor()
+  -- myPosition = myPosition:floor()
   for k, v in pairs(MyActorHelper:getAllActors()) do
     if (v.candlePositions and #v.candlePositions > 0) then
       for kk, vv in pairs(v.candlePositions) do

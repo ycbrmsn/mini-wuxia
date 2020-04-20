@@ -4,24 +4,24 @@ Jiangfeng = MyActor:new(MyConstant.JIANGFENG_ACTOR_ID)
 function Jiangfeng:new ()
   local o = {
     objid = 4313483881,
-    initPosition = { x = 8, y = 8, z = -18 },
+    initPosition = MyPosition:new(8.5, 8.5, -17.5),
     bedData = {
-      { x = 6, y = 9, z = -13 }, -- 床尾位置
+      MyPosition:new(6.5, 9.5, -12.5), -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
     candlePositions = {
-      MyPosition:new(9, 9, -11) -- 蜡烛台
+      MyPosition:new(9.5, 9.5, -10.5) -- 蜡烛台
     },
     patrolPositions = {
-      { x = 10, y = 11, z = 12 }, -- 落叶松旁的城上
-      { x = -10, y = 11, z = 12 } -- 庄稼地旁的城上
+      MyPosition:new(10.5, 11.5, 12.5), -- 落叶松旁的城上
+      MyPosition:new(-9.5, 11.5, 12.5) -- 庄稼地旁的城上
     },
     doorPositions = {
-      { x = 9, y = 8, z = -22 } -- 门外
+      MyPosition:new(9.5, 8.5, -21.5) -- 门外
     },
     homeAreaPositions = {
-      { x = 7, y = 8, z = -19 }, -- 屋门口边上
-      { x = 11, y = 8, z = -12 } -- 屋内小柜子旁，避开桌椅
+      MyPosition:new(7.5, 8.5, -18.5), -- 屋门口边上
+      MyPosition:new(11.5, 8.5, -11.5) -- 屋内小柜子旁，避开桌椅
     }
   }
   setmetatable(o, self)

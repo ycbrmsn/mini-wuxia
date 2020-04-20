@@ -4,23 +4,23 @@ Miaolan = MyActor:new(MyConstant.MIAOLAN_ACTOR_ID)
 function Miaolan:new ()
   local o = {
     objid = 4314184974,
-    initPosition = { x = -34, y = 8, z = -13 }, -- 药店柜台后
+    initPosition = MyPosition:new(-33.5, 8.5, -12.5), -- 药店柜台后
     bedData = {
-      { x = -30, y = 14, z = -15 }, -- 床尾位置
+      MyPosition:new(-29.5, 14.5, -14.5), -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
     },
     candlePositions = {
-      MyPosition:new(-32, 9, -15), -- 楼下蜡烛台
-      MyPosition:new(-28, 14, -14) -- 楼上蜡烛台
+      MyPosition:new(-31.5, 9.5, -14.5), -- 楼下蜡烛台
+      MyPosition:new(-27.5, 14.5, -13.5) -- 楼上蜡烛台
     },
-    secondFloorPosition = { x = -29, y = 13, z = -14 }, -- 二楼床旁边
+    secondFloorPosition = MyPosition:new(-28.5, 13.5, -13.5), -- 二楼床旁边
     secondFloorPositions1 = {
-      { x = -26, y = 14, z = -15 }, -- 楼梯口
-      { x = -29, y = 14, z = -14 } -- 床旁边
+      MyPosition:new(-25.5, 14.5, -14.5), -- 楼梯口
+      MyPosition:new(-28.5, 14.5, -13.5) -- 床旁边
     },
     secondFloorPositions2 = {
-      { x = -29, y = 13, z = -16 }, -- 靠近床旁边
-      { x = -30, y = 13, z = -19 } -- 门口
+      MyPosition:new(-28.5, 13.5, -15.5), -- 靠近床旁边
+      MyPosition:new(-29.5, 13.5, -18.5) -- 门口
     }
   }
   setmetatable(o, self)

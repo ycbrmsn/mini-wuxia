@@ -4,30 +4,30 @@ Wangdali = MyActor:new(MyConstant.WANGDALI_ACTOR_ID)
 function Wangdali:new ()
   local o = {
     objid = 4315385568,
-    initPosition = { x = -30, y = 9, z = -45 }, -- 屋内
+    initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
-      { x = -26, y = 10, z = -47 }, -- 床尾位置
+      MyPosition:new(-25.5, 10.5, -46.5), -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
     candlePositions = {
-      MyPosition:new(-32, 10, -42) -- 蜡烛台
+      MyPosition:new(-31.5, 10.5, -41.5) -- 蜡烛台
     },
-    bedTailPointPosition = { x = -26, y = 10, z = -44 }, -- 床尾指向位置
+    bedTailPointPosition = MyPosition:new(-25.5, 10.5, -43.5), -- 床尾指向位置
     movePositions = {
-      { x = -30, y = 9, z = -45 }, -- 屋内
-      { x = -30, y = 9, z = -34 }, -- 门外
-      { x = -22, y = 9, z = -35 }, -- 屋外楼梯上
-      { x = -21, y = 9, z = -44 } -- 铁匠炉旁边
+      MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
+      MyPosition:new(-29.5, 9.5, -33.5), -- 门外
+      MyPosition:new(-21.5, 9.5, -34.5), -- 屋外楼梯上
+      MyPosition:new(-20.5, 9.5, -43.5) -- 铁匠炉旁边
     },
     outDoorPositions = {
-      { x = -17, y = 9, z = -49 }, -- 亭口角
-      { x = -23, y = 9, z = -37 } -- 亭口对角
+      MyPosition:new(-16.5, 9.5, -48.5), -- 亭口角
+      MyPosition:new(-22.5, 9.5, -36.5) -- 亭口对角
     },
     homePositions = {
-      { x = -33, y = 9, z = -39 }, -- 进门口右角落
-      { x = -27, y = 9, z = -47 } -- 对角床上
+      MyPosition:new(-32.5, 9.5, -38.5), -- 进门口右角落
+      MyPosition:new(-26.5, 9.5, -46.5) -- 对角床上
     },
-    doorPosition = { x = -30, y = 9, z = -36 } -- 门外位置
+    doorPosition = MyPosition:new(-29.5, 9.5, -35.5) -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self

@@ -259,6 +259,7 @@ function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   self.wants = { want }
   -- 创建当前前往区域
   MyActorActionHelper:createMoveToPos(want)
+  self.action:runTo(want.toPos)
 end
 
 function MyActor:wantApproach (think, positions, isNegDir, index, restTime)

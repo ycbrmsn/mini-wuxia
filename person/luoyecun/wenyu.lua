@@ -4,30 +4,30 @@ Wenyu = MyActor:new(MyConstant.WENYU_ACTOR_ID)
 function Wenyu:new ()
   local o = {
     objid = 4315385572,
-    initPosition = { x = 24, y = 8, z = -10 }, -- 屋内
+    initPosition = MyPosition:new(24.5, 8.5, -9.5), -- 屋内
     bedData1 = {
-      { x = 20, y = 9, z = -9 }, -- 床尾位置1
+      MyPosition:new(20.5, 9.5, -8.5), -- 床尾位置1
       ActorHelper.FACE_YAW.EAST -- 床尾朝向东
     },
     bedData2 = {
-      { x = 20, y = 9, z = -12 }, -- 床尾位置2
+      MyPosition:new(20.5, 9.5, -11.5), -- 床尾位置2
       ActorHelper.FACE_YAW.EAST -- 床尾朝向东
     },
     candlePositions = {
-      MyPosition:new(25, 9, -22), -- 门口蜡烛台
-      MyPosition:new(23, 9, -12) -- 里屋蜡烛台
+      MyPosition:new(25.5, 9.5, -21.5), -- 门口蜡烛台
+      MyPosition:new(23.5, 9.5, -11.5) -- 里屋蜡烛台
     },
     lastBedData = nil, -- 上一次睡的床尾位置
     currentBedData = nil, -- 当前睡的床尾位置
     homeAreaPositions1 = {
-      { x = 28, y = 8, z = -23 }, -- 壁炉旁
-      { x = 25, y = 8, z = -13 } -- 转角处
+      MyPosition:new(28.5, 8.5, -22.5), -- 壁炉旁
+      MyPosition:new(25.5, 8.5, -12.5) -- 转角处
     },
     homeAreaPositions2 = {
-      { x = 28, y = 9, z = -12 }, -- 未转角凳子旁
-      { x = 21, y = 9, z = -9 } -- 床旁边
+      MyPosition:new(28.5, 9.5, -11.5), -- 未转角凳子旁
+      MyPosition:new(21.5, 9.5, -8.5) -- 床旁边
     },
-    doorPosition = { x = 23, y = 8, z = -19 } -- 门外位置
+    doorPosition = MyPosition:new(23.5, 8.5, -18.5) -- 门外位置
   }
   setmetatable(o, self)
   self.__index = self

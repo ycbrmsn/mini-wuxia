@@ -4,11 +4,15 @@ Huaxiaolou = MyActor:new(MyConstant.HUAXIAOLOU_ACTOR_ID)
 function Huaxiaolou:new ()
   local o = {
     objid = 4301071935,
-    initPosition = { x = 10, y = 9, z = -43 },
+    initPosition = MyPosition:new(10.5, 9.5, -42.5),
+    bedData = {
+      MyPosition:new(9.5, 10.5, -41.5), -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
+    },
     candlePositions = {
-      MyPosition:new(11, 10, -41), -- 柜台上的蜡烛台
-      MyPosition:new(18, 10, -43), -- 大厅中的蜡烛台
-      MyPosition:new(28, 10, -40) -- 走廊上的蜡烛台
+      MyPosition:new(11.5, 10.5, -40.5), -- 柜台上的蜡烛台
+      MyPosition:new(18.5, 10.5, -42.5), -- 大厅中的蜡烛台
+      MyPosition:new(28.5, 10.5, -39.5) -- 走廊上的蜡烛台
     }
   }
   setmetatable(o, self)
@@ -30,7 +34,7 @@ function Huaxiaolou:wantAtHour (hour)
   elseif (hour == 19) then
     self:goToSell(not(self:lightAndPutOutCandles(self.candlePositions)))
   elseif (hour == 22) then
-    self:goToSell(not(self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] })))
+    self:goToBed(not(self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] })))
   end
 end
 

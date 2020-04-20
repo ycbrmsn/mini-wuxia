@@ -4,15 +4,15 @@ Jiangyu = MyActor:new(MyConstant.JIANGYU_ACTOR_ID)
 function Jiangyu:new ()
   local o = {
     objid = 4313483879,
-    initPosition = { x = 10, y = 8, z = -14 },
+    initPosition = MyPosition:new(10.5, 8.5, -13.5),
     bedData = {
-      { x = 12, y = 9, z = -13 }, -- 床尾位置
+      MyPosition:new(12.5, 9.5, -12.5), -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
     candlePositions = {
-      MyPosition:new(8, 12, 13), -- 最东边蜡烛台
-      MyPosition:new(0, 12, 13), -- 中央蜡烛台
-      MyPosition:new(-8, 12, 13) -- 最西边蜡烛台
+      MyPosition:new(8.5, 12.5, 13.5), -- 最东边蜡烛台
+      MyPosition:new(0.5, 12.5, 13.5), -- 中央蜡烛台
+      MyPosition:new(-7.5, 12.5, 13.5) -- 最西边蜡烛台
     },
     patrolPositions = jiangfeng.patrolPositions,
     doorPositions = jiangfeng.doorPositions,

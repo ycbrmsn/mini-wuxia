@@ -27,12 +27,12 @@ end
 
 -- 跑到指定地点
 function MyActorAction:runTo (pos)
-  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x + 0.5, pos.y, pos.z + 0.5)
+  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x, pos.y, pos.z)
 end
 
 -- 传送到指定地点
 function MyActorAction:transmitTo (pos)
-  return self.myActor:setPosition(pos.x + 0.5, pos.y, pos.z + 0.5)
+  return self.myActor:setPosition(pos.x, pos.y, pos.z)
 end
 
 function MyActorAction:stopRun ()
@@ -138,7 +138,8 @@ function MyActorAction:execute ()
       want.style = 'sleeping'
       self:playSleep()
     elseif (want.style == 'wake') then
-      self.myActor:putOutCandleAndGoToBed()
+      self.myActor:doItNow()
+      -- self.myActor:putOutCandleAndGoToBed()
     elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
       self.myActor:lookAt(want.toPos)
     elseif (want.style == 'lookAt') then

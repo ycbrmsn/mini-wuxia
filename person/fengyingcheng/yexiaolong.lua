@@ -4,17 +4,17 @@ Yexiaolong = MyActor:new(MyConstant.YEXIAOLONG_ACTOR_ID)
 function Yexiaolong:new ()
   local o = {
     objid = 4315385631,
-    initPosition = { x = 27, y = 9, z = -35 }, -- 客栈客房内
+    initPosition = MyPosition:new(27.5, 9.5, -34.5), -- 客栈客房内
     bedData = {
-      { x = 28, y = 10, z = -35 }, -- 床尾位置
+      MyPosition:new(28.5, 10.5, -34.5), -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
     },
     candlePositions = {
-      MyPosition:new(25, 10, -38) -- 客栈中蜡烛台
+      MyPosition:new(25.5, 10.5, -37.5) -- 客栈中蜡烛台
     },
     homeAreaPositions = {
-      { x = 27, y = 10, z = -38 }, -- 衣柜旁
-      { x = 25, y = 10, z = -34 } -- 柜子上
+      MyPosition:new(27.5, 10.5, -37.5), -- 衣柜旁
+      MyPosition:new(25.5, 10.5, -33.5) -- 柜子上
     }
   }
   setmetatable(o, self)
