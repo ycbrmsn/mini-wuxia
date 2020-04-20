@@ -21,7 +21,8 @@ function Wolf:new ()
       MyPosition:new(122.5, 7.5, 3.5), -- 恶狼谷口位置
       MyPosition:new(123.5, 7.5, 3.5) -- 恶狼谷口后位置
     },
-    areaids = {}
+    areaids = {},
+    areaName = '恶狼谷'
   }
   setmetatable(o, self)
   self.__index = self

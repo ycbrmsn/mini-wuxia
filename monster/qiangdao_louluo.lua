@@ -23,10 +23,11 @@ function QiangdaoLouluo:new ()
     },
     monsterAreas = {},
     encampmentPositions = {
-      MyPosition:new(272.5, 8.5, 65.5),
-      MyPosition:new(272.5, 8.5, 64.5)
+      MyPosition:new(224.5, 8.5, 69.5),
+      MyPosition:new(224.5, 8.5, 68.5)
     },
-    areaids = {}
+    areaids = {},
+    areaName = '强盗营地'
   }
   setmetatable(o, self)
   self.__index = self
