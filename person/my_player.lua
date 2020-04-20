@@ -181,8 +181,11 @@ function MyPlayer:lookAt (objid)
 end
 
 function MyPlayer:wantLookAt (objid, seconds)
-  self.wants = { { style = 'lookAt', dst = objid } }
-  MyTimeHelper:callFnAfterSecond(function (p)
-    self.wants = nil
+  MyTimeHelper:callFnContinueRuns(function ()
+    self:lookAt(objid)
   end, seconds)
+  -- self.wants = { { style = 'lookAt', dst = objid } }
+  -- MyTimeHelper:callFnAfterSecond(function (p)
+  --   self.wants = nil
+  -- end, seconds)
 end

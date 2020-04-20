@@ -345,6 +345,13 @@ function MyActor:wantLookAt (think, myPosition, restTime)
   if (self:isWantsExist()) then
     think = think or self.think
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
+    MyTimeHelper:callFnContinueRuns(function ()
+      if (want.pos) then
+        self:lookAt(want.pos)
+      elseif (want.objid) then
+        self:lookAt(want.objid)
+      end
+    end, restTime)
     if (self.wants[1].style == 'lookAt') then
       self.wants[1] = want
     else

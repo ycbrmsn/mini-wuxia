@@ -24,22 +24,6 @@ function MonsterHelper:getMonsterByObjid (objid)
   return self.monsters[objid]
 end
 
-function MonsterHelper:addWillBeKilledMonster (objid, seconds)
-  table.insert(self.willBeKilledMonster, { objid = objid, remain = seconds * 1000 })
-end
-
-function MonsterHelper:checkWillBeKilledMonster ()
-  if (#self.willBeKilledMonster > 0) then
-    for i = #self.willBeKilledMonster, 1, -1 do
-      self.willBeKilledMonster[i].remain = self.willBeKilledMonster[i].remain - 50
-      if (self.willBeKilledMonster[i].remain <= 0) then
-        ActorHelper:killSelf(self.willBeKilledMonster[i].objid)
-        table.remove(self.willBeKilledMonster, i)
-      end
-    end
-  end
-end
-
 function MonsterHelper:init ()
   qiangdaoXiaotoumu = QiangdaoXiaotoumu:new()
   qiangdaoLouluo = QiangdaoLouluo:new()

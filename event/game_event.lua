@@ -23,33 +23,10 @@ end
 local startGame = function ()
   LogHelper:debug('开始游戏')
   initHours(7)
-  MyTimeHelper:callFnContinueRuns(function ( ... )
-    LogHelper:debug('哈哈')
-  end, 1.5)
-  MyTimeHelper:callFnFastRuns(function ( ... )
-    LogHelper:debug('是的')
-  end, 1.5)
 end
 
 -- 无参数
 local runGame = function ()
-  for k, v in pairs(MyActorHelper.actors) do
-    LogHelper:call(function (myActor)
-      if (myActor.wants and myActor.wants[1] and myActor.wants[1].style == 'lookAt') then
-        if (myActor.wants[1].pos) then
-          myActor:lookAt(myActor.wants[1].pos)
-        elseif (myActor.wants[1].objid) then
-          myActor:lookAt(myActor.wants[1].objid)
-        end
-      end
-    end, v)
-  end
-  MyPlayerHelper:everyPlayerDoSomeThing(function (player)
-    if (player.wants and player.wants[1] and player.wants[1].style == 'lookAt') then
-      player:lookAt(player.wants[1].dst)
-    end
-  end)
-  MonsterHelper:checkWillBeKilledMonster()
   MyTimeHelper:runFnFastRuns()
   MyTimeHelper:runFnContinueRuns()
 end
