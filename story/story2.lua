@@ -11,7 +11,7 @@ function Story2:init ()
       '先生带着我向学院出发了。只是，没想到是要用跑的。',
       '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
       '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
-      '时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。'
+      '#G目前剧情到此。'
       -- '先生先离开了。风颖城，我来了。'
     },
     yexiaolongInitPosition = {
@@ -144,6 +144,13 @@ function Story2:goToCollege ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
+  if (#MyPlayerHelper:getAllPlayers() > 1) then
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我们。')
+  else
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我。')
+  end
+
+  waitSeconds = waitSeconds + 1
   MyTimeHelper:callFnAfterSecond(function (p)
     MyPlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
     for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
@@ -157,13 +164,6 @@ function Story2:goToCollege ()
     end
     MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
   end, waitSeconds, { story2 = story2 })
-  
-  waitSeconds = waitSeconds + 1
-  if (#MyPlayerHelper:getAllPlayers() > 1) then
-    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我们。')
-  else
-    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我。')
-  end
   MyTimeHelper:callFnAfterSecond(function (p)
     MyStoryHelper:forward('跑步去学院')
   end, waitSeconds)
@@ -484,7 +484,8 @@ function Story2:endWords (player, waitSeconds)
   MyTimeHelper:callFnAfterSecond(function ()
     MyPlayerHelper:changeViewMode(nil, VIEWPORTTYPE.MAINVIEW)
     MyStoryHelper:forward('前往风颖城')
-    ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
+    -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
+    ChatHelper:sendSystemMsg('#G目前剧情到此。')
   end, waitSeconds)
 end
 

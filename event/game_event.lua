@@ -11,6 +11,8 @@ local playerEnterGame = function (eventArgs)
     logPaper:newItem(objid, 1, true)
   end
   MyPlayerHelper:initPlayer(objid)
+  -- local areaid = AreaHelper:createAreaRectByRange(MyPosition:new(31.5, 8.5, 4.5) , MyPosition:new(31.5, 9.5, 4.5))
+  -- Area:fillBlock(areaid, 200, 1)
 end
 
 -- eventobjid, toobjid

@@ -27,7 +27,8 @@ end
 
 -- 跑到指定地点
 function MyActorAction:runTo (pos)
-  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x, pos.y, pos.z)
+  local x, y, z = math.floor(pos.x) + 0.5, math.floor(pos.y) + 0.5, math.floor(pos.z) + 0.5
+  return ActorHelper:tryMoveToPos(self.myActor.objid, x, y, z)
 end
 
 -- 传送到指定地点
