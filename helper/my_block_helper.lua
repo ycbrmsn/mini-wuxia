@@ -2,8 +2,11 @@
 MyBlockHelper = {
   candles = {}, -- 保存所有蜡烛台
   cityGateBlockIds = { 414, 122, 415 }, -- 竖纹、雪堆、电石块
-  cityGates = { -- 开关、电石、电石、区域
-    { MyPosition:new(-41.5, 8.5, 484.5), MyPosition:new(-39.5, 15.5, 480.5), MyPosition:new(-32.5, 5.5, 480.5), MyPosition:new(-35.5, 12.5, 480.5) }
+  cityGates = { -- 开关、左电石、右电石、右区域
+    { MyPosition:new(-41.5, 8.5, 484.5), MyPosition:new(-39.5, 5.5, 480.5), MyPosition:new(-32.5, 5.5, 480.5), MyPosition:new(-35.5, 12.5, 480.5) }, -- 南
+    { MyPosition:new(-30.5, 8.5, 619.5), MyPosition:new(-32.5, 5.5, 623.5), MyPosition:new(-39.5, 5.5, 623.5), MyPosition:new(-36.5, 12.5, 623.5) }, -- 北
+    { MyPosition:new(31.5, 8.5, 546.5), MyPosition:new(35.5, 5.5, 548.5), MyPosition:new(35.5, 5.5, 555.5), MyPosition:new(35.5, 12.5, 552.5) }, -- 东
+    { MyPosition:new(-103.5, 8.5, 557.5), MyPosition:new(-107.5, 5.5, 555.5), MyPosition:new(-107.5, 5.5, 548.5), MyPosition:new(-107.5, 12.5, 551.5) } -- 西
   }
 }
 
@@ -113,11 +116,10 @@ function MyBlockHelper:checkCityGates (args)
           if (BlockHelper:getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
             AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
             BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
-            BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
-            MyTimeHelper:callFnAfterSecond(function ()
+            MyTimeHelper:callFnFastRuns(function ()
               AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[2], self.cityGateBlockIds[1], 5)
-            end, 1)
-            LogHelper:debug('做完了')
+              BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
+            end, 0.005)
           end
         else
           BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)

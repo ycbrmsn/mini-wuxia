@@ -40,7 +40,6 @@ end
 -- eventobjid, blockid, x, y, z
 local blockTrigger = function (eventArgs)
   MyBlockHelper:checkCityGates(eventArgs)
-  LogHelper:debug('方块触发', eventArgs)
 end
 
 -- timerid, timername
