@@ -23,6 +23,12 @@ end
 local startGame = function ()
   LogHelper:debug('开始游戏')
   initHours(7)
+  MyTimeHelper:callFnContinueRuns(function ( ... )
+    LogHelper:debug('哈哈')
+  end, 1.5)
+  MyTimeHelper:callFnFastRuns(function ( ... )
+    LogHelper:debug('是的')
+  end, 1.5)
 end
 
 -- 无参数
@@ -44,6 +50,8 @@ local runGame = function ()
     end
   end)
   MonsterHelper:checkWillBeKilledMonster()
+  MyTimeHelper:runFnFastRuns()
+  MyTimeHelper:runFnContinueRuns()
 end
 
 -- 无参数

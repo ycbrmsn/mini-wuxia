@@ -5,7 +5,9 @@ MyTimeHelper = {
   fns = {}, -- second -> { { f, p }, { f, p }, ... }
   fnIntervals = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
   fnCanRuns = {}, -- second -> { objid = { t, t }, objid = { t, t } ... }
-  fnLastRuns = {} -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
+  fnLastRuns = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
+  fnFastRuns = {}, -- { { second, f, p } }
+  fnContinueRuns = {} -- { { second, f, p } }
 }
 
 function MyTimeHelper:updateHour (hour)
@@ -263,4 +265,54 @@ function MyTimeHelper:callFnLastRun (objid, t, f, second, p)
   p.objid = objid
   self:delLastFnLastRunTime(objid, t, second)
   self:setFnLastRun(objid, t, f, self.time + second, p)
+end
+
+-- 添加方法
+function MyTimeHelper:addFnFastRuns (f, second, p)
+  table.insert(self.fnFastRuns, { second * 1000, f, p })
+end
+
+-- 运行方法，然后删除
+function MyTimeHelper:runFnFastRuns ()
+  for i = #self.fnFastRuns, 1, -1 do
+    self.fnFastRuns[i][1] = self.fnFastRuns[i][1] - 50
+    if (self.fnFastRuns[i][1] <= 0) then
+      self.fnFastRuns[i][2](self.fnFastRuns[i][3])
+      table.remove(self.fnFastRuns, i)
+    end
+  end
+end
+
+-- 参数为：函数、秒、函数的参数table
+function MyTimeHelper:callFnFastRuns (f, second, p)
+  if (type(f) ~= 'function') then
+    return
+  end
+  second = second or 1
+  self:addFnFastRuns(f, second, p)
+end
+
+-- 添加方法
+function MyTimeHelper:addFnContinueRuns (f, second, p)
+  table.insert(self.fnContinueRuns, { second * 1000, f, p })
+end
+
+-- 运行方法，然后删除
+function MyTimeHelper:runFnContinueRuns ()
+  for i = #self.fnContinueRuns, 1, -1 do
+    self.fnContinueRuns[i][1] = self.fnContinueRuns[i][1] - 50
+    self.fnContinueRuns[i][2](self.fnContinueRuns[i][3])
+    if (self.fnContinueRuns[i][1] <= 0) then
+      table.remove(self.fnContinueRuns, i)
+    end
+  end
+end
+
+-- 参数为：函数、秒、函数的参数table
+function MyTimeHelper:callFnContinueRuns (f, second, p)
+  if (type(f) ~= 'function') then
+    return
+  end
+  second = second or 1
+  self:addFnContinueRuns(f, second, p)
 end
