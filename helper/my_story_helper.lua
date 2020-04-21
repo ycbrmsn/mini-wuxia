@@ -90,19 +90,18 @@ end
 
 -- 推进剧情相关的事件
 function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
-  if (itemid == MyConstant.COIN_ID) then -- 获得铜板
-    local mainIndex = self:getMainStoryIndex()
-    if (mainIndex == 1) then -- 剧情一
-      if (itemnum == 3) then
-        self:forward('文羽通知学院招生')
-      elseif (itemnum == 7) then
-        self:forward('村长告知先生位置')
-      end
+  local mainIndex = self:getMainStoryIndex()
+  if (mainIndex == 1) then -- 剧情一
+    if (itemid == MyConstant.WENYU_PACKAGE_ID) then -- 文羽包裹
+      self:forward('文羽通知学院招生')
+    elseif (itemid == MyConstant.YANGWANLI_PACKAGE_ID) then -- 村长包裹
+          self:forward('村长告知先生位置')
+        end
+    elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
+      PlayerHelper:setItemDisableThrow(objid, itemid)
+      self:forward('得到风颖城通行令牌')
+      Story1:finishNoticeEvent(objid)
     end
-  elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
-    PlayerHelper:setItemDisableThrow(objid, itemid)
-    self:forward('得到风颖城通行令牌')
-    Story1:finishNoticeEvent(objid)
   end
 end
 

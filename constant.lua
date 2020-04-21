@@ -27,5 +27,7 @@ MyConstant = {
   COIN_ID = 4101, -- 铜板ID
   POTION_ID = 4102, -- 回血药剂
   LOG_PAPER_ID = 4106, -- 江湖日志ID
-  TOKEN_ID = 4111 -- 风颖城通行令牌ID
+  TOKEN_ID = 4111, -- 风颖城通行令牌ID
+  WENYU_PACKAGE_ID = 4116, -- 文羽包裹
+  YANGWANLI_PACKAGE_ID = 4117 -- 村长包裹
 }
