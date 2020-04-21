@@ -113,8 +113,6 @@ function MyActorAction:execute ()
     want.currentRestTime = want.currentRestTime - 1
     if (want.style == 'sleep') then
       self.myActor:setFaceYaw(want.faceYaw)
-      -- self.myActor:setWalkSpeed(0)
-      -- self:runTo(want.lookPos)
     elseif (want.style == 'lookAt') then
       if (want.pos) then
         self.myActor:lookAt(want.pos)
@@ -124,17 +122,19 @@ function MyActorAction:execute ()
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
-      self.myActor:setWalkSpeed(-1)
       if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
         self:transmitTo(want.toPos)
         self.myActor.cantMoveTime = 0
       else
+        -- if (self.myActor.cantMoveTime > 0) then
+        --   self.myActor:setWalkSpeed(-1)
+        -- end
         self:runTo(want.toPos)
       end
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
 
     elseif (want.style == 'freeTime') then -- 自由活动
-      self.myActor:setWalkSpeed(-1)
+      -- self.myActor:setWalkSpeed(-1)
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()

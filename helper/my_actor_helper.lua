@@ -107,7 +107,7 @@ function MyActorHelper:enterArea (objid, areaid)
           want.toPos = pos
           MyActorActionHelper:createMoveToPos(want)
           myActor.action:execute()
-          -- LogHelper:debug('向下一个位置出发')
+          LogHelper:debug(myActor:getName(), '向下一个位置出发')
         elseif (myActor.wants[2]) then
           self:handleNextWant(myActor)
         else

@@ -29,8 +29,8 @@ function Guard:new ()
       { x = -39.5, y = 7, z = 624.5 }, -- 北门
       { x = -108.5, y = 7, z = 548.5 } -- 西门
     },
-    initAreas = {},  -- 进城区域，对象数组
-    initAreas2 = {}, -- 进城后区域，数值数组
+    initAreas = {},  -- 进城区域，对象数组长度5
+    initAreas2 = {}, -- 进城后区域，数值数组长度4
     lordHousePositions = {
       { x = -42.5, y = 7, z = 528.5 }, -- 城主府门口卫兵位置
       { x = -29.5, y = 7, z = 528.5 } -- 城主府门口卫兵位置
@@ -57,6 +57,7 @@ function Guard:init ()
   for i, v in ipairs(self.initPositions2) do
     table.insert(self.initAreas2, AreaHelper:getAreaByPos(v))
   end
+  self.action = MyActorAction:new(self)
   MyTimeHelper:repeatUtilSuccess(self.actorid, 'initGuard', function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
@@ -121,4 +122,19 @@ end
 
 function Guard:toPatrol ()
   -- body
+end
+
+function Guard:checkTokenArea (objid, areaid)
+  local isEnter = false
+  for i, v in ipairs(self.initAreas) do
+    if (v.areaid == areaid) then
+      local player = MyPlayerHelper:getPlayer(objid)
+      if (not(player:takeOutItem(MyConstant.TOKEN_ID))) then
+        self:speakTo(objid, 0, '出示令牌。')
+      end
+      isEnter = true
+      break
+    end
+  end
+  return isEnter
 end

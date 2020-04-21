@@ -17,15 +17,20 @@ function MyItem:newItem (playerid, num, disableThrow)
   end
 end
 
+-- 是否有道具
+function MyItem:hasItem (playerid, containEquip)
+  return BackpackHelper:hasItem(playerid, self.id, containEquip)
+end
+
 -- 江湖日志类
-local data = {
+local logPaperData = {
   id = MyConstant.LOG_PAPER_ID,
   title = '江湖经历:',
   content = '',
   isChange = true -- 日志是否改变
 }
 
-LogPaper = MyItem:new(data)
+LogPaper = MyItem:new(logPaperData)
 
 function LogPaper:new (mainIndex, branchIndex)
   mainIndex, branchIndex = mainIndex or 1, branchIndex or 1
@@ -56,16 +61,4 @@ end
 -- 显示日志
 function LogPaper:showContent (targetuin)
   ChatHelper:sendSystemMsg(self:getContent(), targetuin)
-end
-
--- 玩家是否有江湖日志
-function LogPaper:hasItem (playerid)
-  -- Chat:sendSystemMsg('hasItem')
-  local r1 = Backpack:hasItemByBackpackBar(playerid, BACKPACK_TYPE.SHORTCUT, self.id) -- 快捷栏
-  if (r1 == ErrorCode.OK) then
-    return true
-  else
-    local r2 = Backpack:hasItemByBackpackBar(playerid, BACKPACK_TYPE.INVENTORY, self.id) -- 存储栏
-    return r2 == ErrorCode.OK
-  end
 end

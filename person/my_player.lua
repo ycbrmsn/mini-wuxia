@@ -186,3 +186,19 @@ function MyPlayer:wantLookAt (objid, seconds)
     self:lookAt(objid)
   end, seconds)
 end
+
+-- 背包数量及背包格数组
+function MyPlayer:getItemNum (itemid, containEquip)
+  return BackpackHelper:getItemNum(self.objid, itemid, containEquip)
+end
+
+-- 拿出道具
+function MyPlayer:takeOutItem (itemid, containEquip)
+  local num, arr = self:getItemNum(itemid, containEquip)
+  if (num == 0) then
+    return false
+  else
+    local idx = PlayerHelper:getCurShotcut(self.objid) + 1000
+    return BackpackHelper:swapGridItem(self.objid, arr[1], idx)
+  end
+end

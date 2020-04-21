@@ -357,8 +357,11 @@ function Story2:showMessage (objid)
       if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
         local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
         ChatHelper:sendSystemMsg(msg)
-      elseif (story2.standard == 1) then
-        self:wipeOutQiangdao()
+      else
+        ChatHelper:sendSystemMsg('消灭所有强盗。')
+        if (story2.standard == 1) then
+          self:wipeOutQiangdao()
+        end
       end
     end
   end, 1)

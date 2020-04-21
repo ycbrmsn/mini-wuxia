@@ -156,3 +156,12 @@ function PlayerHelper:changeViewMode (objid, viewmode, islock)
     return Player:changeViewMode(p.objid, p.viewmode, p.islock)
   end, { objid = objid, viewmode = viewmode, islock = islock }, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取当前所用快捷栏键
+function PlayerHelper:getCurShotcut (objid)
+  local onceFailMessage = '获取当前所用快捷栏键失败一次'
+  local finillyFailMessage = StringHelper:concat('获取当前所用快捷栏键失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Player:getCurShotcut(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
