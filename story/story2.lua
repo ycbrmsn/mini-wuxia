@@ -83,17 +83,17 @@ end
 function Story2:goToCollege ()
   local story2 = MyStoryHelper:getStory(2)
   MyPlayerHelper:everyPlayerNotify('约定的时间到了')
-  MyPlayerHelper:changeViewMode()
-  MyPlayerHelper:everyPlayerEnableMove(false)
   -- 初始化所有人位置
-  yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
-  yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
   local idx = 1
   MyPlayerHelper:everyPlayerDoSomeThing(function (p)
     p:setPosition(self:getInitPosition(idx, story2.playerInitPosition))
     p:wantLookAt(yexiaolong, 2)
     idx = idx + 1
   end)
+  yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
+  yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
+  MyPlayerHelper:changeViewMode()
+  MyPlayerHelper:everyPlayerEnableMove(false)
   -- 说话
   local waitSeconds = 2
   local hostPlayer = MyPlayerHelper:getHostPlayer()

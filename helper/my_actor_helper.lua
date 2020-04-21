@@ -51,13 +51,19 @@ function MyActorHelper:getMyPosition (objid)
 end
 
 function MyActorHelper:setPosition (objid, x, y, z)
+  local pos
   if (type(x) == 'table') then
-    return ActorHelper:setPosition(objid, x.x, x.y, x.z)
+    pos = x 
   elseif (type(x) == 'number') then
-    return ActorHelper:setPosition(objid, x, y, z)
+    pos = MyPosition:new(x, y, z)
   else
     LogHelper:debug('设置位置参数类型为：', type(x))
     return false
+  end
+  if (ActorHelper:isPlayer(objid)) then
+    return PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
+  else
+    return ActorHelper:setPosition(objid, pos.x, pos.y, pos.z)
   end
 end
 
@@ -107,7 +113,7 @@ function MyActorHelper:enterArea (objid, areaid)
           want.toPos = pos
           MyActorActionHelper:createMoveToPos(want)
           myActor.action:execute()
-          LogHelper:debug(myActor:getName(), '向下一个位置出发')
+          -- LogHelper:debug(myActor:getName(), '向下一个位置出发')
         elseif (myActor.wants[2]) then
           self:handleNextWant(myActor)
         else

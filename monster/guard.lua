@@ -130,7 +130,10 @@ function Guard:checkTokenArea (objid, areaid)
     if (v.areaid == areaid) then
       local player = MyPlayerHelper:getPlayer(objid)
       if (not(player:takeOutItem(MyConstant.TOKEN_ID))) then
-        self:speakTo(objid, 0, '出示令牌。')
+        self:speakTo(objid, 0, '出示令牌。强闯者，捕。')
+        MyTimeHelper:callFnCanRun(objid, 'checkToken', function ()
+          MonsterHelper:wantLookAt (v.objids, objid, 5)
+        end, 5)
       end
       isEnter = true
       break

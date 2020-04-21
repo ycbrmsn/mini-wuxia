@@ -36,7 +36,7 @@ function MyPlayerHelper:initPlayer (objid)
   local player = self:addPlayer(objid)
   local hostPlayer = self:getHostPlayer()
   if (player == hostPlayer) then
-    player:setPosition(29.5, 9, 7.5)
+    player:setPosition(29.5, 9.5, 7.5)
     PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
   else
     player:setPosition(hostPlayer:getPosition())

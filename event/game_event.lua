@@ -108,11 +108,11 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    if (p.second == 3) then
-      MyStoryHelper.mainIndex = 2
-      MyStoryHelper.mainProgress = 1
-      Story2:goToCollege()
-    end
+    -- if (p.second == 3) then
+    --   MyStoryHelper.mainIndex = 2
+    --   MyStoryHelper.mainProgress = 1
+    --   Story2:goToCollege()
+    -- end
   end, { second = second })
   
 end

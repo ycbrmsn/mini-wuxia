@@ -69,20 +69,32 @@ function MonsterHelper:calExp (playerid, expData)
 end
 
 function MonsterHelper:lookAt (objid, toobjid)
-  local x, y, z
-  if (type(toobjid) == 'table') then
-    x, y, z = toobjid.x, toobjid.y, toobjid.z
+  if (type(objid) == 'table') then
+    for i, v in ipairs(objid) do
+      self:lookAt(v, toobjid)
+    end
   else
-    x, y, z = ActorHelper:getPosition(toobjid)
-    y = y + ActorHelper:getEyeHeight(toobjid) - 1
+    local x, y, z
+    if (type(toobjid) == 'table') then
+      x, y, z = toobjid.x, toobjid.y, toobjid.z
+    else
+      x, y, z = ActorHelper:getPosition(toobjid)
+      y = y + ActorHelper:getEyeHeight(toobjid) - 1
+    end
+    local x0, y0, z0 = ActorHelper:getPosition(objid)
+    y0 = y0 + ActorHelper:getEyeHeight(objid) - 1 -- 生物位置y是地面上一格，所以要减1
+    local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
+    local faceYaw = MathHelper:getActorFaceYaw(myVector3)
+    local facePitch = MathHelper:getActorFacePitch(myVector3)
+    ActorHelper:setFaceYaw(objid, faceYaw)
+    ActorHelper:setFacePitch(objid, facePitch)
   end
-  local x0, y0, z0 = ActorHelper:getPosition(objid)
-  y0 = y0 + ActorHelper:getEyeHeight(objid) - 1 -- 生物位置y是地面上一格，所以要减1
-  local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
-  local faceYaw = MathHelper:getActorFaceYaw(myVector3)
-  local facePitch = MathHelper:getActorFacePitch(myVector3)
-  ActorHelper:setFaceYaw(objid, faceYaw)
-  ActorHelper:setFacePitch(objid, facePitch)
+end
+
+function MonsterHelper:wantLookAt (objid, toobjid, seconds)
+  MyTimeHelper:callFnContinueRuns(function ()
+    self:lookAt(objid, toobjid)
+  end, seconds)
 end
 
 function MonsterHelper:playAct (objid, act, afterSeconds)
