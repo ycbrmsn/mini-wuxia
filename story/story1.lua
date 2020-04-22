@@ -102,3 +102,19 @@ function Story1:finishNoticeEvent (objid)
     yexiaolong:enableMove(true)
   end, 10, { myPlayer = myPlayer })
 end
+
+function Story1:playerBadHurt (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  local pos
+  for i, v in ipairs(miaolan.firstFloorBedPositions) do
+    pos = v
+    if (MyAreaHelper:isAirArea(v)) then
+      break
+    end
+  end
+  player:setPosition(pos)
+  PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.SOUTH, 0)
+  player.action:playDown(1)
+  MyPlayerHelper:changeViewMode(objid)
+  player:thinkTo(objid, 0, '没想到我又受重伤了。')
+end

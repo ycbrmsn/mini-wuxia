@@ -14,6 +14,11 @@ function Miaolan:new ()
       MyPosition:new(-27.5, 14.5, -13.5) -- 楼上蜡烛台
     },
     firstFloorDoorPosition = MyPosition:new(-29.5, 8.5, -21.5),
+    firstFloorBedPositions = {
+      MyPosition:new(-24.5, 9.5, -13.5),
+      MyPosition:new(-26.5, 9.5, -13.5),
+      MyPosition:new(-28.5, 9.5, -13.5)
+    },
     secondFloorPosition = MyPosition:new(-28.5, 13.5, -13.5), -- 二楼床旁边
     secondFloorPositions1 = {
       MyPosition:new(-25.5, 14.5, -14.5), -- 楼梯口
@@ -81,15 +86,15 @@ end
 function Miaolan:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(playerid, nickname, '，要爱护身体，不要撞来撞去。')
+    self:speakTo(playerid, 0, nickname, '，要爱护身体，不要撞来撞去。')
   elseif (self.think == 'free') then
-    self.action:speak(playerid, nickname, '，这么晚过来，你受伤了吗？')
+    self:speakTo(playerid, 0, nickname, '，这么晚过来，你受伤了吗？')
   elseif (self.think == 'toSell') then
-    self.action:speak('我要去卖药了。')
+    self:speakTo(playerid, 0, nickname, '，我要去卖药了。')
   elseif (self.think == 'sell') then
-    self.action:speak(playerid, nickname, '，要抓点药吗？')
+    self:speakTo(playerid, 0, nickname, '，要抓点药吗？')
   elseif (self.think == 'sleep') then
-    self.action:speak(playerid, nickname, '，我要睡觉了，不要闹。')
+    self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要闹。')
   end
 end
 
@@ -98,9 +103,9 @@ function Miaolan:candleEvent (myPlayer, candle)
   if (self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit) then
     self.action:stopRun()
     if (self.wants[1].style == 'sleeping') then
-      self.action:speak(myPlayer.objid, nickname, '，睡眠是很重要的，知道吗？不要点蜡烛了。')
+      self:speakTo(myPlayer.objid, 0, nickname, '，睡眠是很重要的，知道吗？不要点蜡烛了。')
     else
-      self.action:speak(myPlayer.objid, nickname, '，你也该去睡觉了，不要点蜡烛了。')
+      self:speakTo(myPlayer.objid, 0, nickname, '，你也该去睡觉了，不要点蜡烛了。')
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playFree2(1)
@@ -109,7 +114,7 @@ function Miaolan:candleEvent (myPlayer, candle)
     end, 3)
   elseif ((self.think == 'toSell' or self.think == 'sell') and candle.pos:equals(self.candlePositions[1]) and not(candle.isLit)) then
     self.action:stopRun()
-    self.action:speak(myPlayer.objid, nickname, '，熄了蜡烛光线不好呢。')
+    self:speakTo(myPlayer.objid, 0, nickname, '，熄了蜡烛光线不好呢。')
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playFree2(1)
     MyTimeHelper:callFnAfterSecond (function (p)
@@ -124,19 +129,20 @@ function Miaolan:playerClickEvent (objid)
   local maxHp = PlayerHelper:getMaxHp(objid)
   if (hp < maxHp) then
     MyTimeHelper:callFnCanRun (objid, '苗兰疗伤', function ()
-      self.action:speak(objid, myPlayer:getName(), '，你受伤了。来我给你治疗一下。')
+      self:speakTo(objid, 0, myPlayer:getName(), '，你受伤了。来我给你治疗一下。')
       self.action:playAttack()
       self.action:playAttack(1)
       self.action:playAttack(2)
       MyTimeHelper:callFnAfterSecond (function (p)
         ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.TREAT, 1)
         PlayerHelper:setHp(objid, maxHp)
-        myPlayer.action:speak(objid, '谢谢苗大夫，我觉得舒服多了。')
-        self.action:speakAfterSecond(objid, 1, '不用谢。要爱护身体哦。')
-        myPlayer.action:speakAfterSecond(objid, 2, '我知道了。')
+        myPlayer:speakTo(objid, 0, '谢谢苗大夫，我觉得舒服多了。')
+        self:speakTo(objid, 1, '不用谢。要爱护身体哦。')
+        myPlayer:speakTo(objid, 2, '我知道了。')
       end, 3)
     end, 5)
   else
+    self:speakTo(objid, 0, '如果你受伤了，我可以给你免费治疗。')
     self.action:playFree2(2)
   end
 end
