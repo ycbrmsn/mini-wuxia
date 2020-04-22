@@ -10,7 +10,8 @@ MyPlayer = {
   exp = 0,
   levelExp = 100,
   positions = nil,
-  prevAreaId = nil
+  prevAreaId = nil,
+  hurtReason = nil
 }
 
 function MyPlayer:new (objid)

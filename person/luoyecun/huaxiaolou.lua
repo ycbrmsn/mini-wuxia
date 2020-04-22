@@ -13,7 +13,8 @@ function Huaxiaolou:new ()
       MyPosition:new(11.5, 10.5, -40.5), -- 柜台上的蜡烛台
       MyPosition:new(18.5, 10.5, -42.5), -- 大厅中的蜡烛台
       MyPosition:new(28.5, 10.5, -39.5) -- 走廊上的蜡烛台
-    }
+    },
+    doorPosition = MyPosition:new(16.5, 9.5, -38.5)
   }
   setmetatable(o, self)
   self.__index = self
@@ -67,6 +68,7 @@ function Huaxiaolou:goToSell (isNow)
   else
     self:nextWantMove('toSell', { self.initPosition })
   end
+  self:nextWantLookAt(nil, self.doorPosition, 1)
   self:nextWantDoNothing('sell')
 end
 
@@ -108,24 +110,24 @@ end
 function Huaxiaolou:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(playerid, nickname, '，你撞我我也不给你好吃的。')
+    self:speakTo(playerid, 0, nickname, '，你撞我我也不给你好吃的。')
   elseif (self.think == 'lightCandle') then
     if (isPlayerInFront) then
-      self.action:speak(playerid, nickname, '，让一让，我点灯去了。')
+      self:speakTo(playerid, 0, nickname, '，让一让，我点灯去了。')
     else
-      self.action:speak(playerid, nickname, '，不要推丫，万一房子点燃了怎么办。')
+      self:speakTo(playerid, 0, nickname, '，不要推丫，万一房子点燃了怎么办。')
     end
   elseif (self.think == 'putOutCandle') then
     if (isPlayerInFront) then
-      self.action:speak(playerid, nickname, '，让一让，我熄灯去了。')
+      self:speakTo(playerid, 0, nickname, '，让一让，我熄灯去了。')
     else
-      self.action:speak(playerid, nickname, '，你再打扰我，浪费的灯油你来出哟。')
+      self:speakTo(playerid, 0, nickname, '，你再打扰我，浪费的灯油你来出哟。')
     end
   elseif (self.think == 'goToSell') then
     if (isPlayerInFront) then
-      self.action:speak(playerid, nickname, '，你要买食物吗？')
+      self:speakTo(playerid, 0, nickname, '，你要买食物吗？')
     else
-      self.action:speak(playerid, nickname, '，我背后没有食物啦。')
+      self:speakTo(playerid, 0, nickname, '，我背后没有食物啦。')
     end
   end
 end
@@ -133,7 +135,7 @@ end
 function Huaxiaolou:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
   self.action:stopRun()
-  self.action:speak(myPlayer.objid, nickname, '，不要来捣乱哦。')
+  self:speakTo(myPlayer.objid, 0, nickname, '，不要来捣乱哦。')
   self:wantLookAt('sleep', myPlayer.objid, 4)
   self.action:playFree2(1)
   MyTimeHelper:callFnAfterSecond (function (p)

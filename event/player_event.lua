@@ -97,4 +97,4 @@ ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家�
 ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
 -- ScriptSupportEvent:registerEvent([=[Player.ChangeAttr]=], playerChangeAttr) -- 属性变化
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标
-ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 打败目标
+ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 受到伤害

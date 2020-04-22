@@ -4,7 +4,7 @@ Miaolan = MyActor:new(MyConstant.MIAOLAN_ACTOR_ID)
 function Miaolan:new ()
   local o = {
     objid = 4314184974,
-    initPosition = MyPosition:new(-33.5, 8.5, -12.5), -- 药店柜台后
+    initPosition = MyPosition:new(-33.5, 8.5, -13.5), -- 药店柜台后
     bedData = {
       MyPosition:new(-29.5, 14.5, -14.5), -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
@@ -13,6 +13,7 @@ function Miaolan:new ()
       MyPosition:new(-31.5, 9.5, -14.5), -- 楼下蜡烛台
       MyPosition:new(-27.5, 14.5, -13.5) -- 楼上蜡烛台
     },
+    firstFloorDoorPosition = MyPosition:new(-29.5, 8.5, -21.5),
     secondFloorPosition = MyPosition:new(-28.5, 13.5, -13.5), -- 二楼床旁边
     secondFloorPositions1 = {
       MyPosition:new(-25.5, 14.5, -14.5), -- 楼梯口
@@ -67,6 +68,7 @@ end
 function Miaolan:goToSell ()
   self:lightCandle('toSell', true, { self.candlePositions[1] })
   self:nextWantMove('toSell', { self.initPosition })
+  self:nextWantLookAt(nil, self.firstFloorDoorPosition, 1)
   self:nextWantDoNothing('sell')
 end
 

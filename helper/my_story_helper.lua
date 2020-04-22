@@ -129,7 +129,7 @@ end
 
 function MyStoryHelper:playerBadHurt (objid)
   if (self.mainIndex == 1) then -- 在落叶村受重伤
-
+    
   elseif (self.mainIndex == 2 and self.mainProgress == 3) then -- 杀强盗受重伤
     Story2:playerBadHurt(objid)
   end
