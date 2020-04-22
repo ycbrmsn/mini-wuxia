@@ -135,6 +135,6 @@ function Miaolan:playerClickEvent (objid)
       end, 3)
     end, 5)
   else
-    self:playClickAct()
+    self.action:playFree2(2)
   end
 end

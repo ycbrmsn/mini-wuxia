@@ -1,6 +1,6 @@
 -- 日志工具类
 LogHelper = {
-  level = 'error' -- debug info error
+  level = 'debug' -- debug info error
 }
 
 function LogHelper:debug (...)
@@ -38,8 +38,8 @@ function LogHelper:error (...)
 end
 
 function LogHelper:call (f, p)
-  -- xpcall(f, function (err)
-  --   self:error(err)
-  -- end, p)
-  f(p)
+  xpcall(f, function (err)
+    self:error(err)
+  end, p)
+  -- f(p)
 end

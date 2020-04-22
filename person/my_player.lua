@@ -160,6 +160,7 @@ function MyPlayer:upgrade (addLevel)
     local maxHp = PlayerHelper:getMaxHp(self.objid) + 10 * addLevel
     PlayerHelper:setMaxHp(self.objid, maxHp)
     PlayerHelper:setHp(self.objid, maxHp)
+    PlayerHelper:setFoodLevel(self.objid, 100)
     return StringHelper:concat('你升级了。当前等级为：', self.totalLevel)
   end
   return ''

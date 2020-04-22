@@ -165,3 +165,21 @@ function PlayerHelper:getCurShotcut (objid)
     return Player:getCurShotcut(objid)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取当前饱食度
+function PlayerHelper:getFoodLevel (objid)
+  local onceFailMessage = '获取当前饱食度失败一次'
+  local finillyFailMessage = StringHelper:concat('获取当前饱食度失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Player:getFoodLevel(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置玩家饱食度
+function PlayerHelper:setFoodLevel (objid, foodLevel)
+  local onceFailMessage = '设置玩家饱食度失败一次'
+  local finillyFailMessage = StringHelper:concat('设置玩家饱食度失败，参数：objid=', objid, ',foodLevel=', foodLevel)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:setFoodLevel(objid, foodLevel)
+  end, { objid = objid, viewmode = viewmode, islock = islock }, onceFailMessage, finillyFailMessage)
+end
