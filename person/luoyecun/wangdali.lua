@@ -15,9 +15,9 @@ function Wangdali:new ()
     bedTailPointPosition = MyPosition:new(-25.5, 10.5, -43.5), -- 床尾指向位置
     movePositions = {
       MyPosition:new(-29.5, 9, -36.5), -- 屋内
-      MyPosition:new(-29.5, 9.5, -33.5), -- 门外
-      MyPosition:new(-21.5, 9.5, -34.5), -- 屋外楼梯上
-      MyPosition:new(-20.5, 9.5, -43.5) -- 铁匠炉旁边
+      MyPosition:new(-29.5, 9.5, -35.5) -- 门外
+      -- MyPosition:new(-21.5, 9.5, -34.5), -- 屋外楼梯上
+      -- MyPosition:new(-20.5, 9.5, -43.5) -- 铁匠炉旁边
     },
     outDoorPositions = {
       MyPosition:new(-15.5, 9.5, -48.5), -- 亭口角
@@ -94,17 +94,19 @@ end
 function Wangdali:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper:getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(playerid, nickname, '，你撞我做什么?')
+    self:speakTo(playerid, 0, nickname, '，你撞我做什么?')
   elseif (self.think == 'free' or self.think == 'atHome') then
-    self.action:speak(playerid, nickname, '，你想买点装备吗？')
+    self:speakTo(playerid, 0, nickname, '，你想买点装备吗？')
+  elseif (self.think == 'goOut') then
+    self:speakTo(playerid, 0, nickname, '，有事先出去再说。')
   elseif (self.think == 'goHome') then
     if (isPlayerInFront) then
-      self.action:speak(playerid, nickname, '，我要回家了，不要挡路。有事进屋里再说。')
+      self:speakTo(playerid, 0, nickname, '，我要回家了，不要挡路。有事进屋里再说。')
     else
-      self.action:speak(playerid, nickname, '，你怎么能撞人呢。算了，天色不早了，我先回家了。')
+      self:speakTo(playerid, 0, nickname, '，你怎么能撞人呢。算了，天色不早了，我先回家了。')
     end
   elseif (self.think == 'sleep') then
-    self.action:speak(playerid, nickname, '，我要睡觉了，有事明天再说。')
+    self:speakTo(playerid, 0, nickname, '，我要睡觉了，有事明天再说。')
   end
 end
 
@@ -112,7 +114,7 @@ function Wangdali:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
   if (self.think == 'atHome') then
     self.action:stopRun()
-    self.action:speak(myPlayer.objid, nickname, '，别关灯。')
+    self:speakTo(myPlayer.objid, 0, nickname, '，别熄蜡烛。')
     self:wantLookAt(nil, myPlayer.objid, 4)
     MyTimeHelper:callFnAfterSecond (function (p)
       self:doItNow()

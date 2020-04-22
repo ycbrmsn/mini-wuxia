@@ -148,7 +148,7 @@ function MyActorAction:execute ()
       -- self.myActor:putOutCandleAndGoToBed()
     elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
       self.myActor:lookAt(want.toPos)
-    elseif (want.style == 'lookAt') then
+    elseif (want.style == 'lookingAt') then
       if (self.myActor.wants[2]) then
         MyActorHelper:handleNextWant(self.myActor)
       end
