@@ -346,31 +346,15 @@ function MyActor:wantLookAt (think, myPosition, restTime)
   if (self:isWantsExist()) then
     think = think or self.think
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
-    MyTimeHelper:callFnContinueRuns(function ()
-      if (want.pos) then
-        self:lookAt(want.pos)
-      elseif (want.objid) then
-        self:lookAt(want.objid)
-      end
-    end, restTime)
     if (self.wants[1].style == 'lookAt') then
       self.wants[1] = want
     else
       table.insert(self.wants, 1, want)
-      if (self.wants[2].style == 'freeTime') then
-        MyTimeHelper:callFnLastRun(self.objid, 'wantLookAt', function ()
-          MyActorHelper:openAI(self.objid)
-        end, restTime)
-      end
     end
   else
     think = think or 'lookAt'
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
     self.wants = { want }
-    -- 没有想法，则开启AI
-    MyTimeHelper:callFnLastRun(self.objid, 'wantLookAt', function ()
-      MyActorHelper:openAI(self.objid)
-    end, restTime)
   end
   self.think = think
 end
@@ -448,6 +432,16 @@ function MyActor:nextWantDoNothing (think)
     table.insert(self.wants, MyActorActionHelper:getDoNothingData(think))
   else
     self:wantDoNothing(think)
+  end
+end
+
+function MyActor:nextWantLookAt (think, pos, restTime)
+  restTime = restTime or 5
+  if (self:isWantsExist()) then
+    think = think or self.wants[#self.wants].think or 'lookAt'
+    table.insert(self.wants, MyActorActionHelper:getLookAtData(think, pos, restTime))
+  else
+    self:wantLookAt(think, pos, restTime)
   end
 end
 

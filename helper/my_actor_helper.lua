@@ -234,10 +234,10 @@ end
 function MyActorHelper:changeTimer (timerid, timername)
   if (timername == MyActor.timername) then -- 生物计时器，则找出生物开始行动
     for k, v in pairs(self.actors) do
-      LogHelper:call(function (myActor)
-        myActor:updatePosition()
-        myActor.action:execute()
-      end, v)
+      LogHelper:call(function ()
+        v:updatePosition()
+        v.action:execute()
+      end)
     end
   else -- 其他计时器
     -- do nothing

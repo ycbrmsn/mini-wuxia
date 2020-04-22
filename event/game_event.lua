@@ -29,8 +29,10 @@ end
 
 -- 无参数
 local runGame = function ()
-  MyTimeHelper:runFnFastRuns()
-  MyTimeHelper:runFnContinueRuns()
+  LogHelper:call(function ()
+    MyTimeHelper:runFnFastRuns()
+    MyTimeHelper:runFnContinueRuns()
+  end)
 end
 
 -- 无参数
@@ -42,11 +44,11 @@ end
 local atHour = function (eventArgs)
   local hour = eventArgs['hour']
   -- LogHelper:info('atHour: ', hour)
-  LogHelper:call(function (p)
-    MyTimeHelper:updateHour(p.hour)
-    MyStoryHelper:run(p.hour)
-    MyActorHelper:atHour(p.hour)
-  end, { hour = hour })
+  LogHelper:call(function ()
+    MyTimeHelper:updateHour(hour)
+    MyStoryHelper:run(hour)
+    MyActorHelper:atHour(hour)
+  end)
 end
 
 function init ()
@@ -91,14 +93,14 @@ end
 
 local atSecond = function (eventArgs)
   local second = eventArgs['second']
-  LogHelper:call(function (p)
-    MyTimeHelper:updateTime(p.second)
-    MyTimeHelper:runFnAfterSecond(p.second)
-    MyTimeHelper:runFnInterval(p.second)
-    MyTimeHelper:runFnLastRuns(p.second)
+  LogHelper:call(function ()
+    MyTimeHelper:updateTime(second)
+    MyTimeHelper:runFnAfterSecond(second)
+    MyTimeHelper:runFnInterval(second)
+    MyTimeHelper:runFnLastRuns(second)
     MyPlayerHelper:updateEveryPlayerPositions()
 
-    if (p.second == 1) then
+    if (second == 1) then
       initDoorAreas()
       MyAreaHelper:initAreas()
       initMyActors()
@@ -108,12 +110,12 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
-    -- if (p.second == 3) then
+    -- if (second == 3) then
     --   MyStoryHelper.mainIndex = 2
     --   MyStoryHelper.mainProgress = 1
     --   Story2:goToCollege()
     -- end
-  end, { second = second })
+  end)
   
 end
 

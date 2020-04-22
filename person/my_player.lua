@@ -71,7 +71,7 @@ function MyPlayer:updatePositions ()
   if (not(self.positions)) then
     self.positions = {}
   end
-  local myPosition = MyPosition:new(self:getPosition())
+  local myPosition = self:getMyPosition()
   table.insert(self.positions, 1, myPosition)
   if (#self.positions > 3) then
     table.remove(self.positions)

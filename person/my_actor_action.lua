@@ -114,10 +114,15 @@ function MyActorAction:execute ()
     if (want.style == 'sleep') then
       self.myActor:setFaceYaw(want.faceYaw)
     elseif (want.style == 'lookAt') then
-      if (want.pos) then
-        self.myActor:lookAt(want.pos)
-      elseif (want.objid) then
-        self.myActor:lookAt(want.objid)
+      want.style = 'lookingAt'
+      MyTimeHelper:callFnContinueRuns(function ()
+        self.myActor:lookAt(want.dst)
+      end, want.restTime)
+      -- 如果没有想法或自由移动，则一会儿打开AI
+      if (not(self.myActor.wants[2]) or self.myActor.wants[2].style == 'freeTime') then
+        MyTimeHelper:callFnLastRun(self.myActor.objid, 'wantLookAt', function ()
+          MyActorHelper:openAI(self.myActor.objid)
+        end, want.restTime)
       end
     end
   else

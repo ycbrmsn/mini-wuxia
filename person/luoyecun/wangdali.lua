@@ -3,7 +3,7 @@ Wangdali = MyActor:new(MyConstant.WANGDALI_ACTOR_ID)
 
 function Wangdali:new ()
   local o = {
-    objid = 4315385568,
+    objid = 4339145592,
     initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
       MyPosition:new(-25.5, 10.5, -46.5), -- 床尾位置
@@ -14,13 +14,13 @@ function Wangdali:new ()
     },
     bedTailPointPosition = MyPosition:new(-25.5, 10.5, -43.5), -- 床尾指向位置
     movePositions = {
-      MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
+      MyPosition:new(-29.5, 9, -36.5), -- 屋内
       MyPosition:new(-29.5, 9.5, -33.5), -- 门外
       MyPosition:new(-21.5, 9.5, -34.5), -- 屋外楼梯上
       MyPosition:new(-20.5, 9.5, -43.5) -- 铁匠炉旁边
     },
     outDoorPositions = {
-      MyPosition:new(-16.5, 9.5, -48.5), -- 亭口角
+      MyPosition:new(-15.5, 9.5, -48.5), -- 亭口角
       MyPosition:new(-22.5, 9.5, -36.5) -- 亭口对角
     },
     homePositions = {

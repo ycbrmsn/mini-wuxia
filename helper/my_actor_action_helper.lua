@@ -76,11 +76,7 @@ end
 
 function MyActorActionHelper:getLookAtData (think, myPosition, restTime)
   restTime = restTime or 5
-  if (type(myPosition) == 'number') then
-    return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, objid = myPosition, think = think }
-  else
-    return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, pos = myPosition, think = think }
-  end
+  return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, dst = myPosition, think = think }
 end
 
 -- 获取前往位置

@@ -5,9 +5,9 @@ local actorEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug(objid .. '进入了区域' .. areaid)
-  LogHelper:call(function (p)
-    MyActorHelper:enterArea(p.objid, p.areaid)
-  end, { objid = objid, areaid = areaid })
+  LogHelper:call(function ()
+    MyActorHelper:enterArea(objid, areaid)
+  end)
 end
 
 -- eventobjid, areaid
@@ -15,26 +15,28 @@ local actorLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug(objid .. '离开了区域' .. areaid)
-  LogHelper:call(function (p)
-    MyActorHelper:leaveArea(p.objid, p.areaid)
-  end, { objid = objid, areaid = areaid })
+  LogHelper:call(function ()
+    MyActorHelper:leaveArea(objid, areaid)
+  end)
 end
 
 -- eventobjid, toobjid
 local actorCollide = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
-  LogHelper:call(function (p)
-    MyActorHelper:actorCollide(p.objid, p.toobjid)
-  end, { objid = objid, toobjid = toobjid })
+  LogHelper:call(function ()
+    MyActorHelper:actorCollide(objid, toobjid)
+  end)
 end
 
 -- eventobjid, toobjid
 local actorDie = function (eventArgs)
-  LogHelper:call(function (p)
-    MonsterHelper:actorDie(p.objid, p.toobjid)
-    MyStoryHelper:actorDieEvent(p.objid)
-  end, { objid = eventArgs.eventobjid, toobjid = eventArgs.toobjid })
+  local objid = eventArgs['eventobjid']
+  local toobjid = eventArgs['toobjid']
+  LogHelper:call(function ()
+    MonsterHelper:actorDie(objid, toobjid)
+    MyStoryHelper:actorDieEvent(objid)
+  end)
 end
 
 -- eventobjid, blockid, x, y, z
@@ -47,9 +49,9 @@ local changeTimer = function (eventArgs)
   local timerid = eventArgs['timerid']
   local timername = eventArgs['timername']
   -- LogHelper:debug('timer run')
-  LogHelper:call(function (p)
-    MyActorHelper:changeTimer(p.timerid, p.timername)
-  end, { timerid = timerid, timername = timername })
+  LogHelper:call(function ()
+    MyActorHelper:changeTimer(timerid, timername)
+  end)
 end
 
 ScriptSupportEvent:registerEvent([=[Actor.AreaIn]=], actorEnterArea) -- 生物进入区域

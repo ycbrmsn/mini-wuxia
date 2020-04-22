@@ -5,9 +5,9 @@ local playerEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:info('玩家进入区域' .. areaid)
-  LogHelper:call(function (p)
-    MyAreaHelper:playerEnterArea(p.objid, p.areaid)
-  end, { objid = objid, areaid = areaid })
+  LogHelper:call(function ()
+    MyAreaHelper:playerEnterArea(objid, areaid)
+  end)
 end
 
 -- 参数 eventobjid, areaid
@@ -15,18 +15,18 @@ local playerLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
   -- LogHelper:debug('玩家离开区域' .. areaid)
-  LogHelper:call(function (p)
-    MyAreaHelper:playerLeaveArea(eventArgs.eventobjid, eventArgs.areaid)
+  LogHelper:call(function ()
+    MyAreaHelper:playerLeaveArea(objid, areaid)
   end)
 end
 
 -- 参数 eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
-  LogHelper:call(function (p)
-    local myPosition = MyPosition:new(p.eventArgs)
-    MyBlockHelper:check(myPosition, p.objid)
-  end, { eventArgs = eventArgs, objid = objid })
+  LogHelper:call(function ()
+    local myPosition = MyPosition:new(eventArgs)
+    MyBlockHelper:check(myPosition, objid)
+  end)
 end
 
 -- 参数 eventobjid toobjid itemid itemnum
@@ -43,9 +43,9 @@ local playerClickActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
   -- local actorid = CreatureHelper:getActorID(toobjid)
-  LogHelper:call(function (p)
-    MyActorHelper:playerClickActor(p.objid, p.toobjid)
-  end, { objid = objid, toobjid = toobjid })
+  LogHelper:call(function ()
+    MyActorHelper:playerClickActor(objid, toobjid)
+  end)
   
 end
 
@@ -56,33 +56,34 @@ local playerAddItem = function (eventArgs)
   local itemid = eventArgs['itemid']
   local itemnum = eventArgs['itemnum']
   -- LogHelper:info(objid, ',', toobjid, ',', itemid, ',', itemnum)
-  LogHelper:call(function (p)
-    MyStoryHelper:playerAddItem(p.objid, p.itemid, p.itemnum)
-  end, { objid = objid, itemid = itemid, itemnum = itemnum })
+  LogHelper:call(function ()
+    MyStoryHelper:playerAddItem(objid, itemid, itemnum)
+  end)
 end
 
 -- 参数 eventobjid, toobjid
 local playerDamageActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
-  LogHelper:call(function (p)
-    MyPlayerHelper:playerDamageActor(p.objid, p.toobjid)
-  end, { objid = objid, toobjid = toobjid })
+  LogHelper:call(function ()
+    MyPlayerHelper:playerDamageActor(objid, toobjid)
+  end)
 end
 
 -- eventobjid, toobjid
 local playerDefeatActor = function (eventArgs)
-  LogHelper:call(function (p)
+  LogHelper:call(function ()
     MyPlayerHelper:playerDefeatActor(eventArgs.eventobjid, eventArgs.toobjid)
   end)
 end
 
 -- eventobjid, toobjid
 local playerBeHurt = function (eventArgs)
-  LogHelper:call(function (p)
-    local hp = PlayerHelper:getHp(eventArgs.eventobjid)
+  local objid = eventArgs['eventobjid']
+  LogHelper:call(function ()
+    local hp = PlayerHelper:getHp(objid)
     if (hp == 1) then
-      MyStoryHelper:playerBadHurt(eventArgs.eventobjid)
+      MyStoryHelper:playerBadHurt(objid)
     end
   end)
 end

@@ -7,7 +7,7 @@ MyTimeHelper = {
   fnCanRuns = {}, -- second -> { objid = { t, t }, objid = { t, t } ... }
   fnLastRuns = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
   fnFastRuns = {}, -- { { second, f, p } }
-  fnContinueRuns = {} -- { { second, f, p } }
+  fnContinueRuns = {} -- { t = { second, f, p }, t = { second, f, p }, ... }
 }
 
 function MyTimeHelper:updateHour (hour)
@@ -130,7 +130,6 @@ function MyTimeHelper:callFnInterval (objid, t, f, second, p)
   else
     time = self.time
     result = f(p)
-    -- LogHelper:call(f, p)
   end
   self:setFnInterval(objid, t, f, time, p)
   return result
@@ -176,7 +175,7 @@ function MyTimeHelper:callFnCanRun (objid, t, f, second, p)
   local lastTime = self:getLastFnCanRunTime(objid, t, second)
   if (not(lastTime)) then -- 没找到则标记，然后执行
     self:addLastFnCanRunTime(objid, t)
-    LogHelper:call(f, p)
+    f(p)
   end
 end
 
@@ -293,26 +292,27 @@ function MyTimeHelper:callFnFastRuns (f, second, p)
 end
 
 -- 添加方法
-function MyTimeHelper:addFnContinueRuns (f, second, p)
-  table.insert(self.fnContinueRuns, { second * 1000, f, p })
+function MyTimeHelper:addFnContinueRuns (f, second, t, p)
+  self.fnContinueRuns[t] = { second * 1000, f, p }
 end
 
 -- 运行方法，然后删除
 function MyTimeHelper:runFnContinueRuns ()
-  for i = #self.fnContinueRuns, 1, -1 do
-    self.fnContinueRuns[i][1] = self.fnContinueRuns[i][1] - 50
-    self.fnContinueRuns[i][2](self.fnContinueRuns[i][3])
-    if (self.fnContinueRuns[i][1] <= 0) then
-      table.remove(self.fnContinueRuns, i)
+  for k, v in pairs(self.fnContinueRuns) do
+    v[1] = v[1] - 50
+    v[2](v[3])
+    if (v[1] <= 0) then
+      self.fnContinueRuns[k] = nil
     end
   end
 end
 
 -- 参数为：函数、秒、函数的参数table
-function MyTimeHelper:callFnContinueRuns (f, second, p)
+function MyTimeHelper:callFnContinueRuns (f, second, t, p)
   if (type(f) ~= 'function') then
     return
   end
   second = second or 1
-  self:addFnContinueRuns(f, second, p)
+  t = t or os.time()
+  self:addFnContinueRuns(f, second, t, p)
 end
