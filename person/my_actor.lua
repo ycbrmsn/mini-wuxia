@@ -533,7 +533,6 @@ function MyActor:initActor (initPosition)
   -- if (self.objid) then
     self.action = MyActorAction:new(self)
     MyActorHelper:addPerson(self) -- 生物加入集合中
-    local areaid = AreaHelper:getAreaByPos(initPosition)
     -- 加入蜡烛台数据
     if (self.candlePositions and #self.candlePositions > 0) then
       for i, v in ipairs(self.candlePositions) do
@@ -541,6 +540,7 @@ function MyActor:initActor (initPosition)
       end
     end
     -- 清除木围栏
+    local areaid = AreaHelper:getAreaByPos(initPosition)
     AreaHelper:clearAllWoodenFence(areaid)
     return true
   else

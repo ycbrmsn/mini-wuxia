@@ -1,4 +1,4 @@
--- 蜡烛台 -- 位置类 -- 三维向量
+-- 蜡烛台 -- 床 -- 位置类 -- 三维向量
 MyCandle = {
   BLOCK_ID = {
     CANDLE = 931, -- 熄灭的蜡烛台
@@ -20,8 +20,13 @@ function MyCandle:new (myPosition, blockid)
 end
 
 -- 位置上是否是蜡烛台
-function MyCandle:isCandle (myPosition)
-  local blockid = BlockHelper:getBlockID(myPosition.x, myPosition.y, myPosition.z)
+function MyCandle:isCandle (pos)
+  local blockid
+  if (type(pos) == 'table') then
+    blockid = BlockHelper:getBlockID(pos.x, pos.y, pos.z)
+  else
+    blockid = pos
+  end
   return self:isBlockCandle(blockid)
 end
 
@@ -58,6 +63,21 @@ function MyCandle:toggle ()
   else
     self:light()
   end
+end
+
+-- 床
+MyBed = {
+  BLOCK_ID = 828 -- 舒适的床
+}
+
+function MyBed:isBed (pos)
+  local blockid
+  if (type(pos) == 'table') then
+    blockid = BlockHelper:getBlockID(pos.x, pos.y, pos.z)
+  else
+    blockid = pos
+  end
+  return blockid and blockid == self.BLOCK_ID
 end
 
 -- 位置类

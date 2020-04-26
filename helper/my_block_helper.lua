@@ -64,14 +64,21 @@ function MyBlockHelper:checkIfRemoveCandle (myPosition, blockid)
   end
 end
 
-function MyBlockHelper:check (myPosition, objid)
-  local candle = self:handleCandle(myPosition)
-  if (candle) then
-    local myActor = self:getWhoseCandle(myPosition)
-    if (myActor) then
-      local myPlayer = MyPlayerHelper:getPlayer(objid)
-      myActor:candleEvent(myPlayer, candle)
+function MyBlockHelper:check (pos, objid)
+  local blockid = BlockHelper:getBlockID(pos.x, pos.y, pos.z)
+  if (MyCandle:isCandle(blockid)) then
+    -- 处理蜡烛台
+    local candle = self:handleCandle(pos)
+    if (candle) then
+      local myActor = self:getWhoseCandle(pos)
+      if (myActor) then
+        local player = MyPlayerHelper:getPlayer(objid)
+        myActor:candleEvent(player, candle)
+      end
     end
+  elseif (MyBed:isBed(blockid)) then
+    -- 处理床
+    MyPlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
   end
 end
 
@@ -129,4 +136,12 @@ function MyBlockHelper:checkCityGates (args)
       end
     end
   end
+end
+
+function MyBlockHelper:setBedUnableUse ()
+  BlockHelper:setBlockSettingAttState(BlockHelper.bedid, BLOCKATTR.ENABLE_BEOPERATED, false)
+end
+
+function MyBlockHelper:handleBed (myPosition)
+  
 end

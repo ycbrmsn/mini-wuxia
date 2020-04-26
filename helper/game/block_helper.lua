@@ -2,7 +2,8 @@
 BlockHelper = {
   repeatTime = 3, -- 失败重复调用次数
   woodenFenceid = 534, -- 木围栏id
-  doorid = 812 -- 果木门id
+  doorid = 812, -- 果木门id
+  bedid = 828 -- 舒适的床
 }
 
 -- 门是否开着，参数为x, y, z或者table，最后一个doorid，默认是果木门
@@ -111,7 +112,7 @@ function BlockHelper:replaceBlock (blockid, x, y, z, face)
   local finillyFailMessage = StringHelper:concat('替换方块失败，参数：blockid=', blockid, ', x=', x, ', y=', y, ', z=', z, ', face=', face)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Block:replaceBlock(p.blockid, p.x, p.y, p.z, p.face)
-  end, { blockid = blockid, x = x, y = y, z = z, face = face}, onceFailMessage, finillyFailMessage)
+  end, { blockid = blockid, x = x, y = y, z = z, face = face }, onceFailMessage, finillyFailMessage)
 end
 
 -- 是否是气体方块
@@ -126,4 +127,13 @@ function BlockHelper:getBlockSwitchStatus (pos)
   return CommonHelper:callOneResultMethod(function (p)
     return Block:getBlockSwitchStatus(p.pos)
   end, { pos = pos }, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置方块设置属性状态
+function BlockHelper:setBlockSettingAttState (blockid, attrtype, switch)
+  local onceFailMessage = '设置方块设置属性状态一次'
+  local finillyFailMessage = StringHelper:concat('设置方块设置属性状态失败，参数：blockid=', blockid, ', attrtype=', attrtype, ', switch=', switch)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Block:setBlockSettingAttState(blockid, attrtype, switch)
+  end, {}, onceFailMessage, finillyFailMessage)
 end
