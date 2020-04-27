@@ -32,10 +32,10 @@ function Guard:new ()
     initAreas = {},  -- 进城区域，对象数组长度5
     initAreas2 = {}, -- 进城后区域，数值数组长度4
     savePositions = {
-      MyPosition:new(-35.5, 8.5, 469.5), -- 南
-      MyPosition:new(47.5, 8.5, 552.5), -- 东
-      MyPosition:new(-36.5, 8.5, 635.5), -- 北
-      MyPosition:new(-117.5, 8.5, 551.5) -- 西
+      MyPosition:new(-35.5, 8.5, 464.5), -- 南
+      MyPosition:new(52.5, 8.5, 552.5), -- 东
+      MyPosition:new(-36.5, 8.5, 640.5), -- 北
+      MyPosition:new(-122.5, 8.5, 551.5) -- 西
     }, -- 安全地点，未持有令牌前往地点
     lordHousePositions = {
       MyPosition:new(-42.5, 7, 528.5), -- 城主府门口卫兵位置
@@ -140,6 +140,17 @@ function Guard:checkTokenArea (objid, areaid)
         MyTimeHelper:callFnCanRun(objid, 'checkToken', function ()
           MonsterHelper:wantLookAt (v.objids, objid, 5)
         end, 5)
+        local xt, yt, zt = 0, 0, 0
+        if (i == 1) then
+          zt = -0.5
+        elseif (i == 2) then
+          xt = 0.5
+        elseif (i == 3) then
+          zt = 0.5
+        else
+          xt = -0.5
+        end
+        ActorHelper:appendSpeed(objid, xt, yt, zt)
         player.action:runTo({ self.savePositions[i] }, function ()
           player:thinkTo(objid, 0, '还是不要乱跑比较好。')
         end)
