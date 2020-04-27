@@ -2,6 +2,7 @@
 BlockHelper = {
   repeatTime = 3, -- 失败重复调用次数
   woodenFenceid = 534, -- 木围栏id
+  switchid = 724, -- 开关id
   doorid = 812, -- 果木门id
   bedid = 828 -- 舒适的床
 }

@@ -138,10 +138,17 @@ function MyBlockHelper:checkCityGates (args)
   end
 end
 
-function MyBlockHelper:setBedUnableUse ()
-  BlockHelper:setBlockSettingAttState(BlockHelper.bedid, BLOCKATTR.ENABLE_BEOPERATED, false)
+function MyBlockHelper:initBlocks ()
+  BlockHelper:setBlockSettingAttState(BlockHelper.bedid, BLOCKATTR.ENABLE_BEOPERATED, false) -- 舒适的床不可操作
+  BlockHelper:setBlockSettingAttState(BlockHelper.switchid, BLOCKATTR.ENABLE_DESTROYED, false) -- 开关不可被破坏
+  BlockHelper:setBlockSettingAttState(BlockHelper.doorid, BLOCKATTR.ENABLE_DESTROYED, false) -- 门不可被破坏
 end
 
-function MyBlockHelper:handleBed (myPosition)
-  
+function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
+  local disableMsg = '不可被破坏'
+  if (blockid == BlockHelper.switchid) then
+    MyPlayerHelper:showToast(objid, '开关', disableMsg)
+  elseif (blockid == BlockHelper.doorid) then
+    MyPlayerHelper:showToast(objid, '门', disableMsg)
+  end
 end

@@ -24,7 +24,7 @@ end
 -- 无参数
 local startGame = function ()
   LogHelper:debug('开始游戏')
-  MyBlockHelper:setBedUnableUse() -- 舒适的床不可用
+  MyBlockHelper:initBlocks()
   initHours(7)
 end
 
