@@ -421,20 +421,20 @@ function Story2:wipeOutQiangdao ()
   hostPlayer.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong:speak(waitSeconds, '……我是说这些强盗不错。')
+  yexiaolong:speak(waitSeconds, '这些强盗挺不错的。')
 
   waitSeconds = waitSeconds + 2
   hostPlayer:speak(waitSeconds, '！！！')
   hostPlayer.action:playDown(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong:speak(waitSeconds, '我之前还在想，如果考验只是杀几条狼。那不是就招了个猎户嘛。')
+  yexiaolong:speak(waitSeconds, '我起先还在思量，如果考验只是杀几条狼，那岂不是就招的猎户。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '这样的话，回去之后肯定又会被小高嘲笑了。不错不错。')
+  yexiaolong:speak(waitSeconds, '如此，回去之后定又会被小高嘲笑。不错不错。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '路见不平的少年英雄。哈哈……')
+  yexiaolong:speak(waitSeconds, '路见不平的少年侠士。快哉。')
   yexiaolong.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 3
@@ -466,22 +466,22 @@ function Story2:endWords (player, waitSeconds)
 
   waitSeconds = waitSeconds + 2
   if (story2.standard == 1) then
-    yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想看看小高招的新学员了。我先走了。')
+    yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想瞧瞧小高招的新学员了。我去也。')
   else
-    yexiaolong:speak(waitSeconds, '不了，你身上有伤，不易快行。我还有事，要先行一步。我先走了。')
+    yexiaolong:speak(waitSeconds, '不了，你身上有伤，不易快行。我还有事，要先行一步。我去也。')
   end
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     yexiaolong:wantMove('goToCollege', story2.toCollegePositions)
-    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢走。')
+    MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢行。')
     MyPlayerHelper:everyPlayerDoSomeThing(function (p)
       p.action:playFree2()
     end)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '先生又走了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
+  MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '先生又离开了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
   MyPlayerHelper:everyPlayerEnableMove(true, waitSeconds)
 
   MyTimeHelper:callFnAfterSecond(function ()
@@ -557,7 +557,7 @@ function Story2:playerBadHurt (objid)
   story2.standard = 2
   MyPlayerHelper:changeViewMode()
   player:enableBeAttacked(false)
-  player:enableMove(false)
+  player:enableMove(false, true)
   local waitSeconds = 0
   yexiaolong:thinks(waitSeconds, '果然还是太勉强了吗？')
 
@@ -677,7 +677,7 @@ function Story2:playerBadHurt (objid)
         p:setPosition(pos)
         p:wantLookAt(yexiaolong, 2)
         if (p ~= player) then
-          p:enableMove(false)
+          p:enableMove(false, true)
         end
         idx = idx + 1
       end, ws)

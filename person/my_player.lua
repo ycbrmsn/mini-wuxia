@@ -86,16 +86,20 @@ function MyPlayer:getName ()
   return self.nickname
 end
 
-function MyPlayer:enableMove (enable)
+function MyPlayer:enableMove (enable, showMsg)
   if (enable) then
-    PlayerHelper:notifyGameInfo2Self(self.objid, '恢复移动')
+    if (showMsg) then
+      PlayerHelper:notifyGameInfo2Self(self.objid, '恢复移动')
+    end
     PlayerHelper:setAttr(self.objid, PLAYERATTR.WALK_SPEED, -1)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.RUN_SPEED, -1)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.SNEAK_SPEED, -1)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.SWIN_SPEED, -1)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.JUMP_POWER, -1)
   else
-    PlayerHelper:notifyGameInfo2Self(self.objid, '当前不可移动')
+    if (showMsg) then
+      PlayerHelper:notifyGameInfo2Self(self.objid, '当前不可移动')
+    end
     PlayerHelper:setAttr(self.objid, PLAYERATTR.WALK_SPEED, 0)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.RUN_SPEED, 0)
     PlayerHelper:setAttr(self.objid, PLAYERATTR.SNEAK_SPEED, 0)

@@ -76,7 +76,7 @@ end
 function Story1:finishNoticeEvent (objid)
   -- 设置对话人物不可移动
   local myPlayer = MyPlayerHelper:getPlayer(objid)
-  myPlayer:enableMove(false)
+  myPlayer:enableMove(false, true)
   yexiaolong:enableMove(false)
   yexiaolong:wantStayForAWhile(100)
   -- 开始对话
@@ -97,7 +97,7 @@ function Story1:finishNoticeEvent (objid)
   yexiaolong:speak(10, '嗯，那去准备吧。')
   yexiaolong.action:playHi(10)
   MyTimeHelper:callFnAfterSecond (function (p)
-    p.myPlayer:enableMove(true)
+    p.myPlayer:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
   end, 10, { myPlayer = myPlayer })

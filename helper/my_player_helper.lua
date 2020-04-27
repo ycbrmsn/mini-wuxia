@@ -135,7 +135,7 @@ end
 
 function MyPlayerHelper:everyPlayerEnableMove (enable, afterSeconds)
   self:everyPlayerDoSomeThing(function (player)
-    player:enableMove(enable)
+    player:enableMove(enable, true)
   end, afterSeconds)
 end
 

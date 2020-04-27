@@ -13,33 +13,39 @@ function Guard:new ()
       { MyConstant.COIN_ID, 15, 20 } -- 铜板
     },
     initPositions = {
-      { x = -39.5, y = 7, z = 478.5 }, -- 南城门卫兵位置
-      { x = -32.5, y = 7, z = 478.5 }, -- 南城门卫兵位置
-      { x = 37.5, y = 7, z = 548.5 }, -- 东城门卫兵位置
-      { x = 37.5, y = 7, z = 555.5 }, -- 东城门卫兵位置
-      { x = -32.5, y = 7, z = 625.5 }, -- 北城门卫兵位置
-      { x = -39.5, y = 7, z = 625.5 }, -- 北城门卫兵位置
-      { x = -109.5, y = 7, z = 555.5 }, -- 西城门卫兵位置
-      { x = -109.5, y = 7, z = 548.5 }, -- 西城门卫兵位置
-      { x = -50.5, y = 7, z = 529.5 } -- 城主府卫兵位置
+      MyPosition:new(-39.5, 7, 478.5), -- 南城门卫兵位置
+      MyPosition:new(-32.5, 7, 478.5), -- 南城门卫兵位置
+      MyPosition:new(37.5, 7, 548.5), -- 东城门卫兵位置
+      MyPosition:new(37.5, 7, 555.5), -- 东城门卫兵位置
+      MyPosition:new(-32.5, 7, 625.5), -- 北城门卫兵位置
+      MyPosition:new(-39.5, 7, 625.5), -- 北城门卫兵位置
+      MyPosition:new(-109.5, 7, 555.5), -- 西城门卫兵位置
+      MyPosition:new(-109.5, 7, 548.5), -- 西城门卫兵位置
+      MyPosition:new(-50.5, 7, 529.5) -- 城主府卫兵位置
     },
     initPositions2 = {
-      { x = -32.5, y = 7, z = 479.5 }, -- 南门
-      { x = 36.5, y = 7, z = 555.5 }, -- 东门
-      { x = -39.5, y = 7, z = 624.5 }, -- 北门
-      { x = -108.5, y = 7, z = 548.5 } -- 西门
+      MyPosition:new(-32.5, 7, 479.5), -- 南门
+      MyPosition:new(36.5, 7, 555.5), -- 东门
+      MyPosition:new(-39.5, 7, 624.5), -- 北门
+      MyPosition:new(-108.5, 7, 548.5) -- 西门
     },
     initAreas = {},  -- 进城区域，对象数组长度5
     initAreas2 = {}, -- 进城后区域，数值数组长度4
+    savePositions = {
+      MyPosition:new(-35.5, 8.5, 469.5), -- 南
+      MyPosition:new(47.5, 8.5, 552.5), -- 东
+      MyPosition:new(-36.5, 8.5, 635.5), -- 北
+      MyPosition:new(-117.5, 8.5, 551.5) -- 西
+    }, -- 安全地点，未持有令牌前往地点
     lordHousePositions = {
-      { x = -42.5, y = 7, z = 528.5 }, -- 城主府门口卫兵位置
-      { x = -29.5, y = 7, z = 528.5 } -- 城主府门口卫兵位置
+      MyPosition:new(-42.5, 7, 528.5), -- 城主府门口卫兵位置
+      MyPosition:new(-29.5, 7, 528.5) -- 城主府门口卫兵位置
     },
     lordHousePatrolPositions = {
-      { x = -21, y = 7, z = 531 }, -- 城主府卫兵巡逻位置
-      { x = -51, y = 7, z = 531 }, -- 城主府卫兵巡逻位置
-      { x = -51, y = 7, z = 572 }, -- 城主府卫兵巡逻位置
-      { x = -21, y = 7, z = 572 } -- 城主府卫兵巡逻位置
+      MyPosition:new(-21, 7, 531), -- 城主府卫兵巡逻位置
+      MyPosition:new(-51, 7, 531), -- 城主府卫兵巡逻位置
+      MyPosition:new(-51, 7, 572), -- 城主府卫兵巡逻位置
+      MyPosition:new(-21, 7, 572) -- 城主府卫兵巡逻位置
     },
     patrolGuards = {}
   }
@@ -134,6 +140,9 @@ function Guard:checkTokenArea (objid, areaid)
         MyTimeHelper:callFnCanRun(objid, 'checkToken', function ()
           MonsterHelper:wantLookAt (v.objids, objid, 5)
         end, 5)
+        player.action:runTo({ self.savePositions[i] }, function ()
+          player:thinkTo(objid, 0, '还是不要乱跑比较好。')
+        end)
       end
       isEnter = true
       break
