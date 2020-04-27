@@ -220,7 +220,13 @@ function MyActorHelper:actorCollide (objid, toobjid)
       local actor2 = MyActorHelper:getActorByObjid(toobjid)
       if (actor2) then
         -- 先简单处理为actorid小的停下来
-        if (actor1.actorid < actor2.actorid) then
+        if (actor1.actorid == actor2.actorid) then
+          if (objid < toobjid) then
+            actor1:wantStayForAWhile()
+          else
+            actor2:wantStayForAWhile()
+          end
+        elseif (actor1.actorid < actor2.actorid) then
           actor1:wantStayForAWhile()
         else
           actor2:wantStayForAWhile()
