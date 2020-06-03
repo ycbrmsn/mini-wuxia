@@ -11,7 +11,7 @@ function QiangdaoXiaotoumu:new ()
     fallOff = {
       { 12512, 1, 20 }, -- 烤土豆
       { 11002, 1, 20 }, -- 石斧头
-      { MyConstant.COIN_ID, 10, 20 } -- 铜板
+      { MyConstant.ITEM.COIN_ID, 10, 20 } -- 铜板
     },
     initPosition = { x = 20, y = 7, z = 45 },
     toPosition = { x = -363, y = 7, z = 556 },

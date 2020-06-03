@@ -1,7 +1,7 @@
--- 风贤
-Fengxian = MyActor:new(MyConstant.FENGXIAN_ACTOR_ID)
+-- 陆道风
+Ludaofeng = MyActor:new(MyConstant.LUDAOFENG_ACTOR_ID)
 
-function Fengxian:new ()
+function Ludaofeng:new ()
   local o = {
     objid = 4334703245,
     initPosition = { x = -36, y = 8, z = 557 }, -- 议事厅
@@ -28,12 +28,12 @@ function Fengxian:new ()
 end
 
 -- 默认想法
-function Fengxian:defaultWant ()
+function Ludaofeng:defaultWant ()
   self:wantDoNothing()
 end
 
 -- 在几点想做什么
-function Fengxian:wantAtHour (hour)
+function Ludaofeng:wantAtHour (hour)
   if (hour == 6) then
     self:wantFreeInArea({ self.studyAreaPositions })
   elseif (hour == 8) then
@@ -47,7 +47,7 @@ function Fengxian:wantAtHour (hour)
   end
 end
 
-function Fengxian:doItNow ()
+function Ludaofeng:doItNow ()
   local hour = MyTimeHelper:getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
@@ -61,7 +61,7 @@ function Fengxian:doItNow ()
 end
 
 -- 初始化
-function Fengxian:init ()
+function Ludaofeng:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
     self:doItNow()
@@ -69,10 +69,10 @@ function Fengxian:init ()
   return initSuc
 end
 
-function Fengxian:collidePlayer (playerid, isPlayerInFront)
+function Ludaofeng:collidePlayer (playerid, isPlayerInFront)
   
 end
 
-function Fengxian:candleEvent (myPlayer, candle)
+function Ludaofeng:candleEvent (myPlayer, candle)
   
 end

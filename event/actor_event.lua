@@ -39,6 +39,15 @@ local actorDie = function (eventArgs)
   end)
 end
 
+-- eventobjid, toobjid(opt), blockid(opt), x, y, z
+local actorProjectileHit = function (eventArgs)
+  local projectileid, toobjid, blockid = eventArgs.eventobjid, eventArgs.toobjid, eventArgs.blockid
+  local x, y, z = eventArgs.x, eventArgs.y, eventArgs.z
+  LogHelper:call(function ()
+    MyItemHelper:projectileHit(projectileid, toobjid, blockid, x, y, z)
+  end)
+end
+
 -- eventobjid, blockid, x, y, z
 local blockDigEnd = function (eventArgs)
   LogHelper:call(function ()
@@ -65,6 +74,7 @@ ScriptSupportEvent:registerEvent([=[Actor.AreaIn]=], actorEnterArea) -- 生物�
 ScriptSupportEvent:registerEvent([=[Actor.AreaOut]=], actorLeaveArea) -- 生物离开区域
 ScriptSupportEvent:registerEvent([=[Actor.Collide]=], actorCollide) -- 生物发生碰撞
 ScriptSupportEvent:registerEvent([=[Actor.Die]=], actorDie) -- 生物死亡
+ScriptSupportEvent:registerEvent([=[Actor.Projectile.Hit]=], actorProjectileHit) -- 投掷物击中
 ScriptSupportEvent:registerEvent([=[Block.Dig.End]=], blockDigEnd) -- 完成方块挖掘
 ScriptSupportEvent:registerEvent([=[Block.Trigger]=], blockTrigger) -- 方块被触发
 ScriptSupportEvent:registerEvent([=[minitimer.change]=], changeTimer) -- 计时器发生变化

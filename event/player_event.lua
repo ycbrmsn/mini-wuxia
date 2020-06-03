@@ -33,9 +33,12 @@ end
 local playerUseItem = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local itemid = eventArgs['itemid']
-  if(itemid == logPaper.id) then -- 如果使用江湖日志，则显示日志内容
-    logPaper:showContent(objid)
-  end
+  LogHelper:call(function ()
+    MyItemHelper:useItem(objid, itemid)
+  end)
+  -- if(itemid == logPaper.id) then -- 如果使用江湖日志，则显示日志内容
+  --   logPaper:showContent(objid)
+  -- end
 end
 
 -- 参数 eventobjid, toobjid
@@ -88,6 +91,33 @@ local playerBeHurt = function (eventArgs)
   end)
 end
 
+-- eventobjid, toobjid, itemid, itemnum
+local playerSelectShortcut = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  LogHelper:call(function ()
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:holdItem()
+  end)
+end
+
+-- eventobjid, toobjid, itemid, itemnum
+local playerShortcutChange = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  LogHelper:call(function ()
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:holdItem()
+  end)
+end
+
+-- eventobjid, playermotion
+local playerMotionStateChange = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  local playermotion = eventArgs['playermotion']
+  LogHelper:call(function ()
+    LogHelper:debug(playermotion)
+  end)
+end
+
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
 ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩家离开区域
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
@@ -98,3 +128,6 @@ ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) --
 -- ScriptSupportEvent:registerEvent([=[Player.ChangeAttr]=], playerChangeAttr) -- 属性变化
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标
 ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 受到伤害
+ScriptSupportEvent:registerEvent([=[Player.SelectShortcut]=], playerSelectShortcut) -- 选择快捷栏
+ScriptSupportEvent:registerEvent([=[Player.ShortcutChange]=], playerShortcutChange) -- 快捷栏变化
+ScriptSupportEvent:registerEvent([=[Player.MotionStateChange]=], playerMotionStateChange) -- 运动状态改变

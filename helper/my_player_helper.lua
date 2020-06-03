@@ -58,6 +58,7 @@ function MyPlayerHelper:playerDamageActor (objid, toobjid)
   if (hp and hp <= 0) then
     self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
   else
+    hp = math.ceil(hp)
     self:showToast(objid, StringHelper:concat(actorname, '剩余生命：', hp))
   end
 end

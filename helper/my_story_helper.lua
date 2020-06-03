@@ -92,11 +92,11 @@ end
 function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
   local mainIndex = self:getMainStoryIndex()
   if (mainIndex == 1) then -- 剧情一
-    if (itemid == MyConstant.WENYU_PACKAGE_ID) then -- 文羽包裹
+    if (itemid == MyConstant.ITEM.WENYU_PACKAGE_ID) then -- 文羽包裹
       self:forward('文羽通知学院招生')
-    elseif (itemid == MyConstant.YANGWANLI_PACKAGE_ID) then -- 村长包裹
+    elseif (itemid == MyConstant.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
       self:forward('村长告知先生位置')
-    elseif (itemid == MyConstant.TOKEN_ID) then -- 风颖城通行令牌
+    elseif (itemid == MyConstant.ITEM.TOKEN_ID) then -- 风颖城通行令牌
       PlayerHelper:setItemDisableThrow(objid, itemid)
       self:forward('得到风颖城通行令牌')
       Story1:finishNoticeEvent(objid)

@@ -10,7 +10,7 @@ function Wolf:new ()
     },
     fallOff = {
       { 12518, 1, 20 }, -- 生鸡腿
-      { MyConstant.COIN_ID, 1, 20 } -- 铜板
+      { MyConstant.ITEM.COIN_ID, 1, 20 } -- 铜板
     },
     monsterPositions = {
       { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置

@@ -3,15 +3,16 @@ MyPlayer = {
   objid = nil,
   nickname = nil,
   action = nil,
-  wants = nil,
+  wants = nil,  -- 想做什么
   moveMotion = nil,
-  level = 1,
-  totalLevel = 1,
-  exp = 0,
-  levelExp = 100,
-  positions = nil,
-  prevAreaId = nil,
-  hurtReason = nil
+  level = 1, -- 当前等级，已废弃
+  totalLevel = 1, -- 总等级
+  exp = 0,  -- 当前经验
+  levelExp = 100, -- 每升一级需要的经验
+  positions = nil, -- 最近几秒的位置
+  prevAreaId = nil, -- 上一进入区域id
+  hurtReason = nil, -- 受伤原因，目前没用
+  hold = nil -- 手持物品
 }
 
 function MyPlayer:new (objid)
@@ -158,10 +159,11 @@ end
 function MyPlayer:upgrade (addLevel)
   if (addLevel > 0) then
     self.totalLevel = self.totalLevel + addLevel
-    local attrtype1 = { PLAYERATTR.ATK_MELEE, PLAYERATTR.ATK_REMOTE, PLAYERATTR.DEF_MELEE, PLAYERATTR.DEF_REMOTE }
-    for i, v in ipairs(attrtype1) do
-      PlayerHelper:addAttr(self.objid, v, 2 * addLevel)
-    end
+    self:changeAttr(2 * addLevel, 2 * addLevel)
+    -- local attrtype1 = { PLAYERATTR.ATK_MELEE, PLAYERATTR.ATK_REMOTE, PLAYERATTR.DEF_MELEE, PLAYERATTR.DEF_REMOTE }
+    -- for i, v in ipairs(attrtype1) do
+    --   PlayerHelper:addAttr(self.objid, v, 2 * addLevel)
+    -- end
     local maxHp = PlayerHelper:getMaxHp(self.objid) + 10 * addLevel
     PlayerHelper:setMaxHp(self.objid, maxHp)
     PlayerHelper:setHp(self.objid, maxHp)
@@ -206,5 +208,38 @@ function MyPlayer:takeOutItem (itemid, containEquip)
   else
     local idx = PlayerHelper:getCurShotcut(self.objid) + 1000
     return BackpackHelper:swapGridItem(self.objid, arr[1], idx)
+  end
+end
+
+function MyPlayer:holdItem ()
+  local itemid = PlayerHelper:getCurToolID(self.objid)
+  if (not(self.hold) and not(itemid)) then  -- 变化前后都没有拿东西
+    -- do nothing
+  elseif (not(self.hold)) then -- 之前没有拿东西
+    self:changeHold(itemid)
+  elseif (not(itemid)) then -- 之后没有拿东西
+    self:changeHold(itemid)
+  elseif (self.hold ~= itemid) then -- 换了一件东西拿
+    self:changeHold(itemid)
+  end -- else是没有换东西，略去
+end
+
+function MyPlayer:changeHold (itemid)
+  MyItemHelper:changeHold(self.objid, self.hold, itemid)
+  self.hold = itemid
+end
+
+function MyPlayer:changeAttr (attack, defense)
+  local attrMap = {}
+  if (attack and attack ~= 0) then
+    attrMap[PLAYERATTR.ATK_MELEE] = attack
+    attrMap[PLAYERATTR.ATK_REMOTE] = attack
+  end
+  if (defense and defense ~= 0) then
+    attrMap[PLAYERATTR.DEF_MELEE] = defense
+    attrMap[PLAYERATTR.DEF_REMOTE] = defense
+  end
+  for k, v in pairs(attrMap) do
+    PlayerHelper:addAttr(self.objid, k, v)
   end
 end

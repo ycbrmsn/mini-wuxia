@@ -10,7 +10,7 @@ function Guard:new ()
     },
     fallOff = {
       { 12003, 1, 20 }, -- 短剑
-      { MyConstant.COIN_ID, 15, 20 } -- 铜板
+      { MyConstant.ITEM.COIN_ID, 15, 20 } -- 铜板
     },
     initPositions = {
       MyPosition:new(-39.5, 7, 478.5), -- 南城门卫兵位置
@@ -135,7 +135,7 @@ function Guard:checkTokenArea (objid, areaid)
   for i, v in ipairs(self.initAreas) do
     if (i < 5 and v.areaid == areaid) then
       local player = MyPlayerHelper:getPlayer(objid)
-      if (not(player:takeOutItem(MyConstant.TOKEN_ID))) then
+      if (not(player:takeOutItem(MyConstant.ITEM.TOKEN_ID))) then
         self:speakTo(objid, 0, '出示令牌。强闯者，捕。')
         MyTimeHelper:callFnCanRun(objid, 'checkToken', function ()
           MonsterHelper:wantLookAt (v.objids, objid, 5)

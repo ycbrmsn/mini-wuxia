@@ -95,10 +95,7 @@ end
 local atSecond = function (eventArgs)
   local second = eventArgs['second']
   LogHelper:call(function ()
-    MyTimeHelper:updateTime(second)
-    MyTimeHelper:runFnAfterSecond(second)
-    MyTimeHelper:runFnInterval(second)
-    MyTimeHelper:runFnLastRuns(second)
+    MyTimeHelper:doPerSecond(second)
     MyPlayerHelper:updateEveryPlayerPositions()
 
     if (second == 1) then

@@ -183,3 +183,12 @@ function PlayerHelper:setFoodLevel (objid, foodLevel)
     return Player:setFoodLevel(objid, foodLevel)
   end, { objid = objid, viewmode = viewmode, islock = islock }, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取玩家当前手持的物品id
+function PlayerHelper:getCurToolID (objid)
+  local onceFailMessage = '获取玩家当前手持的物品id失败一次'
+  local finillyFailMessage = StringHelper:concat('获取玩家当前手持的物品id失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Player:getCurToolID(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end

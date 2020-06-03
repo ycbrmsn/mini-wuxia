@@ -54,6 +54,11 @@ function WorldHelper:stopEffect (pos, particleId)
   return self:stopEffectOnPosition(pos.x, pos.y, pos.z, particleId)
 end
 
+function WorldHelper:spawnProjectileByDirPos (shooter, itemid, pos, dirVector3, speed)
+  speed = speed or 100
+  return self:spawnProjectileByDir(shooter, itemid, pos.x, pos.y, pos.z, dirVector3.x, dirVector3.y, dirVector3.z, speed)
+end
+
 -- 封装原始接口
 
 -- 生成生物
@@ -140,4 +145,13 @@ function WorldHelper:stopEffectOnPosition (x, y, z, particleId)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:stopEffectOnPosition(p.x, p.y, p.z, p.particleId)
   end, { x = x, y = y, z = z, particleId = particleId }, onceFailMessage, finillyFailMessage)
+end
+
+-- 生成投掷物(通过方向)
+function WorldHelper:spawnProjectileByDir (shooter, itemid, x, y, z, dirx, diry, dirz, speed)
+  local onceFailMessage = '生成投掷物(通过方向)失败一次'
+  local finillyFailMessage = StringHelper:concat('生成投掷物(通过方向)失败，参数：shooter=', shooter, ',itemid=', itemid, ',x=', x, ',y=', y, ',z=', z, ',dirx=', dirx, ',diry=', diry, ',dirz=', dirz, ',speed=', speed)
+  return CommonHelper:callOneResultMethod(function (p)
+    return World:spawnProjectileByDir(shooter, itemid, x, y, z, dirx, diry, dirz, speed)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

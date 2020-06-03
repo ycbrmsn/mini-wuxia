@@ -2,6 +2,7 @@
 AreaHelper = {
   movePosDim = { x = 0, y = 0, z = 0 }, -- 移动地点尺寸
   approachPosDim = { x = 1, y = 0, z = 1 }, -- 靠近地点尺寸
+  nineCubicDim = { x = 1, y = 1, z = 1 }, -- 扩大1格
   allDoorAreas = {}
 }
 
@@ -13,6 +14,11 @@ end
 -- 创建靠近区域
 function AreaHelper:createApproachPosArea (pos)
   return self:createAreaRect(pos, self.approachPosDim)
+end
+
+-- 创建扩大1格区域
+function AreaHelper:createNineCubicArea (pos)
+  return self:createAreaRect(pos, self.nineCubicDim)
 end
 
 -- 创建初始化生物区域

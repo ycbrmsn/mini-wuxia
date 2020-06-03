@@ -612,7 +612,7 @@ function Story2:playerBadHurt (objid)
   MyTimeHelper:callFnAfterSecond(function ()
     local num = #MyPlayerHelper:getAllPlayers() * 2
     yexiaolong:speak(0, '这里有', num, '瓶药剂。剩下的交给我吧。')
-    Backpack:addItem(player.objid, MyConstant.POTION_ID, num) -- 回血药剂
+    Backpack:addItem(player.objid, MyConstant.ITEM.POTION_ID, num) -- 回血药剂
     yexiaolong:lookAt(player.objid)
     -- player:lookAt(yexiaolong.objid)
   end, waitSeconds)

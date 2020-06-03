@@ -316,3 +316,10 @@ function MyTimeHelper:callFnContinueRuns (f, second, t, p)
   t = t or os.time()
   self:addFnContinueRuns(f, second, t, p)
 end
+
+function MyTimeHelper:doPerSecond (second)
+  self:updateTime(second)
+  self:runFnAfterSecond(second)
+  self:runFnInterval(second)
+  self:runFnLastRuns(second)
+end
