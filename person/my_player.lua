@@ -12,7 +12,9 @@ MyPlayer = {
   positions = nil, -- 最近几秒的位置
   prevAreaId = nil, -- 上一进入区域id
   hurtReason = nil, -- 受伤原因，目前没用
-  hold = nil -- 手持物品
+  hold = nil, -- 手持物品
+  attack = 0, -- 手持武器攻击
+  defense = 0 -- 手持武器防御
 }
 
 function MyPlayer:new (objid)
@@ -225,11 +227,14 @@ function MyPlayer:holdItem ()
 end
 
 function MyPlayer:changeHold (itemid)
-  MyItemHelper:changeHold(self.objid, self.hold, itemid)
+  local foundItem = MyItemHelper:changeHold(self.objid, self.hold, itemid)
   self.hold = itemid
+  if (foundItem) then
+    self:showAttr(true) -- 目前默认显示近程攻击
+  end
 end
 
-function MyPlayer:changeAttr (attack, defense)
+function MyPlayer:changeAttr (attack, defense, dodge)
   local attrMap = {}
   if (attack and attack ~= 0) then
     attrMap[PLAYERATTR.ATK_MELEE] = attack
@@ -239,7 +244,31 @@ function MyPlayer:changeAttr (attack, defense)
     attrMap[PLAYERATTR.DEF_MELEE] = defense
     attrMap[PLAYERATTR.DEF_REMOTE] = defense
   end
+  if (dodge and dodge ~= 0) then
+    attrMap[PLAYERATTR.DODGE] = dodge
+  end
   for k, v in pairs(attrMap) do
     PlayerHelper:addAttr(self.objid, k, v)
   end
+end
+
+function MyPlayer:showAttr (isMelee)
+  local attack
+  if (isMelee) then
+    attack = PlayerHelper:getAttr(self.objid, PLAYERATTR.ATK_MELEE)
+  else
+    attack = PlayerHelper:getAttr(self.objid, PLAYERATTR.ATK_REMOTE)
+  end
+  local defense = PlayerHelper:getAttr(self.objid, PLAYERATTR.DEF_MELEE)
+  local att, def = attack - self.attack, defense - self.defense
+  if (att >= 0) then
+    att = '+' .. att
+  end
+  if (def >= 0) then
+    def = '+' .. def
+  end
+  local content = StringHelper:concat('攻击', att, '，防御', def)
+  ChatHelper:sendSystemMsg(content, self.objid)
+  self.attack = attack
+  self.defense = defense
 end

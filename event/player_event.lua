@@ -36,9 +36,6 @@ local playerUseItem = function (eventArgs)
   LogHelper:call(function ()
     MyItemHelper:useItem(objid, itemid)
   end)
-  -- if(itemid == logPaper.id) then -- 如果使用江湖日志，则显示日志内容
-  --   logPaper:showContent(objid)
-  -- end
 end
 
 -- 参数 eventobjid, toobjid
@@ -118,6 +115,14 @@ local playerMotionStateChange = function (eventArgs)
   end)
 end
 
+-- eventobjid, toobjid
+local playerMoveOneBlockSize = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  LogHelper:call(function ()
+    LogHelper:debug('移动一格')
+  end)
+end
+
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
 ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩家离开区域
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
@@ -131,3 +136,4 @@ ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 受到伤
 ScriptSupportEvent:registerEvent([=[Player.SelectShortcut]=], playerSelectShortcut) -- 选择快捷栏
 ScriptSupportEvent:registerEvent([=[Player.ShortcutChange]=], playerShortcutChange) -- 快捷栏变化
 ScriptSupportEvent:registerEvent([=[Player.MotionStateChange]=], playerMotionStateChange) -- 运动状态改变
+ScriptSupportEvent:registerEvent([=[Player.MoveOneBlockSize]=], playerMoveOneBlockSize) -- 移动一格

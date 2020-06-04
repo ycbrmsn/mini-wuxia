@@ -15,12 +15,16 @@ end
 function MyItemHelper:changeHold (objid, itemid1, itemid2)
   local item1 = self:getItem(itemid1)
   local item2 = self:getItem(itemid2)
+  local foundItem = false
   if (item1) then -- 之前手持物是自定义特殊道具
     item1:putDown(objid)
+    foundItem = true
   end
   if (item2) then -- 当前手持物是自定义特殊道具
     item2:pickUp(objid)
+    foundItem = true
   end
+  return foundItem
 end
 
 function MyItemHelper:useItem (objid, itemid)
