@@ -296,13 +296,18 @@ function MyTimeHelper:addFnContinueRuns (f, second, t, p)
   self.fnContinueRuns[t] = { second * 1000, f, p }
 end
 
+-- 删除方法
+function MyTimeHelper:delFnContinueRuns (t)
+  self.fnContinueRuns[t] = nil
+end
+
 -- 运行方法，然后删除
 function MyTimeHelper:runFnContinueRuns ()
   for k, v in pairs(self.fnContinueRuns) do
     v[1] = v[1] - 50
     v[2](v[3])
     if (v[1] <= 0) then
-      self.fnContinueRuns[k] = nil
+      self:delFnContinueRuns(k)
     end
   end
 end

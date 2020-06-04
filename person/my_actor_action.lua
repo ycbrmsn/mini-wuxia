@@ -117,13 +117,7 @@ function MyActorAction:execute ()
       want.style = 'lookingAt'
       MyTimeHelper:callFnContinueRuns(function ()
         self.myActor:lookAt(want.dst)
-      end, want.restTime)
-      -- 如果没有想法或自由移动，则一会儿打开AI
-      if (not(self.myActor.wants[2]) or self.myActor.wants[2].style == 'freeTime') then
-        MyTimeHelper:callFnLastRun(self.myActor.objid, 'wantLookAt', function ()
-          MyActorHelper:openAI(self.myActor.objid)
-        end, want.restTime)
-      end
+      end, want.restTime, self.myActor.objid .. 'lookat')
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
@@ -151,6 +145,8 @@ function MyActorAction:execute ()
     elseif (want.style == 'lookingAt') then
       if (self.myActor.wants[2]) then
         MyActorHelper:handleNextWant(self.myActor)
+      else -- 没有想法
+        MyActorHelper:openAI(self.myActor.objid)
       end
     else -- 生物不想做什么，则生物自由安排
       -- do nothing

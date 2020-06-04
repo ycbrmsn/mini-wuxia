@@ -346,7 +346,7 @@ function MyActor:wantLookAt (think, myPosition, restTime)
   if (self:isWantsExist()) then
     think = think or self.think
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
-    if (self.wants[1].style == 'lookAt') then
+    if (self.wants[1].style == 'lookAt' or self.wants[1].style == 'lookingAt') then
       self.wants[1] = want
     else
       table.insert(self.wants, 1, want)
@@ -479,7 +479,7 @@ end
 
 function MyActor:defaultPlayerClickEvent (objid)
   self.action:stopRun()
-  self:wantLookAt(nil, objid)
+  self:wantLookAt(nil, objid, 60)
   self:playerClickEvent(objid)
 end
 

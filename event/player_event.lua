@@ -121,7 +121,7 @@ end
 local playerMoveOneBlockSize = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function ()
-    LogHelper:debug('移动一格')
+    MyActorHelper:resumeClickActor(objid)
   end)
 end
 

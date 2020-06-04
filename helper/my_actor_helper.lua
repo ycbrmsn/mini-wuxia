@@ -1,6 +1,7 @@
 -- 人物工具类
 MyActorHelper = {
-  actors = {} -- objid -> actor
+  actors = {}, -- objid -> actor
+  clickActors = {} -- 玩家点击的actor：objid -> actor
 }
 
 function MyActorHelper:new (o)
@@ -159,6 +160,8 @@ function MyActorHelper:handleNextWant (myActor)
     nextWant.toPos = MyActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
     MyActorActionHelper:createMoveToPos(nextWant)
     -- LogHelper:debug(myActor:getName() .. '开始闲逛')
+  elseif (nextWant.style == 'freeTime') then
+    MyActorHelper:openAI(myActor.objid)
   elseif (nextWant.style == 'wait') then
     local restTime = nextWant.restTime
     table.remove(myActor.wants, 1)
@@ -200,10 +203,37 @@ end
 function MyActorHelper:playerClickActor (objid, toobjid)
   local myActor = self:getActorByObjid(toobjid)
   if (myActor) then
+    self:recordClickActor(objid, myActor)
     if (myActor.wants and myActor.wants[1].style == 'sleeping') then
       myActor.wants[1].style = 'wake'
     end
     myActor:defaultPlayerClickEvent(objid)
+  end
+end
+
+-- 记录点击的玩家与被点击的生物之间的一对一关系
+function MyActorHelper:recordClickActor (objid, myActor)
+  for k, v in pairs(self.clickActors) do
+    if (v == myActor) then -- 有其他玩家点击过，则替换为当前玩家点击
+      self.clickActors[k] = nil
+      break
+    end
+  end
+  self.clickActors[objid] = myActor
+end
+
+-- 准备恢复被点击的生物之前的行为
+function MyActorHelper:resumeClickActor (objid)
+  local myActor = self.clickActors[objid]
+  if (myActor) then
+    if (myActor.wants and #myActor.wants > 0) then
+      local want = myActor.wants[1]
+      if (want.style == 'lookingAt') then
+        want.currentRestTime = 5
+        MyTimeHelper:delFnContinueRuns(myActor.objid .. 'lookat')
+      end
+    end
+    self.clickActors[objid] = nil
   end
 end
 
