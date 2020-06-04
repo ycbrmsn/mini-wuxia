@@ -40,6 +40,12 @@ function MyItem:useItem (objid)
   -- body
 end
 
+-- 进入潜行
+function MyItem:useItem2 (objid)
+  LogHelper:debug('useItem2')
+  -- body
+end
+
 -- 投掷物命中
 function MyItem:projectileHit(objid, toobjid, blockid, x, y, z)
   -- body

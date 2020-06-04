@@ -111,7 +111,9 @@ local playerMotionStateChange = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local playermotion = eventArgs['playermotion']
   LogHelper:call(function ()
-    LogHelper:debug(playermotion)
+    if (playermotion == PLAYERMOTION.SNEAK) then -- 潜行
+      MyItemHelper:useItem2(objid)
+    end
   end)
 end
 

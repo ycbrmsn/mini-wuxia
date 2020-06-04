@@ -55,7 +55,7 @@ function MyTimeHelper:runFnAfterSecond (time)
   end
 end
 
--- 参数为：函数、秒、函数的参数table
+-- 参数为：函数、秒、函数的参数table。几秒后执行方法
 function MyTimeHelper:callFnAfterSecond (f, second, p)
   if (type(f) ~= 'function') then
     return
@@ -111,7 +111,7 @@ function MyTimeHelper:setFnInterval (objid, t, f, time, p)
   end
 end
 
--- 至少间隔多少秒执行一次，如果当前符合条件，则执行；不符合，则记录下来，时间到了执行
+-- 至少间隔多少秒执行一次，如果当前符合条件，则立即执行；不符合，则记录下来，时间到了（间隔上次执行多少秒后）执行
 function MyTimeHelper:callFnInterval (objid, t, f, second, p)
   if (not(objid)) then
     return
@@ -162,7 +162,7 @@ function MyTimeHelper:addLastFnCanRunTime (objid, t)
   end
 end
 
--- 如果方法能执行则标记，然后执行；否则不执行
+-- 如果方法能执行（间隔上次执行多少秒之后）则标记，然后执行；否则（间隔时间不够）不执行
 function MyTimeHelper:callFnCanRun (objid, t, f, second, p)
   if (not(objid)) then
     return
@@ -250,7 +250,7 @@ function MyTimeHelper:setFnLastRun (objid, t, f, time, p)
   end
 end
 
--- 多少秒之后执行一次，记录下来，时间到了执行。如果该时间之前有该类型数据，则删除
+-- 多少秒之后（时间点）执行一次，记录下来，时间点到了执行。记录时如果该时间点之前有该类型数据，则删除
 function MyTimeHelper:callFnLastRun (objid, t, f, second, p)
   if (not(objid)) then
     return
@@ -282,7 +282,7 @@ function MyTimeHelper:runFnFastRuns ()
   end
 end
 
--- 参数为：函数、秒、函数的参数table
+-- 参数为：函数、秒、函数的参数table。几秒后执行方法，精确到0.05秒
 function MyTimeHelper:callFnFastRuns (f, second, p)
   if (type(f) ~= 'function') then
     return
@@ -307,7 +307,7 @@ function MyTimeHelper:runFnContinueRuns ()
   end
 end
 
--- 参数为：函数、秒、函数的参数table
+-- 参数为：函数、秒、函数的参数table。持续执行方法，精确到0.05秒
 function MyTimeHelper:callFnContinueRuns (f, second, t, p)
   if (type(f) ~= 'function') then
     return

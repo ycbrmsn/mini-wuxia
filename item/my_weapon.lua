@@ -4,9 +4,7 @@
 
 -- 木剑
 WoodSword = MyWeapon:new(MyWeaponAttr.woodSword)
-LogHelper:call(function ()
 woodSword0 = WoodSword:newLevel(4129, 0)
-end)
 -- woodSword1 = WoodSword:newLevel(-1, 1)
 -- woodSword2 = WoodSword:newLevel(-1, 2)
 -- woodSword3 = WoodSword:newLevel(-1, 3)
@@ -358,7 +356,7 @@ SwallowSoulBow = MyWeapon:new(MyWeaponAttr.swallowSoulBow)
 -- 坠星弓
 FallStarBow = MyWeapon:new(MyWeaponAttr.fallStarBow)
 
-function FallStarBow:useItem (objid)
+function FallStarBow:useItem2 (objid)
   -- body
 end
 
@@ -376,7 +374,7 @@ end
 -- 连珠弓
 OneByOneBow = MyWeapon:new(MyWeaponAttr.oneByOneBow)
 
-function OneByOneBow:useItem (objid)
+function OneByOneBow:useItem2 (objid)
   -- body
 end
 

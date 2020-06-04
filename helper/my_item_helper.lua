@@ -34,6 +34,14 @@ function MyItemHelper:useItem (objid, itemid)
   end
 end
 
+function MyItemHelper:useItem2 (objid)
+  local itemid = PlayerHelper:getCurToolID(objid)
+  local item = self:getItem(itemid)
+  if (item) then -- 使用自定义特殊道具
+    item:useItem2(objid)
+  end
+end
+
 -- 记录投掷物伤害
 function MyItemHelper:recordProjectile (projectileid, objid, item, hurt)
   self.projectiles[projectileid] = { objid = objid, item = item, hurt = hurt }
