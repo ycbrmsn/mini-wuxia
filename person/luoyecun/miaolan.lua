@@ -142,7 +142,7 @@ function Miaolan:playerClickEvent (objid)
       end, 3)
     end, 5)
   else
-    self:speakTo(objid, 0, '如果你受伤了，我可以给你免费治疗。')
+    -- self:speakTo(objid, 0, '如果你受伤了，我可以给你免费治疗。')
     self.action:playFree2(2)
   end
 end
