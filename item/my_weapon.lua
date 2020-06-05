@@ -30,7 +30,7 @@ bronzeSword0 = BronzeSword:newLevel(4136, 0)
 
 -- 刺虎剑
 StabTigerSword = MyWeapon:new(MyWeaponAttr.stabTigerSword)
--- stabTigerSword0 = StabTigerSword:newLevel(-1, 0)
+stabTigerSword0 = StabTigerSword:newLevel(4144, 0)
 -- stabTigerSword1 = StabTigerSword:newLevel(-1, 1)
 -- stabTigerSword2 = StabTigerSword:newLevel(-1, 2)
 -- stabTigerSword3 = StabTigerSword:newLevel(-1, 3)
@@ -43,7 +43,7 @@ StabTigerSword = MyWeapon:new(MyWeaponAttr.stabTigerSword)
 
 -- 饮血剑
 DrinkBloodSword = MyWeapon:new(MyWeaponAttr.drinkBloodSword)
--- drinkBloodSword0 = DrinkBloodSword:newLevel(-1, 0)
+drinkBloodSword0 = DrinkBloodSword:newLevel(4147, 0)
 -- drinkBloodSword1 = DrinkBloodSword:newLevel(-1, 1)
 -- drinkBloodSword2 = DrinkBloodSword:newLevel(-1, 2)
 -- drinkBloodSword3 = DrinkBloodSword:newLevel(-1, 3)
@@ -54,7 +54,7 @@ DrinkBloodSword = MyWeapon:new(MyWeaponAttr.drinkBloodSword)
 -- drinkBloodSword8 = DrinkBloodSword:newLevel(-1, 8)
 -- drinkBloodSword9 = DrinkBloodSword:newLevel(-1, 9)
 
--- 强袭剑
+-- 奔袭剑
 StrongAttackSword = MyWeapon:new(MyWeaponAttr.strongAttackSword)
 
 function StrongAttackSword:useItem (objid)
@@ -89,7 +89,7 @@ function StrongAttackSword:useItem (objid)
 
 end
 
--- strongAttackSword0 = StrongAttackSword:newLevel(-1, 0)
+strongAttackSword0 = StrongAttackSword:newLevel(4151, 0)
 -- strongAttackSword1 = StrongAttackSword:newLevel(-1, 1)
 -- strongAttackSword2 = StrongAttackSword:newLevel(-1, 2)
 -- strongAttackSword3 = StrongAttackSword:newLevel(-1, 3)
@@ -108,7 +108,7 @@ function ChaseWindSword:useItem (objid)
   -- body
 end
 
--- chaseWindSword0 = ChaseWindSword:newLevel(-1, 0)
+chaseWindSword0 = ChaseWindSword:newLevel(4155, 0)
 -- chaseWindSword1 = ChaseWindSword:newLevel(-1, 1)
 -- chaseWindSword2 = ChaseWindSword:newLevel(-1, 2)
 -- chaseWindSword3 = ChaseWindSword:newLevel(-1, 3)
@@ -149,7 +149,7 @@ bronzeKnife0 = BronzeKnife:newLevel(4138, 0)
 
 -- 割鹿刀
 CutDeerKnife = MyWeapon:new(MyWeaponAttr.cutDeerKnife)
--- cutDeerKnife0 = CutDeerKnife:newLevel(-1, 0)
+cutDeerKnife0 = CutDeerKnife:newLevel(4145, 0)
 -- cutDeerKnife1 = CutDeerKnife:newLevel(-1, 1)
 -- cutDeerKnife2 = CutDeerKnife:newLevel(-1, 2)
 -- cutDeerKnife3 = CutDeerKnife:newLevel(-1, 3)
@@ -162,7 +162,7 @@ CutDeerKnife = MyWeapon:new(MyWeaponAttr.cutDeerKnife)
 
 -- 凝霜刀
 CongealFrostKnife = MyWeapon:new(MyWeaponAttr.congealFrostKnife)
--- congealFrostKnife0 = CongealFrostKnife:newLevel(-1, 0)
+congealFrostKnife0 = CongealFrostKnife:newLevel(4148, 0)
 -- congealFrostKnife1 = CongealFrostKnife:newLevel(-1, 1)
 -- congealFrostKnife2 = CongealFrostKnife:newLevel(-1, 2)
 -- congealFrostKnife3 = CongealFrostKnife:newLevel(-1, 3)
@@ -180,7 +180,7 @@ function RejuvenationKnife:useItem (objid)
   -- body
 end
 
--- rejuvenationKnife0 = RejuvenationKnife:newLevel(-1, 0)
+rejuvenationKnife0 = RejuvenationKnife:newLevel(4152, 0)
 -- rejuvenationKnife1 = RejuvenationKnife:newLevel(-1, 1)
 -- rejuvenationKnife2 = RejuvenationKnife:newLevel(-1, 2)
 -- rejuvenationKnife3 = RejuvenationKnife:newLevel(-1, 3)
@@ -198,7 +198,7 @@ function SealDemonKnife:useItem (objid)
   -- body
 end
 
--- sealDemonKnife0 = SealDemonKnife:newLevel(-1, 0)
+sealDemonKnife0 = SealDemonKnife:newLevel(4156, 0)
 -- sealDemonKnife1 = SealDemonKnife:newLevel(-1, 1)
 -- sealDemonKnife2 = SealDemonKnife:newLevel(-1, 2)
 -- sealDemonKnife3 = SealDemonKnife:newLevel(-1, 3)
@@ -239,7 +239,7 @@ bronzeSpear0 = BronzeSpear:newLevel(4137, 0)
 
 -- 御龙枪
 ControlDragonSpear = MyWeapon:new(MyWeaponAttr.controlDragonSpear)
--- controlDragonSpear0 = ControlDragonSpear:newLevel(-1, 0)
+controlDragonSpear0 = ControlDragonSpear:newLevel(4146, 0)
 -- controlDragonSpear1 = ControlDragonSpear:newLevel(-1, 1)
 -- controlDragonSpear2 = ControlDragonSpear:newLevel(-1, 2)
 -- controlDragonSpear3 = ControlDragonSpear:newLevel(-1, 3)
@@ -252,7 +252,7 @@ ControlDragonSpear = MyWeapon:new(MyWeaponAttr.controlDragonSpear)
 
 -- 火尖枪
 FireTipSpear = MyWeapon:new(MyWeaponAttr.fireTipSpear)
--- fireTipSpear0 = FireTipSpear:newLevel(-1, 0)
+fireTipSpear0 = FireTipSpear:newLevel(4149, 0)
 -- fireTipSpear1 = FireTipSpear:newLevel(-1, 1)
 -- fireTipSpear2 = FireTipSpear:newLevel(-1, 2)
 -- fireTipSpear3 = FireTipSpear:newLevel(-1, 3)
@@ -270,7 +270,7 @@ function OverlordSpear:useItem (objid)
   -- body
 end
 
--- overlordSpear0 = OverlordSpear:newLevel(-1, 0)
+overlordSpear0 = OverlordSpear:newLevel(4153, 0)
 -- overlordSpear1 = OverlordSpear:newLevel(-1, 1)
 -- overlordSpear2 = OverlordSpear:newLevel(-1, 2)
 -- overlordSpear3 = OverlordSpear:newLevel(-1, 3)
@@ -288,7 +288,7 @@ function ShockSoulSpear:useItem (objid)
   -- body
 end
 
--- shockSoulSpear0 = ShockSoulSpear:newLevel(-1, 0)
+shockSoulSpear0 = ShockSoulSpear:newLevel(4157, 0)
 -- shockSoulSpear1 = ShockSoulSpear:newLevel(-1, 1)
 -- shockSoulSpear2 = ShockSoulSpear:newLevel(-1, 2)
 -- shockSoulSpear3 = ShockSoulSpear:newLevel(-1, 3)
@@ -316,7 +316,7 @@ woodBow0 = WoodBow:newLevel(4128, 0)
 
 -- 青铜弓
 BronzeBow = MyWeapon:new(MyWeaponAttr.bronzeBow)
-bronzeBow0 = BronzeBow:newLevel(4143, 0)
+bronzeBow0 = BronzeBow:newLevel(4139, 0)
 -- bronzeBow1 = BronzeBow:newLevel(-1, 1)
 -- bronzeBow2 = BronzeBow:newLevel(-1, 2)
 -- bronzeBow3 = BronzeBow:newLevel(-1, 3)
@@ -329,7 +329,7 @@ bronzeBow0 = BronzeBow:newLevel(4143, 0)
 
 -- 射雕弓
 ShootEagleBow = MyWeapon:new(MyWeaponAttr.shootEagleBow)
--- shootEagleBow0 = ShootEagleBow:newLevel(-1, 0)
+shootEagleBow0 = ShootEagleBow:newLevel(4143, 0)
 -- shootEagleBow1 = ShootEagleBow:newLevel(-1, 1)
 -- shootEagleBow2 = ShootEagleBow:newLevel(-1, 2)
 -- shootEagleBow3 = ShootEagleBow:newLevel(-1, 3)
@@ -342,7 +342,7 @@ ShootEagleBow = MyWeapon:new(MyWeaponAttr.shootEagleBow)
 
 -- 噬魂弓
 SwallowSoulBow = MyWeapon:new(MyWeaponAttr.swallowSoulBow)
--- swallowSoulBow0 = SwallowSoulBow:newLevel(-1, 0)
+swallowSoulBow0 = SwallowSoulBow:newLevel(4150, 0)
 -- swallowSoulBow1 = SwallowSoulBow:newLevel(-1, 1)
 -- swallowSoulBow2 = SwallowSoulBow:newLevel(-1, 2)
 -- swallowSoulBow3 = SwallowSoulBow:newLevel(-1, 3)
@@ -360,7 +360,7 @@ function FallStarBow:useItem2 (objid)
   -- body
 end
 
--- fallStarBow0 = FallStarBow:newLevel(-1, 0)
+fallStarBow0 = FallStarBow:newLevel(4154, 0)
 -- fallStarBow1 = FallStarBow:newLevel(-1, 1)
 -- fallStarBow2 = FallStarBow:newLevel(-1, 2)
 -- fallStarBow3 = FallStarBow:newLevel(-1, 3)
@@ -378,7 +378,7 @@ function OneByOneBow:useItem2 (objid)
   -- body
 end
 
--- oneByOneBow0 = OneByOneBow:newLevel(-1, 0)
+oneByOneBow0 = OneByOneBow:newLevel(4158, 0)
 -- oneByOneBow1 = OneByOneBow:newLevel(-1, 1)
 -- oneByOneBow2 = OneByOneBow:newLevel(-1, 2)
 -- oneByOneBow3 = OneByOneBow:newLevel(-1, 3)
