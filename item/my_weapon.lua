@@ -43,6 +43,23 @@ stabTigerSword0 = StabTigerSword:newLevel(4144, 0)
 
 -- 饮血剑
 DrinkBloodSword = MyWeapon:new(MyWeaponAttr.drinkBloodSword)
+
+-- 攻击命中恢复血量
+function DrinkBloodSword:attackHit (objid, toobjid)
+  local hp = self.hp + math.floor(self.addHpPerLevel * self.level)
+  local toHp
+  if (ActorHelper:isPlayer(toobjid)) then -- 命中玩家
+    toHp = PlayerHelper:getHp(toobjid)
+  else -- 命中生物
+    toHp = CreatureHelper:getHp(toobjid)
+  end
+  if (toHp < hp) then
+    hp = toHp
+  end
+  local player = MyPlayerHelper:getPlayer(objid)
+  player:recoverHp(hp)
+end
+
 drinkBloodSword0 = DrinkBloodSword:newLevel(4147, 0)
 -- drinkBloodSword1 = DrinkBloodSword:newLevel(-1, 1)
 -- drinkBloodSword2 = DrinkBloodSword:newLevel(-1, 2)
@@ -162,6 +179,14 @@ cutDeerKnife0 = CutDeerKnife:newLevel(4145, 0)
 
 -- 凝霜刀
 CongealFrostKnife = MyWeapon:new(MyWeaponAttr.congealFrostKnife)
+
+-- 攻击命中冰冻
+function CongealFrostKnife:attackHit (objid, toobjid)
+  local bufflv = math.floor(self.level / 3 + 1)
+  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  ActorHelper:addBuff(toobjid, 45, bufflv, customticks)
+end
+
 congealFrostKnife0 = CongealFrostKnife:newLevel(4148, 0)
 -- congealFrostKnife1 = CongealFrostKnife:newLevel(-1, 1)
 -- congealFrostKnife2 = CongealFrostKnife:newLevel(-1, 2)
@@ -213,6 +238,12 @@ sealDemonKnife0 = SealDemonKnife:newLevel(4156, 0)
 
 -- 木枪
 WoodSpear = MyWeapon:new(MyWeaponAttr.woodSpear)
+
+-- 攻击命中
+function WoodSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+end
+
 woodSpear0 = WoodSpear:newLevel(4131, 0)
 -- woodSpear1 = WoodSpear:newLevel(-1, 1)
 -- woodSpear2 = WoodSpear:newLevel(-1, 2)
@@ -226,6 +257,12 @@ woodSpear0 = WoodSpear:newLevel(4131, 0)
 
 -- 青铜枪
 BronzeSpear = MyWeapon:new(MyWeaponAttr.bronzeSpear)
+
+-- 攻击命中
+function BronzeSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+end
+
 bronzeSpear0 = BronzeSpear:newLevel(4137, 0)
 -- bronzeSpear1 = BronzeSpear:newLevel(-1, 1)
 -- bronzeSpear2 = BronzeSpear:newLevel(-1, 2)
@@ -239,6 +276,12 @@ bronzeSpear0 = BronzeSpear:newLevel(4137, 0)
 
 -- 御龙枪
 ControlDragonSpear = MyWeapon:new(MyWeaponAttr.controlDragonSpear)
+
+-- 攻击命中
+function ControlDragonSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+end
+
 controlDragonSpear0 = ControlDragonSpear:newLevel(4146, 0)
 -- controlDragonSpear1 = ControlDragonSpear:newLevel(-1, 1)
 -- controlDragonSpear2 = ControlDragonSpear:newLevel(-1, 2)
@@ -252,6 +295,15 @@ controlDragonSpear0 = ControlDragonSpear:newLevel(4146, 0)
 
 -- 火尖枪
 FireTipSpear = MyWeapon:new(MyWeaponAttr.fireTipSpear)
+
+-- 攻击命中着火
+function FireTipSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+  local bufflv = math.floor(self.level / 3 + 1)
+  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  ActorHelper:addBuff(toobjid, 33, bufflv, customticks)
+end
+
 fireTipSpear0 = FireTipSpear:newLevel(4149, 0)
 -- fireTipSpear1 = FireTipSpear:newLevel(-1, 1)
 -- fireTipSpear2 = FireTipSpear:newLevel(-1, 2)
@@ -265,6 +317,11 @@ fireTipSpear0 = FireTipSpear:newLevel(4149, 0)
 
 -- 霸王枪
 OverlordSpear = MyWeapon:new(MyWeaponAttr.overlordSpear)
+
+-- 攻击命中
+function OverlordSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+end
 
 function OverlordSpear:useItem (objid)
   -- body
@@ -283,6 +340,11 @@ overlordSpear0 = OverlordSpear:newLevel(4153, 0)
 
 -- 慑魂枪
 ShockSoulSpear = MyWeapon:new(MyWeaponAttr.shockSoulSpear)
+
+-- 攻击命中
+function ShockSoulSpear:attackHit (objid, toobjid)
+  self:reduceStrength(objid)
+end
 
 function ShockSoulSpear:useItem (objid)
   -- body
@@ -342,6 +404,14 @@ shootEagleBow0 = ShootEagleBow:newLevel(4143, 0)
 
 -- 噬魂弓
 SwallowSoulBow = MyWeapon:new(MyWeaponAttr.swallowSoulBow)
+
+-- 攻击命中中毒
+function SwallowSoulBow:attackHit (objid, toobjid)
+  local bufflv = math.floor(self.level / 3 + 1)
+  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  ActorHelper:addBuff(toobjid, 34, bufflv, customticks)
+end
+
 swallowSoulBow0 = SwallowSoulBow:newLevel(4150, 0)
 -- swallowSoulBow1 = SwallowSoulBow:newLevel(-1, 1)
 -- swallowSoulBow2 = SwallowSoulBow:newLevel(-1, 2)

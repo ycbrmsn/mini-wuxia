@@ -51,6 +51,15 @@ function MyPlayerHelper:showToast (objid, ...)
   end, 2, { info = info })
 end
 
+-- 玩家攻击命中
+function MyPlayerHelper:playerAttackHit (objid, toobjid)
+  local itemid = PlayerHelper:getCurToolID(objid)
+  local item = MyItemHelper:getItem(itemid)
+  if (item) then
+    item:attackHit(objid, toobjid)
+  end
+end
+
 -- 玩家造成伤害
 function MyPlayerHelper:playerDamageActor (objid, toobjid)
   local actorname = CreatureHelper:getActorName(toobjid)
@@ -63,6 +72,7 @@ function MyPlayerHelper:playerDamageActor (objid, toobjid)
   end
 end
 
+-- 玩家击败生物
 function MyPlayerHelper:playerDefeatActor (playerid, objid)
   local exp = MonsterHelper:getExp(playerid, objid)
   local player = self:getPlayer(playerid)

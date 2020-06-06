@@ -61,8 +61,10 @@ MyWeaponAttr = {
   drinkBloodSword = {
     attack = 14,
     defense = 5,
+    hp = 5,
     addAttPerLevel = 2,
-    addDefPerLevel = 0
+    addDefPerLevel = 0,
+    addHpPerLevel = 1
   }, -- 饮血剑
   strongAttackSword = {
     attack = 20,
@@ -119,36 +121,42 @@ MyWeaponAttr = {
   woodSpear = {
     attack = 17,
     defense = 0,
+    strength = 20,
     addAttPerLevel = 1,
     addDefPerLevel = 0
   }, -- 木枪
   bronzeSpear = {
     attack = 33,
     defense = 0,
+    strength = 30,
     addAttPerLevel = 1,
     addDefPerLevel = 0
   }, -- 青铜枪
   controlDragonSpear = {
     attack = 51,
     defense = 0,
+    strength = 40,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 御龙枪
   fireTipSpear = {
     attack = 19,
     defense = 0,
+    strength = 20,
     addAttPerLevel = 2,
     addDefPerLevel = 0
   }, -- 火尖枪
   overlordSpear = {
     attack = 36,
     defense = 0,
+    strength = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 霸王枪
   shockSoulSpear = {
     attack = 55,
     defense = 0,
+    strength = 40,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   }, -- 慑魂枪

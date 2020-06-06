@@ -1,6 +1,6 @@
 -- 玩家事件
 
--- 参数 eventobjid, areaid
+-- eventobjid, areaid
 local playerEnterArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
@@ -10,7 +10,7 @@ local playerEnterArea = function (eventArgs)
   end)
 end
 
--- 参数 eventobjid, areaid
+-- eventobjid, areaid
 local playerLeaveArea = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local areaid = eventArgs['areaid']
@@ -20,7 +20,7 @@ local playerLeaveArea = function (eventArgs)
   end)
 end
 
--- 参数 eventobjid, blockid, x, y, z
+-- eventobjid, blockid, x, y, z
 local clickBlock = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function ()
@@ -29,7 +29,7 @@ local clickBlock = function (eventArgs)
   end)
 end
 
--- 参数 eventobjid toobjid itemid itemnum
+-- eventobjid toobjid itemid itemnum
 local playerUseItem = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local itemid = eventArgs['itemid']
@@ -38,7 +38,7 @@ local playerUseItem = function (eventArgs)
   end)
 end
 
--- 参数 eventobjid, toobjid
+-- eventobjid, toobjid
 local playerClickActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
@@ -49,7 +49,7 @@ local playerClickActor = function (eventArgs)
   
 end
 
--- 参数 eventobjid, toobjid, itemid, itemnum
+-- eventobjid, toobjid, itemid, itemnum
 local playerAddItem = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
@@ -61,7 +61,16 @@ local playerAddItem = function (eventArgs)
   end)
 end
 
--- 参数 eventobjid, toobjid
+-- eventobjid, toobjid
+local playerAttackHit = function (eventArgs)
+  local objid = eventArgs['eventobjid']
+  local toobjid = eventArgs['toobjid']
+  LogHelper:call(function ()
+    MyPlayerHelper:playerAttackHit(objid, toobjid)
+  end)
+end
+
+-- eventobjid, toobjid
 local playerDamageActor = function (eventArgs)
   local objid = eventArgs['eventobjid']
   local toobjid = eventArgs['toobjid']
@@ -131,6 +140,7 @@ ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击�
 ScriptSupportEvent:registerEvent([=[Player.UseItem]=], playerUseItem) -- 玩家使用物品
 ScriptSupportEvent:registerEvent([=[Player.ClickActor]=], playerClickActor) -- 玩家点击生物
 ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家新增道具
+ScriptSupportEvent:registerEvent([=[Player.AttackHit]=], playerAttackHit) -- 玩家攻击命中
 ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
 -- ScriptSupportEvent:registerEvent([=[Player.ChangeAttr]=], playerChangeAttr) -- 属性变化
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标

@@ -14,7 +14,8 @@ MyPlayer = {
   hurtReason = nil, -- 受伤原因，目前没用
   hold = nil, -- 手持物品
   attack = 0, -- 手持武器攻击
-  defense = 0 -- 手持武器防御
+  defense = 0, -- 手持武器防御
+  strength = 100 -- 体力，用于使枪消耗
 }
 
 function MyPlayer:new (objid)
@@ -146,16 +147,18 @@ end
 function MyPlayer:gainExp (exp)
   self.exp = self.exp + exp
   local msg = '获得'.. exp .. '点经验。'
+  ChatHelper:sendSystemMsg(msg, self.objid)
   local needExp = self.totalLevel * self.levelExp - self.exp
   if (needExp <= 0) then
     repeat
-      msg = msg .. '\n' .. self:upgrade(1)
+      msg = self:upgrade(1)
+      ChatHelper:sendSystemMsg(msg, self.objid)
       needExp = needExp + self.levelExp
     until (needExp > 0)
   else
-    msg = msg .. '当前等级为：' .. self.totalLevel .. '。还差' .. needExp .. '点经验升级。'
+    msg = '当前等级为：' .. self.totalLevel .. '。还差' .. needExp .. '点经验升级。'
+    ChatHelper:sendSystemMsg(msg, self.objid)
   end
-  ChatHelper:sendSystemMsg(msg, self.objid)
 end
 
 function MyPlayer:upgrade (addLevel)
@@ -271,4 +274,69 @@ function MyPlayer:showAttr (isMelee)
   ChatHelper:sendSystemMsg(content, self.objid)
   self.attack = attack
   self.defense = defense
+end
+
+-- 恢复血量（加/减血）
+function MyPlayer:recoverHp (hp)
+  if (hp == 0) then
+    return
+  end
+  local curHp = PlayerHelper:getHp(self.objid)
+  if (hp > 0) then -- 加血
+    local maxHp = PlayerHelper:getMaxHp(self.objid)
+    if (curHp == maxHp) then -- 满血量不处理
+      return
+    end
+    curHp = curHp + hp
+    if (curHp > maxHp) then
+      curHp = maxHp
+    end
+  else -- 减血
+    local minHp = 1
+    if (curHp == minHp) then -- 重伤不处理
+      return
+    end
+    curHp = curHp + hp
+    if (curHp < minHp) then
+      curHp = minHp
+    end
+  end
+  PlayerHelper:setHp(self.objid, curHp)
+end
+
+-- 恢复饱食度（加/减饱食度）
+function MyPlayer:recoverFoodLevel(foodLevel)
+  if (foodLevel == 0) then
+    return
+  end
+  local curFoodLevel = PlayerHelper:getFoodLevel(self.objid)
+  if (foodLevel > 0) then -- 增加饱食度
+    local maxFoodLevel = 100
+    if (curFoodLevel == maxFoodLevel) then -- 满饱食度不处理
+      return
+    end
+    curFoodLevel = curFoodLevel + foodLevel
+    if (curFoodLevel > maxFoodLevel) then
+      curFoodLevel = maxFoodLevel
+    end
+  else -- 减血
+    local minFoodLevel = 0
+    if (curFoodLevel == minFoodLevel) then -- 饥饿不处理
+      return
+    end
+    curFoodLevel = curFoodLevel + foodLevel
+    if (curFoodLevel < minFoodLevel) then
+      curFoodLevel = minFoodLevel
+    end
+  end
+  PlayerHelper:setFoodLevel(self.objid, curFoodLevel)
+end
+
+-- 减体力
+function MyPlayer:reduceStrength (strength)
+  self.strength = self.strength - strength
+  if (self.strength <= 0) then
+    self.strength = 100
+    self:recoverFoodLevel(-1)
+  end
 end

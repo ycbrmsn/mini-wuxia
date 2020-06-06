@@ -51,6 +51,11 @@ function MyItem:projectileHit(objid, toobjid, blockid, x, y, z)
   -- body
 end
 
+-- 攻击命中
+function MyItem:attackHit (objid, toobjid)
+  -- body
+end
+
 -- 武器类
 MyWeapon = MyItem:new()
 
@@ -77,6 +82,12 @@ end
 function MyWeapon:putDown (objid)
   local player = MyPlayerHelper:getPlayer(objid)
   player:changeAttr(-self.attack, -self.defense)
+end
+
+-- 减少体力
+function MyWeapon:reduceStrength (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  player:reduceStrength(self.strength)
 end
 
 -- 江湖日志类
