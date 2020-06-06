@@ -42,11 +42,11 @@ function MyItemHelper:useItem2 (objid)
   end
 end
 
--- 记录投掷物伤害
+-- 记录投掷物伤害 投掷物id、人物id、道具、伤害
 function MyItemHelper:recordProjectile (projectileid, objid, item, hurt)
-  self.projectiles[projectileid] = { objid = objid, item = item, hurt = hurt }
+  self.projectiles[projectileid] = { objid = objid, projectileid = projectileid, item = item, hurt = hurt }
   -- 一定时间后清除数据
-  MyTimeHelper:callFnAfterSecond(function ( ... )
+  MyTimeHelper:callFnAfterSecond(function ()
     self.projectiles[projectileid] = nil
   end, 30)
 end
@@ -55,6 +55,6 @@ function MyItemHelper:projectileHit (projectileid, toobjid, blockid, x, y, z)
   local projectileInfo = self.projectiles[projectileid]
   if (projectileInfo) then
     local item = projectileInfo.item
-    item:projectileHit(objid, toobjid, blockid, x, y, z)
+    item:projectileHit(projectileInfo, toobjid, blockid, x, y, z)
   end
 end

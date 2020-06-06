@@ -340,3 +340,45 @@ function MyPlayer:reduceStrength (strength)
     self:recoverFoodLevel(-1)
   end
 end
+
+-- 伤害生物
+function MyPlayer:damageActor (toobjid, val)
+  if (val <= 0) then -- 伤害值无效
+    return
+  end
+  if (ActorHelper:isPlayer(toobjid)) then -- 伤害玩家
+    local hp = PlayerHelper:getHp(toobjid)
+    if (hp > val) then -- 玩家不会死亡
+      hp = hp - val
+      PlayerHelper:setHp(toobjid, hp)
+    else -- 玩家可能会死亡，则检测玩家是否可被杀死
+      local ableBeKilled = PlayerHelper:getPlayerEnableBeKilled(toobjid)
+      if (ableBeKilled) then -- 能被杀死
+        ActorHelper:killSelf(toobjid)
+        MyPlayerHelper:playerDefeatActor(self.objid, toobjid)
+      else -- 不能被杀死
+        hp = 1
+        PlayerHelper:setHp(toobjid, hp)
+      end
+    end
+  else -- 伤害了生物
+    local hp = CreatureHelper:getHp(toobjid)
+    if (not(hp)) then -- 未找到生物
+      return
+    end
+    if (hp > val) then -- 生物不会死亡
+      hp = hp - val
+      CreatureHelper:setHp(toobjid, hp)
+    else -- 生物可能会死亡，则检测生物是否可被杀死
+      local ableBeKilled = ActorHelper:getEnableBeKilledState(toobjid)
+      if (ableBeKilled) then -- 能被杀死
+        ActorHelper:killSelf(toobjid)
+        MyPlayerHelper:playerDefeatActor(self.objid, toobjid)
+      else -- 不能被杀死
+        hp = 1
+        CreatureHelper:setHp(toobjid, hp)
+      end
+    end
+  end
+  MyPlayerHelper:playerDamageActor(self.objid, toobjid)
+end

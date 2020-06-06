@@ -18,11 +18,17 @@ function PlayerHelper:setPlayerEnableMove (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_MOVE, enable)
 end
 
+-- 查询玩家是否可被杀死
+function PlayerHelper:getPlayerEnableBeKilled (objid)
+  return PlayerHelper:checkActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED)
+end
+
 -- 设置玩家是否可被杀死
 function PlayerHelper:setPlayerEnableBeKilled (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED, enable)
 end
 
+-- 设置玩家是否可被攻击
 function PlayerHelper:setPlayerEnableBeAttacked (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEATTACKED, enable)
 end
@@ -92,6 +98,15 @@ function PlayerHelper:setPosition (objid, x, y, z)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Player:setPosition(p.objid, p.x, p.y, p.z)
   end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取玩家特殊属性的状态
+function PlayerHelper:checkActionAttrState (objid, actionattr)
+  local onceFailMessage = '获取玩家特殊属性的状态失败一次'
+  local finillyFailMessage = StringHelper:concat('获取玩家特殊属性的状态失败，参数：objid=', objid, ',actionattr=', actionattr)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Player:checkActionAttrState(objid, actionattr)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 设置玩家行为属性状态

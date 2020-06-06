@@ -114,18 +114,48 @@ function StrongAttackSword:useItem (objid)
       if (targetObjid) then -- 发现目标
         player:setDistancePosition(targetObjid, -1)
         player:lookAt(targetObjid)
+        player:damageActor(targetObjid, self.attack * 2)
         -- local targetPos = MyActorHelper:getMyPosition(targetObjid)
-        -- local itemid = -1 -- 通用投掷物id
-        -- local dirVector3 = MyVector3:new(playerPos, targetPos) -- 方向向量
-        -- local projectileid = WorldHelper:spawnProjectileByDirPos(player.objid, itemid, targetPos, dirVector3) -- 创建投掷物
+        -- local itemid = MyConstant.WEAPON.COMMON_PROJECTILE_ID -- 通用投掷物id
+        -- -- local dirVector3 = MyVector3:new(playerPos, targetPos) -- 方向向量
+        -- local initPos = MyPosition:new(targetPos.x, targetPos.y + 0.2, targetPos.z)
+        -- local dirVector3 = MyVector3:new(0, -1, 0)
+        -- local projectileid = WorldHelper:spawnProjectileByDirPos(player.objid, itemid, initPos, dirVector3) -- 创建投掷物
         -- MyItemHelper:recordProjectile(projectileid, objid, self, self.attack * 2 - MyConstant.PROJECTILE_HURT) -- 记录伤害
         break
       end
     else
-      ChatHelper:sendSystemMsg('未发现目标', objid)
+      ChatHelper:sendSystemMsg('技能有效范围内未发现目标', objid)
     end
   end
 end
+
+-- 投掷物命中
+-- function StrongAttackSword:projectileHit(projectileInfo, toobjid, blockid, x, y, z)
+--       LogHelper:debug(CreatureHelper:getHp(toobjid))
+--   if (toobjid > 0) then
+--     local hurt = projectileInfo.hurt
+--     local toHp
+--     if (ActorHelper:isPlayer(toobjid)) then -- 命中玩家
+--       toHp = PlayerHelper:getHp(toobjid)
+--       if (toHp <= hurt) then
+--         toHp = 1
+--       else
+--         toHp = toHp - hurt
+--       end
+--       PlayerHelper:setHp(toobjid, toHp)
+--     else -- 命中生物
+--       toHp = CreatureHelper:getHp(toobjid)
+--       if (toHp <= hurt) then
+--         toHp = 1
+--       else
+--         toHp = toHp - hurt
+--       end
+--       CreatureHelper:setHp(toobjid, toHp)
+--       LogHelper:debug(CreatureHelper:getHp(toobjid))
+--     end
+--   end
+-- end
 
 strongAttackSword0 = StrongAttackSword:newLevel(4151, 0)
 -- strongAttackSword1 = StrongAttackSword:newLevel(-1, 1)

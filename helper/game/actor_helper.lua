@@ -47,6 +47,16 @@ function ActorHelper:getEnableMoveState (objid)
   return self:getActionAttrState(objid, CREATUREATTR.ENABLE_MOVE)
 end
 
+-- 设置生物可被杀死状态
+function ActorHelper:setEnableBeKilledState (objid, switch)
+  return self:setActionAttrState(objid, CREATUREATTR.ENABLE_BEKILLED, switch)
+end
+
+-- 获取生物可被杀死状态
+function ActorHelper:getEnableBeKilledState (objid)
+  return self:getActionAttrState(objid, CREATUREATTR.ENABLE_BEKILLED)
+end
+
 -- 封装原始接口
 
 -- 向目标位置移动

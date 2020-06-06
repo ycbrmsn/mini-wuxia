@@ -5,6 +5,10 @@ function CreatureHelper:getHp (objid)
   return self:getAttr(objid, CREATUREATTR.CUR_HP)
 end
 
+function CreatureHelper:setHp (objid, hp)
+  return self:setAttr(objid, CREATUREATTR.CUR_HP, hp)
+end
+
 -- 封装原始接口
 
 -- 设置生物AI是否生效
@@ -58,6 +62,15 @@ function CreatureHelper:getAttr (objid, attrtype)
   local finillyFailMessage = StringHelper:concat('获取生物属性失败，参数：objid=', objid, ', attrtype=', attrtype)
   return CommonHelper:callOneResultMethod(function (p)
     return Creature:getAttr(objid, attrtype)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 设置生物属性
+function CreatureHelper:setAttr (objid, attrtype, val)
+  local onceFailMessage = '设置生物属性失败一次'
+  local finillyFailMessage = StringHelper:concat('设置生物属性失败，参数：objid=', objid, ',attrtype=', attrtype, ',val=', val)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Creature:setAttr(objid, attrtype, val)
   end, nil, onceFailMessage, finillyFailMessage)
 end
 
