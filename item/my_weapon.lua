@@ -76,13 +76,33 @@ StrongAttackSword = MyWeapon:new(MyWeaponAttr.strongAttackSword)
 
 function StrongAttackSword:useItem (objid)
   local player = MyPlayerHelper:getPlayer(objid)
+  local teamid = PlayerHelper:getTeam(objid)
   local playerPos = player:getMyPosition()
   -- 循环以距离玩家正面1米递增的间隔点开始，作为中心点，扩大1格，查找生物
   for i = 1, self.level + 1 do
     local pos = MathHelper:getDistancePosition(player:getMyPosition(), player:getFaceYaw(), i)
     local areaid = AreaHelper:createNineCubicArea(pos)
-    local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
-    if (objids and #objids > 0) then -- 发现生物，则找到最近的生物
+    local objids1, objids2 = AreaHelper:getAllCreaturesAndPlayersInAreaId(areaid)
+    local objids = {}
+    if (objids1 and #objids1 > 0) then -- 发现生物，排除同队生物
+      for ii, vv in ipairs(objids1) do
+        local tid = CreatureHelper:getTeam(vv)
+        if (tid ~= teamid) then -- 非同队生物
+          table.insert(objids, vv)
+        end
+      end
+    end
+    if (objids2 and #objids2 > 0) then -- 发现玩家，排除当前玩家与同队玩家
+      for ii, vv in ipairs(objids2) do
+        if (vv ~= objid) then -- 非当前玩家
+          local tid = PlayerHelper:getTeam(vv)
+          if (tid ~= teamid) then -- 非同队玩家
+            table.insert(objids, vv)
+          end
+        end
+      end
+    end
+    if (#objids > 0) then
       local tempDistance, targetObjid
       for ii, vv in ipairs(objids) do
         local distance = WorldHelper:calcDistance(playerPos, MyActorHelper:getMyPosition(vv))
@@ -93,17 +113,18 @@ function StrongAttackSword:useItem (objid)
       end
       if (targetObjid) then -- 发现目标
         player:setDistancePosition(targetObjid, -1)
-        player.action:playAttack()
-        local targetPos = MyActorHelper:getMyPosition(targetObjid)
-        local itemid = -1
-        local dirVector3 = MyVector3:new(playerPos, targetPos)
-        local projectileid = WorldHelper:spawnProjectileByDirPos(player.objid, itemid, targetPos, dirVector3)
-        MyItemHelper:recordProjectile(projectileid, objid, self, self.attack * 2 - MyConstant.PROJECTILE_HURT) -- 记录伤害
+        player:lookAt(targetObjid)
+        -- local targetPos = MyActorHelper:getMyPosition(targetObjid)
+        -- local itemid = -1 -- 通用投掷物id
+        -- local dirVector3 = MyVector3:new(playerPos, targetPos) -- 方向向量
+        -- local projectileid = WorldHelper:spawnProjectileByDirPos(player.objid, itemid, targetPos, dirVector3) -- 创建投掷物
+        -- MyItemHelper:recordProjectile(projectileid, objid, self, self.attack * 2 - MyConstant.PROJECTILE_HURT) -- 记录伤害
         break
       end
+    else
+      ChatHelper:sendSystemMsg('未发现目标', objid)
     end
   end
-
 end
 
 strongAttackSword0 = StrongAttackSword:newLevel(4151, 0)

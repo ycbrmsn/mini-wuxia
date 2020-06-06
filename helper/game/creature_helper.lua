@@ -57,6 +57,15 @@ function CreatureHelper:getAttr (objid, attrtype)
   local onceFailMessage = '获取生物属性失败一次'
   local finillyFailMessage = StringHelper:concat('获取生物属性失败，参数：objid=', objid, ', attrtype=', attrtype)
   return CommonHelper:callOneResultMethod(function (p)
-    return Creature:getAttr(p.objid, p.attrtype)
-  end, { objid = objid, attrtype = attrtype }, onceFailMessage, finillyFailMessage)
+    return Creature:getAttr(objid, attrtype)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取生物队伍
+function CreatureHelper:getTeam (objid)
+  local onceFailMessage = '获取生物队伍失败一次'
+  local finillyFailMessage = StringHelper:concat('获取生物队伍失败，参数：objid=', objid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Creature:getTeam(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

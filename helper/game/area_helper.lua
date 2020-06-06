@@ -37,6 +37,20 @@ function AreaHelper:getAllCreaturesInAreaId (areaid)
   return self:getAllCreaturesInAreaRange(posBeg, posEnd)
 end
 
+-- 查询areaid内的所有玩家
+function AreaHelper:getAllPlayersInAreaId (areaid)
+  local posBeg, posEnd = self:getAreaRectRange(areaid)
+  return self:getAllPlayersInAreaRange(posBeg, posEnd)
+end
+
+-- 查询areaid内的所有生物与玩家，返回生物id数组与玩家id数组
+function AreaHelper:getAllCreaturesAndPlayersInAreaId (areaid)
+  local posBeg, posEnd = self:getAreaRectRange(areaid)
+  local objids1 = self:getAllCreaturesInAreaRange(posBeg, posEnd)
+  local objids2 = self:getAllPlayersInAreaRange(posBeg, posEnd)
+  return objids1, objids2
+end
+
 -- 封装原始接口
 
 -- 根据中心位置创建矩形区域
@@ -107,8 +121,17 @@ function AreaHelper:getAllCreaturesInAreaRange (posBeg, posEnd)
   local onceFailMessage = '获取区域范围内全部生物失败一次'
   local finillyFailMessage = StringHelper:concat('获取区域范围内全部生物失败，参数：posBeg=', posBeg, ', posEnd=', posEnd)
   return CommonHelper:callOneResultMethod(function (p)
-    return Area:getAllCreaturesInAreaRange(p.posBeg, p.posEnd)
-  end, { posBeg = posBeg, posEnd = posEnd }, onceFailMessage, finillyFailMessage)
+    return Area:getAllCreaturesInAreaRange(posBeg, posEnd)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 获取区域范围内全部玩家
+function AreaHelper:getAllPlayersInAreaRange (posBeg, posEnd)
+  local onceFailMessage = '获取区域范围内全部玩家失败一次'
+  local finillyFailMessage = StringHelper:concat('获取区域范围内全部玩家失败，参数：posBeg=', posBeg, ', posEnd=', posEnd)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Area:getAllPlayersInAreaRange(posBeg, posEnd)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 获取区域范围
