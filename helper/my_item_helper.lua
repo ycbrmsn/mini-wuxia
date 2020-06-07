@@ -62,13 +62,15 @@ function MyItemHelper:projectileHit (projectileid, toobjid, blockid, x, y, z)
 end
 
 -- 记录使用技能
-function MyItemHelper:recordUseSkill (objid, itemid, cd)
+function MyItemHelper:recordUseSkill (objid, itemid, cd, dontSetCD)
   if (objid and itemid and cd) then
     if (not(self.itemcds[objid])) then
       self.itemcds[objid] = {}
     end
     self.itemcds[objid][itemid] = os.time()
-    PlayerHelper:setSkillCD(objid, itemid, cd)
+    if (not(dontSetCD)) then
+      PlayerHelper:setSkillCD(objid, itemid, cd)
+    end
   else
     if (not(objid)) then
       LogHelper:debug('objid不存在')
@@ -94,7 +96,12 @@ function MyItemHelper:ableUseSkill (objid, itemid, cd)
       if (not(time)) then -- 该技能未使用过
         return true
       else -- 技能使用过
-        return os.time() - time >= cd
+        local remainingTime = cd + time - os.time()
+        if (remainingTime <= 0) then
+          return true
+        else
+          return false, remainingTime
+        end
       end
     end
   else
@@ -103,13 +110,13 @@ function MyItemHelper:ableUseSkill (objid, itemid, cd)
     else
       LogHelper:debug('objid不存在')
     end
-    return false
+    return true
   end
 end
 
 -- 记录延迟技能
-function MyItemHelper:recordDelaySkill (objid, time, index)
-  self.delaySkills[objid] = { time = time, index = index }
+function MyItemHelper:recordDelaySkill (objid, time, index, name)
+  self.delaySkills[objid] = { time = time, index = index, name = name }
 end
 
 -- 删除延迟技能记录
@@ -123,5 +130,6 @@ function MyItemHelper:cancelDelaySkill (objid)
   if (delaySkillInfo and delaySkillInfo.index) then
     MyTimeHelper:delFn(delaySkillInfo.time, delaySkillInfo.index)
     self:delDelaySkillRecord(objid)
+    ChatHelper:sendSystemMsg('取消' .. delaySkillInfo.name .. '技能', objid)
   end
 end

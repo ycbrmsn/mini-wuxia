@@ -50,7 +50,9 @@ function MyTimeHelper:delFn (time, index)
   if (not(index)) then
     self.fns[time] = nil
   else
-    self.fns[time][index] = nil
+    if (self.fns[time]) then
+      self.fns[time][index] = nil
+    end
   end
 end
 
