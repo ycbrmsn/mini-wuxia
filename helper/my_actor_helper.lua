@@ -286,3 +286,51 @@ function MyActorHelper:atHour (hour)
     v:wantAtHour(hour)
   end
 end
+
+-- 获得区域内所有敌对生物
+function MyActorHelper:getAllOtherTeamActorsInAreaId (objid, areaid)
+  local objids1, objids2 = AreaHelper:getAllCreaturesAndPlayersInAreaId(areaid)
+  local objids = {}
+  if (ActorHelper:isPlayer(objid)) then -- 是玩家
+    local teamid = PlayerHelper:getTeam(objid)
+    if (objids1 and #objids1 > 0) then -- 发现生物，排除同队生物
+      for i, v in ipairs(objids1) do
+        local tid = CreatureHelper:getTeam(v)
+        if (tid ~= teamid) then -- 非同队生物
+          table.insert(objids, v)
+        end
+      end
+    end
+    if (objids2 and #objids2 > 0) then -- 发现玩家，排除同队玩家
+      for i, v in ipairs(objids2) do
+        if (v ~= objid) then -- 非当前玩家
+          local tid = PlayerHelper:getTeam(v)
+          if (tid ~= teamid) then -- 非同队玩家
+            table.insert(objids, v)
+          end
+        end
+      end
+    end
+  else -- 是生物
+    local teamid = CreatureHelper:getTeam(objid)
+    if (objids1 and #objids1 > 0) then -- 发现生物，排除同队生物
+      for i, v in ipairs(objids1) do
+        if (v ~= objid) then -- 非当前生物
+          local tid = CreatureHelper:getTeam(v)
+          if (tid ~= teamid) then -- 非同队生物
+            table.insert(objids, v)
+          end
+        end
+      end
+    end
+    if (objids2 and #objids2 > 0) then -- 发现玩家，排除同队玩家
+      for i, v in ipairs(objids2) do
+        local tid = PlayerHelper:getTeam(v)
+        if (tid ~= teamid) then -- 非同队玩家
+          table.insert(objids, v)
+        end
+      end
+    end
+  end
+  return objids
+end

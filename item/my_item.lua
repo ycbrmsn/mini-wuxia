@@ -59,6 +59,14 @@ end
 -- 武器类
 MyWeapon = MyItem:new()
 
+function MyWeapon:new (o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  o:newLevels()
+  return o
+end
+
 function MyWeapon:newLevel (id, level)
   local o = {
     id = id,
@@ -72,6 +80,12 @@ function MyWeapon:newLevel (id, level)
     MyItemHelper:register(o)
   end
   return o
+end
+
+function MyWeapon:newLevels ()
+  for i, v in ipairs(self.levelIds) do
+    self:newLevel(v, i - 1)
+  end
 end
 
 function MyWeapon:pickUp (objid)

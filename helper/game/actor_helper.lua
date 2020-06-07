@@ -213,8 +213,8 @@ function ActorHelper:playBodyEffectById (objid, particleId, scale)
   local onceFailMessage = '在指定玩家身上播放特效失败一次'
   local finillyFailMessage = StringHelper:concat('在指定玩家身上播放特效失败，参数：objid=', objid, ',particleId=', particleId, ',scale=', scale)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Actor:playBodyEffectById(p.objid, p.particleId, p.scale)
-  end, { objid = objid, particleId = particleId, scale = scale }, onceFailMessage, finillyFailMessage)
+    return Actor:playBodyEffectById(objid, particleId, scale)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 给actor附加一个速度
@@ -222,8 +222,8 @@ function ActorHelper:appendSpeed (objid, x, y, z)
   local onceFailMessage = '给actor附加一个速度失败一次'
   local finillyFailMessage = StringHelper:concat('给actor附加一个速度失败，参数：objid=', objid, ',x=', x, ',y=', y, ',z=', z)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Actor:appendSpeed(p.objid, p.x, p.y, p.z)
-  end, { objid = objid, x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+    return Actor:appendSpeed(objid, x, y, z)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 杀死自己
@@ -231,6 +231,15 @@ function ActorHelper:killSelf (objid)
   local onceFailMessage = '杀死自己失败一次'
   local finillyFailMessage = StringHelper:concat('杀死自己失败，参数：objid=', objid)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Actor:killSelf(p.objid)
-  end, { objid = objid }, onceFailMessage, finillyFailMessage)
+    return Actor:killSelf(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 清除全部减益BUFF
+function ActorHelper:clearAllBadBuff (objid)
+  local onceFailMessage = '清除全部减益BUFF失败一次'
+  local finillyFailMessage = StringHelper:concat('清除全部减益BUFF失败，参数：objid=', objid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:clearAllBadBuff(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

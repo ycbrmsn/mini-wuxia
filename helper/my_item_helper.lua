@@ -2,7 +2,8 @@
 MyItemHelper = {
   item = {}, -- 特殊自定义道具 itemid -> item
   projectiles = {}, -- 投掷物 projectileid -> info
-  itemcds = {} -- 道具cd objid -> { itemid -> time }
+  itemcds = {}, -- 道具cd objid -> { itemid -> time }
+  delaySkills = {} -- 当前技能 objid - > { 'time' -> time, 'index' -> index }
 }
 
 function MyItemHelper:register (item)
@@ -103,5 +104,24 @@ function MyItemHelper:ableUseSkill (objid, itemid, cd)
       LogHelper:debug('objid不存在')
     end
     return false
+  end
+end
+
+-- 记录延迟技能
+function MyItemHelper:recordDelaySkill (objid, time, index)
+  self.delaySkills[objid] = { time = time, index = index }
+end
+
+-- 删除延迟技能记录
+function MyItemHelper:delDelaySkillRecord (objid)
+  self.delaySkills[objid] = nil
+end
+
+-- 取消延迟技能
+function MyItemHelper:cancelDelaySkill (objid)
+  local delaySkillInfo = self.delaySkills[objid]
+  if (delaySkillInfo and delaySkillInfo.index) then
+    MyTimeHelper:delFn(delaySkillInfo.time, delaySkillInfo.index)
+    self:delDelaySkillRecord(objid)
   end
 end

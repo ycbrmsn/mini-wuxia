@@ -41,170 +41,194 @@ MyConstant = {
 
 MyWeaponAttr = {
   -- 剑
-  woodSword = {
+  woodSword = { -- 木剑
+    levelIds = { 4129 },
     attack = 10,
     defense = 5,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 木剑
-  bronzeSword = {
+  },
+  bronzeSword = { -- 青铜剑
+    levelIds = { 4136 },
     attack = 22,
     defense = 5,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 青铜剑
-  stabTigerSword = {
+  },
+  stabTigerSword = { -- 刺虎剑
+    levelIds = { 4144 },
     attack = 35,
     defense = 10,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 刺虎剑
-  drinkBloodSword = {
+  },
+  drinkBloodSword = { -- 饮血剑
+    levelIds = { 4147 },
     attack = 14,
     defense = 5,
     hp = 5,
     addAttPerLevel = 2,
     addDefPerLevel = 0,
     addHpPerLevel = 1
-  }, -- 饮血剑
-  strongAttackSword = {
+  },
+  strongAttackSword = { -- 闪袭剑
+    levelIds = { 4162 },
     attack = 20,
     defense = 3,
     cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 强袭剑
-  chaseWindSword = {
+  },
+  chaseWindSword = { -- 追风剑
+    levelIds = { 4165 },
     attack = 30,
     defense = 10,
     cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
-  }, -- 追风剑
+  },
 
   -- 刀
-  woodKnife = {
+  woodKnife = { -- 木刀
+    levelIds = { 4132 },
     attack = 13,
     defense = 2,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 木刀
-  bronzeKnife = {
+  },
+  bronzeKnife = { -- 青铜刀
+    levelIds = { 4138 },
     attack = 27,
     defense = 2,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 青铜刀
-  cutDeerKnife = {
+  },
+  cutDeerKnife = { -- 割鹿刀
+    levelIds = { 4145 },
     attack = 41,
     defense = 5,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 割鹿刀
-  congealFrostKnife = {
+  },
+  congealFrostKnife = { -- 凝霜刀
+    levelIds = { 4148 },
     attack = 17,
     defense = 2,
     addAttPerLevel = 2,
     addDefPerLevel = 0
-  }, -- 凝霜刀
-  rejuvenationKnife = {
+  },
+  rejuvenationKnife = { -- 回春刀
+    levelIds = { 4163 },
     attack = 25,
     defense = 5,
     cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 回春刀
-  sealDemonKnife = {
+  },
+  sealDemonKnife = { -- 封魔刀
+    levelIds = { 4166 },
     attack = 35,
     defense = 5,
     cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
-  }, -- 封魔刀
+  },
 
   -- 枪
-  woodSpear = {
+  woodSpear = { -- 木枪
+    levelIds = { 4131 },
     attack = 17,
     defense = 0,
     strength = 20,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 木枪
-  bronzeSpear = {
+  },
+  bronzeSpear = { -- 青铜枪
+    levelIds = { 4137 },
     attack = 33,
     defense = 0,
     strength = 30,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 青铜枪
-  controlDragonSpear = {
+  },
+  controlDragonSpear = { -- 御龙枪
+    levelIds = { 4146 },
     attack = 51,
     defense = 0,
     strength = 40,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 御龙枪
-  fireTipSpear = {
+  },
+  fireTipSpear = { -- 火尖枪
+    levelIds = { 4149 },
     attack = 19,
     defense = 0,
     strength = 20,
     addAttPerLevel = 2,
     addDefPerLevel = 0
-  }, -- 火尖枪
-  overlordSpear = {
+  },
+  overlordSpear = { -- 霸王枪
+    levelIds = { 4164 },
     attack = 36,
     defense = 0,
     strength = 30,
     cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 霸王枪
-  shockSoulSpear = {
+  },
+  shockSoulSpear = { -- 慑魂枪
+    levelIds = { 4167 },
     attack = 55,
     defense = 0,
     strength = 40,
     cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
-  }, -- 慑魂枪
+  },
 
   -- 弓
-  woodBow = {
+  woodBow = { -- 木弓
+    levelIds = { 4128 },
     attack = 15,
     defense = 0,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 木弓
-  bronzeBow = {
+  },
+  bronzeBow = { -- 青铜弓
+    levelIds = { 4139 },
     attack = 32,
     defense = 0,
     addAttPerLevel = 1,
     addDefPerLevel = 0
-  }, -- 青铜弓
-  shootEagleBow = {
+  },
+  shootEagleBow = { -- 射雕弓
+    levelIds = { 4143 },
     attack = 47,
     defense = 0,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 射雕弓
-  swallowSoulBow = {
+  },
+  swallowSoulBow = { -- 噬魂弓
+    levelIds = { 4150 },
     attack = 17,
     defense = 0,
     addAttPerLevel = 2,
     addDefPerLevel = 0
-  }, -- 噬魂弓
-  fallStarBow = {
+  },
+  fallStarBow = { -- 坠星弓
+    levelIds = { 4154 },
     attack = 35,
     defense = 0,
     cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
-  }, -- 坠星弓
-  oneByOneBow = {
+  },
+  oneByOneBow = { -- 连珠弓
+    levelIds = { 4158 },
     attack = 47,
     defense = 0,
     cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
-  } -- 连珠弓
+  }
 }

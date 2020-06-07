@@ -42,6 +42,16 @@ function MyTimeHelper:addFn (f, time, p)
     self.fns[time] = fs
   end
   table.insert(fs, { f, p })
+  return #fs
+end
+
+-- 删除方法
+function MyTimeHelper:delFn (time, index)
+  if (not(index)) then
+    self.fns[time] = nil
+  else
+    self.fns[time][index] = nil
+  end
 end
 
 -- 运行方法，然后删除
@@ -49,9 +59,11 @@ function MyTimeHelper:runFnAfterSecond (time)
   local fs = self.fns[time]
   if (fs) then
     for i, v in ipairs(fs) do
-      v[1](v[2])
+      if (v) then
+        v[1](v[2])
+      end
     end
-    fs = nil
+    self:delFn(time)
   end
 end
 
@@ -62,7 +74,8 @@ function MyTimeHelper:callFnAfterSecond (f, second, p)
   end
   second = second or 1
   local time = self.time + second
-  self:addFn(f, time, p)
+  local index = self:addFn(f, time, p)
+  return time, index
 end
 
 function MyTimeHelper:runFnInterval (time)

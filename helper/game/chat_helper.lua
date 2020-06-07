@@ -45,6 +45,23 @@ function BackpackHelper:getItemNum (playerid, itemid, containEquip)
   end
 end
 
+-- 获取快捷栏某个道具总数及背包格数组
+function BackpackHelper:getItemNumByShortcut (playerid, itemid)
+  return self:getItemNumByBackpackBar(playerid, BACKPACK_TYPE.SHORTCUT, itemid)
+end
+
+-- 获取存储栏某个道具总数及背包格数组
+function BackpackHelper:getItemNumByInventory (playerid, itemid)
+  return self:getItemNumByBackpackBar(playerid, BACKPACK_TYPE.INVENTORY, itemid)
+end
+
+-- 获取快捷、存储栏某个道具的总数及背包格数组 返回值 number, table, table
+function BackpackHelper:getItemNum (playerid, itemid)
+  local num1, arr1 = self:getItemNumByShortcut(playerid, itemid)
+  local num2, arr2 = self:getItemNumByInventory(playerid, itemid)
+  return num1 + num2, arr1, arr2
+end
+
 -- 封装原始接口
 
 -- 检测背包是否持有某个道具
@@ -67,5 +84,14 @@ function BackpackHelper:swapGridItem (playerid, gridsrc, griddst)
   local finillyFailMessage = StringHelper:concat('交换背包道具失败，参数：playerid=', playerid, ',gridsrc=', gridsrc, ',griddst=', griddst)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Backpack:swapGridItem(playerid, gridsrc, griddst)
-  end, {}, onceFailMessage, finillyFailMessage)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 通过道具格移除道具
+function BackpackHelper:removeGridItem (playerid, gridid, num)
+  local onceFailMessage = '通过道具格移除道具失败一次'
+  local finillyFailMessage = StringHelper:concat('通过道具格移除道具失败，参数：playerid=', playerid, ',gridid=', gridid, ',num=', num)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Backpack:removeGridItem(playerid, gridid, num)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

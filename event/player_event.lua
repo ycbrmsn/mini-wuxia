@@ -130,6 +130,7 @@ end
 local playerMoveOneBlockSize = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function ()
+    MyItemHelper:cancelDelaySkill(objid)
     MyActorHelper:resumeClickActor(objid)
   end)
 end
