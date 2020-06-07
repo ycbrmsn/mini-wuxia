@@ -1,7 +1,8 @@
 -- 我的道具工具类
 MyItemHelper = {
-  item = {}, -- 特殊自定义道具
-  projectiles = {} -- 投掷物
+  item = {}, -- 特殊自定义道具 itemid -> item
+  projectiles = {}, -- 投掷物 projectileid -> info
+  itemcds = {} -- 道具cd objid -> { itemid -> time }
 }
 
 function MyItemHelper:register (item)
@@ -56,5 +57,51 @@ function MyItemHelper:projectileHit (projectileid, toobjid, blockid, x, y, z)
   if (projectileInfo) then
     local item = projectileInfo.item
     item:projectileHit(projectileInfo, toobjid, blockid, x, y, z)
+  end
+end
+
+-- 记录使用技能
+function MyItemHelper:recordUseSkill (objid, itemid, cd)
+  if (objid and itemid and cd) then
+    if (not(self.itemcds[objid])) then
+      self.itemcds[objid] = {}
+    end
+    self.itemcds[objid][itemid] = os.time()
+    PlayerHelper:setSkillCD(objid, itemid, cd)
+  else
+    if (not(objid)) then
+      LogHelper:debug('objid不存在')
+    elseif (not(itemid)) then
+      LogHelper:debug('itemid不存在')
+    else
+      LogHelper:debug('cd不存在')
+    end
+  end
+end
+
+-- 是否能够使用技能
+function MyItemHelper:ableUseSkill (objid, itemid, cd)
+  if (not(cd) or cd <= 0) then -- cd值有误
+    return true
+  end
+  if (objid and itemid) then
+    local info = self.itemcds[objid]
+    if (not(info)) then -- 玩家未使用过技能
+      return true
+    else
+      local time = info[itemid]
+      if (not(time)) then -- 该技能未使用过
+        return true
+      else -- 技能使用过
+        return os.time() - time >= cd
+      end
+    end
+  else
+    if (objid) then
+      LogHelper:debug('itemid不存在')
+    else
+      LogHelper:debug('objid不存在')
+    end
+    return false
   end
 end

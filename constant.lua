@@ -70,12 +70,14 @@ MyWeaponAttr = {
   strongAttackSword = {
     attack = 20,
     defense = 3,
+    cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 强袭剑
   chaseWindSword = {
     attack = 30,
     defense = 10,
+    cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   }, -- 追风剑
@@ -108,12 +110,14 @@ MyWeaponAttr = {
   rejuvenationKnife = {
     attack = 25,
     defense = 5,
+    cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 回春刀
   sealDemonKnife = {
     attack = 35,
     defense = 5,
+    cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   }, -- 封魔刀
@@ -151,6 +155,7 @@ MyWeaponAttr = {
     attack = 36,
     defense = 0,
     strength = 30,
+    cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 霸王枪
@@ -158,6 +163,7 @@ MyWeaponAttr = {
     attack = 55,
     defense = 0,
     strength = 40,
+    cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   }, -- 慑魂枪
@@ -190,12 +196,14 @@ MyWeaponAttr = {
   fallStarBow = {
     attack = 35,
     defense = 0,
+    cd = 30,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   }, -- 坠星弓
   oneByOneBow = {
     attack = 47,
     defense = 0,
+    cd = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   } -- 连珠弓

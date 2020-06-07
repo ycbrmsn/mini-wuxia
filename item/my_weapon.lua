@@ -75,6 +75,11 @@ drinkBloodSword0 = DrinkBloodSword:newLevel(4147, 0)
 StrongAttackSword = MyWeapon:new(MyWeaponAttr.strongAttackSword)
 
 function StrongAttackSword:useItem (objid)
+  local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
+  if (not(ableUseSkill)) then
+    MyPlayerHelper:showToast(objid, '技能冷却中')
+    return
+  end
   local player = MyPlayerHelper:getPlayer(objid)
   local teamid = PlayerHelper:getTeam(objid)
   local playerPos = player:getMyPosition()
@@ -103,6 +108,7 @@ function StrongAttackSword:useItem (objid)
       end
     end
     if (#objids > 0) then
+      MyItemHelper:recordUseSkill(objid, self.id, self.cd)
       local tempDistance, targetObjid
       for ii, vv in ipairs(objids) do
         local distance = WorldHelper:calcDistance(playerPos, MyActorHelper:getMyPosition(vv))
@@ -157,7 +163,7 @@ end
 --   end
 -- end
 
-strongAttackSword0 = StrongAttackSword:newLevel(4151, 0)
+strongAttackSword0 = StrongAttackSword:newLevel(4162, 0)
 -- strongAttackSword1 = StrongAttackSword:newLevel(-1, 1)
 -- strongAttackSword2 = StrongAttackSword:newLevel(-1, 2)
 -- strongAttackSword3 = StrongAttackSword:newLevel(-1, 3)
@@ -176,7 +182,7 @@ function ChaseWindSword:useItem (objid)
   -- body
 end
 
-chaseWindSword0 = ChaseWindSword:newLevel(4155, 0)
+chaseWindSword0 = ChaseWindSword:newLevel(4165, 0)
 -- chaseWindSword1 = ChaseWindSword:newLevel(-1, 1)
 -- chaseWindSword2 = ChaseWindSword:newLevel(-1, 2)
 -- chaseWindSword3 = ChaseWindSword:newLevel(-1, 3)
@@ -256,7 +262,7 @@ function RejuvenationKnife:useItem (objid)
   -- body
 end
 
-rejuvenationKnife0 = RejuvenationKnife:newLevel(4152, 0)
+rejuvenationKnife0 = RejuvenationKnife:newLevel(4163, 0)
 -- rejuvenationKnife1 = RejuvenationKnife:newLevel(-1, 1)
 -- rejuvenationKnife2 = RejuvenationKnife:newLevel(-1, 2)
 -- rejuvenationKnife3 = RejuvenationKnife:newLevel(-1, 3)
@@ -274,7 +280,7 @@ function SealDemonKnife:useItem (objid)
   -- body
 end
 
-sealDemonKnife0 = SealDemonKnife:newLevel(4156, 0)
+sealDemonKnife0 = SealDemonKnife:newLevel(4166, 0)
 -- sealDemonKnife1 = SealDemonKnife:newLevel(-1, 1)
 -- sealDemonKnife2 = SealDemonKnife:newLevel(-1, 2)
 -- sealDemonKnife3 = SealDemonKnife:newLevel(-1, 3)
@@ -378,7 +384,7 @@ function OverlordSpear:useItem (objid)
   -- body
 end
 
-overlordSpear0 = OverlordSpear:newLevel(4153, 0)
+overlordSpear0 = OverlordSpear:newLevel(4164, 0)
 -- overlordSpear1 = OverlordSpear:newLevel(-1, 1)
 -- overlordSpear2 = OverlordSpear:newLevel(-1, 2)
 -- overlordSpear3 = OverlordSpear:newLevel(-1, 3)
@@ -401,7 +407,7 @@ function ShockSoulSpear:useItem (objid)
   -- body
 end
 
-shockSoulSpear0 = ShockSoulSpear:newLevel(4157, 0)
+shockSoulSpear0 = ShockSoulSpear:newLevel(4167, 0)
 -- shockSoulSpear1 = ShockSoulSpear:newLevel(-1, 1)
 -- shockSoulSpear2 = ShockSoulSpear:newLevel(-1, 2)
 -- shockSoulSpear3 = ShockSoulSpear:newLevel(-1, 3)
