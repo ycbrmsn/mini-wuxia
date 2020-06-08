@@ -334,3 +334,13 @@ function MyActorHelper:getAllOtherTeamActorsInAreaId (objid, areaid)
   end
   return objids
 end
+
+-- 播放人物特效然后关闭
+function MyActorHelper:playAndStopEffectById (objid, particleId, scale, time)
+  scale = scale or 1
+  time = time or 3
+  ActorHelper:playBodyEffectById(objid, particleId, scale)
+  MyTimeHelper:callFnLastRun(objid, objid .. 'stopBodyEffect' .. particleId, function ()
+    ActorHelper:stopBodyEffectById(objid, particleId)
+  end, time)
+end

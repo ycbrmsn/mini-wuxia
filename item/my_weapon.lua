@@ -28,7 +28,7 @@ function DrinkBloodSword:attackHit (objid, toobjid)
   end
   local player = MyPlayerHelper:getPlayer(objid)
   player:recoverHp(hp)
-  ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.LITTLE_TREAT, 1)
+  MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.LITTLE_TREAT)
 end
 
 -- 闪袭剑
@@ -59,6 +59,7 @@ function StrongAttackSword:useItem (objid)
         end
       end
       if (targetObjid) then -- 发现目标
+        MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.SMOG1)
         player:setDistancePosition(targetObjid, -1)
         player:lookAt(targetObjid)
         player:damageActor(targetObjid, self.attack * 2)
@@ -186,15 +187,15 @@ function OverlordSpear:useItem (objid)
   -- 击退周围3格内的敌对生物
   local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
-  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 2, z = 3 })
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   for i, v in ipairs(objids) do
     local dstPos = MyActorHelper:getMyPosition(v)
-    local speed = MathHelper:getSpeedVector3(playerPos, dstPos, 2)
+    local speed = MathHelper:getSpeedVector3(playerPos, dstPos, 5)
     ActorHelper:appendSpeed(v, speed.x, speed.y, speed.z)
   end
-  ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.BOOM1, 1)
+  MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.BOOM1)
 end
 
 -- 慑魂枪
