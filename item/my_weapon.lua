@@ -28,6 +28,7 @@ function DrinkBloodSword:attackHit (objid, toobjid)
   end
   local player = MyPlayerHelper:getPlayer(objid)
   player:recoverHp(hp)
+  ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.LITTLE_TREAT, 1)
 end
 
 -- 闪袭剑

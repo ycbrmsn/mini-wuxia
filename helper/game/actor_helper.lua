@@ -33,7 +33,8 @@ ActorHelper = {
     NORTH = 180
   },
   BODY_EFFECT = {
-    TREAT = 1235
+    LITTLE_TREAT = 1008, -- 一颗心加血特效
+    TREAT = 1235 -- 红十字加血特效
   }
 }
 
