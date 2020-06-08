@@ -344,3 +344,10 @@ function MyActorHelper:playAndStopEffectById (objid, particleId, scale, time)
     ActorHelper:stopBodyEffectById(objid, particleId)
   end, time)
 end
+
+-- 给对象增加一个速度 id、速度大小、起始位置、目标位置
+function MyActorHelper:appendSpeed (objid, speed, srcPos, dstPos)
+  dstPos = dstPos or MyActorHelper:getMyPosition(objid)
+  local speedVector3 = MathHelper:getSpeedVector3(srcPos, dstPos, speed)
+  ActorHelper:appendSpeed(objid, speedVector3.x, speedVector3.y, speedVector3.z)
+end

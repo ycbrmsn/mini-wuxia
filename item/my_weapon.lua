@@ -59,9 +59,12 @@ function StrongAttackSword:useItem (objid)
         end
       end
       if (targetObjid) then -- 发现目标
-        MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.SMOG1)
+        WorldHelper:playAndStopEffectById(playerPos, ActorHelper.BODY_EFFECT.SMOG1)
         player:setDistancePosition(targetObjid, -1)
         player:lookAt(targetObjid)
+        -- 击退效果
+        MyActorHelper:appendSpeed(targetObjid, 2, player:getMyPosition())
+        -- 伤害
         player:damageActor(targetObjid, self.attack * 2)
         break
       end
