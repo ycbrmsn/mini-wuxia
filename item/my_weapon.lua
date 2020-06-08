@@ -28,7 +28,7 @@ function DrinkBloodSword:attackHit (objid, toobjid)
   end
   local player = MyPlayerHelper:getPlayer(objid)
   player:recoverHp(hp)
-  MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.LITTLE_TREAT)
+  MyActorHelper:playAndStopBodyEffectById(objid, MyConstant.BODY_EFFECT.LITTLE_TREAT)
 end
 
 -- 闪袭剑
@@ -59,7 +59,7 @@ function StrongAttackSword:useItem (objid)
         end
       end
       if (targetObjid) then -- 发现目标
-        WorldHelper:playAndStopEffectById(playerPos, ActorHelper.BODY_EFFECT.SMOG1)
+        WorldHelper:playAndStopBodyEffectById(playerPos, MyConstant.BODY_EFFECT.SMOG1)
         player:setDistancePosition(targetObjid, -1)
         player:lookAt(targetObjid)
         -- 击退效果
@@ -194,11 +194,9 @@ function OverlordSpear:useItem (objid)
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   for i, v in ipairs(objids) do
-    local dstPos = MyActorHelper:getMyPosition(v)
-    local speed = MathHelper:getSpeedVector3(playerPos, dstPos, 5)
-    ActorHelper:appendSpeed(v, speed.x, speed.y, speed.z)
+    MyActorHelper:appendSpeed(v, 5, playerPos)
   end
-  MyActorHelper:playAndStopEffectById(objid, ActorHelper.BODY_EFFECT.BOOM1)
+  MyActorHelper:playAndStopBodyEffectById(objid, MyConstant.BODY_EFFECT.BOOM1)
 end
 
 -- 慑魂枪
@@ -260,7 +258,7 @@ function FallStarBow:useItem2 (objid)
     local player = MyPlayerHelper:getPlayer(objid)
     player:enableMove(false)
     ChatHelper:sendSystemMsg('释放技能中无法移动', objid)
-    ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.LIGHT1, 1)
+    ActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT10, 1)
     self:useSkill(objid, 1)
   end
 end
@@ -297,8 +295,11 @@ function FallStarBow:getObjids (objid, index)
 end
 
 function FallStarBow:useSkill (objid, index)
-  -- 蓄力3秒
-  ChatHelper:sendSystemMsg('蓄力2秒', objid)
+  -- 蓄力2秒
+  -- ChatHelper:sendSystemMsg('蓄力2秒', objid)
+  MyActorHelper:playSoundEffectById(objid, MyConstant.SOUND_EFFECT.SKILL9)
+  local player = MyPlayerHelper:getPlayer(objid)
+  player.action:playAttack()
   local time, idx = MyTimeHelper:callFnAfterSecond (function ()
     local objids = self:getObjids(objid, index + 1)
     if (not(objids)) then -- 没有目标
@@ -319,9 +320,10 @@ function FallStarBow:useSkill (objid, index)
   MyItemHelper:recordDelaySkill(objid, time, idx, '坠星')
 end
 
+-- 取消技能
 function FallStarBow:cancelSkill (objid)
   MyItemHelper:cancelDelaySkill(objid)
-  ActorHelper:stopBodyEffectById(objid, ActorHelper.BODY_EFFECT.LIGHT1)
+  ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT10)
   local player = MyPlayerHelper:getPlayer(objid)
   player:enableMove(true)
 end
@@ -331,6 +333,7 @@ function FallStarBow:projectileHit (projectileInfo, toobjid, blockid, x, y, z)
   if (toobjid > 0) then
     local objid = projectileInfo.objid
     local player = MyPlayerHelper:getPlayer(objid)
+    MyActorHelper:appendSpeed(toobjid, 2, player:getMyPosition()) -- 箭矢冲击
     player:damageActor(toobjid, projectileInfo.hurt)
   end
 end

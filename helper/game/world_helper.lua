@@ -45,17 +45,17 @@ function WorldHelper:stopRepelEffect (pos)
   return self:stopEffect(pos, self.PARTICLE_ID.BOOM16)
 end
 
-function WorldHelper:playEffect (pos, particleId, scale)
+function WorldHelper:playBodyEffect (pos, particleId, scale)
   scale = scale or 1
   return self:playParticalEffect(pos.x, pos.y, pos.z, particleId, scale)
 end
 
-function WorldHelper:stopEffect (pos, particleId)
+function WorldHelper:stopBodyEffect (pos, particleId)
   return self:stopEffectOnPosition(pos.x, pos.y, pos.z, particleId)
 end
 
 -- 指定地点播放特效然后关闭
-function WorldHelper:playAndStopEffectById (pos, particleId, scale, time)
+function WorldHelper:playAndStopBodyEffectById (pos, particleId, scale, time)
   scale = scale or 1
   time = time or 3
   local posString = pos:toString()

@@ -36,6 +36,22 @@ MyConstant = {
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID
     COMMON_PROJECTILE_ID = 4159 -- 通用投掷物ID
+  },
+  BODY_EFFECT = {
+    LITTLE_TREAT = 1008, -- 一颗心加血特效
+    TREAT = 1235, -- 红十字加血特效
+
+    BOOM1 = 1186, -- 黄色的小爆炸脚下一个圈
+
+    SMOG1 = 1226, -- 一团小烟雾随即消失
+
+    IMPRISON1 = 1227, -- 一圈紫色光幕围住并盘旋着锁链
+
+    LIGHT1 = 1341, -- 两格大小的一个黄色小光源
+    LIGHT10 = 1185 -- 两格大小的两个气旋不停旋转
+  },
+  SOUND_EFFECT = {
+    SKILL9 = 10086 -- 一阵风的声音
   }
 }
 

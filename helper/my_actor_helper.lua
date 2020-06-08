@@ -336,12 +336,26 @@ function MyActorHelper:getAllOtherTeamActorsInAreaId (objid, areaid)
 end
 
 -- 播放人物特效然后关闭
-function MyActorHelper:playAndStopEffectById (objid, particleId, scale, time)
+function MyActorHelper:playAndStopBodyEffectById (objid, particleId, scale, time)
   scale = scale or 1
   time = time or 3
   ActorHelper:playBodyEffectById(objid, particleId, scale)
   MyTimeHelper:callFnLastRun(objid, objid .. 'stopBodyEffect' .. particleId, function ()
     ActorHelper:stopBodyEffectById(objid, particleId)
+  end, time)
+end
+
+-- 播放人物音效
+function MyActorHelper:playSoundEffectById (objid, soundId, isLoop)
+  ActorHelper:playSoundEffectById(objid, soundId, 100, 1, isLoop)
+end
+
+-- 播放人物音效然后关闭
+function MyActorHelper:playAndStopSoundEffectById (objid, soundId, isLoop, time)
+  time = time or 3
+  self:playSoundEffectById(objid, soundId, isLoop)
+  MyTimeHelper:callFnLastRun(objid, objid .. 'stopSoundEffect' .. soundId, function ()
+    ActorHelper:stopSoundEffectById(objid, soundId)
   end, time)
 end
 

@@ -31,18 +31,6 @@ ActorHelper = {
     WEST = 90,
     SOUTH = 0,
     NORTH = 180
-  },
-  BODY_EFFECT = {
-    LITTLE_TREAT = 1008, -- 一颗心加血特效
-    TREAT = 1235, -- 红十字加血特效
-
-    BOOM1 = 1186, -- 黄色的小爆炸脚下一个圈
-
-    SMOG1 = 1226, -- 一团小烟雾随即消失
-
-    IMPRISON1 = 1227, -- 一圈紫色光幕围住并盘旋着锁链
-
-    LIGHT1 = 1341 -- 两格大小的一个黄色小光源
   }
 }
 
@@ -217,21 +205,39 @@ function ActorHelper:getEyeHeight (objid)
   end, nil, onceFailMessage, finillyFailMessage)
 end
 
--- 在指定玩家身上播放特效
+-- 在指定Actor身上播放特效
 function ActorHelper:playBodyEffectById (objid, particleId, scale)
-  local onceFailMessage = '在指定玩家身上播放特效失败一次'
+  local onceFailMessage = '在指定Actor身上播放特效失败一次'
   local finillyFailMessage = StringHelper:concat('在指定玩家身上播放特效失败，参数：objid=', objid, ',particleId=', particleId, ',scale=', scale)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Actor:playBodyEffectById(objid, particleId, scale)
   end, nil, onceFailMessage, finillyFailMessage)
 end
 
--- 停止指定玩家身上的特效
+-- 停止指定Actor身上的特效
 function ActorHelper:stopBodyEffectById (objid, particleId)
-  local onceFailMessage = '停止指定玩家身上的特效失败一次'
+  local onceFailMessage = '停止指定Actor身上的特效失败一次'
   local finillyFailMessage = StringHelper:concat('停止指定玩家身上的特效失败，参数：objid=', objid, ',particleId=', particleId)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Actor:stopBodyEffectById(objid, particleId)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 在指定Actor身上播放音效
+function ActorHelper:playSoundEffectById (objid, soundId, volume, pitch, isLoop)
+  local onceFailMessage = '在指定Actor身上播放音效失败一次'
+  local finillyFailMessage = StringHelper:concat('在指定Actor身上播放音效失败，参数：objid=', objid, ',soundId=', soundId)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:playSoundEffectById(objid, soundId, volume, pitch, isLoop)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 停止指定Actor身上的音效
+function ActorHelper:stopSoundEffectById (objid, soundId)
+  local onceFailMessage = '停止指定Actor身上的音效失败一次'
+  local finillyFailMessage = StringHelper:concat('停止指定Actor身上的音效失败，参数：objid=', objid, ',soundId=', soundId)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Actor:stopSoundEffectById(objid, soundId)
   end, nil, onceFailMessage, finillyFailMessage)
 end
 
