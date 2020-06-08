@@ -194,7 +194,7 @@ function OverlordSpear:useItem (objid)
     local speed = MathHelper:getSpeedVector3(playerPos, dstPos, 2)
     ActorHelper:appendSpeed(v, speed.x, speed.y, speed.z)
   end
-  WorldHelper:playAttackEffect(playerPos)
+  ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.BOOM1, 1)
 end
 
 -- 慑魂枪

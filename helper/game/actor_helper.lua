@@ -34,7 +34,8 @@ ActorHelper = {
   },
   BODY_EFFECT = {
     LITTLE_TREAT = 1008, -- 一颗心加血特效
-    TREAT = 1235 -- 红十字加血特效
+    TREAT = 1235, -- 红十字加血特效
+    BOOM1 = 1186, -- 黄色的小爆炸脚下一个圈
   }
 }
 
