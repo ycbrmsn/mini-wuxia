@@ -242,15 +242,25 @@ end
 FallStarBow = MyWeapon:new(MyWeaponAttr.fallStarBow)
 
 function FallStarBow:useItem2 (objid)
+  -- 检测技能是否正在释放
+  if (MyItemHelper:isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
+    self:cancelSkill(objid)
+    return
+  end
+  -- 检测技能cd是否完成
   local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '坠星技能冷却中')
     ChatHelper:sendSystemMsg('坠星技能冷却时间剩余' .. remainingTime .. '秒', objid)
     return
   end
+  -- 检测技能释放条件
   if (self:getObjids(objid, 1)) then
-    MyItemHelper:cancelDelaySkill(objid) -- 取消之前的技能
     MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:enableMove(false)
+    ChatHelper:sendSystemMsg('释放技能中无法移动', objid)
+    ActorHelper:playBodyEffectById(objid, ActorHelper.BODY_EFFECT.LIGHT1, 1)
     self:useSkill(objid, 1)
   end
 end
@@ -288,11 +298,11 @@ end
 
 function FallStarBow:useSkill (objid, index)
   -- 蓄力3秒
-  ChatHelper:sendSystemMsg('蓄力3秒', objid)
+  ChatHelper:sendSystemMsg('蓄力2秒', objid)
   local time, idx = MyTimeHelper:callFnAfterSecond (function ()
     local objids = self:getObjids(objid, index + 1)
     if (not(objids)) then -- 没有目标
-      MyItemHelper:cancelDelaySkill(objid)
+      self:cancelSkill(objid)
       return
     end
     local itemid = MyConstant.WEAPON.COMMON_PROJECTILE_ID -- 通用投掷物id
@@ -305,8 +315,15 @@ function FallStarBow:useSkill (objid, index)
       MyItemHelper:recordProjectile(projectileid, objid, self, self.attack) -- 记录伤害
     end
     self:useSkill(objid, index + 1)
-  end, 3)
+  end, 2)
   MyItemHelper:recordDelaySkill(objid, time, idx, '坠星')
+end
+
+function FallStarBow:cancelSkill (objid)
+  MyItemHelper:cancelDelaySkill(objid)
+  ActorHelper:stopBodyEffectById(objid, ActorHelper.BODY_EFFECT.LIGHT1)
+  local player = MyPlayerHelper:getPlayer(objid)
+  player:enableMove(true)
 end
 
 -- 投掷物命中

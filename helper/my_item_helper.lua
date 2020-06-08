@@ -119,6 +119,15 @@ function MyItemHelper:recordDelaySkill (objid, time, index, name)
   self.delaySkills[objid] = { time = time, index = index, name = name }
 end
 
+-- 延迟技能是否正在释放
+function MyItemHelper:isDelaySkillUsing (objid, name)
+  if (self.delaySkills[objid] and self.delaySkills[objid].name == name) then
+    return true
+  else
+    return false
+  end
+end
+
 -- 删除延迟技能记录
 function MyItemHelper:delDelaySkillRecord (objid)
   self.delaySkills[objid] = nil
