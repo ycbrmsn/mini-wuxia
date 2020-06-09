@@ -219,6 +219,7 @@ function ShockSoulSpear:useItem (objid)
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   if (#objids > 0) then
+    MyItemHelper:recordUseSkill(objid, self.id, self.cd)
     for i, v in ipairs(objids) do
       MyActorHelper:imprisonActor(v)
     end
