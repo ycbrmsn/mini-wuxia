@@ -37,6 +37,7 @@ function MyActorAction:transmitTo (pos)
 end
 
 function MyActorAction:stopRun ()
+  self.myActor:closeAI()
   self:runTo(MyPosition:new(self.myActor:getPosition()))
 end
 
@@ -118,6 +119,8 @@ function MyActorAction:execute ()
       MyTimeHelper:callFnContinueRuns(function ()
         self.myActor:lookAt(want.dst)
       end, want.restTime, self.myActor.objid .. 'lookat')
+    elseif (want.style == 'forceDoNothing') then
+      self.myActor:stopRun()
     end
   else
     if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
@@ -146,7 +149,7 @@ function MyActorAction:execute ()
       if (self.myActor.wants[2]) then
         MyActorHelper:handleNextWant(self.myActor)
       else -- 没有想法
-        MyActorHelper:openAI(self.myActor.objid)
+        -- self.myActor:openAI()
       end
     else -- 生物不想做什么，则生物自由安排
       -- do nothing

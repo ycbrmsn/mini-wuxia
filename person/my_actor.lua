@@ -8,7 +8,8 @@ MyActor = {
   cantMoveTime = 0, -- 无法移动的时间
   freeInAreaId = nil, -- 自由活动区域id
   timername = 'myActorTimer',
-  wants = nil
+  wants = nil,
+  isAIOpened = true
 }
 
 function MyActor:new (actorid, objid)
@@ -105,6 +106,20 @@ function MyActor:enableMove (switch)
   else -- 
     return true 
   end
+end
+
+function MyActor:openAI ()
+  MyActorHelper:openAI(self.objid)
+  self.isAIOpened = true
+end
+
+function MyActor:closeAI ()
+  MyActorHelper:closeAI(self.objid)
+  self.isAIOpened = false
+end
+
+function MyActor:stopRun ()
+  self.action:stopRun()
 end
 
 -- 获取生物位置
@@ -253,7 +268,7 @@ end
 -- 生物想向指定位置移动
 function MyActor:wantMove (think, positions, isNegDir, index, restTime)
   MyAreaHelper:removeToArea(self)
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   self.think = think
   local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
@@ -264,7 +279,7 @@ end
 
 function MyActor:wantApproach (think, positions, isNegDir, index, restTime)
   MyAreaHelper:removeToArea(self)
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   self.think = think
   local want = MyActorActionHelper:getApproachData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
@@ -294,7 +309,7 @@ end
 function MyActor:wantPatrol (think, positions, isNegDir, index, restTime)
   MyAreaHelper:removeToArea(self)
   -- LogHelper:debug(self:getName() .. '想巡逻')
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   self.think = think
   local want = MyActorActionHelper:getPatrolData(think, positions, isNegDir, index, restTime)
   self.wants = { want }
@@ -306,7 +321,7 @@ end
 function MyActor:wantFreeTime (think)
   MyAreaHelper:removeToArea(self)
   think = think or 'free'
-  MyActorHelper:openAI(self.objid)
+  self:openAI()
   self.think = think
   self.wants = { MyActorActionHelper:getFreeTimeData(think) }
 end
@@ -318,7 +333,7 @@ function MyActor:wantFreeInArea (think, posPairs)
     posPairs = think
     think = 'free'
   end
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   self.think = think
   local want = MyActorActionHelper:setFreeInArea(think, self, posPairs)
   want.toPos = MyActorActionHelper:getFreeInAreaPos(self.freeInAreaIds)
@@ -335,14 +350,14 @@ end
 function MyActor:wantDoNothing (think)
   MyAreaHelper:removeToArea(self)
   think = think or 'doNothing'
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   self.think = think
   self.wants = { MyActorActionHelper:getDoNothingData(think) }
 end
 
 function MyActor:wantLookAt (think, myPosition, restTime)
   restTime = restTime or 5
-  MyActorHelper:closeAI(self.objid)
+  self:closeAI()
   if (self:isWantsExist()) then
     think = think or self.think
     local want = MyActorActionHelper:getLookAtData(think, myPosition, restTime)
@@ -363,6 +378,25 @@ function MyActor:wantGoToSleep (bedData)
   MyAreaHelper:removeToArea(self)
   self:wantMove('sleep', { bedData[1] })
   self:nextWantSleep('sleep', bedData[2])
+end
+
+-- 强制不能做什么，用于受技能影响
+function MyActor:forceDoNothing (think)
+  self:closeAI()
+  if (self:isWantsExist()) then
+    if (self.wants[1].style == 'forceDoNothing') then -- 如果已经存在，则次数叠加
+      self.wants[1].times = self.wants[1].times + 1
+    else
+      think = think or self.think
+      local want = MyActorActionHelper:getForceDoNothing(think)
+      table.insert(self.wants, 1, want)
+    end
+  else
+    think = think or 'forceDoNothing'
+    local want = MyActorActionHelper:getForceDoNothing(think)
+    self.wants = { want }
+  end
+  self.think = think
 end
 
 function MyActor:toggleCandle (think, myPosition, isLitCandle, isNow)
@@ -557,4 +591,26 @@ function MyActor:defaultCollidePlayerEvent (playerid, isPlayerInFront)
   self.action:stopRun()
   self:collidePlayer(playerid, isPlayerInFront)
   self:wantLookAt(nil, playerid)
+end
+
+-- 设置囚禁状态
+function MyActor:setImprisoned (active)
+  if (active) then
+    self:forceDoNothing()
+  else
+    self:freeForceDoNothing()
+  end
+end
+
+-- 解除囚禁状态，返回true表示已不是囚禁状态
+function MyActor:freeForceDoNothing ()
+  if (self:isWantsExist() and self.wants[1].style == 'forceDoNothing') then
+    if (self.wants[1].times > 1) then
+      self.wants[1].times = self.wants[1].times - 1
+      return false
+    else
+      MyActorHelper:handleNextWant(self)
+    end
+  end
+  return true
 end

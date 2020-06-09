@@ -28,7 +28,7 @@ function DrinkBloodSword:attackHit (objid, toobjid)
   end
   local player = MyPlayerHelper:getPlayer(objid)
   player:recoverHp(hp)
-  MyActorHelper:playAndStopBodyEffectById(objid, MyConstant.BODY_EFFECT.LITTLE_TREAT)
+  MyActorHelper:playAndStopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT3)
 end
 
 -- 闪袭剑
@@ -212,6 +212,30 @@ function ShockSoulSpear:useItem (objid)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '慑魂技能冷却中')
     return
+  end
+
+  local idx = 0
+  for k, v in pairs(MonsterHelper.forceDoNothingMonsters) do
+    idx = idx + 1
+  end
+  LogHelper:debug('imprison:', idx)
+
+  local player = MyPlayerHelper:getPlayer(objid)
+  local playerPos = player:getMyPosition()
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
+  local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
+  AreaHelper:destroyArea(areaid)
+  if (#objids > 0) then
+    for i, v in ipairs(objids) do
+      MyActorHelper:imprisonActor(v)
+    end
+    MyTimeHelper:callFnFastRuns (function ()
+      for i, v in ipairs(objids) do
+        MyActorHelper:cancelImprisonActor(v)
+      end
+    end, 1)
+  else
+    ChatHelper:sendSystemMsg('慑魂技能有效范围内未发现目标', objid)
   end
 end
 

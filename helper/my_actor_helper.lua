@@ -161,7 +161,7 @@ function MyActorHelper:handleNextWant (myActor)
     MyActorActionHelper:createMoveToPos(nextWant)
     -- LogHelper:debug(myActor:getName() .. '开始闲逛')
   elseif (nextWant.style == 'freeTime') then
-    MyActorHelper:openAI(myActor.objid)
+    myActor:openAI()
   elseif (nextWant.style == 'wait') then
     local restTime = nextWant.restTime
     table.remove(myActor.wants, 1)
@@ -335,11 +335,15 @@ function MyActorHelper:getAllOtherTeamActorsInAreaId (objid, areaid)
   return objids
 end
 
+function MyActorHelper:playBodyEffectById (objid, particleId, scale)
+  scale = scale or 1
+  return ActorHelper:playBodyEffectById(objid, particleId, scale)
+end
+
 -- 播放人物特效然后关闭
 function MyActorHelper:playAndStopBodyEffectById (objid, particleId, scale, time)
-  scale = scale or 1
   time = time or 3
-  ActorHelper:playBodyEffectById(objid, particleId, scale)
+  self:playBodyEffectById(objid, particleId, scale)
   MyTimeHelper:callFnLastRun(objid, objid .. 'stopBodyEffect' .. particleId, function ()
     ActorHelper:stopBodyEffectById(objid, particleId)
   end, time)
@@ -347,7 +351,7 @@ end
 
 -- 播放人物音效
 function MyActorHelper:playSoundEffectById (objid, soundId, isLoop)
-  ActorHelper:playSoundEffectById(objid, soundId, 100, 1, isLoop)
+  return ActorHelper:playSoundEffectById(objid, soundId, 100, 1, isLoop)
 end
 
 -- 播放人物音效然后关闭
@@ -364,4 +368,36 @@ function MyActorHelper:appendSpeed (objid, speed, srcPos, dstPos)
   dstPos = dstPos or MyActorHelper:getMyPosition(objid)
   local speedVector3 = MathHelper:getSpeedVector3(srcPos, dstPos, speed)
   ActorHelper:appendSpeed(objid, speedVector3.x, speedVector3.y, speedVector3.z)
+end
+
+-- 囚禁actor，用于慑魂枪效果
+function MyActorHelper:imprisonActor (objid)
+  MyActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT22)
+  if (ActorHelper:isPlayer(objid)) then -- 玩家
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:setImprisoned(true)
+  else
+    local actor = self:getActorByObjid(objid)
+    if (actor) then
+      actor:setImprisoned(true)
+    else
+      MonsterHelper:imprisonMonster(objid)
+    end
+  end
+end
+
+-- 取消囚禁actor
+function MyActorHelper:cancelImprisonActor (objid)
+  ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT22)
+  if (ActorHelper:isPlayer(objid)) then -- 玩家
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:setImprisoned(false)
+  else
+    local actor = self:getActorByObjid(objid)
+    if (actor) then
+      actor:setImprisoned(false)
+    else
+      MonsterHelper:cancelImprisonMonster(objid)
+    end
+  end
 end

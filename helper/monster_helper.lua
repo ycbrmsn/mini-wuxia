@@ -1,7 +1,7 @@
 -- 怪物工具类
 MonsterHelper = {
   monsters = {}, -- objid -> actor
-  willBeKilledMonster = {}
+  forceDoNothingMonsters = {} -- objid -> { 'time' = os.time(), 'times' = times } 禁锢时间、禁锢次数
 }
 
 function MonsterHelper:addMonster (objid, o)
@@ -127,6 +127,41 @@ function MonsterHelper:createFallOff (monster, pos)
         local num = math.random(1, v[2])
         WorldHelper:spawnItem(pos.x, pos.y, pos.z, v[1], num)
       end
+    end
+  end
+end
+
+-- 禁锢怪物
+function MonsterHelper:imprisonMonster (objid)
+  local monster = self.forceDoNothingMonsters[objid]
+  if (monster) then
+    monster.time = os.time()
+    monster.times = monster.times + 1
+  else
+    self.forceDoNothingMonsters[objid] = { time = os.time(), times = 1 }
+  end
+  MyActorHelper:stopRun(objid)
+end
+
+-- 取消禁锢怪物
+function MonsterHelper:cancelImprisonMonster (objid)
+  local monster = self.forceDoNothingMonsters[objid]
+  if (monster) then
+    if (monster.times > 1) then
+      monster.times = monster.times - 1
+    else
+      self.forceDoNothingMonsters[objid] = nil
+      MyActorHelper:openAI(objid)
+    end
+  end
+end
+
+-- 清除禁锢怪物的无效数据
+function MonsterHelper:clearImprisonedMonsterData ()
+  local curTime = os.time()
+  for k, v in pairs(self.forceDoNothingMonsters) do
+    if (curTime - v.time > 30) then -- 清除30秒以上的无效数据
+      self.forceDoNothingMonsters[k] = nil
     end
   end
 end

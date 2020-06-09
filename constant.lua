@@ -38,17 +38,16 @@ MyConstant = {
     COMMON_PROJECTILE_ID = 4159 -- 通用投掷物ID
   },
   BODY_EFFECT = {
-    LITTLE_TREAT = 1008, -- 一颗心加血特效
-    TREAT = 1235, -- 红十字加血特效
+    SMOG1 = 1226, -- 一团小烟雾随即消失
 
     BOOM1 = 1186, -- 黄色的小爆炸脚下一个圈
 
-    SMOG1 = 1226, -- 一团小烟雾随即消失
+    LIGHT3 = 1008, -- 一颗心加血特效
+    LIGHT10 = 1185, -- 两格大小的两个气旋不停旋转
+    LIGHT22 = 1227, -- 一圈紫色光幕围住并盘旋着锁链
+    LIGHT26 = 1235, -- 红十字加血特效
 
-    IMPRISON1 = 1227, -- 一圈紫色光幕围住并盘旋着锁链
-
-    LIGHT1 = 1341, -- 两格大小的一个黄色小光源
-    LIGHT10 = 1185 -- 两格大小的两个气旋不停旋转
+    PARTICLE24 = 1341 -- 两格大小的一个黄色小光源
   },
   SOUND_EFFECT = {
     SKILL9 = 10086 -- 一阵风的声音
@@ -97,6 +96,7 @@ MyWeaponAttr = {
   },
   chaseWindSword = { -- 追风剑
     levelIds = { 4165 },
+    projectileid = 4168,
     attack = 30,
     defense = 10,
     cd = 30,

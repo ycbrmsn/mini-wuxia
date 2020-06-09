@@ -15,7 +15,8 @@ MyPlayer = {
   hold = nil, -- 手持物品
   attack = 0, -- 手持武器攻击
   defense = 0, -- 手持武器防御
-  strength = 100 -- 体力，用于使枪消耗
+  strength = 100, -- 体力，用于使枪消耗
+  cantUseSkillReasons = {} -- 无法使用技能原因
 }
 
 function MyPlayer:new (objid)
@@ -381,4 +382,22 @@ function MyPlayer:damageActor (toobjid, val)
     end
   end
   MyPlayerHelper:playerDamageActor(self.objid, toobjid)
+end
+
+-- 设置囚禁状态
+function MyPlayer:setImprisoned (active)
+  self:enableMove(not(active)) -- 可移动设置
+  PlayerHelper:setActionAttrState(self.objid, PLAYERATTR.ENABLE_ATTACK, not(active)) -- 可攻击设置
+  if (active) then
+    table.insert(self.cantUseSkillReasons, 'imprisoned') -- 设置囚禁标志用于不能使用主动技能
+    ChatHelper:sendSystemMsg('你被慑魂枪震慑了灵魂，无法做出有效行为', self.objid)
+  else
+    -- 去掉囚禁标志
+    for i = #self.cantUseSkillReasons, 1, -1 do
+      local reason = self.cantUseSkillReasons[i]
+      if (reason == 'imprisoned') then
+        table.remove(self.cantUseSkillReasons, i)
+      end
+    end
+  end
 end

@@ -12,7 +12,7 @@ function MyActorActionHelper:getMoveData (think, positions, isNegDir, index, res
   index = index or 1
   restTime = restTime or 0
   local data = { style = 'move', restTime = restTime, currentRestTime = 0, positions = positions, 
-    index = index, isNegDir = isNegDir, think = think }
+    index = index, isNegDir = isNegDir, think = think, isAIOpened = false }
   local toPos = self:getToPos(positions, isNegDir, index)
   data.toPos = toPos
   return data
@@ -26,14 +26,14 @@ end
 
 -- 不移动行为数据
 function MyActorActionHelper:getDontMoveData (think)
-  return { style = 'dontMove', restTime = 0, currentRestTime = 0, think = think }
+  return { style = 'dontMove', restTime = 0, currentRestTime = 0, think = think, isAIOpened = false }
 end
 
 function MyActorActionHelper:getPatrolData (think, positions, isNegDir, index, restTime)
   index = index or 1
   restTime = restTime or 5
   local data = { style = 'patrol', restTime = restTime, currentRestTime = 0, positions = positions, 
-    index = index, isNegDir = isNegDir, think = think }
+    index = index, isNegDir = isNegDir, think = think, isAIOpened = false }
   local toPos = self:getToPos(positions, isNegDir, index)
   data.toPos = toPos
   return data
@@ -41,27 +41,27 @@ end
 
 -- 自由活动数据
 function MyActorActionHelper:getFreeTimeData (think)
-  return { style = 'freeTime', restTime = 0, currentRestTime = 0, think = think }
+  return { style = 'freeTime', restTime = 0, currentRestTime = 0, think = think, isAIOpened = true }
 end
 
 -- 在区域内自由活动数据
 function MyActorActionHelper:getFreeInAreaData (think, restTime)
   restTime = restTime or 5
-  return { style = 'freeInArea', restTime = restTime, currentRestTime = 0, think = think }
+  return { style = 'freeInArea', restTime = restTime, currentRestTime = 0, think = think, isAIOpened = false }
 end
 
 -- 生物想不做事数据
 function MyActorActionHelper:getDoNothingData (think)
-  return { style = 'doNothing', restTime = 0, currentRestTime = 0, think = think }
+  return { style = 'doNothing', restTime = 0, currentRestTime = 0, think = think, isAIOpened = false }
 end
 
 function MyActorActionHelper:getSleepData (think, faceYaw)
-  return { style = 'sleep', restTime = 0, currentRestTime = 0, faceYaw = faceYaw, think = think }
+  return { style = 'sleep', restTime = 0, currentRestTime = 0, faceYaw = faceYaw, think = think, isAIOpened = false }
 end
 
 function MyActorActionHelper:getWaitData (think, restTime)
   restTime = restTime or 5
-  return { style = 'wait', restTime = restTime, currentRestTime = 0, think = think }
+  return { style = 'wait', restTime = restTime, currentRestTime = 0, think = think, isAIOpened = false }
 end
 
 function MyActorActionHelper:getToggleCandleData (think, isLitCandle)
@@ -71,12 +71,16 @@ function MyActorActionHelper:getToggleCandleData (think, isLitCandle)
   else
     style = 'putOutCandle'
   end
-  return { style = style, restTime = 0, currentRestTime = 0, think = think }
+  return { style = style, restTime = 0, currentRestTime = 0, think = think, isAIOpened = false }
 end
 
 function MyActorActionHelper:getLookAtData (think, myPosition, restTime)
   restTime = restTime or 5
-  return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, dst = myPosition, think = think }
+  return { style = 'lookAt', restTime = restTime, currentRestTime = restTime, dst = myPosition, think = think, isAIOpened = false }
+end
+
+function MyActorActionHelper:getForceDoNothing (think)
+  return { style = 'forceDoNothing', restTime = 1, currentRestTime = 1, think = think, isAIOpened = false, times = 1 }
 end
 
 -- 获取前往位置
@@ -170,7 +174,7 @@ function MyActorActionHelper:updateActionState (myActor)
     local style = myActor.wants[1].style
     if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing' or style == 'sleep') then
       -- myActor:enableMove(true)
-      MyActorHelper:closeAI(myActor.objid)
+      myActor:closeAI()
     elseif (style == 'dontMove') then
       -- myActor:enableMove(false)
     end
