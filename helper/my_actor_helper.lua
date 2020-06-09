@@ -388,16 +388,19 @@ end
 
 -- 取消囚禁actor
 function MyActorHelper:cancelImprisonActor (objid)
-  ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT22)
+  local canCancel
   if (ActorHelper:isPlayer(objid)) then -- 玩家
     local player = MyPlayerHelper:getPlayer(objid)
-    player:setImprisoned(false)
+    canCancel = player:setImprisoned(false)
   else
     local actor = self:getActorByObjid(objid)
     if (actor) then
-      actor:setImprisoned(false)
+      canCancel = actor:setImprisoned(false)
     else
-      MonsterHelper:cancelImprisonMonster(objid)
+      canCancel = MonsterHelper:cancelImprisonMonster(objid)
     end
+  end
+  if (canCancel) then
+    ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT22)
   end
 end

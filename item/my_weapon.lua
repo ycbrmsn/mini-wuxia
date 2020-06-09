@@ -213,13 +213,6 @@ function ShockSoulSpear:useItem (objid)
     MyPlayerHelper:showToast(objid, '慑魂技能冷却中')
     return
   end
-
-  local idx = 0
-  for k, v in pairs(MonsterHelper.forceDoNothingMonsters) do
-    idx = idx + 1
-  end
-  LogHelper:debug('imprison:', idx)
-
   local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
@@ -233,7 +226,7 @@ function ShockSoulSpear:useItem (objid)
       for i, v in ipairs(objids) do
         MyActorHelper:cancelImprisonActor(v)
       end
-    end, 1)
+    end, self.level + 1)
   else
     ChatHelper:sendSystemMsg('慑魂技能有效范围内未发现目标', objid)
   end

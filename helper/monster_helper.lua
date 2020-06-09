@@ -143,25 +143,17 @@ function MonsterHelper:imprisonMonster (objid)
   MyActorHelper:stopRun(objid)
 end
 
--- 取消禁锢怪物
+-- 取消禁锢怪物，返回true表示已不是囚禁状态
 function MonsterHelper:cancelImprisonMonster (objid)
   local monster = self.forceDoNothingMonsters[objid]
   if (monster) then
     if (monster.times > 1) then
       monster.times = monster.times - 1
+      return false
     else
       self.forceDoNothingMonsters[objid] = nil
       MyActorHelper:openAI(objid)
     end
   end
-end
-
--- 清除禁锢怪物的无效数据
-function MonsterHelper:clearImprisonedMonsterData ()
-  local curTime = os.time()
-  for k, v in pairs(self.forceDoNothingMonsters) do
-    if (curTime - v.time > 30) then -- 清除30秒以上的无效数据
-      self.forceDoNothingMonsters[k] = nil
-    end
-  end
+  return true
 end
