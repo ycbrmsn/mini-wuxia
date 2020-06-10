@@ -69,7 +69,7 @@ function MyTimeHelper:runFnAfterSecond (time)
   end
 end
 
--- 参数为：函数、秒、函数的参数table。几秒后执行方法
+-- 参数为：函数、秒、函数的参数table。大致几秒后执行方法
 function MyTimeHelper:callFnAfterSecond (f, second, p)
   if (type(f) ~= 'function') then
     return

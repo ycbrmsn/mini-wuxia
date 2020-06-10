@@ -180,3 +180,12 @@ function WorldHelper:spawnProjectileByDir (shooter, itemid, x, y, z, dirx, diry,
     return World:spawnProjectileByDir(shooter, itemid, x, y, z, dirx, diry, dirz, speed)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 移除actor
+function WorldHelper:despawnActor (objid)
+  local onceFailMessage = '移除actor失败一次'
+  local finillyFailMessage = StringHelper:concat('移除actor失败，参数：objid=', objid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return World:despawnActor(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end

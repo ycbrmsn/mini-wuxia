@@ -83,28 +83,39 @@ function ChaseWindSword:useItem (objid)
     MyPlayerHelper:showToast(objid, '追风技能冷却中')
     return
   end
+  MyItemHelper:recordUseSkill(objid, self.id, self.cd)
   local gridid = BackpackHelper:getCurShotcutGrid(objid)
   local curDur = BackpackHelper:getGridDurability(objid, gridid) -- 耐久度
   local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
   local aimPos = player:getAimPos() -- 准星位置
-  -- 替换追风剑为掷出的追风剑
-  BackpackHelper:setGridItem(objid, gridid, MyWeaponAttr.flyChaseWinidSword.levelIds[1], 1)
+  -- 移除手持的追风剑
+  BackpackHelper:removeGridItem(objid, gridid)
   -- 生成飞行的追风剑（投掷物）
   local projectileid = WorldHelper:spawnProjectileByPos(objid, self.projectileid, srcPos, aimPos)
-  MyItemHelper:recordProjectile(projectileid, objid, self, { pos = playerPos, curDur = curDur })
+  local time, index = MyTimeHelper:callFnAfterSecond (function ()
+    local pos = MyActorHelper:getMyPosition(projectileid)
+    if (pos.x) then
+      WorldHelper:despawnActor(projectileid) -- 移除投掷物
+      self:moveAndRecoverWeapon(player, objid, playerPos, pos, self, curDur)
+    else
+      self:recoverWeapon(objid, self, curDur)
+    end
+  end, self.level + 2)
+  MyItemHelper:recordProjectile(projectileid, objid, self, { pos = playerPos, curDur = curDur, time = time, index = index })
 end
 
 -- 投掷物命中
 function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
+  MyTimeHelper:delFn(projectileInfo.time, projectileInfo.index)
   local objid = projectileInfo.objid
   local item = projectileInfo.item
   local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = projectileInfo.pos
   local curDur = projectileInfo.curDur -- 耐久度
   if (toobjid > 0) then -- 命中生物
-    self:moveAndSwitchWeapon(player, objid, playerPos, pos, item, curDur)
+    self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
     MyActorHelper:appendSpeed(toobjid, 2, player:getMyPosition()) -- 冲击
     -- 判断是否是敌对生物
     if (not(MyActorHelper:isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
@@ -113,27 +124,29 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
       player:damageActor(toobjid, math.floor(item.attack + distance * 5))
     end
   elseif (blockid > 0) then -- 命中方块
-    self:moveAndSwitchWeapon(player, objid, playerPos, pos, item, curDur)
+    self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
   end
 end
 
--- 移动并切换武器
-function ChaseWindSword:moveAndSwitchWeapon (player, playerid, playerPos, pos, item, curDur)
+-- 移动并收回武器
+function ChaseWindSword:moveAndRecoverWeapon (player, playerid, playerPos, pos, item, curDur)
+  WorldHelper:playAndStopBodyEffectById(playerPos, MyConstant.BODY_EFFECT.SMOG1)
   local dstPos = MathHelper:getPos2PosInLineDistancePosition(playerPos, pos, 1)
   player:setMyPosition(dstPos)
-  local num, backpacks = BackpackHelper:getItemNum(playerid, MyWeaponAttr.flyChaseWinidSword.levelIds[1])
-  if (num >= 1) then -- 存在掷出的追风剑，则移除替换为追风剑
-    BackpackHelper:removeGridItem(playerid, backpacks[1])
-    BackpackHelper:setGridItem(playerid, backpacks[1], item.id, 1, curDur)
-  end
+  self:recoverWeapon(playerid, item, curDur)
 end
 
--- 掷出的追风剑
-FlyChaseWindSword = MyWeapon:new(MyWeaponAttr.flyChaseWinidSword)
-
--- 使用移动到飞行的追风剑处收回追风剑
-function FlyChaseWindSword:useItem (objid)
-  
+-- 收回追风剑
+function ChaseWindSword:recoverWeapon (playerid, item, curDur)
+  local itemid = PlayerHelper:getCurToolID(playerid)
+  if (itemid) then -- 手上拿了别的东西
+    item:newItem(playerid, 1)
+    local num, backpacks = BackpackHelper:getItemNum(playerid, item.id)
+    BackpackHelper:setGridItem(playerid, backpacks[1], item.id, 1, curDur)
+  else -- 空手
+    local gridid = BackpackHelper:getCurShotcutGrid(objid)
+    BackpackHelper:setGridItem(playerid, gridid, item.id, 1, curDur)
+  end
 end
 
 -- 刀

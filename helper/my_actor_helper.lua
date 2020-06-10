@@ -288,7 +288,7 @@ function MyActorHelper:atHour (hour)
 end
 
 -- 是否是同队生物
-function MyActorHelper:isTheSameTeamActor (objid1, objids2)
+function MyActorHelper:isTheSameTeamActor (objid1, objid2)
   local teamid1, teamid2
   if (ActorHelper:isPlayer(objid1)) then -- 是玩家
     teamid1 = PlayerHelper:getTeam(objid1)
