@@ -126,6 +126,24 @@ function SealDemonKnife:useItem (objid)
     MyPlayerHelper:showToast(objid, '封魔技能冷却中')
     return
   end
+  local player = MyPlayerHelper:getPlayer(objid)
+  local playerPos = player:getMyPosition()
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
+  local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
+  AreaHelper:destroyArea(areaid)
+  if (#objids > 0) then
+    MyItemHelper:recordUseSkill(objid, self.id, self.cd)
+    for i, v in ipairs(objids) do
+      MyActorHelper:sealActor(v)
+    end
+    MyTimeHelper:callFnFastRuns (function ()
+      for i, v in ipairs(objids) do
+        MyActorHelper:cancelSealActor(v)
+      end
+    end, self.level + 5)
+  else
+    ChatHelper:sendSystemMsg('封魔技能有效范围内未发现目标', objid)
+  end
 end
 
 -- 枪

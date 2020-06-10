@@ -1,7 +1,8 @@
 -- 怪物工具类
 MonsterHelper = {
   monsters = {}, -- objid -> actor
-  forceDoNothingMonsters = {} -- objid -> { 'time' = os.time(), 'times' = times } 禁锢时间、禁锢次数
+  forceDoNothingMonsters = {}, -- objid -> times 禁锢次数
+  sealedMonsters = {} -- objid -> times
 }
 
 function MonsterHelper:addMonster (objid, o)
@@ -133,26 +134,49 @@ end
 
 -- 禁锢怪物
 function MonsterHelper:imprisonMonster (objid)
-  local monster = self.forceDoNothingMonsters[objid]
-  if (monster) then
-    monster.time = os.time()
-    monster.times = monster.times + 1
+  local times = self.forceDoNothingMonsters[objid]
+  if (times) then
+    self.forceDoNothingMonsters[objid] = times + 1
   else
-    self.forceDoNothingMonsters[objid] = { time = os.time(), times = 1 }
+    self.forceDoNothingMonsters[objid] = 1
   end
   MyActorHelper:stopRun(objid)
 end
 
 -- 取消禁锢怪物，返回true表示已不是囚禁状态
 function MonsterHelper:cancelImprisonMonster (objid)
-  local monster = self.forceDoNothingMonsters[objid]
-  if (monster) then
-    if (monster.times > 1) then
-      monster.times = monster.times - 1
+  local times = self.forceDoNothingMonsters[objid]
+  if (times) then
+    if (times > 1) then
+      self.forceDoNothingMonsters[objid] = times - 1
       return false
     else
       self.forceDoNothingMonsters[objid] = nil
       MyActorHelper:openAI(objid)
+    end
+  end
+  return true
+end
+
+-- 封魔怪物
+function MonsterHelper:sealMonster (objid)
+  local times = self.sealedMonsters[objid]
+  if (times) then
+    self.sealedMonsters[objid] = times + 1
+  else
+    self.sealedMonsters[objid] = 1
+  end
+end
+
+-- 取消封魔怪物
+function MonsterHelper:cancelSealMonster (objid)
+  local times = self.sealedMonsters[objid]
+  if (times) then
+    if (times > 1) then
+      self.sealedMonsters[objid] = times - 1
+      return false
+    else
+      self.sealedMonsters[objid] = nil
     end
   end
   return true

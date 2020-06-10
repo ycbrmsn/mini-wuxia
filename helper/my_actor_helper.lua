@@ -404,3 +404,38 @@ function MyActorHelper:cancelImprisonActor (objid)
     ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT22)
   end
 end
+
+-- 封魔actor
+function MyActorHelper:sealActor (objid)
+  MyActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT47)
+  if (ActorHelper:isPlayer(objid)) then -- 玩家
+    local player = MyPlayerHelper:getPlayer(objid)
+    player:setSeal(true)
+  else
+    local actor = self:getActorByObjid(objid)
+    if (actor) then
+      actor:setSealed(true)
+    else
+      MonsterHelper:sealMonster(objid)
+    end
+  end
+end
+
+-- 取消封魔actor
+function MyActorHelper:cancelSealActor (objid)
+  local canCancel
+  if (ActorHelper:isPlayer(objid)) then -- 玩家
+    local player = MyPlayerHelper:getPlayer(objid)
+    canCancel = player:setSeal(false)
+  else
+    local actor = self:getActorByObjid(objid)
+    if (actor) then
+      canCancel = actor:setSealed(false)
+    else
+      canCancel = MonsterHelper:cancelSealMonster(objid)
+    end
+  end
+  if (canCancel) then
+    ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT47)
+  end
+end

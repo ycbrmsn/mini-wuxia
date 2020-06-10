@@ -17,7 +17,8 @@ MyPlayer = {
   defense = 0, -- 手持武器防御
   strength = 100, -- 体力，用于使枪消耗
   cantUseSkillReasons = {
-    imprisoned = 0
+    seal = 0, -- 封魔叠加数
+    imprisoned = 0 -- 慑魂叠加数
   } -- 无法使用技能原因, { string -> times }
 }
 
@@ -398,5 +399,17 @@ function MyPlayer:setImprisoned (active)
     -- 返回true表示已不是囚禁状态
     self.cantUseSkillReasons.imprisoned = self.cantUseSkillReasons.imprisoned - 1
     return self.cantUseSkillReasons.imprisoned <= 0
+  end
+end
+
+-- 设置封魔状态
+function MyPlayer:setSeal (active)
+  if (active) then
+    self.cantUseSkillReasons.seal = self.cantUseSkillReasons.seal + 1
+    ChatHelper:sendSystemMsg('你被封魔了，当前无法使用技能', self.objid)
+  else
+    -- 返回true表示已不是封魔状态
+    self.cantUseSkillReasons.seal = self.cantUseSkillReasons.seal - 1
+    return self.cantUseSkillReasons.seal <= 0
   end
 end

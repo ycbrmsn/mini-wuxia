@@ -9,7 +9,8 @@ MyActor = {
   freeInAreaId = nil, -- 自由活动区域id
   timername = 'myActorTimer',
   wants = nil,
-  isAIOpened = true
+  isAIOpened = true,
+  sealTimes = 0 -- 封魔叠加次数
 }
 
 function MyActor:new (actorid, objid)
@@ -598,7 +599,7 @@ function MyActor:setImprisoned (active)
   if (active) then
     self:forceDoNothing()
   else
-    self:freeForceDoNothing()
+    return self:freeForceDoNothing()
   end
 end
 
@@ -613,4 +614,14 @@ function MyActor:freeForceDoNothing ()
     end
   end
   return true
+end
+
+-- 设置封魔状态
+function MyActor:setSealed (active)
+  if (active) then
+    self.sealTimes = self.sealTimes + 1
+  else
+    self.sealTimes = self.sealTimes - 1
+    return self.sealTimes <= 0
+  end
 end
