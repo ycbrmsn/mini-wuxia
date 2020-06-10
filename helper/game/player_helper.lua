@@ -225,3 +225,12 @@ function PlayerHelper:setSkillCD (objid, itemid, cd)
     return Player:setSkillCD(objid, itemid, cd)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取player准星位置
+function PlayerHelper:getAimPos (objid)
+  local onceFailMessage = '获取player准星位置失败一次'
+  local finillyFailMessage = StringHelper:concat('获取player准星位置失败，参数：objid=', objid)
+  return CommonHelper:callThreeResultMethod(function (p)
+    return Player:getAimPos(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end

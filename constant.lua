@@ -107,6 +107,9 @@ MyWeaponAttr = {
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
+  flyChaseWinidSword = { -- 掷出的追风剑
+    levelIds = { 4169 }
+  },
 
   -- 刀
   woodKnife = { -- 木刀

@@ -287,6 +287,25 @@ function MyActorHelper:atHour (hour)
   end
 end
 
+-- 是否是同队生物
+function MyActorHelper:isTheSameTeamActor (objid1, objids2)
+  local teamid1, teamid2
+  if (ActorHelper:isPlayer(objid1)) then -- 是玩家
+    teamid1 = PlayerHelper:getTeam(objid1)
+  else
+    teamid1 = CreatureHelper:getTeam(objid1)
+  end
+  if (ActorHelper:isPlayer(objid2)) then -- 是玩家
+    teamid2 = PlayerHelper:getTeam(objid2)
+  else
+    teamid2 = CreatureHelper:getTeam(objid2)
+  end
+  if (not(teamid1) or not(teamid2)) then -- 如果有生物没有队伍，则不是同队
+    return false
+  end
+  return teamid1 == teamid2
+end
+
 -- 获得区域内所有敌对生物
 function MyActorHelper:getAllOtherTeamActorsInAreaId (objid, areaid)
   local objids1, objids2 = AreaHelper:getAllCreaturesAndPlayersInAreaId(areaid)

@@ -132,6 +132,10 @@ function MyPlayer:setPosition (x, y, z)
   return MyActorHelper:setPosition(self.objid, x, y, z)
 end
 
+function MyPlayer:setMyPosition (pos)
+  return MyActorHelper:setPosition(self.objid, pos.x, pos.y, pos.z)
+end
+
 function MyPlayer:getDistancePosition (distance)
   return MyActorHelper:getDistancePosition(self.objid, distance)
 end
@@ -146,6 +150,11 @@ end
 
 function MyPlayer:getFacePitch ()
   return ActorHelper:getFacePitch(self.objid)
+end
+
+-- 获取准星位置
+function MyPlayer:getAimPos ()
+  return MyPosition:new(PlayerHelper:getAimPos(self.objid))
 end
 
 function MyPlayer:gainExp (exp)
@@ -215,8 +224,8 @@ function MyPlayer:takeOutItem (itemid, containEquip)
   if (num == 0) then
     return false
   else
-    local idx = PlayerHelper:getCurShotcut(self.objid) + 1000
-    return BackpackHelper:swapGridItem(self.objid, arr[1], idx)
+    local grid = BackpackHelper:getCurShotcutGrid(self.objid)
+    return BackpackHelper:swapGridItem(self.objid, arr[1], grid)
   end
 end
 

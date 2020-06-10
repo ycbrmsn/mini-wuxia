@@ -65,9 +65,13 @@ function WorldHelper:playAndStopBodyEffectById (pos, particleId, scale, time)
   end, time)
 end
 
--- 通过地点与方向生成投掷物
+-- 通过起点与目的点生成投掷物
+function WorldHelper:spawnProjectileByPos (shooter, itemid, pos, dst, speed)
+  return WorldHelper:spawnProjectile(shooter, itemid, pos.x, pos.y, pos.z, dst.x, dst.y, dst.z, speed)
+end
+
+-- 通过起点与方向生成投掷物
 function WorldHelper:spawnProjectileByDirPos (shooter, itemid, pos, dirVector3, speed)
-  speed = speed or 100
   return self:spawnProjectileByDir(shooter, itemid, pos.x, pos.y, pos.z, dirVector3.x, dirVector3.y, dirVector3.z, speed)
 end
 
@@ -156,6 +160,15 @@ function WorldHelper:stopEffectOnPosition (x, y, z, particleId)
   local finillyFailMessage = StringHelper:concat('停止指定位置的特效失败，参数：x=', x, ',y=', y, ',z=', z, ',particleId=', particleId)
   return CommonHelper:callIsSuccessMethod(function (p)
     return World:stopEffectOnPosition(x, y, z, particleId)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
+
+-- 生成投掷物
+function WorldHelper:spawnProjectile (shooter, itemid, x, y, z, dstx, dsty, dstz, speed)
+  local onceFailMessage = '生成投掷物失败一次'
+  local finillyFailMessage = StringHelper:concat('生成投掷物失败，参数：shooter=', shooter, ',itemid=', itemid, ',x=', x, ',y=', y, ',z=', z, ',dstx=', dstx, ',dsty=', dsty, ',dstz=', dstz, ',speed=', speed)
+  return CommonHelper:callOneResultMethod(function (p)
+    return World:spawnProjectile(shooter, itemid, x, y, z, dstx, dsty, dstz, speed)
   end, nil, onceFailMessage, finillyFailMessage)
 end
 

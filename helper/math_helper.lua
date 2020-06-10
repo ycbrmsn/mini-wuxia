@@ -60,3 +60,10 @@ function MathHelper:getSpeedVector3 (srcPos, dstPos, speed)
   local ratio = speed / vector3:getLength()
   return vector3:mul(ratio)
 end
+
+-- 获得两点连线上距离另一个点（第二个点）多远的位置，distance为正则位置可能在两点之间
+function MathHelper:getPos2PosInLineDistancePosition (pos1, pos2, distance)
+  local myVector3 = MyVector3:new(pos2, pos1)
+  local angle = self:getActorFaceYaw(myVector3)
+  return self:getDistancePosition(pos2, angle, distance)
+end

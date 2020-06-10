@@ -47,7 +47,7 @@ function MyItem:useItem2 (objid)
 end
 
 -- 投掷物命中
-function MyItem:projectileHit(projectileInfo, toobjid, blockid, x, y, z)
+function MyItem:projectileHit(projectileInfo, toobjid, blockid, pos)
   -- body
 end
 
