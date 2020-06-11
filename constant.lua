@@ -208,35 +208,35 @@ MyWeaponAttr = {
 
   -- 弓
   woodBow = { -- 木弓
-    levelIds = { 4128 },
+    levelIds = { 4170 },
     attack = 15,
     defense = 0,
     addAttPerLevel = 1,
     addDefPerLevel = 0
   },
   bronzeBow = { -- 青铜弓
-    levelIds = { 4139 },
+    levelIds = { 4171 },
     attack = 32,
     defense = 0,
     addAttPerLevel = 1,
     addDefPerLevel = 0
   },
   shootEagleBow = { -- 射雕弓
-    levelIds = { 4143 },
+    levelIds = { 4172 },
     attack = 47,
     defense = 0,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
   swallowSoulBow = { -- 噬魂弓
-    levelIds = { 4150 },
+    levelIds = { 4173 },
     attack = 17,
     defense = 0,
     addAttPerLevel = 2,
     addDefPerLevel = 0
   },
   fallStarBow = { -- 坠星弓
-    levelIds = { 4154 },
+    levelIds = { 4174 },
     attack = 35,
     defense = 0,
     cd = 15,
@@ -244,7 +244,7 @@ MyWeaponAttr = {
     addDefPerLevel = 1
   },
   oneByOneBow = { -- 连珠弓
-    levelIds = { 4158 },
+    levelIds = { 4175 },
     attack = 47,
     defense = 0,
     cd = 15,

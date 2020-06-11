@@ -372,15 +372,14 @@ function FallStarBow:useItem2 (objid)
     return false
   end
   -- 检测技能cd是否完成
-  local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
+  local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '坠星技能冷却中')
-    ChatHelper:sendSystemMsg('坠星技能冷却时间剩余' .. remainingTime .. '秒', objid)
     return
   end
   -- 检测技能释放条件
   if (self:getObjids(objid, 1)) then
-    MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
+    MyItemHelper:recordUseSkill(objid, self.id, self.cd) -- 记录新的技能
     player:enableMove(false)
     ChatHelper:sendSystemMsg('释放技能中无法移动', objid)
     ActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT10, 1)
@@ -474,10 +473,9 @@ function OneByOneBow:useItem2 (objid)
   if (not(player:ableUseSkill('连珠'))) then
     return false
   end
-  local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
+  local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '连珠技能冷却中')
-    ChatHelper:sendSystemMsg('连珠技能冷却时间剩余' .. remainingTime .. '秒', objid)
     return
   end
   -- 查询背包内箭矢数量
@@ -487,7 +485,7 @@ function OneByOneBow:useItem2 (objid)
     ChatHelper:sendSystemMsg('箭矢数量不足', objid)
     return false
   end
-  MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
+  MyItemHelper:recordUseSkill(objid, self.id, self.cd) -- 记录新的技能
   self:resetHitTimes(objid)
   for i = 1, times do
     MyTimeHelper:callFnFastRuns(function ()
