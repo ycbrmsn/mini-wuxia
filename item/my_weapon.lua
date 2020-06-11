@@ -280,7 +280,7 @@ function OverlordSpear:useItem (objid)
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   for i, v in ipairs(objids) do
-    MyActorHelper:appendSpeed(v, 5, playerPos)
+    MyActorHelper:appendSpeed(v, 4, playerPos)
   end
   MyActorHelper:playAndStopBodyEffectById(objid, MyConstant.BODY_EFFECT.BOOM1)
 end
