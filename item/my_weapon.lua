@@ -93,7 +93,8 @@ function ChaseWindSword:useItem (objid)
   local gridid = BackpackHelper:getCurShotcutGrid(objid)
   local curDur = BackpackHelper:getGridDurability(objid, gridid) -- 耐久度
   local playerPos = player:getMyPosition()
-  local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+  -- local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+  local srcPos = MyPosition:new(ActorHelper:getEyePosition(objid))
   local aimPos = player:getAimPos() -- 准星位置
   -- 移除手持的追风剑
   BackpackHelper:removeGridItem(objid, gridid)
@@ -486,17 +487,25 @@ function OneByOneBow:useItem2 (objid)
     return false
   end
   MyItemHelper:recordUseSkill(objid, self.id, self.cd) -- 记录新的技能
+  ActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4, 1)
   self:resetHitTimes(objid)
+  player.action:playAttack()
   for i = 1, times do
     MyTimeHelper:callFnFastRuns(function ()
       local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
       if (num > 0 and player:ableUseSkill('连珠')) then -- 有箭矢并且能释放技能
         BackpackHelper:removeGridItemByItemID(objid, MyConstant.WEAPON.ARROW_ID, 1) -- 扣除箭矢
         local playerPos = player:getMyPosition()
-        local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+        -- local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+        local srcPos = MyPosition:new(ActorHelper:getEyePosition(objid))
         local aimPos = player:getAimPos() -- 准星位置
         local projectileid = WorldHelper:spawnProjectileByPos(objid, MyConstant.WEAPON.ARROW_ID, srcPos, aimPos)
         MyItemHelper:recordProjectile(projectileid, objid, self)
+        if (i == times) then -- 最后一箭关闭特效
+          ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4)
+        end
+      else -- 无法释放技能关闭特效
+        ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4)
       end
     end, 0.2 * i)
   end
