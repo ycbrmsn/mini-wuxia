@@ -114,7 +114,7 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
   local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = projectileInfo.pos
   local curDur = projectileInfo.curDur -- 耐久度
-  if (toobjid > 0) then -- 命中生物
+  if (toobjid > 0) then -- 命中生物（似乎命中同队生物不会进入这里）
     self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
     MyActorHelper:appendSpeed(toobjid, 2, player:getMyPosition()) -- 冲击
     -- 判断是否是敌对生物
@@ -446,9 +446,71 @@ end
 OneByOneBow = MyWeapon:new(MyWeaponAttr.oneByOneBow)
 
 function OneByOneBow:useItem2 (objid)
-  local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
+  local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '连珠技能冷却中')
+    ChatHelper:sendSystemMsg('连珠技能冷却时间剩余' .. remainingTime .. '秒', objid)
     return
   end
+  -- 查询背包内箭矢数量
+  local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
+  local times = self.level + 3
+  if (num < times) then
+    ChatHelper:sendSystemMsg('箭矢数量不足', objid)
+    return false
+  end
+  MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
+  self:resetHitTimes(objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  for i = 1, times do
+    MyTimeHelper:callFnFastRuns(function ()
+      local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
+      if (num > 0) then -- 有箭矢
+        BackpackHelper:removeGridItemByItemID(objid, MyConstant.WEAPON.ARROW_ID, 1) -- 扣除箭矢
+        local playerPos = player:getMyPosition()
+        local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+        local aimPos = player:getAimPos() -- 准星位置
+        local projectileid = WorldHelper:spawnProjectileByPos(objid, MyConstant.WEAPON.ARROW_ID, srcPos, aimPos)
+        MyItemHelper:recordProjectile(projectileid, objid, self)
+      end
+    end, 0.2 * i)
+  end
+end
+
+-- 投掷物命中
+function OneByOneBow:projectileHit (projectileInfo, toobjid, blockid, pos)
+  local objid = projectileInfo.objid
+  local item = projectileInfo.item
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (toobjid > 0) then -- 命中生物（似乎命中同队生物不会进入这里）
+    MyActorHelper:appendSpeed(toobjid, 1, player:getMyPosition()) -- 冲击
+    -- 判断是否是敌对生物
+    if (not(MyActorHelper:isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
+      local hurt = item.attack - self:addHitTimes(objid) * 10 -- 命中伤害10点递减
+      if (hurt < 10) then -- 最低伤害10点
+        hurt = 10
+      end
+      player:damageActor(toobjid, hurt)
+    end
+  end
+end
+
+-- 重置命中次数
+function OneByOneBow:resetHitTimes (objid)
+  if (not(self.hitTimes)) then
+    self.hitTimes = {}
+  end
+  self.hitTimes[objid] = 0
+end
+
+-- 获得命中次数
+function OneByOneBow:getHitTimes (objid)
+  return self.hitTimes[objid]
+end
+
+-- 增加命中次数
+function OneByOneBow:addHitTimes (objid)
+  local times = self:getHitTimes(objid)
+  self.hitTimes[objid] = self.hitTimes[objid] + 1
+  return times
 end

@@ -94,7 +94,7 @@ MyWeaponAttr = {
     levelIds = { 4162 },
     attack = 20,
     defense = 3,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
@@ -103,7 +103,7 @@ MyWeaponAttr = {
     projectileid = 4168,
     attack = 30,
     defense = 10,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
@@ -141,7 +141,7 @@ MyWeaponAttr = {
     levelIds = { 4163 },
     attack = 25,
     defense = 5,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
@@ -149,7 +149,7 @@ MyWeaponAttr = {
     levelIds = { 4166 },
     attack = 35,
     defense = 5,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
@@ -192,7 +192,7 @@ MyWeaponAttr = {
     attack = 36,
     defense = 0,
     strength = 30,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
@@ -201,7 +201,7 @@ MyWeaponAttr = {
     attack = 55,
     defense = 0,
     strength = 40,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
@@ -239,7 +239,7 @@ MyWeaponAttr = {
     levelIds = { 4154 },
     attack = 35,
     defense = 0,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
@@ -247,7 +247,7 @@ MyWeaponAttr = {
     levelIds = { 4158 },
     attack = 47,
     defense = 0,
-    cd = 30,
+    cd = 15,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   }
