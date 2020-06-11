@@ -1,7 +1,6 @@
 -- 武器
 
 -- 剑
-
 -- 木剑
 WoodSword = MyWeapon:new(MyWeaponAttr.woodSword)
 
@@ -35,12 +34,15 @@ end
 StrongAttackSword = MyWeapon:new(MyWeaponAttr.strongAttackSword)
 
 function StrongAttackSword:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('闪袭'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '闪袭技能冷却中')
     return
   end
-  local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   -- 循环以距离玩家正面1米递增的间隔点开始，作为中心点，扩大1格，查找生物
   for i = 1, self.level + 1 do
@@ -78,6 +80,10 @@ end
 ChaseWindSword = MyWeapon:new(MyWeaponAttr.chaseWindSword)
 
 function ChaseWindSword:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('追风'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '追风技能冷却中')
@@ -86,7 +92,6 @@ function ChaseWindSword:useItem (objid)
   MyItemHelper:recordUseSkill(objid, self.id, self.cd)
   local gridid = BackpackHelper:getCurShotcutGrid(objid)
   local curDur = BackpackHelper:getGridDurability(objid, gridid) -- 耐久度
-  local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
   local aimPos = player:getAimPos() -- 准星位置
@@ -174,6 +179,10 @@ end
 RejuvenationKnife = MyWeapon:new(MyWeaponAttr.rejuvenationKnife)
 
 function RejuvenationKnife:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('回春'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '回春技能冷却中')
@@ -189,12 +198,15 @@ end
 SealDemonKnife = MyWeapon:new(MyWeaponAttr.sealDemonKnife)
 
 function SealDemonKnife:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('封魔'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '封魔技能冷却中')
     return
   end
-  local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
@@ -260,6 +272,10 @@ function OverlordSpear:attackHit (objid, toobjid)
 end
 
 function OverlordSpear:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('霸王'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '霸王技能冷却中')
@@ -274,7 +290,6 @@ function OverlordSpear:useItem (objid)
     PlayerHelper:setHp(objid, hp)
   end
   -- 击退周围3格内的敌对生物
-  local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
@@ -294,12 +309,15 @@ function ShockSoulSpear:attackHit (objid, toobjid)
 end
 
 function ShockSoulSpear:useItem (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('慑魂'))) then
+    return false
+  end
   local ableUseSkill = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '慑魂技能冷却中')
     return
   end
-  local player = MyPlayerHelper:getPlayer(objid)
   local playerPos = player:getMyPosition()
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
@@ -349,6 +367,10 @@ function FallStarBow:useItem2 (objid)
     self:cancelSkill(objid)
     return
   end
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('坠星'))) then
+    return false
+  end
   -- 检测技能cd是否完成
   local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
@@ -359,7 +381,6 @@ function FallStarBow:useItem2 (objid)
   -- 检测技能释放条件
   if (self:getObjids(objid, 1)) then
     MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
-    local player = MyPlayerHelper:getPlayer(objid)
     player:enableMove(false)
     ChatHelper:sendSystemMsg('释放技能中无法移动', objid)
     ActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT10, 1)
@@ -370,6 +391,9 @@ end
 function FallStarBow:getObjids (objid, index)
   -- 8格内的敌对生物
   local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('坠星'))) then
+    return false
+  end
   local playerPos = player:getMyPosition()
   local areaid = AreaHelper:createAreaRect(playerPos, { x = 8, y = 4, z = 8 })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
@@ -446,6 +470,10 @@ end
 OneByOneBow = MyWeapon:new(MyWeaponAttr.oneByOneBow)
 
 function OneByOneBow:useItem2 (objid)
+  local player = MyPlayerHelper:getPlayer(objid)
+  if (not(player:ableUseSkill('连珠'))) then
+    return false
+  end
   local ableUseSkill, remainingTime = MyItemHelper:ableUseSkill(objid, self.id, self.cd)
   if (not(ableUseSkill)) then
     MyPlayerHelper:showToast(objid, '连珠技能冷却中')
@@ -461,11 +489,10 @@ function OneByOneBow:useItem2 (objid)
   end
   MyItemHelper:recordUseSkill(objid, self.id, self.cd, true) -- 记录新的技能
   self:resetHitTimes(objid)
-  local player = MyPlayerHelper:getPlayer(objid)
   for i = 1, times do
     MyTimeHelper:callFnFastRuns(function ()
       local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
-      if (num > 0) then -- 有箭矢
+      if (num > 0 and player:ableUseSkill('连珠')) then -- 有箭矢并且能释放技能
         BackpackHelper:removeGridItemByItemID(objid, MyConstant.WEAPON.ARROW_ID, 1) -- 扣除箭矢
         local playerPos = player:getMyPosition()
         local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)

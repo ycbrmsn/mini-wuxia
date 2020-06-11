@@ -422,3 +422,17 @@ function MyPlayer:setSeal (active)
     return self.cantUseSkillReasons.seal <= 0
   end
 end
+
+-- 是否能够使用技能
+function MyPlayer:ableUseSkill (skillname)
+  skillname = skillname or ''
+  if (self.cantUseSkillReasons.seal > 0) then
+    ChatHelper:sendSystemMsg('你处于封魔状态，当前无法使用' .. skillname .. '技能', self.objid)
+    return false
+  end
+  if (self.cantUseSkillReasons.imprisoned > 0) then
+    ChatHelper:sendSystemMsg('你处于慑魂状态，当前无法使用' .. skillname .. '技能', self.objid)
+    return false
+  end
+  return true
+end
