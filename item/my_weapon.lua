@@ -100,7 +100,8 @@ function ChaseWindSword:useItem (objid)
   BackpackHelper:removeGridItem(objid, gridid)
   -- 生成飞行的追风剑（投掷物）
   local projectileid = WorldHelper:spawnProjectileByPos(objid, self.projectileid, srcPos, aimPos)
-  local time, index = MyTimeHelper:callFnAfterSecond (function ()
+  local weaponType = objid .. '-' .. self.id
+  MyTimeHelper:callFnFastRuns (function ()
     local pos = MyActorHelper:getMyPosition(projectileid)
     if (pos.x) then
       WorldHelper:despawnActor(projectileid) -- 移除投掷物
@@ -108,13 +109,13 @@ function ChaseWindSword:useItem (objid)
     else
       self:recoverWeapon(objid, self, curDur)
     end
-  end, self.level + 2)
-  MyItemHelper:recordProjectile(projectileid, objid, self, { pos = playerPos, curDur = curDur, time = time, index = index })
+  end, self.level + 2, weaponType)
+  MyItemHelper:recordProjectile(projectileid, objid, self, { pos = playerPos, curDur = curDur, weaponType = weaponType })
 end
 
 -- 投掷物命中
 function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
-  MyTimeHelper:delFn(projectileInfo.time, projectileInfo.index)
+  MyTimeHelper:delFnFastRuns(projectileInfo.weaponType)
   local objid = projectileInfo.objid
   local item = projectileInfo.item
   local player = MyPlayerHelper:getPlayer(objid)
@@ -490,25 +491,30 @@ function OneByOneBow:useItem2 (objid)
   ActorHelper:playBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4, 1)
   self:resetHitTimes(objid)
   player.action:playAttack()
-  for i = 1, times do
-    MyTimeHelper:callFnFastRuns(function ()
-      local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
-      if (num > 0 and player:ableUseSkill('连珠')) then -- 有箭矢并且能释放技能
-        BackpackHelper:removeGridItemByItemID(objid, MyConstant.WEAPON.ARROW_ID, 1) -- 扣除箭矢
-        local playerPos = player:getMyPosition()
-        -- local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
-        local srcPos = MyPosition:new(ActorHelper:getEyePosition(objid))
-        local aimPos = player:getAimPos() -- 准星位置
-        local projectileid = WorldHelper:spawnProjectileByPos(objid, MyConstant.WEAPON.ARROW_ID, srcPos, aimPos)
-        MyItemHelper:recordProjectile(projectileid, objid, self)
-        if (i == times) then -- 最后一箭关闭特效
+  -- 半秒后发射
+  MyTimeHelper:callFnFastRuns(function ()
+    local weaponType = objid .. '-' .. self.id
+    for i = 1, times do
+      MyTimeHelper:callFnFastRuns(function ()
+        local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
+        if (num > 0 and player:ableUseSkill('连珠')) then -- 有箭矢并且能释放技能
+          BackpackHelper:removeGridItemByItemID(objid, MyConstant.WEAPON.ARROW_ID, 1) -- 扣除箭矢
+          local playerPos = player:getMyPosition()
+          -- local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
+          local srcPos = MyPosition:new(ActorHelper:getEyePosition(objid))
+          local aimPos = player:getAimPos() -- 准星位置
+          local projectileid = WorldHelper:spawnProjectileByPos(objid, MyConstant.WEAPON.ARROW_ID, srcPos, aimPos)
+          MyItemHelper:recordProjectile(projectileid, objid, self)
+          if (i == times) then -- 最后一箭关闭特效
+            ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4)
+          end
+        else -- 无法释放技能则终止其他箭的发射并关闭特效
+          MyTimeHelper:delFnFastRuns(weaponType)
           ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4)
         end
-      else -- 无法释放技能关闭特效
-        ActorHelper:stopBodyEffectById(objid, MyConstant.BODY_EFFECT.LIGHT4)
-      end
-    end, 0.2 * i)
-  end
+      end, 0.2 * i, weaponType)
+    end
+  end, 0.5)
 end
 
 -- 投掷物命中

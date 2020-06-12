@@ -306,7 +306,7 @@ function MyTimeHelper:runFnFastRuns ()
   end
 end
 
--- 参数为：函数、秒、类型。几秒后执行方法，精确到0.05秒
+-- 参数为：函数、秒、类型。精确几秒后执行方法，精确到0.05秒
 function MyTimeHelper:callFnFastRuns (f, second, t)
   if (type(f) ~= 'function') then
     return
