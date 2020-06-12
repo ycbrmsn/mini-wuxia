@@ -6,7 +6,7 @@ MyTimeHelper = {
   fnIntervals = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
   fnCanRuns = {}, -- second -> { objid = { t, t }, objid = { t, t } ... }
   fnLastRuns = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
-  fnFastRuns = {}, -- { { second, f, p } }
+  fnFastRuns = {}, -- { { second, f, t } }
   fnContinueRuns = {} -- { t = { second, f, p }, t = { second, f, p }, ... }
 }
 
@@ -282,8 +282,17 @@ function MyTimeHelper:callFnLastRun (objid, t, f, second, p)
 end
 
 -- 添加方法
-function MyTimeHelper:addFnFastRuns (f, second, p)
-  table.insert(self.fnFastRuns, { second * 1000, f, p })
+function MyTimeHelper:addFnFastRuns (f, second, t)
+  table.insert(self.fnFastRuns, { second * 1000, f, t })
+end
+
+-- 删除方法
+function MyTimeHelper:delFnFastRuns (t)
+  for i = #self.fnFastRuns, 1, -1 do
+    if (self.fnFastRuns[i][3] and self.fnFastRuns[i][3] == t) then
+      table.remove(self.fnFastRuns, i)
+    end
+  end
 end
 
 -- 运行方法，然后删除
@@ -291,19 +300,19 @@ function MyTimeHelper:runFnFastRuns ()
   for i = #self.fnFastRuns, 1, -1 do
     self.fnFastRuns[i][1] = self.fnFastRuns[i][1] - 50
     if (self.fnFastRuns[i][1] <= 0) then
-      self.fnFastRuns[i][2](self.fnFastRuns[i][3])
+      self.fnFastRuns[i][2]()
       table.remove(self.fnFastRuns, i)
     end
   end
 end
 
--- 参数为：函数、秒、函数的参数table。几秒后执行方法，精确到0.05秒
-function MyTimeHelper:callFnFastRuns (f, second, p)
+-- 参数为：函数、秒、类型。几秒后执行方法，精确到0.05秒
+function MyTimeHelper:callFnFastRuns (f, second, t)
   if (type(f) ~= 'function') then
     return
   end
   second = second or 1
-  self:addFnFastRuns(f, second, p)
+  self:addFnFastRuns(f, second, t)
 end
 
 -- 添加方法
