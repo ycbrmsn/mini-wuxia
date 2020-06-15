@@ -128,6 +128,11 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
 end
 
 function MyStoryHelper:playerBadHurt (objid)
+  -- 检测技能是否正在释放
+  if (MyItemHelper:isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
+    FallStarBow:cancelSkill(objid)
+    return
+  end
   if (self.mainIndex == 1) then -- 在落叶村受重伤
     Story1:playerBadHurt(objid)
   elseif (self.mainIndex == 2 and self.mainProgress == 3) then -- 杀强盗受重伤

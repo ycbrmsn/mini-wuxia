@@ -15,7 +15,7 @@ DrinkBloodSword = MyWeapon:new(MyWeaponAttr.drinkBloodSword)
 
 -- 攻击命中恢复血量
 function DrinkBloodSword:attackHit (objid, toobjid)
-  local hp = self.hp + math.floor(self.addHpPerLevel * self.level)
+  local hp = self.hp + self.addHpPerLevel * self.level
   local toHp
   if (ActorHelper:isPlayer(toobjid)) then -- 命中玩家
     toHp = PlayerHelper:getHp(toobjid)
@@ -45,7 +45,8 @@ function StrongAttackSword:useItem (objid)
   end
   local playerPos = player:getMyPosition()
   -- 循环以距离玩家正面1米递增的间隔点开始，作为中心点，扩大1格，查找生物
-  for i = 1, self.level + 1 do
+  local distanceTimes = self.distance + self.level * self.addDistancePerLevel
+  for i = 1, distanceTimes do
     local pos = MathHelper:getDistancePosition(player:getMyPosition(), player:getFaceYaw(), i)
     local areaid = AreaHelper:createNineCubicArea(pos)
     local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
@@ -67,7 +68,7 @@ function StrongAttackSword:useItem (objid)
         -- 击退效果
         MyActorHelper:appendSpeed(targetObjid, 2, player:getMyPosition())
         -- 伤害
-        player:damageActor(targetObjid, self.attack * 2)
+        player:damageActor(targetObjid, self.attack * (self.multiple + self.level * self.addMultiplePerLevel))
         break
       end
     else
@@ -109,7 +110,7 @@ function ChaseWindSword:useItem (objid)
     else
       self:recoverWeapon(objid, self, curDur)
     end
-  end, self.level + 2, weaponType)
+  end, self.flyTime + self.level * self.addFlyTimePerLevel, weaponType)
   MyItemHelper:recordProjectile(projectileid, objid, self, { pos = playerPos, curDur = curDur, weaponType = weaponType })
 end
 
@@ -128,7 +129,8 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
     if (not(MyActorHelper:isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
       local toPos = MyActorHelper:getMyPosition(toobjid)
       local distance = WorldHelper:calcDistance(playerPos, toPos)
-      player:damageActor(toobjid, math.floor(item.attack + distance * 5))
+      local dam = item.damage + item.level * item.addDamagePerLevel
+      player:damageActor(toobjid, math.floor(item.attack + distance * dam))
     end
   elseif (blockid > 0) then -- 命中方块
     self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
@@ -157,7 +159,6 @@ function ChaseWindSword:recoverWeapon (playerid, item, curDur)
 end
 
 -- 刀
-
 -- 木刀
 WoodKnife = MyWeapon:new(MyWeaponAttr.woodKnife)
 
@@ -172,8 +173,8 @@ CongealFrostKnife = MyWeapon:new(MyWeaponAttr.congealFrostKnife)
 
 -- 攻击命中冰冻
 function CongealFrostKnife:attackHit (objid, toobjid)
-  local bufflv = math.floor(self.level / 3 + 1)
-  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  local bufflv = self.level + 1
+  local customticks = 5 * 20 -- 每秒20帧
   ActorHelper:addBuff(toobjid, 45, bufflv, customticks)
 end
 
@@ -191,8 +192,8 @@ function RejuvenationKnife:useItem (objid)
     return
   end
   MyItemHelper:recordUseSkill(objid, self.id, self.cd)
-  local bufflv = math.floor(self.level / 3 + 1)
-  local customticks = math.floor(self.level / 3 + 2) * 5 * 20 -- 每秒20帧
+  local bufflv = self.level + 1
+  local customticks = (self.skillTime + self.level * self.addSkillTimePerLevel) * 20 -- 每秒20帧
   ActorHelper:addBuff(objid, 50, bufflv, customticks) -- 快速生命恢复
 end
 
@@ -210,7 +211,8 @@ function SealDemonKnife:useItem (objid)
     return
   end
   local playerPos = player:getMyPosition()
-  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
+  local skillRange = self.skillRange + self.level * self.addSkillRangePerLevel
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = skillRange, y = skillRange, z = skillRange })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   if (#objids > 0) then
@@ -222,14 +224,13 @@ function SealDemonKnife:useItem (objid)
       for i, v in ipairs(objids) do
         MyActorHelper:cancelSealActor(v)
       end
-    end, self.level + 5)
+    end, self.skillTime + self.level * self.addSkillTimePerLevel)
   else
     ChatHelper:sendSystemMsg('封魔技能有效范围内未发现目标', objid)
   end
 end
 
 -- 枪
-
 -- 木枪
 WoodSpear = MyWeapon:new(MyWeaponAttr.woodSpear)
 
@@ -260,8 +261,8 @@ FireTipSpear = MyWeapon:new(MyWeaponAttr.fireTipSpear)
 -- 攻击命中着火
 function FireTipSpear:attackHit (objid, toobjid)
   self:reduceStrength(objid)
-  local bufflv = math.floor(self.level / 3 + 1)
-  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  local bufflv = self.level + 1
+  local customticks = 5 * 20 -- 每秒20帧
   ActorHelper:addBuff(toobjid, 33, bufflv, customticks)
 end
 
@@ -288,12 +289,14 @@ function OverlordSpear:useItem (objid)
   local curHp = PlayerHelper:getHp(objid)
   local maxHp = PlayerHelper:getMaxHp(objid)
   if (curHp < maxHp) then -- 恢复损失生命的20%
-    local hp = curHp + math.floor((maxHp - curHp) * 0.2)
+    local coverHp = self.coverHp + self.level * addCoverHpPerLevel
+    local hp = curHp + math.floor((maxHp - curHp) * coverHp)
     PlayerHelper:setHp(objid, hp)
   end
   -- 击退周围3格内的敌对生物
   local playerPos = player:getMyPosition()
-  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
+  local skillRange = self.skillRange + self.level * self.addSkillRangePerLevel
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = skillRange, y = skillRange, z = skillRange })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   for i, v in ipairs(objids) do
@@ -321,7 +324,8 @@ function ShockSoulSpear:useItem (objid)
     return
   end
   local playerPos = player:getMyPosition()
-  local areaid = AreaHelper:createAreaRect(playerPos, { x = 3, y = 3, z = 3 })
+  local skillRange = self.skillRange + self.level * self.addSkillRangePerLevel
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = skillRange, y = skillRange, z = skillRange })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   if (#objids > 0) then
@@ -333,14 +337,13 @@ function ShockSoulSpear:useItem (objid)
       for i, v in ipairs(objids) do
         MyActorHelper:cancelImprisonActor(v)
       end
-    end, self.level + 1)
+    end, self.skillTime + self.level * self.addSkillTimePerLevel)
   else
     ChatHelper:sendSystemMsg('慑魂技能有效范围内未发现目标', objid)
   end
 end
 
 -- 弓
-
 -- 木弓
 WoodBow = MyWeapon:new(MyWeaponAttr.woodBow)
 
@@ -355,8 +358,8 @@ SwallowSoulBow = MyWeapon:new(MyWeaponAttr.swallowSoulBow)
 
 -- 攻击命中中毒
 function SwallowSoulBow:attackHit (objid, toobjid)
-  local bufflv = math.floor(self.level / 3 + 1)
-  local customticks = math.floor(self.level / 3 + 1) * 5 * 20 -- 每秒20帧
+  local bufflv = self.level + 1
+  local customticks = 5 * 20 -- 每秒20帧
   ActorHelper:addBuff(toobjid, 34, bufflv, customticks)
 end
 
@@ -396,7 +399,8 @@ function FallStarBow:getObjids (objid, index)
     return false
   end
   local playerPos = player:getMyPosition()
-  local areaid = AreaHelper:createAreaRect(playerPos, { x = 8, y = 4, z = 8 })
+  local skillRange = self.skillRange + self.level * self.addSkillRangePerLevel
+  local areaid = AreaHelper:createAreaRect(playerPos, { x = skillRange, y = 4, z = skillRange })
   local objids = MyActorHelper:getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper:destroyArea(areaid)
   local msg
@@ -482,7 +486,7 @@ function OneByOneBow:useItem2 (objid)
   end
   -- 查询背包内箭矢数量
   local num = BackpackHelper:getItemNumAndGrid(objid, MyConstant.WEAPON.ARROW_ID)
-  local times = self.level + 3
+  local times = self.arrowNum + self.level * self.addArrowNumPerLevel
   if (num < times) then
     ChatHelper:sendSystemMsg('箭矢数量不足', objid)
     return false
