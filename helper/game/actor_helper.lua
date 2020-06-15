@@ -54,6 +54,11 @@ function ActorHelper:getEnableBeKilledState (objid)
   return self:getActionAttrState(objid, CREATUREATTR.ENABLE_BEKILLED)
 end
 
+-- 设置生物是否可被攻击状态
+function ActorHelper:setEnableBeAttackedState (objid, switch)
+  return self:setActionAttrState(objid, CREATUREATTR.ENABLE_BEATTACKED, switch)
+end
+
 -- 封装原始接口
 
 -- 向目标位置移动

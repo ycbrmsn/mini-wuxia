@@ -234,3 +234,12 @@ function PlayerHelper:getAimPos (objid)
     return Player:getAimPos(objid)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 传送玩家到出生点
+function PlayerHelper:teleportHome (objid)
+  local onceFailMessage = '传送玩家到出生点失败一次'
+  local finillyFailMessage = StringHelper:concat('传送玩家到出生点失败，参数：objid=', objid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:teleportHome(objid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
