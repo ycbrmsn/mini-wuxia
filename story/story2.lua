@@ -428,13 +428,13 @@ function Story2:wipeOutQiangdao ()
   hostPlayer.action:playDown(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong:speak(waitSeconds, '我起先还在思量，如果考验只是杀几条狼，那岂不是就招的猎户。')
+  yexiaolong:speak(waitSeconds, '起先我还在思量，如果考验只是杀几条狼，那岂不是就带了几个猎户回去嘛。')
 
   waitSeconds = waitSeconds + 3
   yexiaolong:speak(waitSeconds, '如此，回去之后定又会被小高嘲笑。不错不错。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '路见不平的少年侠士。快哉。')
+  yexiaolong:speak(waitSeconds, '现在嘛……路见不平的少年侠士。快哉。')
   yexiaolong.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 3
@@ -444,9 +444,9 @@ function Story2:wipeOutQiangdao ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '刚刚路上捡了把小剑，挺适合你现在用的。就给你好了。')
+  yexiaolong:speak(waitSeconds, '对了，我这里还有几把小剑，挺适合你现在用的。就给你好了。')
   MyPlayerHelper:everyPlayerDoSomeThing (function (p)
-    Backpack:addItem(p.objid, 12003, 1) -- 短剑
+    Backpack:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
@@ -692,7 +692,7 @@ function Story2:playerBadHurt (objid)
       MyTimeHelper:callFnAfterSecond(function ()
         MyStoryHelper:forward('终于消灭了强盗')
         yexiaolong:lookAt(player.objid)
-        yexiaolong:speak(0, '不错，这么快就恢复过来了。')
+        yexiaolong:speak(0, '不错，这么快就又能动弹了。')
         self:endWords(player, 2)
       end, ws)
     end
