@@ -93,9 +93,13 @@ function MonsterHelper:lookAt (objid, toobjid)
 end
 
 function MonsterHelper:wantLookAt (objid, toobjid, seconds)
+  local t = nil
+  if (type(objid) == 'number') then
+    t = objid .. 'lookat'
+  end
   MyTimeHelper:callFnContinueRuns(function ()
     self:lookAt(objid, toobjid)
-  end, seconds, objid .. 'lookat')
+  end, seconds, t)
 end
 
 function MonsterHelper:playAct (objid, act, afterSeconds)
@@ -120,12 +124,14 @@ function MonsterHelper:actorDie (objid, toobjid)
   end
 end
 
+-- 创建怪物掉落
 function MonsterHelper:createFallOff (monster, pos)
   if (monster.fallOff and #monster.fallOff > 0) then
     for i, v in ipairs(monster.fallOff) do
       local r = math.random(1, 100)
       if (v[3] > r) then
-        local num = math.random(1, v[2])
+        local num = math.ceil(v[2] / 2)
+        num = math.random(num, v[2])
         WorldHelper:spawnItem(pos.x, pos.y, pos.z, v[1], num)
       end
     end

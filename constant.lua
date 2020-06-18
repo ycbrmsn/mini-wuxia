@@ -30,7 +30,8 @@ MyConstant = {
     LOG_PAPER_ID = 4106, -- 江湖日志ID
     TOKEN_ID = 4111, -- 风颖城通行令牌ID
     WENYU_PACKAGE_ID = 4116, -- 文羽包裹
-    YANGWANLI_PACKAGE_ID = 4117 -- 村长包裹
+    YANGWANLI_PACKAGE_ID = 4117, -- 村长包裹
+    APPLE_ID = 4125 -- 苹果
   },
   WEAPON = {
     ARROW_ID = 4130, -- 箭矢ID

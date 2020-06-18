@@ -1,4 +1,4 @@
--- 强盗喽啰
+-- 强盗喽罗
 QiangdaoLouluo = MyActor:new(MyConstant.QIANGDAO_LOULUO_ACTOR_ID)
 
 function QiangdaoLouluo:new ()
@@ -9,9 +9,8 @@ function QiangdaoLouluo:new ()
       exp = 25
     },
     fallOff = {
-      { 12502, 1, 20 }, -- 小麦面包
-      { 11001, 1, 20 }, -- 木斧头
-      { MyConstant.ITEM.COIN_ID, 3, 20 } -- 铜板
+      { MyConstant.ITEM.APPLE_ID, 1, 30 }, -- 苹果
+      { MyConstant.ITEM.COIN_ID, 5, 70 } -- 铜板
     },
     initPosition = { x = 22, y = 7, z = 37 },
     toPosition = { x = -363, y = 7, z = 556 },

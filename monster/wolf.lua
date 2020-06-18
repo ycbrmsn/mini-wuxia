@@ -9,8 +9,8 @@ function Wolf:new ()
       exp = 20
     },
     fallOff = {
-      { 12518, 1, 20 }, -- 生鸡腿
-      { MyConstant.ITEM.COIN_ID, 1, 20 } -- 铜板
+      { MyConstant.ITEM.APPLE_ID, 1, 20 }, -- 苹果
+      { MyConstant.ITEM.COIN_ID, 1, 50 } -- 铜板
     },
     monsterPositions = {
       { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置

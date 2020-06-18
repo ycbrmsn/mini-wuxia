@@ -9,9 +9,8 @@ function QiangdaoXiaotoumu:new ()
       exp = 40
     },
     fallOff = {
-      { 12512, 1, 20 }, -- 烤土豆
-      { 11002, 1, 20 }, -- 石斧头
-      { MyConstant.ITEM.COIN_ID, 10, 20 } -- 铜板
+      { MyConstant.ITEM.APPLE_ID, 1, 30 }, -- 苹果
+      { MyConstant.ITEM.COIN_ID, 10, 70 } -- 铜板
     },
     initPosition = { x = 20, y = 7, z = 45 },
     toPosition = { x = -363, y = 7, z = 556 },
