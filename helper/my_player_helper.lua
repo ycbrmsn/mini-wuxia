@@ -62,8 +62,15 @@ end
 
 -- 玩家造成伤害
 function MyPlayerHelper:playerDamageActor (objid, toobjid)
-  local actorname = CreatureHelper:getActorName(toobjid)
-  local hp = CreatureHelper:getHp(toobjid)
+  local actorname, hp
+  if (ActorHelper:isPlayer(toobjid)) then -- 命中玩家
+    local player = MyPlayerHelper:getPlayer(toobjid)
+    actorname = player:getName()
+    hp = PlayerHelper:getHp(toobjid)
+  else
+    actorname = CreatureHelper:getActorName(toobjid)
+    hp = CreatureHelper:getHp(toobjid)
+  end
   if (hp and hp <= 0) then
     self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
   else

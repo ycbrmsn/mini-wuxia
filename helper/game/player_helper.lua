@@ -20,7 +20,7 @@ end
 
 -- 查询玩家是否可被杀死
 function PlayerHelper:getPlayerEnableBeKilled (objid)
-  return PlayerHelper:checkActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED)
+  return self:checkActionAttrState(objid, PLAYERATTR.ENABLE_BEKILLED)
 end
 
 -- 设置玩家是否可被杀死
@@ -102,11 +102,7 @@ end
 
 -- 获取玩家特殊属性的状态
 function PlayerHelper:checkActionAttrState (objid, actionattr)
-  local onceFailMessage = '获取玩家特殊属性的状态失败一次'
-  local finillyFailMessage = StringHelper:concat('获取玩家特殊属性的状态失败，参数：objid=', objid, ',actionattr=', actionattr)
-  return CommonHelper:callOneResultMethod(function (p)
-    return Player:checkActionAttrState(objid, actionattr)
-  end, nil, onceFailMessage, finillyFailMessage)
+  return Player:checkActionAttrState(objid, actionattr) == ErrorCode.OK
 end
 
 -- 设置玩家行为属性状态
