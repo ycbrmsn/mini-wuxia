@@ -108,6 +108,10 @@ local atSecond = function (eventArgs)
       TimerHelper:startForwardTimer(TimerHelper.timerid)
     end
 
+    if (second > 1) then -- 初始化之后行动
+      MyActorHelper:runActors()
+    end
+
     -- if (second == 3) then
     --   MyStoryHelper.mainIndex = 2
     --   MyStoryHelper.mainProgress = 1
