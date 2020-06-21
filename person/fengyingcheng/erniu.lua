@@ -7,7 +7,7 @@ function Erniu:new ()
     initPosition = MyPosition:new(-53.5, 9.5, 494.5), -- 马厩小房间
     bedData = {
       MyPosition:new(-51.5, 8.5, 494.5), -- 床尾位置
-      ActorHelper.FACE_YAW.NORTH -- 床尾朝向南
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向北
     },
     candlePositions = {
       MyPosition:new(-53.5, 9.5, 497.5)

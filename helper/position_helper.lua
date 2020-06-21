@@ -20,7 +20,13 @@ PositionHelper = {
     MyPosition:new(24, 8, -19), -- 文羽家的门
     MyPosition:new(252, 14, 0), -- 强盗营地的门
     MyPosition:new(252, 14, 1), -- 强盗营地的门
-    MyPosition:new(-55, 8, 498) -- 二牛门
+    MyPosition:new(-55, 8, 498), -- 二牛门
+    MyPosition:new(-54, 7, 532), -- 千兵卫门1
+    MyPosition:new(-54, 7, 533), -- 千兵卫门2
+    MyPosition:new(-46, 8, 501), -- 风颖马厩门1
+    MyPosition:new(-46, 8, 500), -- 风颖马厩门2
+    MyPosition:new(-59, 8, 492), -- 风颖马厩门3
+    MyPosition:new(-58, 8, 492) -- 风颖马厩门4
   }
 }
 

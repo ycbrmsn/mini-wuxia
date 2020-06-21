@@ -73,7 +73,8 @@ function initMyActors ()
 
   daniu = Daniu:new()
   erniu = Erniu:new()
-  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, erniu }
+  qianbingwei = Qianbingwei:new()
+  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, erniu, qianbingwei }
   for i, v in ipairs(myActors) do
     MyTimeHelper:initActor(v)
     -- LogHelper:debug('创建', v:getName(), '完成')

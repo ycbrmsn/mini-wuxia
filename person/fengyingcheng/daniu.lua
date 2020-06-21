@@ -8,7 +8,7 @@ function Daniu:new ()
     doorPosition = MyPosition:new(-46.5, 8.5, 501.5), -- 门口位置
     bedData = {
       MyPosition:new(-47.5, 8.5, 507.5), -- 床尾位置
-      ActorHelper.FACE_YAW.WEST -- 床尾朝向南
+      ActorHelper.FACE_YAW.WEST -- 床尾朝向西
     },
     candlePositions = {
       MyPosition:new(-48.5, 9.5, 503.5)
