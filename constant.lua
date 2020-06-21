@@ -17,6 +17,7 @@ MyConstant = {
   YEXIAOLONG_ACTOR_ID = 10, -- 叶小龙ID
   LUDAOFENG_ACTOR_ID = 13, -- 陆道风
   QIANBINGWEI_ACTOR_ID = 14, -- 千兵卫
+  DANIU_ACTOR_ID = 18, -- 大牛
   ERNIU_ACTOR_ID = 40, -- 二牛
 
   -- 怪物ID

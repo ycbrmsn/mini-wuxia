@@ -69,7 +69,8 @@ function Erniu:init ()
 end
 
 function Erniu:collidePlayer (playerid, isPlayerInFront)
-  
+  local nickname = PlayerHelper:getNickname(playerid)
+  self:speakTo(playerid, 0, '买好票之后拿着它给我就好了。')
 end
 
 function Erniu:candleEvent (myPlayer, candle)
