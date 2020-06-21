@@ -16,7 +16,8 @@ function PersonHelper:init ()
   erniu = Erniu:new()
   qianbingwei = Qianbingwei:new()
   ludaofeng = Ludaofeng:new()
-  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, erniu, qianbingwei, ludaofeng }
+  sunkongwu = Sunkongwu:new()
+  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, erniu, qianbingwei, ludaofeng, sunkongwu }
   for i, v in ipairs(myActors) do
     MyTimeHelper:initActor(v)
     -- LogHelper:debug('创建', v:getName(), '完成')

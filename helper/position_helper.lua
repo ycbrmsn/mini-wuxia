@@ -30,7 +30,13 @@ PositionHelper = {
     MyPosition:new(-37, 8, 546), -- 风颖议事厅门1
     MyPosition:new(-36, 8, 546), -- 风颖议事厅门2
     MyPosition:new(-40, 16, 547), -- 城主书房门
-    MyPosition:new(-33, 16, 547) -- 城主卧房门
+    MyPosition:new(-33, 16, 547), -- 城主卧房门
+    MyPosition:new(6, 8, 559), -- 孔武坊门1
+    MyPosition:new(7, 8, 559), -- 孔武坊门2
+    MyPosition:new(5, 8, 566), -- 孔武坊门3
+    MyPosition:new(5, 8, 567), -- 孔武坊门4
+    MyPosition:new(11, 12, 564), -- 孔武坊门5
+    MyPosition:new(11, 12, 563), -- 孔武坊门6
   }
 }
 

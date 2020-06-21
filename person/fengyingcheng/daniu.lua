@@ -38,7 +38,7 @@ end
 
 function Daniu:doItNow ()
   local hour = MyTimeHelper:getHour()
-  if (hour >= 6 and hour < 8) then
+  if (hour >= 6 and hour < 22) then
     self:wantAtHour(6)
   else
     self:wantAtHour(22)
