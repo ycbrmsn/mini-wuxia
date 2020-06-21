@@ -1,4 +1,4 @@
--- 人物工具类
+-- 生物工具类
 MyActorHelper = {
   actors = {}, -- objid -> actor
   clickActors = {} -- 玩家点击的actor：objid -> actor

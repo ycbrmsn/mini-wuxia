@@ -26,7 +26,11 @@ PositionHelper = {
     MyPosition:new(-46, 8, 501), -- 风颖马厩门1
     MyPosition:new(-46, 8, 500), -- 风颖马厩门2
     MyPosition:new(-59, 8, 492), -- 风颖马厩门3
-    MyPosition:new(-58, 8, 492) -- 风颖马厩门4
+    MyPosition:new(-58, 8, 492), -- 风颖马厩门4
+    MyPosition:new(-37, 8, 546), -- 风颖议事厅门1
+    MyPosition:new(-36, 8, 546), -- 风颖议事厅门2
+    MyPosition:new(-40, 16, 547), -- 城主书房门
+    MyPosition:new(-33, 16, 547) -- 城主卧房门
   }
 }
 

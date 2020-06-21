@@ -25,7 +25,7 @@ end
 local startGame = function ()
   LogHelper:debug('开始游戏')
   MyBlockHelper:initBlocks()
-  initHours(7)
+  initHours(MyConstant.INIT_HOUR)
 end
 
 -- 无参数
@@ -62,27 +62,7 @@ function initHours (hour)
 end
 
 function initMyActors ()
-  wenyu = Wenyu:new()
-  jiangfeng = Jiangfeng:new()
-  jiangyu = Jiangyu:new()
-  wangdali = Wangdali:new()
-  miaolan = Miaolan:new()
-  yangwanli = Yangwanli:new()
-  huaxiaolou = Huaxiaolou:new()
-  yexiaolong = Yexiaolong:new()
-
-  daniu = Daniu:new()
-  erniu = Erniu:new()
-  qianbingwei = Qianbingwei:new()
-  local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, erniu, qianbingwei }
-  for i, v in ipairs(myActors) do
-    MyTimeHelper:initActor(v)
-    -- LogHelper:debug('创建', v:getName(), '完成')
-  end
-  -- MyTimeHelper:initActor(miaolan)
-  guard = Guard:new()
-  guard:init()
-  LogHelper:debug('创建人物完成')
+  PersonHelper:init()
   MyStoryHelper:init()
   MyBlockHelper:init()
 end
@@ -91,7 +71,6 @@ function initDoorAreas ()
   local doors = PositionHelper:getDoorPositions()
   for i, v in ipairs(doors) do
     local areaid = AreaHelper:getAreaByPos(v)
-    -- Area:fillBlock(areaid, 200, 1)
     -- LogHelper:debug('初始化门区域：', areaid)
     table.insert(AreaHelper.allDoorAreas, areaid, v)
   end
