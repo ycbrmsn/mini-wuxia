@@ -366,6 +366,9 @@ function MyPlayer:damageActor (toobjid, val)
   end
   if (ActorHelper:isPlayer(toobjid)) then -- 伤害玩家
     local hp = PlayerHelper:getHp(toobjid)
+    if (hp <= 0) then -- 生物已经死亡
+      return
+    end
     if (hp > val) then -- 玩家不会死亡
       hp = hp - val
       PlayerHelper:setHp(toobjid, hp)
@@ -381,7 +384,7 @@ function MyPlayer:damageActor (toobjid, val)
     end
   else -- 伤害了生物
     local hp = CreatureHelper:getHp(toobjid)
-    if (not(hp)) then -- 未找到生物
+    if (not(hp) or hp <= 0) then -- 未找到生物或生物已经死亡
       return
     end
     if (hp > val) then -- 生物不会死亡

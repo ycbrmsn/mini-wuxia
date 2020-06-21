@@ -1,7 +1,8 @@
 -- 常量
 MyConstant = {
   INIT_HOUR = 7, -- 初始时间
-  PROJECTILE_HURT = 0, -- 通用投掷物固定伤害
+  PROJECTILE_HURT = 6, -- 通用投掷物固定伤害
+  
   -- 人物ID
   -- 落叶村人物
   YANGWANLI_ACTOR_ID = 2, -- 杨万里村长ID

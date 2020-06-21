@@ -2,6 +2,8 @@
 MyTimeHelper = {
   hour = nil,
   time = 0,
+  frame = 0, -- 帧
+  frameInfo = {}, -- 帧对应信息
   fns = {}, -- second -> { { f, p }, { f, p }, ... }
   fnIntervals = {}, -- second -> { objid = { t = { f, p }, t = { f, p } }, objid = { t = { f, p }, t = { f, p } }, ... }
   fnCanRuns = {}, -- second -> { objid = { t, t }, objid = { t, t } ... }
@@ -19,6 +21,13 @@ function MyTimeHelper:updateTime (second)
   self.time = second
 end
 
+function MyTimeHelper:addFrame ()
+  if (self.frameInfo[self.frame]) then
+    self.frameInfo[self.frame] = nil
+  end
+  self.frame = self.frame + 1
+end
+
 function MyTimeHelper:setHour (hour)
   if (WorldHelper:setHours(hour)) then
     self.hour = hour
@@ -32,6 +41,20 @@ function MyTimeHelper:getHour ()
     self.hour = WorldHelper:getHours()
   end
   return self.hour
+end
+
+function MyTimeHelper:getFrameInfo (key)
+  if (not(self.frameInfo[self.frame])) then
+    return nil
+  end
+  return self.frameInfo[self.frame][key]
+end
+
+function MyTimeHelper:setFrameInfo (key, val)
+  if (not(self.frameInfo[self.frame])) then
+    self.frameInfo[self.frame] = {}
+  end
+  self.frameInfo[self.frame][key] = val
 end
 
 -- 添加方法

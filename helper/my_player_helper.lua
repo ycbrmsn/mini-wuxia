@@ -57,26 +57,15 @@ function MyPlayerHelper:playerAttackHit (objid, toobjid)
   local item = MyItemHelper:getItem(itemid)
   if (item) then
     item:attackHit(objid, toobjid)
+    self:showActorHp(objid, toobjid)
   end
 end
 
 -- 玩家造成伤害
 function MyPlayerHelper:playerDamageActor (objid, toobjid)
-  local actorname, hp
-  if (ActorHelper:isPlayer(toobjid)) then -- 命中玩家
-    local player = MyPlayerHelper:getPlayer(toobjid)
-    actorname = player:getName()
-    hp = PlayerHelper:getHp(toobjid)
-  else
-    actorname = CreatureHelper:getActorName(toobjid)
-    hp = CreatureHelper:getHp(toobjid)
-  end
-  if (hp and hp <= 0) then
-    self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
-  else
-    hp = math.ceil(hp)
-    self:showToast(objid, StringHelper:concat(actorname, '剩余生命：', hp))
-  end
+  local key = self:generateDamageKey(objid, toobjid)
+  MyTimeHelper:setFrameInfo(key, true)
+  self:showActorHp(objid, toobjid)
 end
 
 -- 玩家击败生物
@@ -84,6 +73,33 @@ function MyPlayerHelper:playerDefeatActor (playerid, objid)
   local exp = MonsterHelper:getExp(playerid, objid)
   local player = self:getPlayer(playerid)
   player:gainExp(exp)
+end
+
+function MyPlayerHelper:generateDamageKey (objid, toobjid)
+  return objid .. 'damage' .. toobjid
+end
+
+function MyPlayerHelper:showActorHp (objid, toobjid)
+  local actorname, hp
+  if (ActorHelper:isPlayer(toobjid)) then -- 生物是玩家
+    local player = MyPlayerHelper:getPlayer(toobjid)
+    actorname = player:getName()
+    hp = PlayerHelper:getHp(toobjid)
+  else
+    actorname = CreatureHelper:getActorName(toobjid)
+    hp = CreatureHelper:getHp(toobjid)
+  end
+
+  local t = 'showActorHp' .. toobjid
+  MyTimeHelper:delFnFastRuns(t)
+  MyTimeHelper:callFnFastRuns(function ()
+    if (hp and hp <= 0) then
+      self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
+    else
+      hp = math.ceil(hp)
+      self:showToast(objid, StringHelper:concat(actorname, '剩余生命：', hp))
+    end
+  end, 0.1, t)
 end
 
 function MyPlayerHelper:getAllPlayers ()

@@ -31,6 +31,7 @@ end
 -- 无参数
 local runGame = function ()
   LogHelper:call(function ()
+    MyTimeHelper:addFrame()
     MyTimeHelper:runFnFastRuns()
     MyTimeHelper:runFnContinueRuns()
   end)

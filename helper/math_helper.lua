@@ -67,3 +67,8 @@ function MathHelper:getPos2PosInLineDistancePosition (pos1, pos2, distance)
   local angle = self:getActorFaceYaw(myVector3)
   return self:getDistancePosition(pos2, angle, distance)
 end
+
+-- 两点之间的距离
+function MathHelper:getDistance (pos1, pos2)
+  return self:getVector3Length(pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z)
+end
