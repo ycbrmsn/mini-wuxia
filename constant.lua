@@ -20,6 +20,7 @@ MyConstant = {
   DANIU_ACTOR_ID = 18, -- 大牛
   ERNIU_ACTOR_ID = 40, -- 二牛
   SUNKONGWU_ACTOR_ID = 31, -- 孙孔武
+  LIMIAOSHOU_ACTOR_ID = 32, -- 李妙手
 
   -- 怪物ID
   WOLF_ACTOR_ID = 11, -- 恶狼ID
