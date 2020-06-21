@@ -146,3 +146,9 @@ function MyItemHelper:cancelDelaySkill (objid)
     ChatHelper:sendSystemMsg('取消' .. delaySkillInfo.name .. '技能', objid)
   end
 end
+
+-- 移除玩家当前手持物
+function MyItemHelper:removeCurTool (objid)
+  local gridid = BackpackHelper:getCurShotcutGrid(objid)
+  BackpackHelper:removeGridItem(objid, gridid)
+end

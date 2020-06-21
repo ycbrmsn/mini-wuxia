@@ -1,23 +1,26 @@
 -- 位置工具类
 PositionHelper = {
+  luoyecunPos = MyPosition:new(0, 8, 19), -- 落叶村位置
+  pingfengzhaiPos = MyPosition:new(-363, 8, 556), -- 平风寨位置
   doorPositions = {
-    { x = 31, y = 8, z = 2 }, -- 主角家的门
-    { x = 9, y = 8, z = -21 }, -- 江枫家的门
-    { x = -13, y = 8, z = -21 }, -- 村长家的门
-    { x = -12, y = 8, z = -21 }, -- 村长家的门
-    { x = -30, y = 8, z = -22 }, -- 苗兰家一楼的门
-    { x = -30, y = 13, z = -21 }, -- 苗兰家二楼的门
-    { x = -29, y = 9, z = -37 }, -- 王大力家的门
-    { x = -30, y = 9, z = -37 }, -- 王大力家的门
-    { x = 15, y = 9, z = -39 }, -- 花小楼客栈的门
-    { x = 16, y = 9, z = -39 }, -- 花小楼客栈的门
-    { x = 26, y = 9, z = -39 }, -- 客栈客房外门
-    { x = 29, y = 9, z = -42 }, -- 客栈客房中门
-    { x = 26, y = 9, z = -44 }, -- 客栈客房内门
-    { x = 24, y = 9, z = -41 }, -- 客栈客房走廊门
-    { x = 24, y = 8, z = -19 }, -- 文羽家的门
-    { x = 252, y = 14, z = 0 }, -- 强盗营地的门
-    { x = 252, y = 14, z = 1 } -- 强盗营地的门
+    MyPosition:new(31, 8, 2), -- 主角家的门
+    MyPosition:new(9, 8, -21), -- 江枫家的门
+    MyPosition:new(-13, 8, -21), -- 村长家的门
+    MyPosition:new(-12, 8, -21), -- 村长家的门
+    MyPosition:new(-30, 8, -22), -- 苗兰家一楼的门
+    MyPosition:new(-30, 13, -21), -- 苗兰家二楼的门
+    MyPosition:new(-29, 9, -37), -- 王大力家的门
+    MyPosition:new(-30, 9, -37), -- 王大力家的门
+    MyPosition:new(15, 9, -39), -- 花小楼客栈的门
+    MyPosition:new(16, 9, -39), -- 花小楼客栈的门
+    MyPosition:new(26, 9, -39), -- 客栈客房外门
+    MyPosition:new(29, 9, -42), -- 客栈客房中门
+    MyPosition:new(26, 9, -44), -- 客栈客房内门
+    MyPosition:new(24, 9, -41), -- 客栈客房走廊门
+    MyPosition:new(24, 8, -19), -- 文羽家的门
+    MyPosition:new(252, 14, 0), -- 强盗营地的门
+    MyPosition:new(252, 14, 1), -- 强盗营地的门
+    MyPosition:new(-55, 8, 498) -- 二牛门
   }
 }
 

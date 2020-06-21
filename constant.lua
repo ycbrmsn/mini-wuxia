@@ -17,6 +17,7 @@ MyConstant = {
   YEXIAOLONG_ACTOR_ID = 10, -- 叶小龙ID
   LUDAOFENG_ACTOR_ID = 13, -- 陆道风
   QIANBINGWEI_ACTOR_ID = 14, -- 千兵卫
+  ERNIU_ACTOR_ID = 40, -- 二牛
 
   -- 怪物ID
   WOLF_ACTOR_ID = 11, -- 恶狼ID
@@ -32,7 +33,9 @@ MyConstant = {
     TOKEN_ID = 4111, -- 风颖城通行令牌ID
     WENYU_PACKAGE_ID = 4116, -- 文羽包裹
     YANGWANLI_PACKAGE_ID = 4117, -- 村长包裹
-    APPLE_ID = 4125 -- 苹果
+    APPLE_ID = 4125, -- 苹果
+    CARRIAGE_LUOYECUN_ID = 4285, -- 落叶村车票
+    CARRIAGE_PINGFENGZHAI_ID = 4286 -- 平风寨车票
   },
   WEAPON = {
     ARROW_ID = 4130, -- 箭矢ID
