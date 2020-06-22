@@ -167,12 +167,16 @@ function MyActor:lookAt (objid)
     y = y + ActorHelper:getEyeHeight(objid) - 1
   end
   local x0, y0, z0 = ActorHelper:getPosition(self.objid)
-  y0 = y0 + ActorHelper:getEyeHeight(self.objid) - 1 -- 生物位置y是地面上一格，所以要减1
-  local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
-  local faceYaw = MathHelper:getActorFaceYaw(myVector3)
-  local facePitch = MathHelper:getActorFacePitch(myVector3)
-  self:setFaceYaw(faceYaw)
-  self:setFacePitch(facePitch)
+  if (x == x0 and z == z0) then -- 如果人物就在需要看向的位置上，则不做什么
+
+  else
+    y0 = y0 + ActorHelper:getEyeHeight(self.objid) - 1 -- 生物位置y是地面上一格，所以要减1
+    local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
+    local faceYaw = MathHelper:getActorFaceYaw(myVector3)
+    local facePitch = MathHelper:getActorFacePitch(myVector3)
+    self:setFaceYaw(faceYaw)
+    self:setFacePitch(facePitch)
+  end
 end
 
 function MyActor:speak (afterSeconds, ...)
