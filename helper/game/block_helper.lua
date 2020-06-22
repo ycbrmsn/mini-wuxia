@@ -76,8 +76,8 @@ function BlockHelper:getBlockData (x, y, z)
   local onceFailMessage = '获取方块数据失败一次'
   local finillyFailMessage = StringHelper:concat('获取方块数据失败，参数：x=', x, ', y=', y, ', z=', z)
   return CommonHelper:callOneResultMethod(function (p)
-    return Block:getBlockData(p.x, p.y, p.z)
-  end, { x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+    return Block:getBlockData(x, y, z)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 设置方块数据
@@ -85,8 +85,8 @@ function BlockHelper:setBlockAll (x, y, z, blockid, data)
   local onceFailMessage = '设置方块数据失败一次'
   local finillyFailMessage = StringHelper:concat('设置方块数据失败，参数：x=', x, ', y=', y, ', z=', z, ', blockid=', blockid, ', data=', data)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Block:setBlockAll(p.x, p.y, p.z, p.blockid, p.data)
-  end, { x = x, y = y, z = z, blockid = blockid, data = data }, onceFailMessage, finillyFailMessage)
+    return Block:setBlockAll(x, y, z, blockid, data)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 设置blockalldata更新当前位置方块
@@ -94,8 +94,8 @@ function BlockHelper:setBlockAllForNotify (x, y, z, blockid)
   local onceFailMessage = '设置blockalldata更新当前位置方块失败一次'
   local finillyFailMessage = StringHelper:concat('设置blockalldata更新当前位置方块失败，参数：x=', x, ', y=', y, ', z=', z, ', blockid=', blockid)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Block:setBlockAllForNotify(p.x, p.y, p.z, p.blockid)
-  end, { x = x, y = y, z = z, blockid = blockid}, onceFailMessage, finillyFailMessage)
+    return Block:setBlockAllForNotify(x, y, z, blockid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 获取block对应id
@@ -103,8 +103,8 @@ function BlockHelper:getBlockID (x, y, z)
   local onceFailMessage = '获取block对应id失败一次'
   local finillyFailMessage = StringHelper:concat('获取block对应id失败，参数：x=', x, ', y=', y, ', z=', z)
   return CommonHelper:callOneResultMethod(function (p)
-    return Block:getBlockID(p.x, p.y, p.z)
-  end, { x = x, y = y, z = z }, onceFailMessage, finillyFailMessage)
+    return Block:getBlockID(x, y, z)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 替换方块
@@ -112,8 +112,8 @@ function BlockHelper:replaceBlock (blockid, x, y, z, face)
   local onceFailMessage = '替换方块失败一次'
   local finillyFailMessage = StringHelper:concat('替换方块失败，参数：blockid=', blockid, ', x=', x, ', y=', y, ', z=', z, ', face=', face)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Block:replaceBlock(p.blockid, p.x, p.y, p.z, p.face)
-  end, { blockid = blockid, x = x, y = y, z = z, face = face }, onceFailMessage, finillyFailMessage)
+    return Block:replaceBlock(blockid, x, y, z, face)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 是否是气体方块
@@ -126,8 +126,8 @@ function BlockHelper:getBlockSwitchStatus (pos)
   local onceFailMessage = '获取功能方块的开关状态失败一次'
   local finillyFailMessage = StringHelper:concat('获取功能方块的开关状态失败，参数：pos=', pos)
   return CommonHelper:callOneResultMethod(function (p)
-    return Block:getBlockSwitchStatus(p.pos)
-  end, { pos = pos }, onceFailMessage, finillyFailMessage)
+    return Block:getBlockSwitchStatus(pos)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 设置方块设置属性状态
@@ -136,5 +136,5 @@ function BlockHelper:setBlockSettingAttState (blockid, attrtype, switch)
   local finillyFailMessage = StringHelper:concat('设置方块设置属性状态失败，参数：blockid=', blockid, ', attrtype=', attrtype, ', switch=', switch)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Block:setBlockSettingAttState(blockid, attrtype, switch)
-  end, {}, onceFailMessage, finillyFailMessage)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

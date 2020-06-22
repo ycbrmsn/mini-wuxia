@@ -58,8 +58,8 @@ function AreaHelper:createAreaRect (pos, dim)
   local onceFailMessage = '创建区域失败一次'
   local finillyFailMessage = StringHelper:concat('创建矩形区域失败，参数：pos=', pos, ', dim=', dim)
   return CommonHelper:callOneResultMethod(function (p)
-    return Area:createAreaRect(p.pos, p.dim)
-  end, { pos = pos, dim = dim }, onceFailMessage, finillyFailMessage)
+    return Area:createAreaRect(pos, dim)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 根据起始点创建矩形区域
@@ -67,8 +67,8 @@ function AreaHelper:createAreaRectByRange (posBeg, posEnd)
   local onceFailMessage = '创建矩形区域失败一次'
   local finillyFailMessage = StringHelper:concat('创建矩形区域失败，参数：posBeg=', posBeg, ', posEnd=', posEnd)
   return CommonHelper:callOneResultMethod(function (p)
-    return Area:createAreaRectByRange(p.posBeg, p.posEnd)
-  end, { posBeg = posBeg, posEnd = posEnd }, onceFailMessage, finillyFailMessage)
+    return Area:createAreaRectByRange(posBeg, posEnd)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 销毁区域
@@ -76,8 +76,8 @@ function AreaHelper:destroyArea (areaid)
   local onceFailMessage = '销毁区域失败一次'
   local finillyFailMessage = StringHelper:concat('销毁区域失败，参数：areaid=', areaid)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Area:destroyArea(p.areaid)
-  end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
+    return Area:destroyArea(areaid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 获取区域中的生物 该接口第二次调用会报错，不使用
@@ -85,8 +85,8 @@ end
 --   local onceFailMessage = '获取区域中的生物失败一次'
 --   local finillyFailMessage = StringHelper:concat('获取区域中的生物失败，参数：areaid=', areaid)
 --   return CommonHelper:callOneResultMethod(function (p)
---     return Area:getAreaCreatures(p.areaid)
---   end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
+--     return Area:getAreaCreatures(areaid)
+--   end, nil, onceFailMessage, finillyFailMessage)
 -- end
 
 -- 获取随机区域内的位置
@@ -94,8 +94,8 @@ function AreaHelper:getRandomPos (areaid)
   local onceFailMessage = '获取随机区域内的位置失败一次'
   local finillyFailMessage = StringHelper:concat('获取随机区域内的位置失败，参数：areaid=', areaid)
   return CommonHelper:callOneResultMethod(function (p)
-    return Area:getRandomPos(p.areaid)
-  end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
+    return Area:getRandomPos(areaid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 清空区域内的全部方块
@@ -103,8 +103,8 @@ function AreaHelper:clearAllBlock (areaid, blockid)
   local onceFailMessage = '清空区域内的全部方块失败一次'
   local finillyFailMessage = StringHelper:concat('清空区域内的全部方块失败，参数：areaid=', areaid, '，blockid=', blockid)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Area:clearAllBlock(p.areaid, p.blockid)
-  end, { areaid = areaid, blockid = blockid }, onceFailMessage, finillyFailMessage)
+    return Area:clearAllBlock(areaid, blockid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 通过位置查找区域
@@ -112,8 +112,8 @@ function AreaHelper:getAreaByPos (pos)
   local onceFailMessage = '通过位置查找区域失败一次'
   local finillyFailMessage = StringHelper:concat('通过位置查找区域失败，参数：pos=', pos)
   return CommonHelper:callOneResultMethod(function (p)
-    return Area:getAreaByPos(p.pos)
-  end, { pos = pos }, onceFailMessage, finillyFailMessage)
+    return Area:getAreaByPos(pos)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 获取区域范围内全部生物
@@ -139,8 +139,8 @@ function AreaHelper:getAreaRectRange (areaid)
   local onceFailMessage = '获取区域范围失败一次'
   local finillyFailMessage = StringHelper:concat('获取区域范围失败，参数：areaid=', areaid)
   return CommonHelper:callTwoResultMethod(function (p)
-    return Area:getAreaRectRange(p.areaid)
-  end, { areaid = areaid }, onceFailMessage, finillyFailMessage)
+    return Area:getAreaRectRange(areaid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 位置是否在区域内
@@ -153,6 +153,6 @@ function AreaHelper:replaceAreaBlock (areaid, srcblockid, destblockid, face)
   local onceFailMessage = '替换方块类型为新的方块类型失败一次'
   local finillyFailMessage = StringHelper:concat('替换方块类型为新的方块类型失败，参数：areaid=', areaid, ',srcblockid=', srcblockid, ',destblockid=', destblockid, ',face=', face)
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Area:replaceAreaBlock(p.areaid, p.srcblockid, p.destblockid, p.face)
-  end, { areaid = areaid, srcblockid = srcblockid, destblockid = destblockid, face = face }, onceFailMessage, finillyFailMessage)
+    return Area:replaceAreaBlock(areaid, srcblockid, destblockid, face)
+  end, nil, onceFailMessage, finillyFailMessage)
 end

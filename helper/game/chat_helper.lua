@@ -9,8 +9,8 @@ function ChatHelper:sendSystemMsg (content, targetuin)
   local onceFailMessage = '发送系统消息失败一次'
   local finillyFailMessage = '发送系统消息失败'
   return CommonHelper:callIsSuccessMethod(function (p)
-    return Chat:sendSystemMsg(p.content, p.targetuin)
-  end, { content = content, targetuin = targetuin }, onceFailMessage, finillyFailMessage)
+    return Chat:sendSystemMsg(content, targetuin)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 背包工具类
@@ -79,8 +79,8 @@ function BackpackHelper:getItemNumByBackpackBar (playerid, bartype, itemid)
   local onceFailMessage = '获取背包持有某个道具总数量失败一次'
   local finillyFailMessage = StringHelper:concat('获取背包持有某个道具总数量失败，参数：playerid=', playerid, ',bartype=', bartype, ', itemid=', itemid)
   return CommonHelper:callTwoResultMethod(function (p)
-    return Backpack:getItemNumByBackpackBar(p.playerid, p.bartype, p.itemid)
-  end, { playerid = playerid, bartype = bartype, itemid = itemid }, onceFailMessage, finillyFailMessage)
+    return Backpack:getItemNumByBackpackBar(playerid, bartype, itemid)
+  end, nil, onceFailMessage, finillyFailMessage)
 end
 
 -- 交换背包道具
