@@ -13,7 +13,7 @@ function Sunkongwu:new ()
       MyPosition:new(7.5, 12.5, 563.5) -- 蜡烛台旁
     },
     bedData = {
-      MyPosition:new(8, 13.5, 561.5), -- 床尾位置
+      MyPosition:new(8.5, 13.5, 561.5), -- 床尾位置
       ActorHelper.FACE_YAW.NORTH -- 床尾朝向
     },
     candlePositions = {
@@ -38,10 +38,7 @@ end
 -- 在几点想做什么
 function Sunkongwu:wantAtHour (hour)
   if (hour == 6) then
-    self:lightCandle('toSell', true, { self.candlePositions[1] })
-    self:nextWantMove('toSell', { self.initPosition })
-    self:nextWantLookAt(nil, self.doorPosition, 1)
-    self:nextWantDoNothing('sell')
+    self:toSell()
   elseif (hour == 20) then
     self:goSecondFloor()
   elseif (hour == 22) then
@@ -67,6 +64,13 @@ function Sunkongwu:init ()
     self:doItNow()
   end
   return initSuc
+end
+
+function Sunkongwu:toSell ()
+  self:lightCandle('toSell', true, { self.candlePositions[1] })
+  self:nextWantMove('toSell', { self.initPosition })
+  self:nextWantLookAt(nil, self.doorPosition, 1)
+  self:nextWantDoNothing('sell')
 end
 
 -- 上二楼

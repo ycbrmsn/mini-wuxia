@@ -43,7 +43,11 @@ PositionHelper = {
     MyPosition:new(20, 8, 567), -- 李妙手门4
     MyPosition:new(20, 8, 566), -- 李妙手门5
     MyPosition:new(14, 12, 563), -- 李妙手门6
-    MyPosition:new(14, 12, 564) -- 李妙手门7
+    MyPosition:new(14, 12, 564), -- 李妙手门7
+    MyPosition:new(7, 8, 580), -- 真宝阁门1
+    MyPosition:new(6, 8, 580), -- 真宝阁门2
+    MyPosition:new(11, 8, 573), -- 真宝阁门3
+    MyPosition:new(17, 8, 573) -- 真宝阁门4
   }
 }
 

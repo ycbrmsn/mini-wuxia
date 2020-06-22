@@ -21,6 +21,7 @@ MyConstant = {
   ERNIU_ACTOR_ID = 40, -- 二牛
   SUNKONGWU_ACTOR_ID = 31, -- 孙孔武
   LIMIAOSHOU_ACTOR_ID = 32, -- 李妙手
+  QIANDUO_ACTOR_ID = 33, -- 钱多
 
   -- 怪物ID
   WOLF_ACTOR_ID = 11, -- 恶狼ID
