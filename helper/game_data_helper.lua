@@ -88,3 +88,14 @@ function GameDataHelper:discardOtherItem (playerid, gridid)
     BackpackHelper:discardItem(playerid, gridid, 99)
   end
 end
+
+-- 更新游戏数据道具
+function GameDataHelper:updateGameData (player)
+  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  if (player == hostPlayer) then
+    self:updateMainIndex()
+    self:updateMainProgress()
+  end
+  self:updateLevel(player)
+  self:updateExp(player)
+end

@@ -21,8 +21,8 @@ function MyStoryHelper:forward (progressName, isBranch)
       self.mainIndex = self.mainIndex + 1
       self.mainProgress = 1
     end
-    GameDataHelper:updateMainIndex()
-    GameDataHelper:updateMainProgress()
+    local hostPlayer = MyPlayerHelper:getHostPlayer()
+    GameDataHelper:updateGameData(hostPlayer)
   end
   if (type(logPaper) == 'nil') then
     logPaper = LogPaper:new()
