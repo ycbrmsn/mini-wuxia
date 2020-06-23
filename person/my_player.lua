@@ -161,6 +161,7 @@ function MyPlayer:gainExp (exp)
   self.exp = self.exp + exp
   local msg = '获得'.. exp .. '点经验。'
   ChatHelper:sendSystemMsg(msg, self.objid)
+  GameDataHelper:updateExp(self)
   local needExp = self.totalLevel * self.levelExp - self.exp
   if (needExp <= 0) then
     repeat
@@ -186,6 +187,7 @@ function MyPlayer:upgrade (addLevel)
     PlayerHelper:setMaxHp(self.objid, maxHp)
     PlayerHelper:setHp(self.objid, maxHp)
     PlayerHelper:setFoodLevel(self.objid, 100)
+    GameDataHelper:updateLevel(self)
     return StringHelper:concat('你升级了。当前等级为：', self.totalLevel)
   end
   return ''

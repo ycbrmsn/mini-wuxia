@@ -36,10 +36,18 @@ function MyPlayerHelper:initPlayer (objid)
   local player = self:addPlayer(objid)
   local hostPlayer = self:getHostPlayer()
   if (player == hostPlayer) then
-    player:setPosition(29.5, 9.5, 7.5)
-    PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+    logPaper = LogPaper:new()
+    if (not(GameDataHelper:updateStoryData())) then -- 刚开始游戏
+      player:setPosition(29.5, 9.5, 7.5)
+      PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+    end
   else
     player:setPosition(hostPlayer:getPosition())
+  end
+  GameDataHelper:updatePlayerData(player)
+  -- 检测玩家是否有江湖日志，如果没有则放进背包
+  if (not(logPaper:hasItem(objid))) then
+    logPaper:newItem(objid, 1, true)
   end
 end
 

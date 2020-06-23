@@ -3,16 +3,9 @@
 -- eventobjid, toobjid
 local playerEnterGame = function (eventArgs)
   local objid = eventArgs['eventobjid']
-  if (type(logPaper) == 'nil') then -- 说明是第一个进入游戏的玩家，即房主，则初始化一些数据
-    LogHelper:call(init)
-  end
-  -- 检测玩家是否有江湖日志，如果没有则放进背包
-  if (not(logPaper:hasItem())) then
-    logPaper:newItem(objid, 1, true)
-  end
-  MyPlayerHelper:initPlayer(objid)
-  -- local areaid = AreaHelper:createAreaRectByRange(MyPosition:new(31.5, 8.5, 4.5) , MyPosition:new(31.5, 9.5, 4.5))
-  -- Area:fillBlock(areaid, 200, 1)
+  LogHelper:call(function ()
+    MyPlayerHelper:initPlayer(objid)
+  end)
 end
 
 -- eventobjid, toobjid
@@ -51,10 +44,6 @@ local atHour = function (eventArgs)
     MyStoryHelper:run(hour)
     MyActorHelper:atHour(hour)
   end)
-end
-
-function init ()
-  logPaper = LogPaper:new()
 end
 
 function initHours (hour)

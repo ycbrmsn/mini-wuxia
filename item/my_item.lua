@@ -25,6 +25,20 @@ function MyItem:hasItem (playerid, containEquip)
   return BackpackHelper:hasItem(playerid, self.id, containEquip)
 end
 
+-- 更新道具数量
+function MyItem:updateNum (playerid, num, disableThrow)
+  local curNum, arr1, arr2 = BackpackHelper:getItemNumAndGrid(playerid, self.id)
+  if (num == curNum) then -- 数量相同则不作处理
+    return
+  else
+    if (num > curNum) then -- 比当前多
+      self:newItem(playerid, num - curNum, disableThrow)
+    else -- 比当前少
+      BackpackHelper:removeGridItemByItemID(playerid, self.id, curNum - num)
+    end
+  end
+end
+
 -- 拿起道具(手上)
 function MyItem:pickUp (objid)
   -- body

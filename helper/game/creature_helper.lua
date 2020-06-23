@@ -12,7 +12,7 @@ end
 -- 封装原始接口
 
 -- 设置生物AI是否生效
-function CreatureHelper:setAIActive(objid, isActive)
+function CreatureHelper:setAIActive (objid, isActive)
   local onceFailMessage = '设置生物AI失败一次'
   local finillyFailMessage = StringHelper:concat('设置生物AI失败，参数：objid=', objid, ', isActive=', isActive)
   return CommonHelper:callIsSuccessMethod(function (p)
