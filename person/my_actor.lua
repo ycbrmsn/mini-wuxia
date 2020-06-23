@@ -581,6 +581,7 @@ function MyActor:initActor (initPosition)
     -- 清除木围栏
     local areaid = AreaHelper:getAreaByPos(initPosition)
     AreaHelper:clearAllWoodenFence(areaid)
+    self:wantAtHour()
     return true
   else
     -- self:newActor(initPosition.x, initPosition.y, initPosition.z, true)

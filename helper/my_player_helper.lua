@@ -38,6 +38,7 @@ function MyPlayerHelper:initPlayer (objid)
   if (player == hostPlayer) then
     logPaper = LogPaper:new()
     if (not(GameDataHelper:updateStoryData())) then -- 刚开始游戏
+      MyTimeHelper:setHour(MyConstant.INIT_HOUR)
       player:setPosition(29.5, 9.5, 7.5)
       PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
     end

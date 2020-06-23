@@ -287,6 +287,7 @@ end
 
 -- 时间到了
 function MyActorHelper:atHour (hour)
+  hour = hour or MyTimeHelper:getHour()
   for k, v in pairs(self.actors) do
     v:wantAtHour(hour)
   end

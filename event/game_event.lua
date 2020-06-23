@@ -18,7 +18,10 @@ end
 local startGame = function ()
   LogHelper:debug('开始游戏')
   MyBlockHelper:initBlocks()
-  initHours(MyConstant.INIT_HOUR)
+
+  initDoorAreas()
+  MyAreaHelper:initAreas()
+  MyAreaHelper:initShowToastAreas()
 end
 
 -- 无参数
@@ -46,10 +49,6 @@ local atHour = function (eventArgs)
   end)
 end
 
-function initHours (hour)
-  MyTimeHelper:setHour(hour)
-end
-
 function initMyActors ()
   PersonHelper:init()
   MyStoryHelper:init()
@@ -70,19 +69,11 @@ local atSecond = function (eventArgs)
   LogHelper:call(function ()
     MyTimeHelper:doPerSecond(second)
     MyPlayerHelper:updateEveryPlayerPositions()
+    MyActorHelper:runActors()
 
     if (second == 1) then
-      initDoorAreas()
-      MyAreaHelper:initAreas()
       initMyActors()
       MonsterHelper:init()
-      MyAreaHelper:initShowToastAreas()
-      TimerHelper.timerid = TimerHelper:createTimerIfNotExist(MyActor.timername, TimerHelper.timerid)
-      TimerHelper:startForwardTimer(TimerHelper.timerid)
-    end
-
-    if (second > 1) then -- 初始化之后行动
-      MyActorHelper:runActors()
     end
 
     -- if (second == 3) then
