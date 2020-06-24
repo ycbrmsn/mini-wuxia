@@ -100,7 +100,8 @@ end
 -- 获取生物位置
 function ActorHelper:getPosition (objid)
   local onceFailMessage = '获取生物位置失败一次'
-  local finillyFailMessage = StringHelper:concat('获取生物位置失败，参数：objid=', objid)
+  -- local finillyFailMessage = StringHelper:concat('获取生物位置失败，参数：objid=', objid)
+  local finillyFailMessage = nil
   return CommonHelper:callThreeResultMethod(function (p)
     return Actor:getPosition(objid)
   end, nil, onceFailMessage, finillyFailMessage)

@@ -279,8 +279,10 @@ end
 function MyActorHelper:runActors ()
   for k, v in pairs(self.actors) do
     LogHelper:call(function ()
-      v:updatePosition()
-      v.action:execute()
+      -- v:updatePosition()
+      if (v:isActive()) then
+        v.action:execute()
+      end
     end)
   end
 end

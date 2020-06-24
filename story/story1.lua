@@ -20,7 +20,7 @@ function Story1:init ()
   }
   self:setData(data)
 
-  if (MyStoryHelper:getMainStoryIndex() == 1) then -- 剧情1
+  if (MyStoryHelper:getMainStoryIndex() == 1 and MyStoryHelper:getMainStoryProgress() == 1) then -- 剧情1
     local areaid = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
     data.areaid = areaid
   end

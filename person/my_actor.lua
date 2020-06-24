@@ -74,6 +74,15 @@ function MyActor:recoverActor ()
   MyActorActionHelper:updateActionState(self)
 end
 
+-- 生物是否有效
+function MyActor:isActive ()
+  if (ActorHelper:getPosition(self.objid)) then
+    return true
+  else
+    return false
+  end
+end
+
 -- 更新生物位置，如果获取位置失败，则重生一个生物
 function MyActor:updatePosition ()
   local x, y, z = ActorHelper:getPosition(self.objid)
