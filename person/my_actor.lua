@@ -5,6 +5,7 @@ MyActor = {
   x = nil,
   y = nil,
   z = nil,
+  defaultSpeed = 300, -- 默认移动速度
   cantMoveTime = 0, -- 无法移动的时间
   freeInAreaId = nil, -- 自由活动区域id
   timername = 'myActorTimer',
