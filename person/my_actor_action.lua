@@ -137,7 +137,7 @@ function MyActorAction:execute ()
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
 
     elseif (want.style == 'freeTime') then -- 自由活动
-      -- self.myActor:setWalkSpeed(-1)
+      self:freeTime(want)
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()
@@ -292,4 +292,16 @@ function MyActorAction:lookAt (objid)
     self.myActor:setFaceYaw(faceYaw)
     self.myActor:setFacePitch(facePitch)
   end
+end
+
+function MyActorAction:freeTime (want)
+  want.currentRestTime = math.random(10, 20)
+  local pos = self.myActor:getMyPosition()
+  if (not(pos)) then
+    return
+  end
+  local areaid = AreaHelper:createFreeTimeArea(pos)
+  pos = AreaHelper:getRandomPos(areaid)
+  AreaHelper:destroyArea(areaid)
+  self:runTo(pos)
 end
