@@ -31,6 +31,7 @@ end
 
 function MyAreaHelper:initAreas ()
   self.playerInHomeAreaId = AreaHelper:getAreaByPos(self.playerInHomePos)
+  self:initShowToastAreas()
 end
 
 function MyAreaHelper:initShowToastAreas ()

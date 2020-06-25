@@ -18,10 +18,7 @@ end
 local startGame = function ()
   LogHelper:debug('开始游戏')
   MyBlockHelper:initBlocks()
-
   initDoorAreas()
-  MyAreaHelper:initAreas()
-  MyAreaHelper:initShowToastAreas()
 end
 
 -- 无参数
@@ -74,6 +71,7 @@ local atSecond = function (eventArgs)
     if (second == 1) then
       initMyActors()
       MonsterHelper:init()
+      MyAreaHelper:initAreas()
     end
 
     -- if (second == 3) then
