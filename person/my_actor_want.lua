@@ -61,7 +61,7 @@ end
 function MyActorWant:wantFreeTime (think)
   MyAreaHelper:removeToArea(self.myActor)
   think = think or 'free'
-  self.myActor:closeAI()
+  self.myActor:openAI()
   self.myActor.think = think
   local want = MyActorActionHelper:getFreeTimeData(think)
   self.myActor.wants = { want }

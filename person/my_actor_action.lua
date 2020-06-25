@@ -295,6 +295,7 @@ function MyActorAction:lookAt (objid)
 end
 
 function MyActorAction:freeTime (want)
+  self.myActor:openAI()
   want.currentRestTime = math.random(10, 20)
   local pos = self.myActor:getMyPosition()
   if (not(pos)) then
