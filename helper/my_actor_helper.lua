@@ -13,6 +13,8 @@ end
 
 -- 新增person
 function MyActorHelper:addPerson (o)
+  o.action = MyActorAction:new(o)
+  o.want = MyActorWant:new(o)
   self.actors[o['objid']] = o
 end
 
@@ -279,7 +281,6 @@ end
 function MyActorHelper:runActors ()
   for k, v in pairs(self.actors) do
     LogHelper:call(function ()
-      -- v:updatePosition()
       if (v:isActive()) then
         v.action:execute()
       end

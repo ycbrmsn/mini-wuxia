@@ -86,6 +86,9 @@ MyPosition = {
 }
 
 function MyPosition:new (x, y, z)
+  if (not(x)) then
+    return nil
+  end
   local o
   if (type(x) == 'table') then
     o = { x = x.x, y = x.y, z = x.z }

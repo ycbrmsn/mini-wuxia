@@ -209,3 +209,87 @@ end
 function MyActorAction:speakInHeartToAllAfterSecond (second, ...)
   self:speakInHeartAfterSecond(nil, second, ...)
 end
+
+function MyActorAction:lightCandle (think, isNow, candlePositions)
+  candlePositions = candlePositions or self.myActor.candlePositions
+  local index = 1
+  for i, v in ipairs(candlePositions) do
+    local candle = MyBlockHelper:getCandle(v)
+    if (not(candle) or not(candle.isLit)) then
+      if (index == 1 and isNow) then
+        self:toggleCandle(think, v, true, true)
+      else
+        self:toggleCandle(think, v, true)
+      end
+      index = index + 1
+    end
+  end
+  return index
+end
+
+function MyActorAction:putOutCandle (think, isNow, candlePositions)
+  candlePositions = candlePositions or self.myActor.candlePositions
+  local index = 1
+  for i, v in ipairs(candlePositions) do
+    local candle = MyBlockHelper:getCandle(v)
+    if (not(candle) or candle.isLit) then
+      if (index == 1 and isNow) then
+        self:toggleCandle(think, v, false, true)
+      else
+        self:toggleCandle(think, v, false)
+      end
+      index = index + 1
+    end
+  end
+  return index
+end
+
+function MyActorAction:putOutCandleAndGoToBed (candlePositions)
+  local index = self:putOutCandle('putOutCandle', true, candlePositions)
+  self:goToBed(index == 1)
+end
+
+function MyActorAction:toggleCandle (think, myPosition, isLitCandle, isNow)
+  if (not(think)) then
+    if (isLitCandle) then
+      think = 'lightCandle'
+    else
+      think = 'putOutCandle'
+    end
+  end
+  if (isNow) then
+    self.myActor:wantApproach(think, { myPosition })
+  else
+    self.myActor:nextWantApproach(think, { myPosition })
+  end
+  self.myActor:nextWantToggleCandle(think, isLitCandle)
+end
+
+function MyActorAction:goToBed (isNow)
+  if (isNow) then
+    self.myActor:wantGoToSleep(self.myActor.bedData)
+  else
+    self.myActor:nextWantGoToSleep(self.myActor.bedData)
+  end
+end
+
+function MyActorAction:lookAt (objid)
+  local x, y, z
+  if (type(objid) == 'table') then
+    x, y, z = objid.x, objid.y, objid.z
+  else
+    x, y, z = ActorHelper:getPosition(objid)
+    y = y + ActorHelper:getEyeHeight(objid) - 1
+  end
+  local x0, y0, z0 = ActorHelper:getPosition(self.myActor.objid)
+  if (x == x0 and z == z0) then -- 如果人物就在需要看向的位置上，则不做什么
+
+  else
+    y0 = y0 + ActorHelper:getEyeHeight(self.myActor.objid) - 1 -- 生物位置y是地面上一格，所以要减1
+    local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
+    local faceYaw = MathHelper:getActorFaceYaw(myVector3)
+    local facePitch = MathHelper:getActorFacePitch(myVector3)
+    self.myActor:setFaceYaw(faceYaw)
+    self.myActor:setFacePitch(facePitch)
+  end
+end
