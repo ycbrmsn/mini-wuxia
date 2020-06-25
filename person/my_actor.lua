@@ -43,7 +43,10 @@ end
 
 -- 生物是否有效
 function MyActor:isActive ()
-  if (ActorHelper:getPosition(self.objid)) then
+  local x, y, z = ActorHelper:getPosition(self.objid)
+  if (x) then
+    self:updateCantMoveTime(x, y, z)
+    self.x, self.y, self.z = x, y, z
     return true
   else
     return false
