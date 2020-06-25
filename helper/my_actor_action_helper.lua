@@ -7,12 +7,16 @@ MyActorActionHelper = {}
       isNegDir是否是负向行动，默认是否,
       index位置序数，从1~#t，默认是1，负向则是负方向的第一个,
       restTime巡逻到达一个位置后停留时间，默认是0
+      speed奔跑速度（倍速）
 --]] 
-function MyActorActionHelper:getMoveData (think, positions, isNegDir, index, restTime)
+function MyActorActionHelper:getMoveData (think, positions, isNegDir, index, restTime, speed)
   index = index or 1
   restTime = restTime or 0
   local data = { style = 'move', restTime = restTime, currentRestTime = 0, positions = positions, 
     index = index, isNegDir = isNegDir, think = think, isAIOpened = false }
+  if (speed) then
+    data.speed = speed
+  end
   local toPos = self:getToPos(positions, isNegDir, index)
   data.toPos = toPos
   return data

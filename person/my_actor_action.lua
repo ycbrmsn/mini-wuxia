@@ -132,7 +132,7 @@ function MyActorAction:execute ()
         -- if (self.myActor.cantMoveTime > 0) then
         --   self.myActor:setWalkSpeed(-1)
         -- end
-        self:runTo(want.toPos)
+        self:runTo(want.toPos, want.speed)
       end
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
 

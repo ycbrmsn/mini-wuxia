@@ -134,7 +134,7 @@ function Story2:goToCollege ()
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond (function (p)
     ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-    yexiaolong:wantMove('goToCollege', p.story2.movePositions1)
+    yexiaolong:wantMove('goToCollege', p.story2.movePositions1, nil, nil, nil, 600)
   end, waitSeconds, { story2 = story2 })
 
   waitSeconds = waitSeconds + 1

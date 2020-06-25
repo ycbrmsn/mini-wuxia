@@ -281,11 +281,11 @@ function MyActor:putOutCandleAndGoToBed (candlePositions)
 end
 
 -- 生物想向指定位置移动
-function MyActor:wantMove (think, positions, isNegDir, index, restTime)
+function MyActor:wantMove (think, positions, isNegDir, index, restTime, speed)
   MyAreaHelper:removeToArea(self)
   self:closeAI()
   self.think = think
-  local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime)
+  local want = MyActorActionHelper:getMoveData(think, positions, isNegDir, index, restTime, speed)
   self.wants = { want }
   -- 创建当前前往区域
   MyActorActionHelper:createMoveToPos(want)
