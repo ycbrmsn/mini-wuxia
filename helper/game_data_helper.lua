@@ -38,10 +38,8 @@ function GameDataHelper:updateMainIndex ()
   local player = MyPlayerHelper:getHostPlayer()
   local itemid = MyConstant.ITEM.GAME_DATA_MAIN_INDEX_ID
   local gridid = 26
-  self:discardOtherItem(player.objid, gridid)
-  BackpackHelper:removeGridItemByItemID(player.objid, itemid)
-  BackpackHelper:setGridItem(player.objid, gridid, itemid, MyStoryHelper.mainIndex)
-  PlayerHelper:setItemDisableThrow(player.objid, itemid)
+  local num = MyStoryHelper.mainIndex
+  self:updateDataItem(player.objid, itemid, gridid, num)
 end
 
 -- 更新主线剧情进度道具
@@ -49,33 +47,24 @@ function GameDataHelper:updateMainProgress ()
   local player = MyPlayerHelper:getHostPlayer()
   local itemid = MyConstant.ITEM.GAME_DATA_MAIN_PROGRESS_ID
   local gridid = 27
-  self:discardOtherItem(player.objid, gridid)
-  BackpackHelper:removeGridItemByItemID(player.objid, itemid)
-  BackpackHelper:setGridItem(player.objid, gridid, itemid, MyStoryHelper.mainProgress)
-  PlayerHelper:setItemDisableThrow(player.objid, itemid)
+  local num = MyStoryHelper.mainProgress
+  self:updateDataItem(player.objid, itemid, gridid, num)
 end
 
 -- 更新玩家等级道具
 function GameDataHelper:updateLevel (player)
   local itemid = MyConstant.ITEM.GAME_DATA_LEVEL_ID
   local gridid = 28
-  self:discardOtherItem(player.objid, gridid)
-  BackpackHelper:removeGridItemByItemID(player.objid, itemid)
-  BackpackHelper:setGridItem(player.objid, gridid, itemid, player:getLevel())
-  PlayerHelper:setItemDisableThrow(player.objid, itemid)
+  local num = player:getLevel()
+  self:updateDataItem(player.objid, itemid, gridid, num)
 end
 
 -- 更新玩家经验道具
 function GameDataHelper:updateExp (player)
   local itemid = MyConstant.ITEM.GAME_DATA_EXP_ID
   local gridid = 29
-  self:discardOtherItem(player.objid, gridid)
-  BackpackHelper:removeGridItemByItemID(player.objid, itemid)
   local num = player:getExp() % 100
-  if (num ~= 0) then -- 不为0时添加道具
-    BackpackHelper:setGridItem(player.objid, gridid, itemid, num)
-    PlayerHelper:setItemDisableThrow(player.objid, itemid)
-  end
+  self:updateDataItem(player.objid, itemid, gridid, num)
 end
 
 -- 丢弃非游戏数据道具
@@ -98,4 +87,22 @@ function GameDataHelper:updateGameData (player)
   end
   self:updateLevel(player)
   self:updateExp(player)
+end
+
+function GameDataHelper:updateDataItem (objid, itemid, gridid, num)
+  local curNum = BackpackHelper:getItemNumAndGrid(objid, itemid)
+  if (num == curNum) then
+    return
+  end
+  if (num < curNum) then -- 减少
+    BackpackHelper:removeGridItemByItemID(objid, itemid, curNum - num)
+  else -- 增加
+    if (curNum == 0) then -- 当前一件都没有
+      self:discardOtherItem(objid, gridid)
+      BackpackHelper:setGridItem(objid, gridid, itemid, num)
+      PlayerHelper:setItemDisableThrow(objid, itemid)
+    else -- 已经有了
+      BackpackHelper:addItem(objid, itemid, num - curNum)
+    end
+  end
 end

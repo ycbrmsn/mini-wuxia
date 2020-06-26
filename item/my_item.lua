@@ -14,7 +14,7 @@ end
 -- 创建道具
 function MyItem:newItem (playerid, num, disableThrow)
   num = num or 1
-  Backpack:addItem(playerid, self.id, num)
+  BackpackHelper:addItem(playerid, self.id, num)
   if (disableThrow) then -- 不可丢弃
     PlayerHelper:setItemDisableThrow(playerid, self.id)
   end

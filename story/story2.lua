@@ -446,7 +446,7 @@ function Story2:wipeOutQiangdao ()
   waitSeconds = waitSeconds + 3
   yexiaolong:speak(waitSeconds, '对了，我这里还有几把小剑，挺适合你现在用的。就给你好了。')
   MyPlayerHelper:everyPlayerDoSomeThing (function (p)
-    Backpack:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
+    BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
@@ -611,8 +611,8 @@ function Story2:playerBadHurt (objid)
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     local num = #MyPlayerHelper:getAllPlayers() * 2
-    yexiaolong:speak(0, '这里有', num, '瓶药剂。剩下的交给我吧。')
-    Backpack:addItem(player.objid, MyConstant.ITEM.POTION_ID, num) -- 回血药剂
+    yexiaolong:speak(0, '这里有', num, '瓶回血药剂。剩下的交给我吧。')
+    BackpackHelper:addItem(player.objid, MyConstant.ITEM.POTION_ID, num) -- 回血药剂
     yexiaolong:lookAt(player.objid)
     -- player:lookAt(yexiaolong.objid)
   end, waitSeconds)
