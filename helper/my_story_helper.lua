@@ -24,9 +24,6 @@ function MyStoryHelper:forward (progressName, isBranch)
     local hostPlayer = MyPlayerHelper:getHostPlayer()
     GameDataHelper:updateGameData(hostPlayer)
   end
-  if (type(logPaper) == 'nil') then
-    logPaper = LogPaper:new()
-  end
   logPaper.isChange = true
 end
 
@@ -79,7 +76,7 @@ function MyStoryHelper:run (hour)
     self:reduceRemainDay()
   end
   if (hour == 9) then
-    if (self.storyRemainDays == 0 and self.mainIndex == 1 and self.mainProgress == #self.stories[1].tips) then
+    if (self.mainIndex == 1 and self.mainProgress == #self.stories[1].tips) then
       self:forward('出发，前往学院')
       Story2:goToCollege()
     end

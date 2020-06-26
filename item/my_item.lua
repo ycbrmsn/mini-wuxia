@@ -119,19 +119,18 @@ function MyWeapon:reduceStrength (objid)
 end
 
 -- 江湖日志类
-local logPaperData = {
-  id = MyConstant.ITEM.LOG_PAPER_ID,
-  title = '江湖经历:',
-  content = '',
-  isChange = true -- 日志是否改变
-}
-
-LogPaper = MyItem:new(logPaperData)
+LogPaper = MyItem:new()
 
 function LogPaper:new ()
-  local o = {}
+  local o = {
+    id = MyConstant.ITEM.LOG_PAPER_ID,
+    title = '江湖经历:',
+    content = '',
+    isChange = true -- 日志是否改变
+  }
   setmetatable(o, self)
   self.__index = self
+  MyItemHelper:register(o)
   return o
 end
 

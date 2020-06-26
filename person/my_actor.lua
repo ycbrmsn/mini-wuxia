@@ -166,13 +166,9 @@ function MyActor:thinkTo (playerids, afterSeconds, ...)
   end
 end
 
--- function MyActor:goToBed (isNow)
---   if (isNow) then
---     self:wantGoToSleep(self.bedData)
---   else
---     self:nextWantGoToSleep(self.bedData)
---   end
--- end
+function MyActor:goToBed (isNow)
+  self.action:goToBed(isNow)
+end
 
 function MyActor:lightCandle (think, isNow, candlePositions)
   return self.action:lightCandle(think, isNow, candlePositions)
