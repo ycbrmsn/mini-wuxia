@@ -61,7 +61,7 @@ end
 
 function MonsterHelper:calExp (playerid, expData)
   local player = MyPlayerHelper:getPlayer(playerid)
-  local levelDiffer = player.totalLevel - expData.level
+  local levelDiffer = player:getLevel() - expData.level
   if (levelDiffer <= 0) then
     return expData.exp
   else

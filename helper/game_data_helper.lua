@@ -19,16 +19,16 @@ end
 
 -- 更新玩家数据
 function GameDataHelper:updatePlayerData (player)
-  local totalLevel = BackpackHelper:getItemNumAndGrid(player.objid, MyConstant.ITEM.GAME_DATA_LEVEL_ID)
-  local exp = (totalLevel - 1) * 100 + 
+  local level = BackpackHelper:getItemNumAndGrid(player.objid, MyConstant.ITEM.GAME_DATA_LEVEL_ID)
+  local exp = (level - 1) * 100 + 
       BackpackHelper:getItemNumAndGrid(player.objid, MyConstant.ITEM.GAME_DATA_EXP_ID)
-  if (totalLevel == 0) then -- 刚进入游戏
+  if (level == 0) then -- 刚进入游戏
     self:updateLevel(player)
     self:updateExp(player)
     return false
   else -- 再次回到游戏
-    player.totalLevel = totalLevel
-    player.exp = exp
+    player:setLevel(level)
+    player:setExp(exp)
     return true
   end
 end
@@ -61,7 +61,7 @@ function GameDataHelper:updateLevel (player)
   local gridid = 28
   self:discardOtherItem(player.objid, gridid)
   BackpackHelper:removeGridItemByItemID(player.objid, itemid)
-  BackpackHelper:setGridItem(player.objid, gridid, itemid, player.totalLevel)
+  BackpackHelper:setGridItem(player.objid, gridid, itemid, player:getLevel())
   PlayerHelper:setItemDisableThrow(player.objid, itemid)
 end
 
@@ -71,7 +71,7 @@ function GameDataHelper:updateExp (player)
   local gridid = 29
   self:discardOtherItem(player.objid, gridid)
   BackpackHelper:removeGridItemByItemID(player.objid, itemid)
-  local num = player.exp % 100
+  local num = player:getExp() % 100
   if (num ~= 0) then -- 不为0时添加道具
     BackpackHelper:setGridItem(player.objid, gridid, itemid, num)
     PlayerHelper:setItemDisableThrow(player.objid, itemid)
