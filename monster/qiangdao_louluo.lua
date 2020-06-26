@@ -34,8 +34,17 @@ function QiangdaoLouluo:new ()
 end
 
 function QiangdaoLouluo:init ()
+  -- 强盗定时生成区域
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  -- 强盗营地提示区域
   for i, v in ipairs(self.encampmentPositions) do
     table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+  end
+  self.generate = function ()
+    self:generateMonsters()
+    qiangdaoXiaotoumu:generateMonsters()
   end
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
@@ -108,21 +117,24 @@ function QiangdaoLouluo:getName ()
 end
 
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
-function QiangdaoLouluo:generateMonsters (num)
+function QiangdaoLouluo:generateMonsters ()
   num = num or 5
-  for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
-  end
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
-    for i, v in ipairs(self.monsterAreas) do
-      local objids = AreaHelper:getAllCreaturesInAreaId(v)
-      if (not(objids) or #objids < num) then
-        for i = 1, num - #objids do
-          local pos = MyAreaHelper:getRandomAirPositionInArea(v)
-          self:newMonster(pos.x, pos.y, pos.z, 1)
-        end
+  for i, v in ipairs(self.monsterAreas) do
+    local objids = AreaHelper:getAllCreaturesInAreaId(v)
+    if (not(objids) or #objids < num) then
+      for i = 1, num - #objids do
+        local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+        self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
+  end
+end
+
+-- 定时生成怪物
+function QiangdaoLouluo:timerGenerate (num)
+  num = num or 5
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters(num)
     return false
   end, 60)
 end

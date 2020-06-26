@@ -30,8 +30,16 @@ function Wolf:new ()
 end
 
 function Wolf:init ()
+  -- 怪物定时生成区域
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  -- 恶狼谷提示区域
   for i, v in ipairs(self.ravinePositions) do
     table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+  end
+  self.generate = function ()
+    self:generateMonsters()
   end
   return true
 end
@@ -46,19 +54,22 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function Wolf:generateMonsters (num)
   num = num or 10
-  for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
-  end
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
-    for i, v in ipairs(self.monsterAreas) do
-      local objids = AreaHelper:getAllCreaturesInAreaId(v)
-      if (not(objids) or #objids < num) then
-        for i = 1, num - #objids do
-          local pos = MyAreaHelper:getRandomAirPositionInArea(v)
-          self:newMonster(pos.x, pos.y, pos.z, 1)
-        end
+  for i, v in ipairs(self.monsterAreas) do
+    local objids = AreaHelper:getAllCreaturesInAreaId(v)
+    if (not(objids) or #objids < num) then
+      for i = 1, num - #objids do
+        local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+        self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
+  end
+end
+
+-- 定时生成怪物
+function Wolf:timerGenerate (num)
+  num = num or 10
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters(num)
     return false
   end, 60)
 end

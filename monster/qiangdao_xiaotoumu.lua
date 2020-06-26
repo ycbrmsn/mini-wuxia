@@ -28,6 +28,13 @@ function QiangdaoXiaotoumu:new ()
 end
 
 function QiangdaoXiaotoumu:init ()
+  -- 强盗小头目定时生成区域
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  self.generate = function ()
+    self:generateMonsters()
+  end
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
@@ -101,16 +108,19 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function QiangdaoXiaotoumu:generateMonsters (num)
   num = num or 1
-  for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
-  end
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
-    for i, v in ipairs(self.monsterAreas) do
-      local objids = AreaHelper:getAllCreaturesInAreaId(v)
-      if (not(objids) or #objids < num) then
-        self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - #objids)
-      end
+  for i, v in ipairs(self.monsterAreas) do
+    local objids = AreaHelper:getAllCreaturesInAreaId(v)
+    if (not(objids) or #objids < num) then
+      self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - #objids)
     end
+  end
+end
+
+-- 定时生成怪物
+function QiangdaoXiaotoumu:timerGenerate (num)
+  num = num or 5
+  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters(num)
     return false
   end, 60)
 end

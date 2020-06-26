@@ -29,20 +29,14 @@ function MonsterHelper:init ()
   qiangdaoXiaotoumu = QiangdaoXiaotoumu:new()
   qiangdaoLouluo = QiangdaoLouluo:new()
   wolf = Wolf:new()
-  qiangdaoXiaotoumu:generateMonsters()
-  qiangdaoLouluo:generateMonsters()
-  wolf:generateMonsters()
-  self:initMonsters()
-end
-
-function MonsterHelper:initMonsters ()
-  -- LogHelper:debug('初始化怪物开始')
   local monsters = { qiangdaoXiaotoumu, qiangdaoLouluo, wolf }
   for i, v in ipairs(monsters) do
     MyTimeHelper:initActor(v)
     -- LogHelper:debug('初始化', v:getName(), '完成')
   end
-  LogHelper:debug('初始化怪物结束')
+  qiangdaoXiaotoumu:timerGenerate()
+  qiangdaoLouluo:timerGenerate()
+  wolf:timerGenerate()
 end
 
 function MonsterHelper:getExp (playerid, objid)
