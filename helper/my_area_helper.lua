@@ -48,13 +48,16 @@ function MyAreaHelper:initShowToastAreas ()
 end
 
 function MyAreaHelper:showToastArea (objid, areaid)
+  local player = MyPlayerHelper:getPlayer(objid)
   for k, v in pairs(self.showToastAreas) do
     if (k == areaid) then
-      local player = MyPlayerHelper:getPlayer(objid)
       if (player.prevAreaId and player.prevAreaId == v[1]) then
         MyPlayerHelper:showToast(objid, v[2])
       end
+      player.prevAreaId = areaid
       break
+    elseif (v[1] == areaid) then
+      player.prevAreaId = areaid
     end
   end
 end
@@ -69,7 +72,6 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
   else
     self:showToastArea(objid, areaid)
   end
-  myPlayer.prevAreaId = areaid
 end
 
 function MyAreaHelper:playerLeaveArea (objid, areaid)
