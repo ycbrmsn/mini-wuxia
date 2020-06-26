@@ -141,7 +141,7 @@ function MyPlayer:gainExp (exp)
 end
 
 function MyPlayer:upgrade (addLevel)
-  self.attr:upgrade(addLevel)
+  return self.attr:upgrade(addLevel)
 end
 
 function MyPlayer:lookAt (objid)
@@ -238,15 +238,15 @@ end
 
 -- 设置囚禁状态
 function MyPlayer:setImprisoned (active)
-  self.attr:setImprisoned(active)
+  return self.attr:setImprisoned(active)
 end
 
 -- 设置封魔状态
 function MyPlayer:setSeal (active)
-  self.attr:setSeal(active)
+  return self.attr:setSeal(active)
 end
 
 -- 是否能够使用技能
 function MyPlayer:ableUseSkill (skillname)
-  self.attr:ableUseSkill(skillname)
+  return self.attr:ableUseSkill(skillname)
 end
