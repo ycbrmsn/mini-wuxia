@@ -90,7 +90,7 @@ function GameDataHelper:updateGameData (player)
 end
 
 function GameDataHelper:updateDataItem (objid, itemid, gridid, num)
-  local curNum = BackpackHelper:getItemNumAndGrid(objid, itemid)
+  local curNum, arr1, arr2 = BackpackHelper:getItemNumAndGrid(objid, itemid)
   if (num == curNum) then
     return
   end
@@ -102,7 +102,13 @@ function GameDataHelper:updateDataItem (objid, itemid, gridid, num)
       BackpackHelper:setGridItem(objid, gridid, itemid, num)
       PlayerHelper:setItemDisableThrow(objid, itemid)
     else -- 已经有了
-      BackpackHelper:addItem(objid, itemid, num - curNum)
+      if (#arr1 > 0) then
+        gridid = arr1[1]
+      else
+        gridid = arr2[1]
+      end
+      local gridNum = BackpackHelper:getGridNum(objid, gridid)
+      BackpackHelper:setGridItem(objid, gridid, itemid, num - curNum + gridNum)
     end
   end
 end

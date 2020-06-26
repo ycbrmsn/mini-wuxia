@@ -115,13 +115,17 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
 end
 
 function MyStoryHelper:playerLeaveArea (objid, areaid)
-  if (areaid == self:getStory(2).areaid and self.mainIndex == 2 and self.mainProgress == 3) then -- 跑出强盗区域
+  local mainIndex = self:getMainStoryIndex()
+  local mainProgress = self:getMainStoryProgress()
+  if (areaid == self:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then -- 跑出强盗区域
     Story2:comeBack(objid, areaid)
   end
 end
 
 function MyStoryHelper:actorLeaveArea (objid, areaid)
-  if (areaid == self:getStory(2).areaid and self.mainIndex == 2 and self.mainProgress == 3) then
+  local mainIndex = self:getMainStoryIndex()
+  local mainProgress = self:getMainStoryProgress()
+  if (areaid == self:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then
     local actorid = CreatureHelper:getActorID(objid)
     if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
       Story2:comeBack(objid, areaid)
@@ -130,20 +134,33 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
 end
 
 function MyStoryHelper:playerBadHurt (objid)
+  local mainIndex = self:getMainStoryIndex()
+  local mainProgress = self:getMainStoryProgress()
   -- 检测技能是否正在释放
   if (MyItemHelper:isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
     FallStarBow:cancelSkill(objid)
     return
   end
-  if (self.mainIndex == 1) then -- 在落叶村受重伤
+  if (mainIndex == 1) then -- 在落叶村受重伤
     Story1:playerBadHurt(objid)
-  elseif (self.mainIndex == 2 and self.mainProgress == 3) then -- 杀强盗受重伤
+  elseif (mainIndex == 2 and mainProgress == 3) then -- 杀强盗受重伤
     Story2:playerBadHurt(objid)
   end
 end
 
 function MyStoryHelper:actorDieEvent (objid)
-  if (self.mainIndex == 2) then
+  if (self:getMainStoryIndex() == 2) then
     Story2:showMessage(objid)
+  end
+end
+
+-- 重新进入游戏时恢复剧情
+function MyStoryHelper:recover ()
+  local mainIndex = self:getMainStoryIndex()
+  local mainProgress = self:getMainStoryProgress()
+  if (mainIndex == 1) then
+
+  elseif (mainIndex == 2) then
+
   end
 end

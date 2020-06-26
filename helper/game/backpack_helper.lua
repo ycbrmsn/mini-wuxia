@@ -139,3 +139,12 @@ function BackpackHelper:getGridItemID (playerid, gridid)
     return Backpack:getGridItemID(playerid, gridid)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 获取背包某个格子的道具数量
+function BackpackHelper:getGridNum (playerid, gridid)
+  local onceFailMessage = '获取背包某个格子的道具数量失败一次'
+  local finillyFailMessage = StringHelper:concat('获取背包某个格子的道具数量失败，参数：playerid=', playerid, ',gridid=', gridid)
+  return CommonHelper:callOneResultMethod(function (p)
+    return Backpack:getGridNum(playerid, gridid)
+  end, nil, onceFailMessage, finillyFailMessage)
+end
