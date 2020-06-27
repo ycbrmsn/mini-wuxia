@@ -29,20 +29,20 @@ end
 
 -- 攻击特效
 function WorldHelper:playAttackEffect (pos)
-  return self:playEffect(pos, self.PARTICLE_ID.BOOM1)
+  return self:playBodyEffect(pos, self.PARTICLE_ID.BOOM1)
 end
 
 function WorldHelper:stopAttackEffect (pos)
-  return self:stopEffect(pos, self.PARTICLE_ID.BOOM1)
+  return self:stopBodyEffect(pos, self.PARTICLE_ID.BOOM1)
 end
 
 -- 击退特效
 function WorldHelper:playRepelEffect (pos)
-  return self:playEffect(pos, self.PARTICLE_ID.BOOM16)
+  return self:playBodyEffect(pos, self.PARTICLE_ID.BOOM16)
 end
 
 function WorldHelper:stopRepelEffect (pos)
-  return self:stopEffect(pos, self.PARTICLE_ID.BOOM16)
+  return self:stopBodyEffect(pos, self.PARTICLE_ID.BOOM16)
 end
 
 function WorldHelper:playBodyEffect (pos, particleId, scale)

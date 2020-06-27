@@ -251,7 +251,7 @@ function Story2:wipeOutQiangdao ()
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function ()
-    local pos = Story2Data:getAirPosition()
+    local pos = Story2Helper:getAirPosition()
     yexiaolong:setPosition(pos)
     yexiaolong:wantLookAt(nil, hostPlayer.objid, 3)
     yexiaolong.action:playFree(1)
@@ -277,23 +277,22 @@ function Story2:wipeOutQiangdao ()
   hostPlayer.action:playDown(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  yexiaolong:speak(waitSeconds, '起先我还在思量，如果考验只是杀几条狼，那岂不是就带了几个猎户回去嘛。')
+  yexiaolong:speak(waitSeconds, '起先我还在思量，如果考验只是杀几条狼，那岂不是就招了几个猎户回去嘛。')
 
   waitSeconds = waitSeconds + 3
   yexiaolong:speak(waitSeconds, '如此，回去之后定又会被小高嘲笑。不错不错。')
 
   waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '现在嘛……路见不平的少年侠士。快哉。')
+  yexiaolong:speak(waitSeconds, '现在嘛……惩奸除恶的少年侠士。快哉。')
   yexiaolong.action:playHappy(waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  MyPlayerHelper:everyPlayerDoSomeThing (function (p)
-    p.action:speakInHeart(p.objid, '路见不平？好像刚刚路上确实有几个坑。')
-    p.action:playThink()
-  end, waitSeconds)
-
-  waitSeconds = waitSeconds + 3
-  yexiaolong:speak(waitSeconds, '对了，我这里还有几把小剑，挺适合你现在用的。就给你好了。')
+  local playerNum = #MyPlayerHelper:getAllPlayers()
+  if (playerNum == 1) then
+    yexiaolong:speak(waitSeconds, '对了，我这里恰好有把小剑，挺适合你现在用的。就给你好了。')
+  else
+    yexiaolong:speak(waitSeconds, '对了，我这里恰好有几把小剑，挺适合你们现在用的。就给你们好了。')
+  end
   MyPlayerHelper:everyPlayerDoSomeThing (function (p)
     BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
   end, waitSeconds)
@@ -343,8 +342,11 @@ end
 
 -- 玩家受到重伤
 function Story2:playerBadHurt (objid)
-  local player = MyPlayerHelper:getPlayer(objid)
+  if (self.standard == 2) then
+    return
+  end
   self.standard = 2
+  local player = MyPlayerHelper:getPlayer(objid)
   MyPlayerHelper:changeViewMode()
   player:enableBeAttacked(false)
   player:enableMove(false, true)
@@ -389,8 +391,7 @@ function Story2:playerBadHurt (objid)
     WorldHelper:playRepelEffect(pos)
     for i, v in ipairs(ids) do
       local dstPos = MyActorHelper:getMyPosition(v)
-      local speed = MathHelper:getSpeedVector3(pos, dstPos, 2)
-      ActorHelper:appendSpeed(v, speed.x, speed.y, speed.z)
+      MyActorHelper:appendSpeed(v, 2, pos, dstPos)
       WorldHelper:playAttackEffect(dstPos)
     end
     MyTimeHelper:callFnAfterSecond(function ()
@@ -438,8 +439,7 @@ function Story2:playerBadHurt (objid)
           WorldHelper:playAttackEffect(attackPos)
           WorldHelper:playBeAttackedSoundOnPos(attackPos)
           local dstPos = MyActorHelper:getMyPosition(v[1])
-          local speed = MathHelper:getSpeedVector3(pos, dstPos, 1)
-          ActorHelper:appendSpeed(v[1], speed.x, speed.y, speed.z)
+          MyActorHelper:appendSpeed(v[1], 2, pos, dstPos)
           local actorid = CreatureHelper:getActorID(v[1])
           if (actorid == MyConstant.QIANGDAO_LOULUO_ACTOR_ID) then
             qiangdaoLouluo:speak(0, '啊！')
