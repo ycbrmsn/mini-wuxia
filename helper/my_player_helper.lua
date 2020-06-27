@@ -50,6 +50,7 @@ function MyPlayerHelper:initPlayer (objid)
   if (not(logPaper:hasItem(objid))) then
     logPaper:newItem(objid, 1, true)
   end
+  MyStoryHelper:recover(player) -- 恢复剧情
 end
 
 -- 显示飘窗信息

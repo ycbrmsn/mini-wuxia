@@ -67,7 +67,7 @@ function MyStoryHelper:reduceRemainDay ()
 end
 
 function MyStoryHelper:getStory (index)
-  index = index or self.mainIndex
+  index = index or self:getMainStoryIndex()
   return self.stories[index]
 end
 
@@ -78,13 +78,15 @@ function MyStoryHelper:run (hour)
   if (hour == 9) then
     if (self.mainIndex == 1 and self.mainProgress == #self.stories[1].tips) then
       self:forward('出发，前往学院')
-      Story2:goToCollege()
+      story2:goToCollege()
     end
   end
 end
 
 function MyStoryHelper:init ()
-  self.stories = { Story1:init(), Story2:init() }
+  story1 = Story1:new()
+  story2 = Story2:new()
+  self.stories = { story1, story2 }
 end
 
 -- 推进剧情相关的事件
@@ -98,16 +100,16 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
     elseif (itemid == MyConstant.ITEM.TOKEN_ID) then -- 风颖城通行令牌
       PlayerHelper:setItemDisableThrow(objid, itemid)
       self:forward('得到风颖城通行令牌')
-      Story1:finishNoticeEvent(objid)
+      story1:finishNoticeEvent(objid)
     end
   end
 end
 
 function MyStoryHelper:playerEnterArea (objid, areaid)
   if (areaid == self:getStory(1).areaid) then -- 文羽通知事件
-    Story1:noticeEvent(areaid)
+    story1:noticeEvent(areaid)
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
-    Story1:fasterTime()
+    story1:fasterTime()
   end
 end
 
@@ -115,7 +117,7 @@ function MyStoryHelper:playerLeaveArea (objid, areaid)
   local mainIndex = self:getMainStoryIndex()
   local mainProgress = self:getMainStoryProgress()
   if (areaid == self:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then -- 跑出强盗区域
-    Story2:comeBack(objid, areaid)
+    Story2Helper:comeBack(objid, areaid)
   end
 end
 
@@ -125,7 +127,7 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
   if (areaid == self:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then
     local actorid = CreatureHelper:getActorID(objid)
     if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
-      Story2:comeBack(objid, areaid)
+      Story2Helper:comeBack(objid, areaid)
     end
   end
 end
@@ -139,25 +141,23 @@ function MyStoryHelper:playerBadHurt (objid)
     return
   end
   if (mainIndex == 1) then -- 在落叶村受重伤
-    Story1:playerBadHurt(objid)
+    story1:playerBadHurt(objid)
   elseif (mainIndex == 2 and mainProgress == 3) then -- 杀强盗受重伤
-    Story2:playerBadHurt(objid)
+    story2:playerBadHurt(objid)
   end
 end
 
 function MyStoryHelper:actorDieEvent (objid)
   if (self:getMainStoryIndex() == 2) then
-    Story2:showMessage(objid)
+    Story2Helper:showMessage(objid)
   end
 end
 
--- 重新进入游戏时恢复剧情
-function MyStoryHelper:recover ()
-  local mainIndex = self:getMainStoryIndex()
-  local mainProgress = self:getMainStoryProgress()
-  if (mainIndex == 1) then
-
-  elseif (mainIndex == 2) then
-
+-- 玩家重新进入游戏时恢复剧情
+function MyStoryHelper:recover (player)
+  if (#self.stories == 0) then
+    self:init()
   end
+  local story = self:getStory()
+  story:recover(player)
 end

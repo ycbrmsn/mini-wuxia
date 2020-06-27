@@ -1,97 +1,31 @@
 -- 剧情二
 Story2 = MyStory:new()
 
-function Story2:init ()
-  local data = {
-    title = '启程',
-    name = '前往学院',
-    desc = '先生带着我向学院出发了',
-    tips = {
-      '终于到了出发的时间了。我好激动。',
-      '先生带着我向学院出发了。只是，没想到是要用跑的。',
-      '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
-      '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
-      '#G目前剧情到此。'
-      -- '先生先离开了。风颖城，我来了。'
-    },
-    yexiaolongInitPosition = {
-      { x = 0, y = 7, z = 23 },
-      { x = 0, y = 7, z = 20 }
-    },
-    playerInitPosition = { x = 0, y = 7, z = 16 },
-    movePositions1 = {
-      { x = 0, y = 7, z = 70 },
-      { x = 0, y = 7, z = 130 },
-      { x = 0, y = 7, z = 190 },
-      { x = 0, y = 7, z = 250 },
-      { x = 0, y = 7, z = 280 }
-    },
-    movePositions2 = {
-      { x = 0, y = 7, z = 65 },
-      { x = 0, y = 7, z = 125 },
-      { x = 0, y = 7, z = 185 },
-      { x = 0, y = 7, z = 245 },
-      { x = 0, y = 7, z = 275 }
-    },
-    leaveForAWhilePositions = {
-      { x = 10, y = 7, z = 280 },
-      { x = 24, y = 7, z = 230 }
-    },
-    eventPositions = {
-      { x = 0, y = 7, z = 320 }
-    },
-    xiaotoumuPositions = {
-      { x = 0, y = 7, z = 330 }
-    },
-    louluoPositions = {
-      { x = -2, y = 7, z = 330 },
-      { x = 2, y = 7, z = 330 },
-      { x = 4, y = 7, z = 330 },
-      { x = -4, y = 7, z = 330 },
-      { x = 6, y = 7, z = 328 },
-      { x = -6, y = 7, z = 328 },
-      { x = 8, y = 7, z = 326 },
-      { x = -8, y = 7, z = 326 },
-      { x = 10, y = 7, z = 324 },
-      { x = -10, y = 7, z = 324 }
-    },
-    xiaotoumus = {},
-    xiaolouluos = {},
-    killXiaotoumuNum = 0,
-    killLouluoNum = 0,
-    toCollegePositions = {
-      { x = 0, y = 7, z = 359 },
-      { x = 0, y = 7, z = 420 },
-      { x = -36, y = 7, z = 458 },
-      { x = -36, y = 7, z = 500 },
-      { x = -6, y = 7, z = 525 },
-      { x = -6, y = 7, z = 580 },
-      { x = -16, y = 7, z = 600 }
-    },
-    standard = 1
-  }
-  self:setData(data)
+function Story2:new ()
+  local data = Story2Helper:getData()
+  self:checkData(data)
 
   if (MyStoryHelper:getMainStoryIndex() <= 2) then -- 剧情2
     local areaid = AreaHelper:getAreaByPos(data.eventPositions[1])
     data.areaid = areaid
   end
+  setmetatable(data, self)
+  self.__index = self
   return data
 end
 
 -- 前往学院
 function Story2:goToCollege ()
-  local story2 = MyStoryHelper:getStory(2)
   MyPlayerHelper:everyPlayerNotify('约定的时间到了')
   -- 初始化所有人位置
   local idx = 1
   MyPlayerHelper:everyPlayerDoSomeThing(function (p)
-    p:setPosition(self:getInitPosition(idx, story2.playerInitPosition))
+    p:setPosition(Story2Helper:getInitPosition(idx, self.playerInitPosition))
     p:wantLookAt(yexiaolong, 2)
     idx = idx + 1
   end)
-  yexiaolong:wantMove('goToCollege', { story2.yexiaolongInitPosition[2] })
-  yexiaolong:setPosition(story2.yexiaolongInitPosition[1])
+  yexiaolong:wantMove('goToCollege', { self.yexiaolongInitPosition[2] })
+  yexiaolong:setPosition(self.yexiaolongInitPosition[1])
   MyPlayerHelper:changeViewMode()
   MyPlayerHelper:everyPlayerEnableMove(false)
   -- 说话
@@ -134,8 +68,8 @@ function Story2:goToCollege ()
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond (function (p)
     ActorHelper:addBuff(yexiaolong.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-    yexiaolong:wantMove('goToCollege', p.story2.movePositions1, nil, nil, nil, 600)
-  end, waitSeconds, { story2 = story2 })
+    yexiaolong:wantMove('goToCollege', self.movePositions1, nil, nil, nil, 600)
+  end, waitSeconds)
 
   waitSeconds = waitSeconds + 1
   MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
@@ -155,15 +89,15 @@ function Story2:goToCollege ()
     MyPlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
     for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
       if (i == 1) then
-        v.action:runTo(p.story2.movePositions2, function (v)
-          Story2:teacherLeaveForAWhile(v)
+        v.action:runTo(self.movePositions2, function (v)
+          self:teacherLeaveForAWhile(v)
         end, v)
       else
-        v.action:runTo(p.story2.movePositions2)
+        v.action:runTo(self.movePositions2)
       end
     end
     MyPlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
-  end, waitSeconds, { story2 = story2 })
+  end, waitSeconds)
   MyTimeHelper:callFnAfterSecond(function (p)
     MyStoryHelper:forward('跑步去学院')
   end, waitSeconds)
@@ -175,22 +109,9 @@ function Story2:goToCollege ()
   MyPlayerHelper:everyPlayerSpeakAfterSecond(waitSeconds, '呼呼。这条路真长啊。不知道还要跑多久。')
 end
 
-function Story2:getInitPosition (index, myPosition)
-  local pos = MyPosition:new(myPosition)
-  if (index > 1) then
-    local temp = math.floor(index / 2)
-    if (math.mod(index, 2) == 0) then
-      temp = temp * -1
-    end
-    pos.x = pos.x + temp
-  end
-  return pos
-end
-
 -- 先生暂时离开
 function Story2:teacherLeaveForAWhile (myPlayer)
-  local story2 = MyStoryHelper:getStory(2)
-  myPlayer:speak(0, '先生，要到了吗？')
+  myPlayer:speak(0, '先生，这是快要到了吗？')
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function (p)
@@ -222,8 +143,8 @@ function Story2:teacherLeaveForAWhile (myPlayer)
 
   waitSeconds = waitSeconds + 1
   MyTimeHelper:callFnAfterSecond(function (p)
-    yexiaolong:wantMove('leaveForAWhile', p.story2.leaveForAWhilePositions)
-  end, waitSeconds, { story2 = story2 })
+    yexiaolong:wantMove('leaveForAWhile', self.leaveForAWhilePositions)
+  end, waitSeconds)
   
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function (p)
@@ -231,15 +152,15 @@ function Story2:teacherLeaveForAWhile (myPlayer)
 
     for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
       if (i == 1) then
-        v.action:runTo(p.story2.eventPositions, function (v)
-          Story2:meetBandits(v)
+        v.action:runTo(self.eventPositions, function (v)
+          self:meetBandits(v)
         end, v)
       else
-        v.action:runTo(p.story2.eventPositions)
+        v.action:runTo(self.eventPositions)
       end
     end
 
-  end, waitSeconds, { story2 = story2 })
+  end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
   MyPlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '这里的树木好茂密啊！')
@@ -247,8 +168,7 @@ end
 
 -- 遭遇强盗
 function Story2:meetBandits (hostPlayer)
-  local story2 = MyStoryHelper:getStory(2)
-  self:initQiangdao()
+  Story2Helper:initQiangdao()
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
   local xiaolouluoId = qiangdaoLouluo.monsters[1]
 
@@ -322,79 +242,8 @@ function Story2:meetBandits (hostPlayer)
   end, waitSeconds)
 end
 
-function Story2:showMessage (objid)
-  local actorid = CreatureHelper:getActorID(objid)
-  MyTimeHelper:callFnAfterSecond(function ()
-    local story2 = MyStoryHelper:getStory(2)
-    local isRight = false
-    if (qiangdaoLouluo.actorid == actorid) then
-      for i, v in ipairs(story2.xiaolouluos) do
-        if (v.objid == objid) then
-          v.killed = true
-          break
-        end
-      end
-      story2.killLouluoNum = story2.killLouluoNum + 1
-      isRight = true
-    elseif (qiangdaoXiaotoumu.actorid == actorid) then
-      for i, v in ipairs(story2.xiaotoumus) do
-        if (v.objid == objid) then
-          v.killed = true
-          break
-        end
-      end
-      story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
-      isRight = true
-      if (story2.killXiaotoumuNum > 0) then
-        MyTimeHelper:callFnAfterSecond(function ()
-          self:killXiaotoumuEvent()
-        end, 1)
-      end
-    end
-    if (isRight) then
-      local remainXiaolouluoNum = #story2.louluoPositions - story2.killLouluoNum
-      local remainXiaotoumuNum = #story2.xiaotoumuPositions - story2.killXiaotoumuNum
-      if (remainXiaotoumuNum + remainXiaolouluoNum > 0) then
-        local msg = '剩余强盗喽罗数：' .. remainXiaolouluoNum .. '。剩余强盗小头目数：' .. remainXiaotoumuNum .. '。'
-        ChatHelper:sendSystemMsg(msg)
-      else
-        ChatHelper:sendSystemMsg('消灭所有强盗。')
-        if (story2.standard == 1) then
-          self:wipeOutQiangdao()
-        end
-      end
-    end
-  end, 1)
-end
-
-function Story2:comeBack (objid, areaid)
-  local pos = MyPosition:new(ActorHelper:getPosition(objid))
-  local x, y, z = 0, 0, 0
-  if (pos.x < -29) then
-    pos.x = -26
-    x = 1
-  elseif (pos.x > 27) then
-    pos.x = 24
-    x = -1
-  end
-  if (pos.z < 298) then
-    pos.z = 301
-    z = 1
-  elseif (pos.z > 359) then
-    pos.z = 356
-    z = -1
-  end
-  if (ActorHelper:isPlayer(objid)) then
-    MyPlayerHelper:showToast(objid, '你不能跑得太远')
-    -- local player = MyPlayerHelper:getPlayer(objid)
-    -- PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
-  end
-  ActorHelper:appendSpeed(objid, x, y, z)
-  ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
-end
-
+-- 消灭强盗
 function Story2:wipeOutQiangdao ()
-  local story2 = MyStoryHelper:getStory(2)
   local hostPlayer = MyPlayerHelper:getHostPlayer()
   MyStoryHelper:forward('终于消灭了强盗')
   MyPlayerHelper:everyPlayerEnableMove(false)
@@ -402,7 +251,7 @@ function Story2:wipeOutQiangdao ()
 
   local waitSeconds = 2
   MyTimeHelper:callFnAfterSecond(function ()
-    local pos = self:getAirPosition()
+    local pos = Story2Data:getAirPosition()
     yexiaolong:setPosition(pos)
     yexiaolong:wantLookAt(nil, hostPlayer.objid, 3)
     yexiaolong.action:playFree(1)
@@ -453,8 +302,8 @@ function Story2:wipeOutQiangdao ()
   self:endWords(hostPlayer, waitSeconds)
 end
 
+-- 结束语
 function Story2:endWords (player, waitSeconds)
-  local story2 = MyStoryHelper:getStory(2)
   yexiaolong:speak(waitSeconds, '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
 
   waitSeconds = waitSeconds + 3
@@ -465,7 +314,7 @@ function Story2:endWords (player, waitSeconds)
   player.action:playThink(waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  if (story2.standard == 1) then
+  if (self.standard == 1) then
     yexiaolong:speak(waitSeconds, '不了，我已经迫不及待想瞧瞧小高招的新学员了。我去也。')
   else
     yexiaolong:speak(waitSeconds, '不了，你身上有伤，不易快行。我还有事，要先行一步。我去也。')
@@ -473,7 +322,7 @@ function Story2:endWords (player, waitSeconds)
 
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
-    yexiaolong:wantMove('goToCollege', story2.toCollegePositions)
+    yexiaolong:wantMove('goToCollege', self.toCollegePositions)
     MyPlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢行。')
     MyPlayerHelper:everyPlayerDoSomeThing(function (p)
       p.action:playFree2()
@@ -492,69 +341,10 @@ function Story2:endWords (player, waitSeconds)
   end, waitSeconds)
 end
 
-function Story2:getAirPosition ()
-  local hostPlayer = MyPlayerHelper:getHostPlayer()
-  local pos = MyPosition:new(hostPlayer:getPosition())
-  local pos2 = MyPosition:new(hostPlayer:getPosition())
-  for i = 6, 1, -1 do
-    pos.x = pos.x + i
-    pos2.x = pos2.x + i + 1
-    if (MyAreaHelper:isAirArea(pos) and MyAreaHelper:isAirArea(pos2)) then
-      return pos, pos2
-    else
-      pos.x = pos.x - i
-      pos2.x = pos2.x - i - 1
-    end
-    pos.z = pos.z + i
-    pos2.z = pos2.z + i + 1
-    if (MyAreaHelper:isAirArea(pos) and MyAreaHelper:isAirArea(pos2)) then
-      return pos, pos2
-    else
-      pos.z = pos.z - i
-      pos2.z = pos2.z - i - 1
-    end
-  end
-  return pos, pos2
-end
-
-function Story2:killXiaotoumuEvent ()
-  local story2 = MyStoryHelper:getStory(2)
-  if (story2.standard == 1 and story2.killLouluoNum < #story2.louluoPositions) then -- 还有喽罗
-    qiangdaoLouluo:speak(0, '他杀了老大！干掉他！')
-    for i, v in ipairs(story2.xiaolouluos) do
-      if (not(v.killed)) then
-        CreatureHelper:setAIActive(v.objid, false)
-      end
-    end
-    MyTimeHelper:callFnAfterSecond(function ()
-      for i, v in ipairs(story2.xiaolouluos) do
-        if (not(v.killed)) then
-          CreatureHelper:setAIActive(v.objid, true)
-          ActorHelper:addBuff(v.objid, 17, 3, 6000) -- 强力攻击3级
-        end
-      end
-    end, 1)
-  end
-end
-
-function Story2:initQiangdao ()
-  local story2 = MyStoryHelper:getStory(2)
-  qiangdaoXiaotoumu:setAIActive(false)
-  qiangdaoLouluo:setAIActive(false)
-  qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPositions)
-  qiangdaoLouluo:setPositions(story2.louluoPositions)
-  for i, v in ipairs(qiangdaoXiaotoumu.monsters) do
-    table.insert(story2.xiaotoumus, { objid = v, killed = false })
-  end
-  for i, v in ipairs(qiangdaoLouluo.monsters) do
-    table.insert(story2.xiaolouluos, { objid = v, killed = false })
-  end
-end
-
+-- 玩家受到重伤
 function Story2:playerBadHurt (objid)
-  local story2 = MyStoryHelper:getStory(2)
   local player = MyPlayerHelper:getPlayer(objid)
-  story2.standard = 2
+  self.standard = 2
   MyPlayerHelper:changeViewMode()
   player:enableBeAttacked(false)
   player:enableMove(false, true)
@@ -564,7 +354,7 @@ function Story2:playerBadHurt (objid)
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     yexiaolong:speak(0, '住手！')
-    for i, v in ipairs(story2.xiaotoumus) do
+    for i, v in ipairs(self.xiaotoumus) do
       if (not(v.killed)) then
         MyActorHelper:stopRun(v.objid)
         if (i == 1) then
@@ -575,7 +365,7 @@ function Story2:playerBadHurt (objid)
         end, 2)
       end
     end
-    for i, v in ipairs(story2.xiaolouluos) do
+    for i, v in ipairs(self.xiaolouluos) do
       if (not(v.killed)) then
         MyActorHelper:stopRun(v.objid)
         if (i == 1) then
@@ -620,13 +410,13 @@ function Story2:playerBadHurt (objid)
   waitSeconds = waitSeconds + 2
   MyTimeHelper:callFnAfterSecond(function ()
     local monsters = {}
-    for i, v in ipairs(story2.xiaotoumus) do
+    for i, v in ipairs(self.xiaotoumus) do
       if (not(v.killed)) then
         local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
         table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
       end
     end
-    for i, v in ipairs(story2.xiaolouluos) do
+    for i, v in ipairs(self.xiaolouluos) do
       if (not(v.killed)) then
         local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
         table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
@@ -697,4 +487,8 @@ function Story2:playerBadHurt (objid)
       end, ws)
     end
   end, waitSeconds)
+end
+
+function Story2:recover (player)
+  Story2Helper:recover(player)
 end

@@ -10,9 +10,9 @@ function QiangdaoLouluo:new ()
     },
     fallOff = {
       { MyConstant.ITEM.APPLE_ID, 1, 30 }, -- 苹果
-      { MyConstant.ITEM.COIN_ID, 5, 70 } -- 铜板
+      { MyConstant.ITEM.COIN_ID, 5, 30 } -- 铜板
     },
-    initPosition = { x = 22, y = 7, z = 37 },
+    initPosition = { x = 34, y = 7, z = 327 },
     toPosition = { x = -363, y = 7, z = 556 },
     monsters = {},
     monsterPositions = {
@@ -46,6 +46,10 @@ function QiangdaoLouluo:init ()
     self:generateMonsters()
     qiangdaoXiaotoumu:generateMonsters()
   end
+  return true
+end
+
+function QiangdaoLouluo:initStoryMonsters ()
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
@@ -56,9 +60,6 @@ function QiangdaoLouluo:init ()
     self:setPositions({self.toPosition})
     -- 清除木围栏
     AreaHelper:clearAllWoodenFence(areaid)
-    return true
-  else
-    return false
   end
 end
 

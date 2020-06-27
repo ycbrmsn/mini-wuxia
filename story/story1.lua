@@ -1,7 +1,7 @@
 -- 剧情一
 Story1 = MyStory:new()
 
-function Story1:init ()
+function Story1:new ()
   local data = {
     title = '序章',
     name = '学院招生通知',
@@ -19,19 +19,20 @@ function Story1:init ()
     createPos = { x = 28, y = 7, z = -28 },
     movePos = { x = 31, y = 8, z = 1 }
   }
-  self:setData(data)
+  self:checkData(data)
 
   if (MyStoryHelper:getMainStoryIndex() == 1 and MyStoryHelper:getMainStoryProgress() == 1) then -- 剧情1
     local areaid = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
     data.areaid = areaid
   end
+  setmetatable(data, self)
+  self.__index = self
   return data
 end
 
 -- 文羽通知事件
 function Story1:noticeEvent (areaid)
   AreaHelper:destroyArea(areaid)
-  local story1 = MyStoryHelper:getStory(1)
   local createPos = story1.createPos
   wenyu:setPosition(createPos.x, createPos.y, createPos.z)
   wenyu:wantMove('notice', { story1.movePos })
@@ -49,13 +50,13 @@ end
 function Story1:fasterTime ()
   local mainIndex = MyStoryHelper:getMainStoryIndex()
   local mainProgress = MyStoryHelper:getMainStoryProgress()
-  if (mainIndex == 1 and mainProgress == (#self.data.tips - 1) and not(self.data.isFasterTime)) then -- 主角回家休息
+  if (mainIndex == 1 and mainProgress == (#self.tips - 1) and not(self.isFasterTime)) then -- 主角回家休息
     -- 时间快速流逝
-    self.data.isFasterTime = true
+    self.isFasterTime = true
     MyTimeHelper:repeatUtilSuccess(666, 'fasterTime', function ()
       -- local storyRemainDays = MyStoryHelper:getMainStoryRemainDays()
       local hour = MyTimeHelper:getHour()
-      if (MyStoryHelper:getMainStoryProgress() < #self.data.tips) then
+      if (MyStoryHelper:getMainStoryProgress() < #self.tips) then
         hour = 0
         MyTimeHelper:setHour(hour)
         MyStoryHelper:forward('剧情一过了一天')
@@ -120,4 +121,11 @@ function Story1:playerBadHurt (objid)
   player.action:playDown(1)
   MyPlayerHelper:changeViewMode(objid)
   player:thinkTo(objid, 0, '没想到我又受重伤了。')
+end
+
+function Story1:recover (player)
+  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  if (mainProgress >= 5) then
+    player:enableMove(true)
+  end
 end

@@ -48,7 +48,6 @@ end
 
 function initMyActors ()
   PersonHelper:init()
-  MyStoryHelper:init()
   MyBlockHelper:init()
 end
 
@@ -77,7 +76,7 @@ local atSecond = function (eventArgs)
     -- if (second == 3) then
     --   MyStoryHelper.mainIndex = 2
     --   MyStoryHelper.mainProgress = 1
-    --   Story2:goToCollege()
+    --   story2:goToCollege()
     -- end
   end)
   
