@@ -11,6 +11,7 @@ function Story2Helper:getData ()
       '先生带着我向学院出发了。只是，没想到是要用跑的。',
       '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
       '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
+      '我……我竟然被一伙强盗打败了。还好先生及时赶到。',
       '#G目前剧情到此。'
       -- '先生先离开了。风颖城，我来了。'
     },
@@ -224,7 +225,35 @@ end
 
 function Story2Helper:recover (player)
   local mainProgress = MyStoryHelper:getMainStoryProgress()
-  if (mainProgress >= 5) then
-    player:enableMove(true)
+  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  if (mainProgress == 1) then -- 村口集合
+    if (player == hostPlayer) then
+      story2:goToCollege()
+    else
+      player:setMyPosition(hostPlayer:getMyPosition())
+    end
+  elseif (mainProgress == 2) then -- 开始奔跑
+    PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.NORTH, 0)
+    player:setMyPosition(story2.eventPositions[1])
+    if (player == hostPlayer) then
+      story2:meetBandits(hostPlayer)
+    end
+  elseif (mainProgress == 3) then -- 路遇强盗
+    if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
+      player:setMyPosition(story2.eventPositions[1])
+    end
+  elseif (mainProgress == 4) then -- 消灭了强盗
+    if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
+      player:setMyPosition(story2.eventPositions[1])
+    end
+    if (player == hostPlayer) then
+      story2:wipeOutQiangdao()
+    end
+  elseif (mainProgress == 5) then -- 被强盗打败
+    if (player == hostPlayer) then
+      story2:playerBadHurt(player.objid)
+    end
+  elseif (mainProgress == 6) then -- 先生离开
+    -- 剧情二结束
   end
 end

@@ -168,6 +168,7 @@ end
 
 -- 遭遇强盗
 function Story2:meetBandits (hostPlayer)
+  MyStoryHelper:forward('遭遇强盗')
   Story2Helper:initQiangdao()
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
   local xiaolouluoId = qiangdaoLouluo.monsters[1]
@@ -238,7 +239,6 @@ function Story2:meetBandits (hostPlayer)
     qiangdaoXiaotoumu:setAIActive(true)
     qiangdaoLouluo:setAIActive(true)
     MyPlayerHelper:everyPlayerEnableMove(true)
-    MyStoryHelper:forward('消灭强盗')
   end, waitSeconds)
 end
 
@@ -295,10 +295,12 @@ function Story2:wipeOutQiangdao ()
   end
   MyPlayerHelper:everyPlayerDoSomeThing (function (p)
     BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
+    if (p == hostPlayer) then
+      MyStoryHelper:forward('被强盗打败')
+      MyStoryHelper:forward('先生离开')
+      self:endWords(hostPlayer, 3)
+    end
   end, waitSeconds)
-
-  waitSeconds = waitSeconds + 3
-  self:endWords(hostPlayer, waitSeconds)
 end
 
 -- 结束语
@@ -334,7 +336,6 @@ function Story2:endWords (player, waitSeconds)
 
   MyTimeHelper:callFnAfterSecond(function ()
     MyPlayerHelper:changeViewMode(nil, VIEWPORTTYPE.MAINVIEW)
-    MyStoryHelper:forward('前往风颖城')
     -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
     ChatHelper:sendSystemMsg('#G目前剧情到此。')
   end, waitSeconds)
@@ -346,6 +347,8 @@ function Story2:playerBadHurt (objid)
     return
   end
   self.standard = 2
+  MyStoryHelper:forward('终于消灭了强盗')
+  MyStoryHelper:forward('被强盗打败')
   local player = MyPlayerHelper:getPlayer(objid)
   MyPlayerHelper:changeViewMode()
   player:enableBeAttacked(false)
@@ -480,9 +483,9 @@ function Story2:playerBadHurt (objid)
 
       ws = ws + 2
       MyTimeHelper:callFnAfterSecond(function ()
-        MyStoryHelper:forward('终于消灭了强盗')
         yexiaolong:lookAt(player.objid)
         yexiaolong:speak(0, '不错，这么快就又能动弹了。')
+        MyStoryHelper:forward('先生离开')
         self:endWords(player, 2)
       end, ws)
     end

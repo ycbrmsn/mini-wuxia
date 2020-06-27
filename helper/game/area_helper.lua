@@ -162,3 +162,8 @@ function AreaHelper:replaceAreaBlock (areaid, srcblockid, destblockid, face)
     return Area:replaceAreaBlock(areaid, srcblockid, destblockid, face)
   end, nil, onceFailMessage, finillyFailMessage)
 end
+
+-- 检测obj是否在区域内
+function AreaHelper:objInArea (areaid, objid)
+  return Area:objInArea(areaid, objid) == ErrorCode.OK
+end
