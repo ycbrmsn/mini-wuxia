@@ -121,9 +121,9 @@ end
 function QiangdaoLouluo:generateMonsters ()
   num = num or 5
   for i, v in ipairs(self.monsterAreas) do
-    local objids = AreaHelper:getAllCreaturesInAreaId(v)
-    if (not(objids) or #objids < num) then
-      for i = 1, num - #objids do
+    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    if (curNum < num) then
+      for i = 1, num - curNum do
         local pos = MyAreaHelper:getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end

@@ -1,51 +1,30 @@
 -- 怪物工具类
 MonsterHelper = {
-  monsters = {}, -- objid -> actor
+  monsters = {}, -- 可击杀的怪物数组
   forceDoNothingMonsters = {}, -- objid -> times 禁锢次数
   sealedMonsters = {} -- objid -> times
 }
-
-function MonsterHelper:addMonster (objid, o)
-  self.monsters[objid] = o
-end
-
-function MonsterHelper:delMonsterByObjid (objid)
-  self.monsters[objid] = nil
-end
-
-function MonsterHelper:delMonstersByActorid (actorid)
-  for k, v in pairs(self.monsters) do
-    if (v.actorid == actorid) then
-      self.monsters[k] = nil
-    end
-  end
-end
-
-function MonsterHelper:getMonsterByObjid (objid)
-  return self.monsters[objid]
-end
 
 function MonsterHelper:init ()
   qiangdaoXiaotoumu = QiangdaoXiaotoumu:new()
   qiangdaoLouluo = QiangdaoLouluo:new()
   wolf = Wolf:new()
-  local monsters = { qiangdaoXiaotoumu, qiangdaoLouluo, wolf }
-  for i, v in ipairs(monsters) do
+  ox = Ox:new()
+  self.monsters = { qiangdaoXiaotoumu, qiangdaoLouluo, wolf, ox }
+  for i, v in ipairs(self.monsters) do
     MyTimeHelper:initActor(v)
+    v:timerGenerate()
     -- LogHelper:debug('初始化', v:getName(), '完成')
   end
-  qiangdaoXiaotoumu:timerGenerate()
-  qiangdaoLouluo:timerGenerate()
-  wolf:timerGenerate()
 end
 
+-- 玩家获得杀怪经验
 function MonsterHelper:getExp (playerid, objid)
   local actorid = CreatureHelper:getActorID(objid)
   if (not(actorid)) then
     return 0
   end
-  local monsterModels = { wolf, qiangdaoLouluo, qiangdaoXiaotoumu }
-  for i, v in ipairs(monsterModels) do
+  for i, v in ipairs(self.monsters) do
     if (v.actorid == actorid) then
       return self:calExp(playerid, v.expData)
     end
@@ -53,16 +32,22 @@ function MonsterHelper:getExp (playerid, objid)
   return 0
 end
 
+-- 计算玩家杀怪获得的经验
 function MonsterHelper:calExp (playerid, expData)
   local player = MyPlayerHelper:getPlayer(playerid)
   local levelDiffer = player:getLevel() - expData.level
-  if (levelDiffer <= 0) then
+  if (levelDiffer <= -6) then -- 相差6级双倍经验
+    return expData.exp * 2
+  elseif (levelDiffer <= -3) then -- 相差3级1.5倍经验
+    return math.floor(expData.exp * 1.5)
+  elseif (levelDiffer <= 0) then
     return expData.exp
   else
     return math.ceil(expData.exp / math.pow(2, levelDiffer))
   end
 end
 
+-- 怪物看向
 function MonsterHelper:lookAt (objid, toobjid)
   if (type(objid) == 'table') then
     for i, v in ipairs(objid) do
@@ -96,6 +81,7 @@ function MonsterHelper:wantLookAt (objid, toobjid, seconds)
   end, seconds, t)
 end
 
+-- 怪物做表情
 function MonsterHelper:playAct (objid, act, afterSeconds)
   if (afterSeconds) then
     MyTimeHelper:callFnAfterSecond (function (p)
@@ -106,11 +92,11 @@ function MonsterHelper:playAct (objid, act, afterSeconds)
   end
 end
 
+-- 怪物死亡
 function MonsterHelper:actorDie (objid, toobjid)
   local actorid = CreatureHelper:getActorID(objid)
   local pos = MyPosition:new(ActorHelper:getPosition(objid))
-  local monsterModels = { wolf, qiangdaoXiaotoumu, qiangdaoLouluo }
-  for i, v in ipairs(monsterModels) do
+  for i, v in ipairs(self.monsters) do
     if (v.actorid == actorid) then
       self:createFallOff(v, pos)
       break
@@ -180,4 +166,23 @@ function MonsterHelper:cancelSealMonster (objid)
     end
   end
   return true
+end
+
+-- 获取区域内actorid类型的生物数量
+function MonsterHelper:getMonsterNum (areaid, actorid)
+  local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
+  if (not(objids)) then
+    return 0
+  end
+  if (not(actorid)) then
+    return #objids
+  end
+  local curNum = 0
+  for i, v in ipairs(objids) do
+    local actid = CreatureHelper:getActorID(v)
+    if (actid and actid == actorid) then
+      curNum = curNum + 1
+    end
+  end
+  return curNum
 end

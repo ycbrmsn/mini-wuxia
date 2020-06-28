@@ -35,7 +35,7 @@ function MyAreaHelper:initAreas ()
 end
 
 function MyAreaHelper:initShowToastAreas ()
-  local arr = { wolf, qiangdaoLouluo }
+  local arr = { wolf, qiangdaoLouluo, ox }
   for i, v in ipairs(arr) do
     if (v.generate) then -- 如果需要生成怪物
       self.showToastAreas[v.areaids[2]] = { v.areaids[1], v.areaName, v.generate }
@@ -55,7 +55,7 @@ function MyAreaHelper:showToastArea (objid, areaid)
   local player = MyPlayerHelper:getPlayer(objid)
   for k, v in pairs(self.showToastAreas) do
     if (k == areaid) then
-      if (player.prevAreaId and player.prevAreaId == v[1]) then
+      if (v[1] == -1 or (player.prevAreaId and player.prevAreaId == v[1])) then
         MyPlayerHelper:showToast(objid, v[2])
         if (#v == 3) then -- 生成怪物
           v[3]()

@@ -73,11 +73,11 @@ local atSecond = function (eventArgs)
       MyAreaHelper:initAreas()
     end
 
-    if (second == 3) then
-      MyStoryHelper.mainIndex = 2
-      MyStoryHelper.mainProgress = 1
-      story2:goToCollege()
-    end
+    -- if (second == 3) then
+    --   MyStoryHelper.mainIndex = 2
+    --   MyStoryHelper.mainProgress = 1
+    --   story2:goToCollege()
+    -- end
   end)
   
 end

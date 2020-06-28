@@ -27,7 +27,8 @@ MyConstant = {
   WOLF_ACTOR_ID = 11, -- 恶狼ID
   QIANGDAO_LOULUO_ACTOR_ID = 8, -- 强盗喽啰ID
   QIANGDAO_XIAOTOUMU_ACTOR_ID = 12, -- 强盗小头目ID
-  GUARD_ACTOR_ID = 15, -- 卫兵
+  GUARD_ACTOR_ID = 15, -- 卫兵（剑）
+  OX_ACTOR_ID = 17, -- 狂牛
 
   -- 道具ID
   ITEM = {

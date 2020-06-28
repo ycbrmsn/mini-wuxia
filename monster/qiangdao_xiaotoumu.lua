@@ -110,9 +110,9 @@ end
 function QiangdaoXiaotoumu:generateMonsters (num)
   num = num or 1
   for i, v in ipairs(self.monsterAreas) do
-    local objids = AreaHelper:getAllCreaturesInAreaId(v)
-    if (not(objids) or #objids < num) then
-      self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - #objids)
+    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    if (curNum < num) then
+      self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - curNum)
     end
   end
 end
