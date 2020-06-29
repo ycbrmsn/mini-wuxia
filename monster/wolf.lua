@@ -81,7 +81,7 @@ function Ox:new ()
   local o = {
     objid = MyConstant.OX_ACTOR_ID,
     expData = {
-      level = 3,
+      level = 7,
       exp = 25
     },
     fallOff = {
