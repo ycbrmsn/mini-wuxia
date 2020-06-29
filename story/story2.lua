@@ -89,9 +89,9 @@ function Story2:goToCollege ()
     MyPlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
     for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
       if (i == 1) then
-        v.action:runTo(self.movePositions2, function (v)
+        v.action:runTo(self.movePositions2, function ()
           self:teacherLeaveForAWhile(v)
-        end, v)
+        end)
       else
         v.action:runTo(self.movePositions2)
       end
@@ -152,9 +152,9 @@ function Story2:teacherLeaveForAWhile (myPlayer)
 
     for i, v in ipairs(MyPlayerHelper:getAllPlayers()) do
       if (i == 1) then
-        v.action:runTo(self.eventPositions, function (v)
+        v.action:runTo(self.eventPositions, function ()
           self:meetBandits(v)
-        end, v)
+        end)
       else
         v.action:runTo(self.eventPositions)
       end

@@ -209,3 +209,12 @@ function MyPlayerHelper:changeViewMode (objid, viewmode, islock)
     end
   end
 end
+
+-- actor行动
+function MyPlayerHelper:runPlayers ()
+  for k, v in pairs(self.players) do
+    LogHelper:call(function ()
+      v.action:execute()
+    end)
+  end
+end

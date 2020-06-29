@@ -5,6 +5,7 @@ local playerEnterGame = function (eventArgs)
   local objid = eventArgs['eventobjid']
   LogHelper:call(function ()
     MyPlayerHelper:initPlayer(objid)
+    -- MyPlayerHelper:getHostPlayer().action:runTo({ { x = 0, y = 7, z = 70 } })
   end)
 end
 
@@ -66,6 +67,7 @@ local atSecond = function (eventArgs)
     MyTimeHelper:doPerSecond(second)
     MyPlayerHelper:updateEveryPlayerPositions()
     MyActorHelper:runActors()
+    MyPlayerHelper:runPlayers()
 
     if (second == 1) then
       initMyActors()
@@ -73,11 +75,11 @@ local atSecond = function (eventArgs)
       MyAreaHelper:initAreas()
     end
 
-    -- if (second == 3) then
-    --   MyStoryHelper.mainIndex = 2
-    --   MyStoryHelper.mainProgress = 1
-    --   story2:goToCollege()
-    -- end
+    if (second == 3) then
+      MyStoryHelper.mainIndex = 2
+      MyStoryHelper.mainProgress = 1
+      story2:goToCollege()
+    end
   end)
   
 end

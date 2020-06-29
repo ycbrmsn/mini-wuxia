@@ -74,7 +74,8 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
   local myPlayer = MyPlayerHelper:getPlayer(objid)
   if (areaid == myPlayer.toAreaId) then -- 玩家自动前往地点
     AreaHelper:destroyArea(areaid)
-    myPlayer.action:runAction()
+    -- myPlayer.action:runAction()
+    myPlayer.action:doNext()
   elseif (guard:checkTokenArea(objid, areaid)) then
   else
     self:showToastArea(objid, areaid)
