@@ -11,6 +11,7 @@ function MyAreaHelper:removeToArea (myActor)
     local want = myActor.wants[1]
     if (want.toAreaId) then
       AreaHelper:destroyArea(want.toAreaId)
+      want.toAreaId = nil
     end
   end
 end
