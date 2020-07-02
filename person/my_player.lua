@@ -115,12 +115,12 @@ function MyPlayer:setMyPosition (pos)
   return MyActorHelper:setPosition(self.objid, pos.x, pos.y, pos.z)
 end
 
-function MyPlayer:getDistancePosition (distance)
-  return MyActorHelper:getDistancePosition(self.objid, distance)
+function MyPlayer:getDistancePosition (distance, angle)
+  return MyActorHelper:getDistancePosition(self.objid, distance, angle)
 end
 
-function MyPlayer:setDistancePosition (objid, distance)
-  self:setPosition(MyActorHelper:getDistancePosition(objid, distance))
+function MyPlayer:setDistancePosition (objid, distance, angle)
+  self:setPosition(MyActorHelper:getDistancePosition(objid, distance, angle))
 end
 
 function MyPlayer:getFaceYaw ()

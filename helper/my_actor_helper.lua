@@ -70,9 +70,17 @@ function MyActorHelper:setPosition (objid, x, y, z)
   end
 end
 
-function MyActorHelper:getDistancePosition (objid, distance)
+--[[  获取距离生物多远的位置
+      参数distance，正数表示前方，负数表示背后；参数angle表示偏转角度顺时针方向偏转]]--
+function MyActorHelper:getDistancePosition (objid, distance, angle)
+  angle = angle or 0
   local pos = self:getMyPosition(objid)
-  local angle = ActorHelper:getFaceYaw(objid)
+  local angle = ActorHelper:getFaceYaw(objid) + angle
+  if (angle > 180) then
+    angle = angle - 360
+  elseif (angle < -180) then
+    angle = angle + 360
+  end
   return MathHelper:getDistancePosition(pos, angle, distance)
 end
 
