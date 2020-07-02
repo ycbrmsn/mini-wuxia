@@ -39,7 +39,7 @@ end
 -- eventobjid, actormotion
 local actorChangeMotion = function (event)
   LogHelper:call(function ()
-    MyActorHelper:actorDie(event['eventobjid'], event['actormotion'])
+    MyActorHelper:actorChangeMotion(event.eventobjid, event.actormotion)
   end)
 end
 

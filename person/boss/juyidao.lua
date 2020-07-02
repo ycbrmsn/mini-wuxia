@@ -14,7 +14,8 @@ function Juyidao:new ()
     isBattle = false, -- 是否在战斗
     battleType = 1, -- 战斗方式
     battleProgress = 1, -- 战斗阶段
-    speed = { 200, 400, 600 } -- 移动速度
+    defaultSpeed = 200,
+    speed = { 400, 600, 1200 } -- 移动速度
   }
   setmetatable(o, self)
   self.__index = self
@@ -43,13 +44,21 @@ function Juyidao:init ()
       self:createAlertArea()
       self:checkAreaPlayer()
       return false
-    end, 60)
+    end, 1)
   end
   return initSuc
 end
 
 function Juyidao:collidePlayer (playerid, isPlayerInFront)
   
+end
+
+function Juyidao:defaultPlayerClickEvent (objid)
+  -- body
+end
+
+function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront)
+  -- body
 end
 
 function Juyidao:candleEvent (myPlayer, candle)
@@ -111,7 +120,9 @@ function Juyidao:checkAlertArea (objid, areaid)
     -- 停止移动
     self:wantDontMove('alert')
     -- 看向玩家
-    self:nextWantLookAt(nil, objid, 10)
+    MyTimeHelper:callFnFastRuns(function ()
+      self:lookAt(objid)
+    end, 2)
     -- 说话
     self:speakTo(objid, 0, '来者何人，扰吾静修。如不退去，小命必丢。')
     return true
@@ -164,9 +175,11 @@ end
 -- 执行战斗
 function Juyidao:runBattle ()
   if (self.battleType == 1) then
-    local pos = MyActorHelper:getMyPosition(self.targetObjid)
-    local distance = MathHelper:getDistance(self:getMyPosition(), pos)
-    self:runAndAttack(pos, distance)
+    local pos = MyActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
+    local selfPos = self:getMyPosition() -- 橘一刀位置
+    local distance = MathHelper:getDistance(selfPos, pos)
+    local desPos = MathHelper:getPos2PosInLineDistancePosition(selfPos, pos, 4) -- 目标位置
+    self:runAndAttack(distance, desPos)
   elseif (self.battleType == 2) then
     self:runCircleAndAttack()
   elseif (self.battleType == 3) then
@@ -175,26 +188,29 @@ function Juyidao:runBattle ()
 end
 
 -- 冲刺一刀
-function Juyidao:runAndAttack (pos, distance)
+function Juyidao:runAndAttack (distance, pos)
   if (self.battleProgress == 1) then -- 冲刺
-    if (distance > 10) then -- 10米外速度1
+    if (distance > 15) then -- 15米外速度
       MonsterHelper:runTo(self.objid, pos, self.speed[1])
-    elseif (distance > 5) then -- 5米外速度2
+    elseif (distance > 10) then -- 10米外速度
       MonsterHelper:runTo(self.objid, pos, self.speed[2])
+    elseif (distance > 5) then -- 5米外速度
+      MonsterHelper:runTo(self.objid, pos, self.speed[3])
     else -- 发动攻击
       self.battleProgress = 2
       self:runAndAttack()
     end
   elseif (self.battleProgress == 2) then -- 来一刀
-    if (distance >= 5) then
-      self.battleProgress = 1
-      self:runAndAttack()
-    else
+    if (not(distance) or distance < 5) then
       self:openAI()
+    else
+      self.battleProgress = 1
+      self:runBattle()
     end
   else -- 后退
-    local disPos = MyPlayerHelper:getPlayer(self.targetObjid):getDistancePosition(10)
-    MonsterHelper:runTo(self.objid, disPos, self.speed[2])
+    local targetPos = MyActorHelper:getMyPosition(self.targetObjid)
+    local dstPos = MathHelper:getPos2PosInLineDistancePosition(self:getMyPosition(), targetPos, 10) -- 目标位置
+    MonsterHelper:runTo(self.objid, dstPos, self.speed[3])
     MyTimeHelper:callFnFastRuns(function ()
       self:startBattle()
     end, 2)

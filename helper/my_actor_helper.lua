@@ -285,6 +285,14 @@ function MyActorHelper:actorAttackHit (objid, toobjid)
   end
 end
 
+-- 生物行为改变
+function MyActorHelper:actorChangeMotion (objid, actormotion)
+  local actor = MyActorHelper:getActorByObjid(objid)
+  if (actor) then
+    actor:changeMotion(actormotion)
+  end
+end
+
 -- actor计时器变化
 function MyActorHelper:changeTimer (timerid, timername)
   if (timername == MyActor.timername) then -- 生物计时器，则找出生物开始行动

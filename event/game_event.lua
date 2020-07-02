@@ -1,8 +1,8 @@
 -- 游戏事件
 
 -- eventobjid, toobjid
-local playerEnterGame = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local playerEnterGame = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
     MyPlayerHelper:initPlayer(objid)
     -- MyPlayerHelper:getHostPlayer().action:runTo({ { x = 0, y = 7, z = 70 } })
@@ -10,9 +10,9 @@ local playerEnterGame = function (eventArgs)
 end
 
 -- eventobjid, toobjid
-local playerLeaveGame = function (eventArgs)
+local playerLeaveGame = function (event)
   -- 从players中清除数据
-  MyPlayerHelper:removePlayer(eventArgs.eventobjid)
+  MyPlayerHelper:removePlayer(event.eventobjid)
 end
 
 -- 无参数
@@ -37,8 +37,8 @@ local endGame = function ()
 end
 
 -- 参数 hour
-local atHour = function (eventArgs)
-  local hour = eventArgs['hour']
+local atHour = function (event)
+  local hour = event['hour']
   -- LogHelper:info('atHour: ', hour)
   LogHelper:call(function ()
     MyTimeHelper:updateHour(hour)
@@ -61,8 +61,8 @@ function initDoorAreas ()
   end
 end
 
-local atSecond = function (eventArgs)
-  local second = eventArgs['second']
+local atSecond = function (event)
+  local second = event['second']
   LogHelper:call(function ()
     MyTimeHelper:doPerSecond(second)
     MyPlayerHelper:updateEveryPlayerPositions()

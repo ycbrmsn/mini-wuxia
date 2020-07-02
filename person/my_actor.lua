@@ -215,6 +215,10 @@ function MyActor:wantFreeTime (think)
   self.want:wantFreeTime(think)
 end
 
+function MyActor:wantFreeAndAlert (think)
+  self.want:wantFreeAndAlert(think)
+end
+
 -- 生物想在区域内自由活动，think可选
 function MyActor:wantFreeInArea (think, posPairs)
   self.want:wantFreeInArea(think, posPairs)

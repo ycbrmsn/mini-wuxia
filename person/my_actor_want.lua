@@ -70,14 +70,14 @@ function MyActorWant:wantFreeTime (think)
 end
 
 -- 自由移动并且警戒着
-function MyActorWant:wantFreeAndAlert (think)
+function MyActorWant:wantFreeAndAlert (think, speed)
   MyAreaHelper:removeToArea(self.myActor)
   think = think or 'alert'
   self.myActor:closeAI()
   self.myActor.think = think
-  local want = MyActorActionHelper:getFreeAndAlertData(think)
+  local want = MyActorActionHelper:getFreeAndAlertData(think, speed)
   self.myActor.wants = { want }
-  self.myActor.action:freeTime(want)
+  self.myActor.action:freeAndAlert(want)
 end
 
 function MyActorWant:wantFreeInArea (think, posPairs)

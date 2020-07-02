@@ -138,6 +138,8 @@ function MyActorAction:execute ()
 
     elseif (want.style == 'freeTime') then -- 自由活动
       self:freeTime(want)
+    elseif (want.style == 'freeAndAlert') then -- 自由警戒
+      self:freeAndAlert(want)
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()
@@ -307,4 +309,17 @@ function MyActorAction:freeTime (want)
   pos = AreaHelper:getRandomPos(areaid)
   AreaHelper:destroyArea(areaid)
   self:runTo(pos)
+end
+
+function MyActorAction:freeAndAlert (want)
+  self.myActor:closeAI()
+  want.currentRestTime = math.random(10, 20)
+  local pos = self.myActor:getMyPosition()
+  if (not(pos)) then
+    return
+  end
+  local areaid = AreaHelper:createFreeTimeArea(pos)
+  pos = AreaHelper:getRandomPos(areaid)
+  AreaHelper:destroyArea(areaid)
+  self:runTo(pos, want.speed)
 end

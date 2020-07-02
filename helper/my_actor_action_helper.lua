@@ -49,13 +49,11 @@ function MyActorActionHelper:getFreeTimeData (think)
 end
 
 -- 自由活动并警戒数据
-function MyActorActionHelper:getFreeAndAlertData (think, positions, speed)
+function MyActorActionHelper:getFreeAndAlertData (think, speed)
   local data = { style = 'freeAndAlert', restTime = 0, currentRestTime = 0, think = think }
   if (speed) then
     data.speed = speed
   end
-  local toPos = self:getToPos(positions, nil, 1)
-  data.toPos = toPos
   return data
 end
 
