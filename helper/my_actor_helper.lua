@@ -247,6 +247,7 @@ function MyActorHelper:resumeClickActor (objid)
   end
 end
 
+-- 生物碰撞
 function MyActorHelper:actorCollide (objid, toobjid)
   local actor1 = MyActorHelper:getActorByObjid(objid)
   -- LogHelper:info('碰撞了', actor1:getName())
@@ -273,6 +274,14 @@ function MyActorHelper:actorCollide (objid, toobjid)
         end
       end
     end
+  end
+end
+
+-- 生物攻击命中
+function MyActorHelper:actorAttackHit (objid, toobjid)
+  local actor = MyActorHelper:getActorByObjid(objid)
+  if (actor) then
+    actor:attackHit(toobjid)
   end
 end
 

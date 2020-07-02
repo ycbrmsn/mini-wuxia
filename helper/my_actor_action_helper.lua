@@ -48,6 +48,17 @@ function MyActorActionHelper:getFreeTimeData (think)
   return { style = 'freeTime', restTime = 0, currentRestTime = 0, think = think }
 end
 
+-- 自由活动并警戒数据
+function MyActorActionHelper:getFreeAndAlertData (think, positions, speed)
+  local data = { style = 'freeAndAlert', restTime = 0, currentRestTime = 0, think = think }
+  if (speed) then
+    data.speed = speed
+  end
+  local toPos = self:getToPos(positions, nil, 1)
+  data.toPos = toPos
+  return data
+end
+
 -- 在区域内自由活动数据
 function MyActorActionHelper:getFreeInAreaData (think, restTime)
   restTime = restTime or 5
@@ -85,6 +96,10 @@ end
 
 function MyActorActionHelper:getForceDoNothing (think)
   return { style = 'forceDoNothing', restTime = 1, currentRestTime = 1, think = think, times = 1 }
+end
+
+function MyActorActionHelper:getBattleData (think)
+  return { style = 'battle', restTime = 0, currentRestTime = 0, think = think }
 end
 
 -- 获取前往位置
@@ -183,4 +198,8 @@ function MyActorActionHelper:updateActionState (myActor)
       -- myActor:enableMove(false)
     end
   end
+end
+
+function MyActorActionHelper:getFreeTimePos ()
+  -- body
 end

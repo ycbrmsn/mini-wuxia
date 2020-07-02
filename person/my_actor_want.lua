@@ -36,6 +36,7 @@ function MyActorWant:wantDontMove (think)
   think = think or 'dontMove'
   self.myActor.think = think
   self.myActor.wants = { MyActorActionHelper:getDontMoveData(think) }
+  self.myActor:stopRun()
 end
 
 function MyActorWant:wantStayForAWhile(second)
@@ -64,6 +65,17 @@ function MyActorWant:wantFreeTime (think)
   self.myActor:openAI()
   self.myActor.think = think
   local want = MyActorActionHelper:getFreeTimeData(think)
+  self.myActor.wants = { want }
+  self.myActor.action:freeTime(want)
+end
+
+-- 自由移动并且警戒着
+function MyActorWant:wantFreeAndAlert (think)
+  MyAreaHelper:removeToArea(self.myActor)
+  think = think or 'alert'
+  self.myActor:closeAI()
+  self.myActor.think = think
+  local want = MyActorActionHelper:getFreeAndAlertData(think)
   self.myActor.wants = { want }
   self.myActor.action:freeTime(want)
 end
@@ -113,6 +125,14 @@ function MyActorWant:wantGoToSleep (bedData)
   MyAreaHelper:removeToArea(self.myActor)
   self:wantMove('sleep', { bedData[1] })
   self:nextWantSleep('sleep', bedData[2])
+end
+
+function MyActorWant:wantBattle (think)
+  MyAreaHelper:removeToArea(self.myActor)
+  think = think or 'battle'
+  self.myActor:closeAI()
+  self.myActor.think = think
+  self.myActor.wants = { MyActorActionHelper:getBattleData(think) }
 end
 
 function MyActorWant:nextWantMove (think, positions, isNegDir, index, restTime, speed)

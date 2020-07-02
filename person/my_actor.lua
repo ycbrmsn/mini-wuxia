@@ -238,6 +238,10 @@ function MyActor:wantGoToSleep (bedData)
   self.want:wantGoToSleep(bedData)
 end
 
+function MyActor:wantBattle (think)
+  self.want:wantBattle(think)
+end
+
 function MyActor:isWantsExist ()
   return self.wants and #self.wants > 0
 end
@@ -367,6 +371,11 @@ function MyActor:defaultCollidePlayerEvent (playerid, isPlayerInFront)
   self.action:stopRun()
   self:collidePlayer(playerid, isPlayerInFront)
   self:wantLookAt(nil, playerid)
+end
+
+-- 攻击命中
+function MyActor:attackHit (toobjid)
+  -- body
 end
 
 -- 设置囚禁状态

@@ -1,6 +1,7 @@
 -- 怪物工具类
 MonsterHelper = {
-  monsters = {}, -- 可击杀的怪物数组
+  monsters = {}, -- 需要移动控制的怪物 { objid = pos }
+  monsterModels = {}, -- 可击杀的怪物实例数组
   forceDoNothingMonsters = {}, -- objid -> times 禁锢次数
   sealedMonsters = {} -- objid -> times
 }
@@ -10,8 +11,8 @@ function MonsterHelper:init ()
   qiangdaoLouluo = QiangdaoLouluo:new()
   wolf = Wolf:new()
   ox = Ox:new()
-  self.monsters = { qiangdaoXiaotoumu, qiangdaoLouluo, wolf, ox }
-  for i, v in ipairs(self.monsters) do
+  self.monsterModels = { qiangdaoXiaotoumu, qiangdaoLouluo, wolf, ox }
+  for i, v in ipairs(self.monsterModels) do
     MyTimeHelper:initActor(v)
     v:timerGenerate()
     -- LogHelper:debug('初始化', v:getName(), '完成')
@@ -24,7 +25,7 @@ function MonsterHelper:getExp (playerid, objid)
   if (not(actorid)) then
     return 0
   end
-  for i, v in ipairs(self.monsters) do
+  for i, v in ipairs(self.monsterModels) do
     if (v.actorid == actorid) then
       return self:calExp(playerid, v.expData)
     end
@@ -96,7 +97,7 @@ end
 function MonsterHelper:actorDie (objid, toobjid)
   local actorid = CreatureHelper:getActorID(objid)
   local pos = MyPosition:new(ActorHelper:getPosition(objid))
-  for i, v in ipairs(self.monsters) do
+  for i, v in ipairs(self.monsterModels) do
     if (v.actorid == actorid) then
       self:createFallOff(v, pos)
       break
@@ -185,4 +186,38 @@ function MonsterHelper:getMonsterNum (areaid, actorid)
     end
   end
   return curNum
+end
+
+-- 怪物行动
+function MonsterHelper:execute ()
+  for k, v in pairs(self.monsters) do
+    local pos = MyActorHelper:getMyPosition(k)
+    if (pos) then -- 怪物有效
+      if (type(v) == 'number') then -- 生物objid
+        pos = MyActorHelper:getMyPosition(v)
+      else -- 位置
+        pos = v
+      end
+      ActorHelper:tryMoveToPos(k, pos.x, pos.y, pos.z)
+    end
+  end
+end
+
+-- 怪物靠近
+function MonsterHelper:monsterApproach (objids, pos)
+  for i, v in ipairs(objids) do
+    self.monsters[v] = pos
+  end
+end
+
+-- 怪物自由
+function MonsterHelper:monsterFree (objids)
+  for i, v in ipairs(objids) do
+    self.monsters[v] = nil
+  end
+end
+
+-- 跑向
+function MonsterHelper:runTo (objid, pos, speed)
+  return ActorHelper:tryMoveToPos(objid, pos.x, pos.y, pos.z, speed)
 end

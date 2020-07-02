@@ -30,6 +30,9 @@ MyConstant = {
   GUARD_ACTOR_ID = 15, -- 卫兵（剑）
   OX_ACTOR_ID = 17, -- 狂牛
 
+  -- boss
+  JUYIDAO_ACTOR_ID = 42, -- 橘一刀
+
   -- 道具ID
   ITEM = {
     COIN_ID = 4101, -- 铜板ID

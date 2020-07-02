@@ -63,11 +63,13 @@ function MyAreaHelper:showToastArea (objid, areaid)
         end
       end
       player.prevAreaId = areaid
-      break
+      return true
     elseif (v[1] == areaid) then
       player.prevAreaId = areaid
+      return true
     end
   end
+  return false
 end
 
 function MyAreaHelper:playerEnterArea (objid, areaid)
@@ -77,9 +79,9 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
     AreaHelper:destroyArea(areaid)
     -- myPlayer.action:runAction()
     myPlayer.action:doNext()
-  elseif (guard:checkTokenArea(objid, areaid)) then
-  else
-    self:showToastArea(objid, areaid)
+  elseif (self:showToastArea(objid, areaid)) then -- 显示提示区域检测
+  elseif (guard and guard:checkTokenArea(objid, areaid)) then -- 检查通行令牌
+  elseif (juyidao and juyidao:checkAlertArea(objid, areaid)) then -- 橘一刀区域
   end
 end
 

@@ -152,6 +152,8 @@ function MyActorAction:execute ()
       else -- 没有想法
         -- self.myActor:openAI()
       end
+    elseif (want.style == 'battle') then -- 战斗
+      self.myActor:doItNow()
     else -- 生物不想做什么，则生物自由安排
       -- do nothing
     end
