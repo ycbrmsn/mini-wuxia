@@ -382,6 +382,11 @@ function MyActor:attackHit (toobjid)
   -- body
 end
 
+-- 行为改变
+function MyActor:changeMotion (actormotion)
+  -- body
+end
+
 -- 设置囚禁状态
 function MyActor:setImprisoned (active)
   if (active) then

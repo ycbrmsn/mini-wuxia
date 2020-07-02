@@ -243,3 +243,7 @@ function Juyidao:attackHit (toobjid)
     self:runBattle()
   end
 end
+
+function Juyidao:changeMotion (actormotion)
+  LogHelper:debug('橘一刀当前行为 ', actormotion)
+end
