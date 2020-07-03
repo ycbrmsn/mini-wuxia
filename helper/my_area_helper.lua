@@ -81,7 +81,6 @@ function MyAreaHelper:playerEnterArea (objid, areaid)
     myPlayer.action:doNext()
   elseif (self:showToastArea(objid, areaid)) then -- 显示提示区域检测
   elseif (guard and guard:checkTokenArea(objid, areaid)) then -- 检查通行令牌
-  elseif (juyidao and juyidao:checkAlertArea(objid, areaid)) then -- 橘一刀区域
   end
 end
 
@@ -91,4 +90,10 @@ end
 
 function MyAreaHelper:creatureEnterArea (objid)
   
+end
+
+-- 位置附近的所有玩家
+function MyAreaHelper:getAllPlayersArroundPos (pos, dim)
+  local posBeg, posEnd = MathHelper:getRectRange(pos, dim)
+  return AreaHelper:getAllPlayersInAreaRange(posBeg, posEnd)
 end

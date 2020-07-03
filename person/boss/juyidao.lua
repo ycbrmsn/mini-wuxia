@@ -4,18 +4,17 @@ Juyidao = MyActor:new(MyConstant.JUYIDAO_ACTOR_ID)
 function Juyidao:new ()
   local o = {
     objid = 4382796216,
-    targetObjid = nil,
+    targetObjid = nil,  -- 攻击对象
+    alertObjids = {}, -- 警告对象
     initPosition = MyPosition:new(65.5, 7.5, 45.5), -- 橘山
     areaSize = {
       MyPosition:new(20, 8, 20), MyPosition:new(30, 10, 30)
     }, -- 内外圈区域大小
-    innerArea = nil, -- 内圈区域
-    outerArea = nil, -- 外圈区域
     isBattle = false, -- 是否在战斗
     battleType = 1, -- 战斗方式
     battleProgress = 1, -- 战斗阶段
     defaultSpeed = 200,
-    speed = { 400, 600, 1200 } -- 移动速度
+    speed = { 800, 1200, 2000 } -- 移动速度
   }
   setmetatable(o, self)
   self.__index = self
@@ -41,7 +40,6 @@ function Juyidao:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
     MyTimeHelper:repeatUtilSuccess(self.actorid, 'alert', function ()
-      self:createAlertArea()
       self:checkAreaPlayer()
       return false
     end, 1)
@@ -49,46 +47,37 @@ function Juyidao:init ()
   return initSuc
 end
 
-function Juyidao:collidePlayer (playerid, isPlayerInFront)
-  
-end
-
-function Juyidao:defaultPlayerClickEvent (objid)
-  -- body
-end
-
-function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront)
-  -- body
-end
-
-function Juyidao:candleEvent (myPlayer, candle)
-  
-end
-
--- 创建警戒区域
-function Juyidao:createAlertArea ()
-  if (self.innerArea) then
-    AreaHelper:destroyArea(self.innerArea)
-    self.innerArea = nil
-  end
-  if (self.outerArea) then
-    AreaHelper:destroyArea(self.outerArea)
-    self.outerArea = nil
-  end
-  local pos = self:getMyPosition()
-  if (pos) then
-    self.innerArea = AreaHelper:createAreaRect(pos, self.areaSize[1])
-    self.outerArea = AreaHelper:createAreaRect(pos, self.areaSize[2])
-  end
-end
+function Juyidao:collidePlayer (playerid, isPlayerInFront) end
+function Juyidao:candleEvent (myPlayer, candle) end
+function Juyidao:defaultPlayerClickEvent (objid) end
+function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront) end
 
 -- 检测区域内的玩家
 function Juyidao:checkAreaPlayer ()
-  if (self.outerArea) then -- 检测外圈
-    local playerids = AreaHelper:getAllPlayersInAreaId(self.innerArea)
-    if (#playerids > 0) then
+  -- 搜索外圈玩家
+  local pos = self:getMyPosition()
+  local playerids = MyAreaHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
+  if (#playerids > 0) then
+    -- 如果玩家没被警告，就警告他
+    for i, v in ipairs(playerids) do
+      local alerted = false
+      for ii, vv in ipairs(self.alertObjids) do
+        if (v == vv) then
+          alerted = true
+          break
+        end
+      end
+      if (not(alerted)) then -- 未被警告
+        table.insert(self.alertObjids, v)
+        self:alertTo(v)
+      end
+    end
+    -- 搜索内圈玩家
+    local playerids2 = MyAreaHelper:getAllPlayersArroundPos(pos, self.areaSize[1])
+    if (#playerids2 > 0) then
+      -- 内圈有玩家，则找最近的内圈玩家
       local minDis, minDisPlayerid -- 距离，最近玩家
-      for i, v in ipairs(playerids) do
+      for i, v in ipairs(playerids2) do
         if (self.targetObjid and self.targetObjid == v) then
           minDisPlayerid = v
           break
@@ -100,35 +89,31 @@ function Juyidao:checkAreaPlayer ()
           minDisPlayerid = v
         end
       end
-      if (self.isBattle) then -- 如果在战斗中，切换目标
-        self:startBattle(minDisPlayerid)
-      end
-    else -- 身边没有玩家
-      if (self.isBattle) then -- 如果在战斗，就停止战斗
-        self:finishBattle()
-      end
+      self:startBattle(minDisPlayerid)
+    end
+  else -- 身边没有玩家
+    -- 清空警告对象
+    if (#self.alertObjids > 0) then
+      self.alertObjids = {}
+    end
+    if (self.isBattle) then -- 如果在战斗，就停止战斗
+      self:finishBattle()
     end
   end
 end
 
--- 检测警戒区域
-function Juyidao:checkAlertArea (objid, areaid)
-  if (self.innerArea and self.innerArea == areaid) then -- 进入内圈
-    self:startBattle(objid)
-    return true
-  elseif (self.outerArea and self.outerArea == areaid) then -- 进入外圈
+-- 警告
+function Juyidao:alertTo (objid)
+  if (not(self.isBattle)) then
     -- 停止移动
     self:wantDontMove('alert')
     -- 看向玩家
     MyTimeHelper:callFnFastRuns(function ()
       self:lookAt(objid)
-    end, 2)
-    -- 说话
-    self:speakTo(objid, 0, '来者何人，扰吾静修。如不退去，小命必丢。')
-    return true
-  else
-    return false
+    end, 1)
   end
+  -- 说话
+  self:speakTo(objid, 0, '来者何人，速速退去。')
 end
 
 -- 开始战斗

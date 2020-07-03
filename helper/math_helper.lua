@@ -72,3 +72,9 @@ end
 function MathHelper:getDistance (pos1, pos2)
   return self:getVector3Length(pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z)
 end
+
+-- 矩形区域范围posBeg, posEnd
+function MathHelper:getRectRange (pos, dim)
+  return MyPosition:new(pos.x - dim.x, pos.y - dim.y, pos.z - dim.z), 
+    MyPosition:new(pos.x + dim.x, pos.y + dim.y, pos.z + dim.z)
+end
