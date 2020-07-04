@@ -130,7 +130,6 @@ end
 function MyActorWant:wantBattle (think)
   MyAreaHelper:removeToArea(self.myActor)
   think = think or 'battle'
-  self.myActor:closeAI()
   self.myActor.think = think
   self.myActor.wants = { MyActorActionHelper:getBattleData(think) }
 end

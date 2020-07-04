@@ -1,9 +1,9 @@
 -- 玩家事件
 
 -- eventobjid, areaid
-local playerEnterArea = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local areaid = eventArgs['areaid']
+local playerEnterArea = function (event)
+  local objid = event['eventobjid']
+  local areaid = event['areaid']
   -- LogHelper:info('玩家进入区域', areaid % 1000)
   LogHelper:call(function ()
     MyAreaHelper:playerEnterArea(objid, areaid)
@@ -11,9 +11,9 @@ local playerEnterArea = function (eventArgs)
 end
 
 -- eventobjid, areaid
-local playerLeaveArea = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local areaid = eventArgs['areaid']
+local playerLeaveArea = function (event)
+  local objid = event['eventobjid']
+  local areaid = event['areaid']
   -- LogHelper:debug('玩家离开区域' .. areaid)
   LogHelper:call(function ()
     MyAreaHelper:playerLeaveArea(objid, areaid)
@@ -21,27 +21,27 @@ local playerLeaveArea = function (eventArgs)
 end
 
 -- eventobjid, blockid, x, y, z
-local clickBlock = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local clickBlock = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
-    local myPosition = MyPosition:new(eventArgs)
+    local myPosition = MyPosition:new(event)
     MyBlockHelper:check(myPosition, objid)
   end)
 end
 
 -- eventobjid toobjid itemid itemnum
-local playerUseItem = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local itemid = eventArgs['itemid']
+local playerUseItem = function (event)
+  local objid = event['eventobjid']
+  local itemid = event['itemid']
   LogHelper:call(function ()
     MyItemHelper:useItem(objid, itemid)
   end)
 end
 
 -- eventobjid, toobjid
-local playerClickActor = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local toobjid = eventArgs['toobjid']
+local playerClickActor = function (event)
+  local objid = event['eventobjid']
+  local toobjid = event['toobjid']
   -- local actorid = CreatureHelper:getActorID(toobjid)
   LogHelper:call(function ()
     MyActorHelper:playerClickActor(objid, toobjid)
@@ -50,11 +50,11 @@ local playerClickActor = function (eventArgs)
 end
 
 -- eventobjid, toobjid, itemid, itemnum
-local playerAddItem = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local toobjid = eventArgs['toobjid']
-  local itemid = eventArgs['itemid']
-  local itemnum = eventArgs['itemnum']
+local playerAddItem = function (event)
+  local objid = event['eventobjid']
+  local toobjid = event['toobjid']
+  local itemid = event['itemid']
+  local itemnum = event['itemnum']
   -- LogHelper:info(objid, ',', toobjid, ',', itemid, ',', itemnum)
   LogHelper:call(function ()
     MyStoryHelper:playerAddItem(objid, itemid, itemnum)
@@ -62,33 +62,33 @@ local playerAddItem = function (eventArgs)
 end
 
 -- eventobjid, toobjid
-local playerAttackHit = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local toobjid = eventArgs['toobjid']
+local playerAttackHit = function (event)
+  local objid = event['eventobjid']
+  local toobjid = event['toobjid']
   LogHelper:call(function ()
     MyPlayerHelper:playerAttackHit(objid, toobjid)
   end)
 end
 
 -- eventobjid, toobjid
-local playerDamageActor = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local toobjid = eventArgs['toobjid']
+local playerDamageActor = function (event)
+  local objid = event['eventobjid']
+  local toobjid = event['toobjid']
   LogHelper:call(function ()
     MyPlayerHelper:playerDamageActor(objid, toobjid)
   end)
 end
 
 -- eventobjid, toobjid
-local playerDefeatActor = function (eventArgs)
+local playerDefeatActor = function (event)
   LogHelper:call(function ()
-    MyPlayerHelper:playerDefeatActor(eventArgs.eventobjid, eventArgs.toobjid)
+    MyPlayerHelper:playerDefeatActor(event.eventobjid, event.toobjid)
   end)
 end
 
 -- eventobjid, toobjid
-local playerBeHurt = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local playerBeHurt = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
     local hp = PlayerHelper:getHp(objid)
     if (hp == 1) then
@@ -98,8 +98,8 @@ local playerBeHurt = function (eventArgs)
 end
 
 -- eventobjid, toobjid, itemid, itemnum
-local playerSelectShortcut = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local playerSelectShortcut = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
     local player = MyPlayerHelper:getPlayer(objid)
     player:holdItem()
@@ -107,8 +107,8 @@ local playerSelectShortcut = function (eventArgs)
 end
 
 -- eventobjid, toobjid, itemid, itemnum
-local playerShortcutChange = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local playerShortcutChange = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
     local player = MyPlayerHelper:getPlayer(objid)
     player:holdItem()
@@ -116,9 +116,9 @@ local playerShortcutChange = function (eventArgs)
 end
 
 -- eventobjid, playermotion
-local playerMotionStateChange = function (eventArgs)
-  local objid = eventArgs['eventobjid']
-  local playermotion = eventArgs['playermotion']
+local playerMotionStateChange = function (event)
+  local objid = event['eventobjid']
+  local playermotion = event['playermotion']
   LogHelper:call(function ()
     if (playermotion == PLAYERMOTION.SNEAK) then -- 潜行
       MyItemHelper:useItem2(objid)
@@ -127,8 +127,8 @@ local playerMotionStateChange = function (eventArgs)
 end
 
 -- eventobjid, toobjid
-local playerMoveOneBlockSize = function (eventArgs)
-  local objid = eventArgs['eventobjid']
+local playerMoveOneBlockSize = function (event)
+  local objid = event['eventobjid']
   LogHelper:call(function ()
     MyActorHelper:resumeClickActor(objid)
   end)

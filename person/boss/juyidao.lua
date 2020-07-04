@@ -8,13 +8,14 @@ function Juyidao:new ()
     alertObjids = {}, -- 警告对象
     initPosition = MyPosition:new(65.5, 7.5, 45.5), -- 橘山
     areaSize = {
-      MyPosition:new(20, 8, 20), MyPosition:new(30, 10, 30)
+      MyPosition:new(15, 8, 15), MyPosition:new(20, 10, 20)
     }, -- 内外圈区域大小
     isBattle = false, -- 是否在战斗
     battleType = 1, -- 战斗方式
     battleProgress = 1, -- 战斗阶段
     defaultSpeed = 200,
-    speed = { 800, 1200, 2000 } -- 移动速度
+    speed = { 400, 1200, 2000 }, -- 移动速度
+    notChooseType = true
   }
   setmetatable(o, self)
   self.__index = self
@@ -89,14 +90,12 @@ function Juyidao:checkAreaPlayer ()
           minDisPlayerid = v
         end
       end
-      self:startBattle(minDisPlayerid)
+      self.targetObjid = minDisPlayerid
+      self:startBattle()
     end
   else -- 身边没有玩家
-    -- 清空警告对象
     if (#self.alertObjids > 0) then
-      self.alertObjids = {}
-    end
-    if (self.isBattle) then -- 如果在战斗，就停止战斗
+      self.alertObjids = {} -- 清空警告对象
       self:finishBattle()
     end
   end
@@ -117,20 +116,17 @@ function Juyidao:alertTo (objid)
 end
 
 -- 开始战斗
-function Juyidao:startBattle (objid)
-  if (not(objid)) then
-    self:chooseBattleType()
-    self:runBattle()
-  elseif (self.isBattle) then -- 在战斗中
-    if (self.targetObjid ~= objid) then -- 切换目标
-      self.targetObjid = objid
-    end
+function Juyidao:startBattle ()
+  if (self.isBattle) then -- 在战斗中
+    -- self:chooseBattleType()
+    -- self:runBattle()
   else -- 未战斗
     self.isBattle = true
     self.targetObjid = objid
+    MonsterHelper:addBoss(self)
     self:chooseBattleType()
     self:wantBattle()
-    self:runBattle()
+    -- self:runBattle()
   end
 end
 
@@ -139,9 +135,10 @@ function Juyidao:finishBattle ()
   if (self.isBattle) then
     self.isBattle = false
     self.targetObjid = nil
-    self:stopRun()
-    self:wantFreeAndAlert()
+    MonsterHelper:delBoss(self.objid)
   end
+  self:stopRun()
+  self:wantFreeAndAlert()
 end
 
 -- 被击败
@@ -153,17 +150,32 @@ end
 
 -- 选择战斗方式
 function Juyidao:chooseBattleType ()
-  self.battleType = math.random(1, 1)
+  self.battleType = math.random(0, 0)
   self.battleProgress = 1
+  self:openAI()
+  if (self.battleType > 0) then
+    local playerids = MyAreaHelper:getAllPlayersArroundPos(self:getMyPosition(), self.areaSize[2])
+    local skillname
+    if (self.battleType == 1) then
+      skillname = '疾风斩'
+    elseif (self.battleType == 2) then
+      skillname = '疾风步'
+    end
+    for i, v in ipairs(playerids) do
+      self:speakTo(v, 0, skillname)
+    end
+  end
 end
 
 -- 执行战斗
 function Juyidao:runBattle ()
-  if (self.battleType == 1) then
+  if (self.battleType == 0) then
+    self:normalAttack()
+  elseif (self.battleType == 1) then
     local pos = MyActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
     local selfPos = self:getMyPosition() -- 橘一刀位置
     local distance = MathHelper:getDistance(selfPos, pos)
-    local desPos = MathHelper:getPos2PosInLineDistancePosition(selfPos, pos, 4) -- 目标位置
+    local desPos = MathHelper:getPos2PosInLineDistancePosition(selfPos, pos, 3) -- 目标位置
     self:runAndAttack(distance, desPos)
   elseif (self.battleType == 2) then
     self:runCircleAndAttack()
@@ -172,33 +184,33 @@ function Juyidao:runBattle ()
   end
 end
 
+-- 普通攻击
+function Juyidao:normalAttack ()
+  local pos = MyActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
+  MonsterHelper:runTo(self.objid, pos, self.speed[1])
+end
+
 -- 冲刺一刀
 function Juyidao:runAndAttack (distance, pos)
   if (self.battleProgress == 1) then -- 冲刺
-    if (distance > 15) then -- 15米外速度
+    if (distance > 12) then -- 15米外速度
       MonsterHelper:runTo(self.objid, pos, self.speed[1])
-    elseif (distance > 10) then -- 10米外速度
+    elseif (distance > 9) then -- 10米外速度
       MonsterHelper:runTo(self.objid, pos, self.speed[2])
-    elseif (distance > 5) then -- 5米外速度
+    elseif (distance > 6) then -- 5米外速度
       MonsterHelper:runTo(self.objid, pos, self.speed[3])
-    else -- 发动攻击
-      self.battleProgress = 2
-      self:runAndAttack()
-    end
-  elseif (self.battleProgress == 2) then -- 来一刀
-    if (not(distance) or distance < 5) then
-      self:openAI()
-    else
-      self.battleProgress = 1
-      self:runBattle()
     end
   else -- 后退
     local targetPos = MyActorHelper:getMyPosition(self.targetObjid)
-    local dstPos = MathHelper:getPos2PosInLineDistancePosition(self:getMyPosition(), targetPos, 10) -- 目标位置
+    local dstPos = MathHelper:getPos2PosInLineDistancePosition(self:getMyPosition(), targetPos, 15) -- 目标位置
     MonsterHelper:runTo(self.objid, dstPos, self.speed[3])
-    MyTimeHelper:callFnFastRuns(function ()
-      self:startBattle()
-    end, 2)
+    if (self.notChooseType) then
+      self.notChooseType = false
+      MyTimeHelper:callFnFastRuns(function ()
+        self.notChooseType = true
+        self:chooseBattleType()
+      end, 2)
+    end
   end
 end
 
@@ -223,9 +235,9 @@ end
 -- 攻击命中
 function Juyidao:attackHit (toobjid)
   if (self.battleType == 1) then
-    self.battleProgress = 3
+    self.battleProgress = 2
     self:closeAI()
-    self:runBattle()
+    MyActorHelper:appendSpeed(toobjid, 1, self:getMyPosition())
   end
 end
 

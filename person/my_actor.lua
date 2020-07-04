@@ -7,6 +7,7 @@ MyActor = {
   z = nil,
   defaultSpeed = 300, -- 默认移动速度
   cantMoveTime = 0, -- 无法移动的时间
+  motion = 0, -- 静止
   freeInAreaId = nil, -- 自由活动区域id
   timername = 'myActorTimer',
   wants = nil,
@@ -56,10 +57,14 @@ end
 -- 更新不能移动时间
 function MyActor:updateCantMoveTime (x, y, z)
   if (self.x) then
-    if (self.x == x and self.y == y and self.z == z and self.action:isForceMove()) then
-      self.cantMoveTime = self.cantMoveTime + 1
+    if (self.x == x and self.y == y and self.z == z) then
+      if (self.action:isForceMove()) then
+        self.cantMoveTime = self.cantMoveTime + 1
+      end
+      self.motion = 0 -- 静止
     else
       self.cantMoveTime = 0
+      self.motion = 1 -- 运动
     end
   end
 end
@@ -215,8 +220,8 @@ function MyActor:wantFreeTime (think)
   self.want:wantFreeTime(think)
 end
 
-function MyActor:wantFreeAndAlert (think)
-  self.want:wantFreeAndAlert(think)
+function MyActor:wantFreeAndAlert (think, speed)
+  self.want:wantFreeAndAlert(think, speed)
 end
 
 -- 生物想在区域内自由活动，think可选

@@ -1,6 +1,8 @@
 -- 怪物工具类
 MonsterHelper = {
   monsters = {}, -- 需要移动控制的怪物 { objid = pos }
+  bosses = {}, -- 需要精确控制的生物 { objid = actor }
+  delBosses = {}, -- 需要删除的boss { objid = true }
   monsterModels = {}, -- 可击杀的怪物实例数组
   forceDoNothingMonsters = {}, -- objid -> times 禁锢次数
   sealedMonsters = {} -- objid -> times
@@ -220,4 +222,32 @@ end
 -- 跑向
 function MonsterHelper:runTo (objid, pos, speed)
   return ActorHelper:tryMoveToPos(objid, pos.x, pos.y, pos.z, speed)
+end
+
+-- 新增boss
+function MonsterHelper:addBoss (actor)
+  actor.isBossStyle = true
+  self.bosses[actor.objid] = actor
+end
+
+-- 删除boss
+function MonsterHelper:delBoss (objid)
+  self.delBosses[objid] = true
+end
+
+-- 开始boss的精确控制
+function MonsterHelper:runBosses ()
+  for k, v in pairs(self.bosses) do
+    if (v:isActive()) then
+      v.action:execute()
+    end
+  end
+  -- 删除boss
+  for k, v in pairs(self.delBosses) do
+    if (v) then
+      self.bosses[k].isBossStyle = false
+      self.bosses[k] = nil
+      self.delBosses[k] = nil
+    end
+  end
 end

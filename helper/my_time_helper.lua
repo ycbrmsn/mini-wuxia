@@ -351,10 +351,12 @@ end
 -- 运行方法，然后删除
 function MyTimeHelper:runFnContinueRuns ()
   for k, v in pairs(self.fnContinueRuns) do
-    v[1] = v[1] - 50
     v[2](v[3])
-    if (v[1] <= 0) then
-      self:delFnContinueRuns(k)
+    if (v[1] ~= -1000) then -- 永久执行
+      v[1] = v[1] - 50
+      if (v[1] <= 0) then
+        self:delFnContinueRuns(k)
+      end
     end
   end
 end

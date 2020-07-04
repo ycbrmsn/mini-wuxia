@@ -28,6 +28,7 @@ local runGame = function ()
     MyTimeHelper:addFrame()
     MyTimeHelper:runFnFastRuns()
     MyTimeHelper:runFnContinueRuns()
+    MonsterHelper:runBosses()
   end)
 end
 

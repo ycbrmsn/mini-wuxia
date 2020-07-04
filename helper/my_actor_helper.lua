@@ -306,7 +306,7 @@ end
 function MyActorHelper:runActors ()
   for k, v in pairs(self.actors) do
     LogHelper:call(function ()
-      if (v:isActive()) then
+      if (v:isActive() and not(v.isBossStyle)) then
         v.action:execute()
       end
     end)
