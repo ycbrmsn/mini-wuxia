@@ -15,7 +15,8 @@ function Juyidao:new ()
     battleProgress = 1, -- 战斗阶段
     defaultSpeed = 200,
     speed = { 400, 1200, 2000 }, -- 移动速度
-    notChooseType = true
+    fallSpeed = { 0.0785, 0.05 },
+    dontDo = true -- 没有做
   }
   setmetatable(o, self)
   self.__index = self
@@ -150,7 +151,7 @@ end
 
 -- 选择战斗方式
 function Juyidao:chooseBattleType ()
-  self.battleType = math.random(0, 0)
+  self.battleType = math.random(3, 3)
   self.battleProgress = 1
   self:openAI()
   if (self.battleType > 0) then
@@ -160,6 +161,8 @@ function Juyidao:chooseBattleType ()
       skillname = '疾风斩'
     elseif (self.battleType == 2) then
       skillname = '疾风步'
+    elseif (self.battleType == 3) then
+      skillname = '坠风斩'
     end
     for i, v in ipairs(playerids) do
       self:speakTo(v, 0, skillname)
@@ -204,10 +207,10 @@ function Juyidao:runAndAttack (distance, pos)
     local targetPos = MyActorHelper:getMyPosition(self.targetObjid)
     local dstPos = MathHelper:getPos2PosInLineDistancePosition(self:getMyPosition(), targetPos, 15) -- 目标位置
     MonsterHelper:runTo(self.objid, dstPos, self.speed[3])
-    if (self.notChooseType) then
-      self.notChooseType = false
+    if (self.dontDo) then
+      self.dontDo = false
       MyTimeHelper:callFnFastRuns(function ()
-        self.notChooseType = true
+        self.dontDo = true
         self:chooseBattleType()
       end, 2)
     end
@@ -226,9 +229,32 @@ end
 -- 凌空一刀
 function Juyidao:jumpAndAttack ()
   if (self.battleProgress == 1) then
-
+    if (self.dontDo) then
+      self.dontDo = false
+      MyTimeHelper:callFnFastRuns(function ()
+        self.dontDo = true
+        self.battleProgress = 2
+      end, 1)
+    end
   elseif (self.battleProgress == 2) then
-    
+    if (self.dontDo) then
+      self.dontDo = false
+      local player = MyPlayerHelper:getPlayer(self.targetObjid)
+      if (player) then
+        local pos = player:getDistancePosition(2)
+        pos.y = pos.y + 2
+        self:setPosition(pos)
+      end
+    end
+    Actor:appendSpeed(self.objid, 0, self.fallSpeed[1], 0)
+  elseif (self.battleProgress == 3) then
+    if (self.dontDo) then
+      self.dontDo = false
+      MyTimeHelper:callFnFastRuns(function ()
+        self.dontDo = true
+        self:chooseBattleType()
+      end, 2)
+    end
   end
 end
 
@@ -238,6 +264,9 @@ function Juyidao:attackHit (toobjid)
     self.battleProgress = 2
     self:closeAI()
     MyActorHelper:appendSpeed(toobjid, 1, self:getMyPosition())
+  elseif (self.battleType == 3) then
+    self.dontDo = true
+    self.battleProgress = 3
   end
 end
 
