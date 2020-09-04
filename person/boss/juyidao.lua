@@ -1,5 +1,5 @@
 -- 橘一刀
-Juyidao = MyActor:new(MyConstant.JUYIDAO_ACTOR_ID)
+Juyidao = BaseActor:new(MyMap.ACTOR.JUYIDAO_ACTOR_ID)
 
 function Juyidao:new ()
   local o = {
@@ -44,7 +44,7 @@ end
 function Juyidao:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    MyTimeHelper:repeatUtilSuccess(self.actorid, 'alert', function ()
+    TimeHelper:repeatUtilSuccess(self.actorid, 'alert', function ()
       self:checkAreaPlayer()
       return false
     end, 1)
@@ -61,7 +61,7 @@ function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront) end
 function Juyidao:checkAreaPlayer ()
   -- 搜索外圈玩家
   local pos = self:getMyPosition()
-  local playerids = MyAreaHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
+  local playerids = AreaHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
   if (#playerids > 0) then
     -- 如果玩家没被警告，就警告他
     for i, v in ipairs(playerids) do
@@ -78,7 +78,7 @@ function Juyidao:checkAreaPlayer ()
       end
     end
     -- 搜索内圈玩家
-    local playerids2 = MyAreaHelper:getAllPlayersArroundPos(pos, self.areaSize[1])
+    local playerids2 = AreaHelper:getAllPlayersArroundPos(pos, self.areaSize[1])
     if (#playerids2 > 0) then
       -- 内圈有玩家，则找最近的内圈玩家
       local minDis, minDisPlayerid -- 距离，最近玩家
@@ -87,7 +87,7 @@ function Juyidao:checkAreaPlayer ()
           minDisPlayerid = v
           break
         end
-        local player = MyPlayerHelper:getPlayer(v)
+        local player = PlayerHelper:getPlayer(v)
         local distance = MathHelper:getDistance(player:getMyPosition(), self:getMyPosition())
         if (not(minDis) or minDis > distance) then
           minDis = distance
@@ -95,7 +95,7 @@ function Juyidao:checkAreaPlayer ()
         end
       end
       self.targetObjid = minDisPlayerid
-      self.targetPlayer = MyPlayerHelper:getPlayer(self.targetObjid)
+      self.targetPlayer = PlayerHelper:getPlayer(self.targetObjid)
       self:startBattle()
     end
   else -- 身边没有玩家
@@ -112,7 +112,7 @@ function Juyidao:alertTo (objid)
     -- 停止移动
     self:wantDontMove('alert')
     -- 看向玩家
-    MyTimeHelper:callFnFastRuns(function ()
+    TimeHelper:callFnFastRuns(function ()
       self:lookAt(objid)
     end, 1)
   end
@@ -160,7 +160,7 @@ function Juyidao:chooseBattleType ()
   self.battleProgress = 1
   self:openAI()
   if (self.battleType > 0) then
-    local playerids = MyAreaHelper:getAllPlayersArroundPos(self:getMyPosition(), self.areaSize[2])
+    local playerids = AreaHelper:getAllPlayersArroundPos(self:getMyPosition(), self.areaSize[2])
     local skillname
     if (self.battleType == 1) then
       skillname = '疾风斩'
@@ -180,7 +180,7 @@ function Juyidao:runBattle ()
   if (self.battleType == 0) then
     self:normalAttack()
   elseif (self.battleType == 1) then
-    local pos = MyActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
+    local pos = ActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
     local selfPos = self:getMyPosition() -- 橘一刀位置
     local distance = MathHelper:getDistance(selfPos, pos)
     local desPos = MathHelper:getPos2PosInLineDistancePosition(selfPos, pos, 3) -- 目标位置
@@ -194,7 +194,7 @@ end
 
 -- 普通攻击
 function Juyidao:normalAttack ()
-  local pos = MyActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
+  local pos = ActorHelper:getMyPosition(self.targetObjid) -- 玩家位置
   MonsterHelper:runTo(self.objid, pos, self.speed[1])
 end
 
@@ -209,12 +209,12 @@ function Juyidao:runAndAttack (distance, pos)
       MonsterHelper:runTo(self.objid, pos, self.speed[3])
     end
   else -- 后退
-    local targetPos = MyActorHelper:getMyPosition(self.targetObjid)
+    local targetPos = ActorHelper:getMyPosition(self.targetObjid)
     local dstPos = MathHelper:getPos2PosInLineDistancePosition(self:getMyPosition(), targetPos, 15) -- 目标位置
     MonsterHelper:runTo(self.objid, dstPos, self.speed[3])
     if (self.dontDo) then
       self.dontDo = false
-      MyTimeHelper:callFnFastRuns(function ()
+      TimeHelper:callFnFastRuns(function ()
         self.dontDo = true
         self:chooseBattleType()
       end, 2)
@@ -241,8 +241,8 @@ function Juyidao:runCircleAndAttack ()
       local pos = self.targetPlayer:getMyPosition()
       local selfPos = self:getMyPosition()
       pos.y = selfPos.y
-      MyActorHelper:appendSpeed(self.objid, 2, pos)
-      MyTimeHelper:callFnFastRuns(function ()
+      ActorHelper:appendFixedSpeed(self.objid, 2, pos)
+      TimeHelper:callFnFastRuns(function ()
         self:chooseBattleType()
         self.dontDo = true
       end, 1)
@@ -255,7 +255,7 @@ function Juyidao:jumpAndAttack ()
   if (self.battleProgress == 1) then
     if (self.dontDo) then
       self.dontDo = false
-      MyTimeHelper:callFnFastRuns(function ()
+      TimeHelper:callFnFastRuns(function ()
         self.dontDo = true
         self.battleProgress = 2
       end, 1)
@@ -275,7 +275,7 @@ function Juyidao:jumpAndAttack ()
   elseif (self.battleProgress == 3) then
     if (self.dontDo) then
       self.dontDo = false
-      MyTimeHelper:callFnFastRuns(function ()
+      TimeHelper:callFnFastRuns(function ()
         self.dontDo = true
         self:chooseBattleType()
       end, 2)
@@ -288,15 +288,15 @@ function Juyidao:attackHit (toobjid)
   if (self.battleType == 1) then
     self.battleProgress = 2
     self:closeAI()
-    MyActorHelper:appendSpeed(toobjid, 1, self:getMyPosition())
+    ActorHelper:appendFixedSpeed(toobjid, 1, self:getMyPosition())
   elseif (self.battleType == 3) then
     self.dontDo = true
     self.battleProgress = 3
-    local player = MyPlayerHelper:getPlayer(toobjid)
+    local player = PlayerHelper:getPlayer(toobjid)
     local pos = player:getMyPosition()
     local selfPos = self:getMyPosition()
     selfPos.y = pos.y
-    MyActorHelper:appendSpeed(toobjid, 2, selfPos)
+    ActorHelper:appendFixedSpeed(toobjid, 2, selfPos)
   end
 end
 

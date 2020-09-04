@@ -1,5 +1,5 @@
 -- 二牛
-Erniu = MyActor:new(MyConstant.ERNIU_ACTOR_ID)
+Erniu = BaseActor:new(MyMap.ACTOR.ERNIU_ACTOR_ID)
 
 function Erniu:new ()
   local o = {
@@ -49,7 +49,7 @@ function Erniu:wantAtHour (hour)
 end
 
 function Erniu:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 22) then
@@ -79,18 +79,18 @@ end
 
 function Erniu:playerClickEvent (objid)
   local itemid = PlayerHelper:getCurToolID(objid)
-  if (itemid == MyConstant.ITEM.CARRIAGE_LUOYECUN_ID) then -- 落叶村车票
-    MyItemHelper:removeCurTool(objid)
-    self:speak(0, '这是去往落叶村的车票。我这就送你过去。')
-    MyTimeHelper:callFnFastRuns(function ()
-      local player = MyPlayerHelper:getPlayer(objid)
+  if (itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID) then -- 落叶村车票
+    ItemHelper:removeCurTool(objid)
+    self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
+    TimeHelper:callFnFastRuns(function ()
+      local player = PlayerHelper:getPlayer(objid)
       player:setMyPosition(PositionHelper.luoyecunPos)
     end, 2)
-  elseif (itemid == MyConstant.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
-    MyItemHelper:removeCurTool(objid)
-    self:speak(0, '这是去往平风寨的车票。我这就送你过去。')
-    MyTimeHelper:callFnFastRuns(function ()
-      local player = MyPlayerHelper:getPlayer(objid)
+  elseif (itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
+    ItemHelper:removeCurTool(objid)
+    self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
+    TimeHelper:callFnFastRuns(function ()
+      local player = PlayerHelper:getPlayer(objid)
       player:setMyPosition(PositionHelper.pingfengzhaiPos)
     end, 2)
   end

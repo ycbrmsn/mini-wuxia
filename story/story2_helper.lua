@@ -75,7 +75,7 @@ end
 
 -- 初始化所有强盗位置
 function Story2Helper:initQiangdao ()
-  local story2 = MyStoryHelper:getStory(2)
+  local story2 = StoryHelper:getStory(2)
   qiangdaoXiaotoumu:initStoryMonsters()
   qiangdaoLouluo:initStoryMonsters()
   qiangdaoXiaotoumu:setAIActive(false)
@@ -105,13 +105,13 @@ end
 
 -- 取得空气位置
 function Story2Helper:getAirPosition ()
-  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  local hostPlayer = PlayerHelper:getHostPlayer()
   local pos = MyPosition:new(hostPlayer:getPosition())
   local pos2 = MyPosition:new(hostPlayer:getPosition())
   for i = 6, 1, -1 do
     pos.x = pos.x + i
     pos2.x = pos2.x + i + 1
-    if (MyAreaHelper:isAirArea(pos) and MyAreaHelper:isAirArea(pos2)) then
+    if (AreaHelper:isAirArea(pos) and AreaHelper:isAirArea(pos2)) then
       return pos, pos2
     else
       pos.x = pos.x - i
@@ -119,7 +119,7 @@ function Story2Helper:getAirPosition ()
     end
     pos.z = pos.z + i
     pos2.z = pos2.z + i + 1
-    if (MyAreaHelper:isAirArea(pos) and MyAreaHelper:isAirArea(pos2)) then
+    if (AreaHelper:isAirArea(pos) and AreaHelper:isAirArea(pos2)) then
       return pos, pos2
     else
       pos.z = pos.z - i
@@ -132,8 +132,8 @@ end
 -- 显示剩余强盗数
 function Story2Helper:showMessage (objid)
   local actorid = CreatureHelper:getActorID(objid)
-  MyTimeHelper:callFnAfterSecond(function ()
-    local story2 = MyStoryHelper:getStory(2)
+  TimeHelper:callFnAfterSecond(function ()
+    local story2 = StoryHelper:getStory(2)
     local isRight = false
     if (qiangdaoLouluo.actorid == actorid) then
       for i, v in ipairs(story2.xiaolouluos) do
@@ -154,7 +154,7 @@ function Story2Helper:showMessage (objid)
       story2.killXiaotoumuNum = story2.killXiaotoumuNum + 1
       isRight = true
       if (story2.killXiaotoumuNum > 0) then
-        MyTimeHelper:callFnAfterSecond(function ()
+        TimeHelper:callFnAfterSecond(function ()
           Story2Helper:killXiaotoumuEvent()
         end, 1)
       end
@@ -194,8 +194,8 @@ function Story2Helper:comeBack (objid, areaid)
     z = -1
   end
   if (ActorHelper:isPlayer(objid)) then
-    MyPlayerHelper:showToast(objid, '你不能跑得太远')
-    -- local player = MyPlayerHelper:getPlayer(objid)
+    PlayerHelper:showToast(objid, '你不能跑得太远')
+    -- local player = PlayerHelper:getPlayer(objid)
     -- PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
   end
   ActorHelper:appendSpeed(objid, x, y, z)
@@ -204,7 +204,7 @@ end
 
 -- 干掉了强盗小头目事件
 function Story2Helper:killXiaotoumuEvent ()
-  local story2 = MyStoryHelper:getStory(2)
+  local story2 = StoryHelper:getStory(2)
   if (story2.standard == 1 and story2.killLouluoNum < #story2.louluoPositions) then -- 还有喽罗
     qiangdaoLouluo:speak(0, '他杀了老大！干掉他！')
     for i, v in ipairs(story2.xiaolouluos) do
@@ -212,7 +212,7 @@ function Story2Helper:killXiaotoumuEvent ()
         CreatureHelper:setAIActive(v.objid, false)
       end
     end
-    MyTimeHelper:callFnAfterSecond(function ()
+    TimeHelper:callFnAfterSecond(function ()
       for i, v in ipairs(story2.xiaolouluos) do
         if (not(v.killed)) then
           CreatureHelper:setAIActive(v.objid, true)
@@ -224,8 +224,8 @@ function Story2Helper:killXiaotoumuEvent ()
 end
 
 function Story2Helper:recover (player)
-  local mainProgress = MyStoryHelper:getMainStoryProgress()
-  local hostPlayer = MyPlayerHelper:getHostPlayer()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  local hostPlayer = PlayerHelper:getHostPlayer()
   if (mainProgress == 1) then -- 村口集合
     if (player == hostPlayer) then
       story2:goToCollege()
@@ -239,10 +239,12 @@ function Story2Helper:recover (player)
       story2:meetBandits(hostPlayer)
     end
   elseif (mainProgress == 3) then -- 路遇强盗
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
   elseif (mainProgress == 4) then -- 消灭了强盗
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
@@ -250,10 +252,12 @@ function Story2Helper:recover (player)
       story2:wipeOutQiangdao()
     end
   elseif (mainProgress == 5) then -- 被强盗打败
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     if (player == hostPlayer) then
       story2:playerBadHurt(player.objid)
     end
   elseif (mainProgress == 6) then -- 先生离开
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     -- 剧情二结束
   end
 end

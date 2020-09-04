@@ -1,16 +1,16 @@
 -- 强盗喽罗
-QiangdaoLouluo = MyActor:new(MyConstant.QIANGDAO_LOULUO_ACTOR_ID)
+QiangdaoLouluo = BaseActor:new(MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID)
 
 function QiangdaoLouluo:new ()
   local o = {
-    objid = MyConstant.QIANGDAO_LOULUO_ACTOR_ID,
+    objid = MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID,
     expData = {
       level = 5,
       exp = 25
     },
     fallOff = {
-      { MyConstant.ITEM.APPLE_ID, 1, 30 }, -- 苹果
-      { MyConstant.ITEM.COIN_ID, 5, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 5, 30 } -- 铜板
     },
     initPosition = { x = 34, y = 7, z = 327 },
     toPosition = { x = -363, y = 7, z = 556 },
@@ -124,7 +124,7 @@ function QiangdaoLouluo:generateMonsters ()
     local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper:getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -134,7 +134,7 @@ end
 -- 定时生成怪物
 function QiangdaoLouluo:timerGenerate (num)
   num = num or 5
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)

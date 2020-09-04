@@ -1,16 +1,16 @@
 -- 卫兵
-Guard = MyActor:new(MyConstant.GUARD_ACTOR_ID)
+Guard = BaseActor:new(MyMap.ACTOR.GUARD_ACTOR_ID)
 
 function Guard:new ()
   local o = {
-    objid = MyConstant.GUARD_ACTOR_ID,
+    objid = MyMap.ACTOR.GUARD_ACTOR_ID,
     expData = {
       level = 10,
       exp = 60
     },
     fallOff = {
       { 12003, 1, 20 }, -- 短剑
-      { MyConstant.ITEM.COIN_ID, 15, 20 } -- 铜板
+      { MyMap.ITEM.COIN_ID, 15, 20 } -- 铜板
     },
     initPositions = {
       MyPosition:new(-39.5, 7, 478.5), -- 南城门卫兵位置
@@ -64,7 +64,7 @@ function Guard:init ()
     table.insert(self.initAreas2, AreaHelper:getAreaByPos(v))
   end
   self.action = MyActorAction:new(self)
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'initGuard', function ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'initGuard', function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
       if (not(v.isOk)) then
@@ -93,16 +93,16 @@ function Guard:initCityGuard (index, o, objids)
     dir = 'W'
   else
     for i, v in ipairs(objids) do
-      MyActorHelper:closeAI(v)
+      ActorHelper:closeAI(v)
       if (i == 1) then
-        MyActorHelper:setPosition(v, self.lordHousePositions[i])
-        MyActorHelper:lookToward(v, 'E')
+        ActorHelper:setPosition(v, self.lordHousePositions[i])
+        ActorHelper:lookToward(v, 'E')
       elseif (i == 2) then
-        MyActorHelper:setPosition(v, self.lordHousePositions[i])
-        MyActorHelper:lookToward(v, 'W')
+        ActorHelper:setPosition(v, self.lordHousePositions[i])
+        ActorHelper:lookToward(v, 'W')
       else
-        MyActorHelper:setPosition(v, self.lordHousePatrolPositions[i - 2])
-        local g = MyActor:new(MyConstant.GUARD_ACTOR_ID, v)
+        ActorHelper:setPosition(v, self.lordHousePatrolPositions[i - 2])
+        local g = BaseActor:new(MyMap.ACTOR.GUARD_ACTOR_ID, v)
         g:wantPatrol('patrol', self.lordHousePatrolPositions, false, i - 2)
         table.insert(self.patrolGuards, g)
       end
@@ -110,9 +110,9 @@ function Guard:initCityGuard (index, o, objids)
   end
   if (index < 5) then
     for i, v in ipairs(objids) do
-      MyActorHelper:closeAI(v)
-      MyActorHelper:setPosition(v, self.initPositions[(index - 1) * 2 + i])
-      MyActorHelper:lookToward(v, dir)
+      ActorHelper:closeAI(v)
+      ActorHelper:setPosition(v, self.initPositions[(index - 1) * 2 + i])
+      ActorHelper:lookToward(v, dir)
     end
   end
   AreaHelper:clearAllWoodenFence(o.areaid)
@@ -134,10 +134,10 @@ function Guard:checkTokenArea (objid, areaid)
   local isEnter = false
   for i, v in ipairs(self.initAreas) do
     if (i < 5 and v.areaid == areaid) then
-      local player = MyPlayerHelper:getPlayer(objid)
-      if (not(player:takeOutItem(MyConstant.ITEM.TOKEN_ID))) then
+      local player = PlayerHelper:getPlayer(objid)
+      if (not(player:takeOutItem(MyMap.ITEM.TOKEN_ID))) then
         self:speakTo(objid, 0, '出示令牌。强闯者，捕。')
-        MyTimeHelper:callFnCanRun(objid, 'checkToken', function ()
+        TimeHelper:callFnCanRun(objid, 'checkToken', function ()
           MonsterHelper:wantLookAt (v.objids, objid, 5)
         end, 5)
         local xt, yt, zt = 0, 0, 0

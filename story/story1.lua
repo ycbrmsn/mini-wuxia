@@ -21,7 +21,7 @@ function Story1:new ()
   }
   self:checkData(data)
 
-  if (MyStoryHelper:getMainStoryIndex() == 1 and MyStoryHelper:getMainStoryProgress() == 1) then -- 剧情1
+  if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == 1) then -- 剧情1
     local areaid = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
     data.areaid = areaid
   end
@@ -36,38 +36,38 @@ function Story1:noticeEvent (areaid)
   local createPos = story1.createPos
   wenyu:setPosition(createPos.x, createPos.y, createPos.z)
   wenyu:wantMove('notice', { story1.movePos })
-  local content = StringHelper:join(MyPlayerHelper:getAllPlayerNames(), '、')
+  local content = StringHelper:join(PlayerHelper:getAllPlayerNames(), '、')
   local subject = '你'
-  if (#MyPlayerHelper:getAllPlayers() > 1) then 
+  if (#PlayerHelper:getAllPlayers() > 1) then 
     subject = '你们'
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu:speak(0, content)
-  MyStoryHelper:forward('文羽找我有事')
+  StoryHelper:forward('文羽找我有事')
 end
 
 -- 时间快速流逝
 function Story1:fasterTime ()
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
-  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainIndex == 1 and mainProgress == (#self.tips - 1) and not(self.isFasterTime)) then -- 主角回家休息
     -- 时间快速流逝
     self.isFasterTime = true
-    MyTimeHelper:repeatUtilSuccess(666, 'fasterTime', function ()
-      -- local storyRemainDays = MyStoryHelper:getMainStoryRemainDays()
-      local hour = MyTimeHelper:getHour()
-      if (MyStoryHelper:getMainStoryProgress() < #self.tips) then
+    TimeHelper:repeatUtilSuccess(666, 'fasterTime', function ()
+      -- local storyRemainDays = StoryHelper:getMainStoryRemainDays()
+      local hour = TimeHelper:getHour()
+      if (StoryHelper:getMainStoryProgress() < #self.tips) then
         hour = 0
-        MyTimeHelper:setHour(hour)
-        MyStoryHelper:forward('剧情一过了一天')
+        TimeHelper:setHour(hour)
+        StoryHelper:forward('剧情一过了一天')
         return false
       else
         if (hour < 8) then
           hour = hour + 1
-          MyTimeHelper:setHour(hour)
+          TimeHelper:setHour(hour)
           return false
         else
-          MyTimeHelper:setHour(9)
+          TimeHelper:setHour(9)
           return true
         end
       end
@@ -78,7 +78,7 @@ end
 -- 结束通知事件
 function Story1:finishNoticeEvent (objid)
   -- 设置对话人物不可移动
-  local myPlayer = MyPlayerHelper:getPlayer(objid)
+  local myPlayer = PlayerHelper:getPlayer(objid)
   myPlayer:enableMove(false, true)
   yexiaolong:enableMove(false)
   yexiaolong:wantStayForAWhile(100)
@@ -89,18 +89,18 @@ function Story1:finishNoticeEvent (objid)
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
   if (hour < 9) then
-    MyStoryHelper.storyRemainDays = 0
+    -- StoryHelper.storyRemainDays = 0
     yexiaolong:speak(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
-    MyStoryHelper:forward('准备出发')
+    StoryHelper:forward('准备出发')
   else
-    MyStoryHelper.storyRemainDays = 1
+    -- StoryHelper.storyRemainDays = 1
     yexiaolong:speak(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
   yexiaolong.action:playStand(6)
   myPlayer:speak(8, '好的。')
   yexiaolong:speak(10, '嗯，那去准备吧。')
   yexiaolong.action:playHi(10)
-  MyTimeHelper:callFnAfterSecond (function (p)
+  TimeHelper:callFnAfterSecond (function (p)
     p.myPlayer:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
@@ -108,23 +108,23 @@ function Story1:finishNoticeEvent (objid)
 end
 
 function Story1:playerBadHurt (objid)
-  local player = MyPlayerHelper:getPlayer(objid)
+  local player = PlayerHelper:getPlayer(objid)
   local pos
   for i, v in ipairs(miaolan.firstFloorBedPositions) do
     pos = v
-    if (MyAreaHelper:isAirArea(v)) then
+    if (AreaHelper:isAirArea(v)) then
       break
     end
   end
   player:setPosition(pos)
   PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.SOUTH, 0)
   player.action:playDown(1)
-  MyPlayerHelper:changeViewMode(objid)
+  PlayerHelper:changeViewMode(objid)
   player:thinkTo(objid, 0, '没想到我又受重伤了。')
 end
 
 function Story1:recover (player)
-  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainProgress >= 5) then
     player:enableMove(true)
   end

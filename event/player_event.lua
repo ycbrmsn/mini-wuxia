@@ -6,7 +6,7 @@ local playerEnterArea = function (event)
   local areaid = event['areaid']
   -- LogHelper:info('玩家进入区域', areaid % 1000)
   LogHelper:call(function ()
-    MyAreaHelper:playerEnterArea(objid, areaid)
+    MyPlayerHelper:playerEnterArea(objid, areaid)
   end)
 end
 
@@ -16,25 +16,23 @@ local playerLeaveArea = function (event)
   local areaid = event['areaid']
   -- LogHelper:debug('玩家离开区域' .. areaid)
   LogHelper:call(function ()
-    MyAreaHelper:playerLeaveArea(objid, areaid)
+    MyPlayerHelper:playerLeaveArea(objid, areaid)
   end)
 end
 
 -- eventobjid, blockid, x, y, z
-local clickBlock = function (event)
-  local objid = event['eventobjid']
+local playerClickBlock = function (event)
   LogHelper:call(function ()
-    local myPosition = MyPosition:new(event)
-    MyBlockHelper:check(myPosition, objid)
+    local x, y, z = event.x, event.y, event.z
+    MyPlayerHelper:playerClickBlock(event.eventobjid, event.blockid, x, y, z)
   end)
 end
 
 -- eventobjid toobjid itemid itemnum
 local playerUseItem = function (event)
   local objid = event['eventobjid']
-  local itemid = event['itemid']
   LogHelper:call(function ()
-    MyItemHelper:useItem(objid, itemid)
+    MyPlayerHelper:playerUseItem(objid, event.toobjid, event.itemid, event.itemnum)
   end)
 end
 
@@ -44,7 +42,7 @@ local playerClickActor = function (event)
   local toobjid = event['toobjid']
   -- local actorid = CreatureHelper:getActorID(toobjid)
   LogHelper:call(function ()
-    MyActorHelper:playerClickActor(objid, toobjid)
+    MyPlayerHelper:playerClickActor(objid, toobjid)
   end)
   
 end
@@ -57,7 +55,7 @@ local playerAddItem = function (event)
   local itemnum = event['itemnum']
   -- LogHelper:info(objid, ',', toobjid, ',', itemid, ',', itemnum)
   LogHelper:call(function ()
-    MyStoryHelper:playerAddItem(objid, itemid, itemnum)
+    MyPlayerHelper:playerAddItem(objid, itemid, itemnum)
   end)
 end
 
@@ -66,6 +64,7 @@ local playerAttackHit = function (event)
   local objid = event['eventobjid']
   local toobjid = event['toobjid']
   LogHelper:call(function ()
+    -- LogHelper:debug('攻击命中')
     MyPlayerHelper:playerAttackHit(objid, toobjid)
   end)
 end
@@ -75,6 +74,7 @@ local playerDamageActor = function (event)
   local objid = event['eventobjid']
   local toobjid = event['toobjid']
   LogHelper:call(function ()
+    -- LogHelper:debug('造成伤害')
     MyPlayerHelper:playerDamageActor(objid, toobjid)
   end)
 end
@@ -88,12 +88,22 @@ end
 
 -- eventobjid, toobjid
 local playerBeHurt = function (event)
-  local objid = event['eventobjid']
   LogHelper:call(function ()
-    local hp = PlayerHelper:getHp(objid)
-    if (hp == 1) then
-      MyStoryHelper:playerBadHurt(objid)
-    end
+    MyPlayerHelper:playerBeHurt(event.eventobjid, event.toobjid)
+  end)
+end
+
+-- eventobjid, toobjid
+local playerDie = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerDie(event.eventobjid, event.toobjid)
+  end)
+end
+
+-- eventobjid, toobjid
+local playerRevive = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerRevive(event.eventobjid, event.toobjid)
   end)
 end
 
@@ -101,8 +111,7 @@ end
 local playerSelectShortcut = function (event)
   local objid = event['eventobjid']
   LogHelper:call(function ()
-    local player = MyPlayerHelper:getPlayer(objid)
-    player:holdItem()
+    MyPlayerHelper:playerSelectShortcut(objid, event.toobjid, event.itemid, event.itemnum)
   end)
 end
 
@@ -110,8 +119,7 @@ end
 local playerShortcutChange = function (event)
   local objid = event['eventobjid']
   LogHelper:call(function ()
-    local player = MyPlayerHelper:getPlayer(objid)
-    player:holdItem()
+    MyPlayerHelper:playerShortcutChange(objid, event.toobjid, event.itemid, event.itemnum)
   end)
 end
 
@@ -120,9 +128,7 @@ local playerMotionStateChange = function (event)
   local objid = event['eventobjid']
   local playermotion = event['playermotion']
   LogHelper:call(function ()
-    if (playermotion == PLAYERMOTION.SNEAK) then -- 潜行
-      MyItemHelper:useItem2(objid)
-    end
+    MyPlayerHelper:playerMotionStateChange(objid, playermotion)
   end)
 end
 
@@ -130,13 +136,41 @@ end
 local playerMoveOneBlockSize = function (event)
   local objid = event['eventobjid']
   LogHelper:call(function ()
-    MyActorHelper:resumeClickActor(objid)
+    MyPlayerHelper:playerMoveOneBlockSize(objid)
+  end)
+end
+
+-- eventobjid, toobjid
+local playerMountActor = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerMountActor(event.eventobjid, event.toobjid)
+  end)
+end
+
+-- eventobjid, toobjid
+local playerDismountActor = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerDismountActor(event.eventobjid, event.toobjid)
+  end)
+end
+
+-- eventobjid, content
+local playerInputContent = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerInputContent(event.eventobjid, event.content)
+  end)
+end
+
+-- eventobjid, content
+local playerNewInputContent = function (event)
+  LogHelper:call(function ()
+    MyPlayerHelper:playerNewInputContent(event.eventobjid, event.content)
   end)
 end
 
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
 ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩家离开区域
-ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], clickBlock) -- 点击方块
+ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], playerClickBlock) -- 点击方块
 ScriptSupportEvent:registerEvent([=[Player.UseItem]=], playerUseItem) -- 玩家使用物品
 ScriptSupportEvent:registerEvent([=[Player.ClickActor]=], playerClickActor) -- 玩家点击生物
 ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家新增道具
@@ -144,9 +178,15 @@ ScriptSupportEvent:registerEvent([=[Player.AttackHit]=], playerAttackHit) -- 玩
 ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标
 ScriptSupportEvent:registerEvent([=[Player.BeHurt]=], playerBeHurt) -- 受到伤害
+ScriptSupportEvent:registerEvent([=[Player.Die]=], playerDie) -- 玩家死亡
+ScriptSupportEvent:registerEvent([=[Player.Revive]=], playerRevive) -- 玩家复活
 ScriptSupportEvent:registerEvent([=[Player.SelectShortcut]=], playerSelectShortcut) -- 选择快捷栏
 ScriptSupportEvent:registerEvent([=[Player.ShortcutChange]=], playerShortcutChange) -- 快捷栏变化
 ScriptSupportEvent:registerEvent([=[Player.MotionStateChange]=], playerMotionStateChange) -- 运动状态改变
 ScriptSupportEvent:registerEvent([=[Player.MoveOneBlockSize]=], playerMoveOneBlockSize) -- 移动一格
+ScriptSupportEvent:registerEvent([=[Player.MountActor]=], playerMountActor) -- 骑乘坐骑
+ScriptSupportEvent:registerEvent([=[Player.DismountActor]=], playerDismountActor) -- 取消骑乘坐骑
+ScriptSupportEvent:registerEvent([=[Player.InputContent]=], playerInputContent) -- 聊天输出界面变化
+ScriptSupportEvent:registerEvent([=[Player.NewInputContent]=], playerNewInputContent) -- 输入字符串
 
 -- ScriptSupportEvent:registerEvent([=[Player.ChangeAttr]=], playerChangeAttr) -- 属性变化

@@ -1,16 +1,16 @@
 -- 强盗小头目
-QiangdaoXiaotoumu = MyActor:new(MyConstant.QIANGDAO_XIAOTOUMU_ACTOR_ID)
+QiangdaoXiaotoumu = BaseActor:new(MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID)
 
 function QiangdaoXiaotoumu:new ()
   local o = {
-    objid = MyConstant.QIANGDAO_XIAOTOUMU_ACTOR_ID,
+    objid = MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID,
     expData = {
       level = 7,
       exp = 40
     },
     fallOff = {
-      { MyConstant.ITEM.APPLE_ID, 1, 30 }, -- 苹果
-      { MyConstant.ITEM.COIN_ID, 10, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 10, 30 } -- 铜板
     },
     initPosition = { x = 33, y = 7, z = 334 },
     toPosition = { x = -363, y = 7, z = 556 },
@@ -120,7 +120,7 @@ end
 -- 定时生成怪物
 function QiangdaoXiaotoumu:timerGenerate (num)
   num = num or 5
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)

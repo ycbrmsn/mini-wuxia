@@ -1,3 +1,5 @@
+-- 常用类
+
 -- 蜡烛台 -- 床 -- 位置类 -- 三维向量
 MyCandle = {
   BLOCK_ID = {
@@ -119,13 +121,17 @@ function MyPosition:equals (myPosition)
   return myPosition.x == self.x and myPosition.y == self.y and myPosition.z == self.z
 end
 
--- 从右起每四位代表一个坐标值
+-- 从右起每四位代表一个坐标值（负数有问题）
 function MyPosition:toNumber ()
   return self.x * 100000000 + self.y * 10000 + self.z
 end
 
 function MyPosition:toString ()
   return StringHelper:concat('{x=', self.x, ',y=', self.y, ',z=', self.z, '}')
+end
+
+function MyPosition:toSimpleString ()
+  return StringHelper:concat(self.x, ',', self.y, ',', self.z)
 end
 
 -- 三维向量
@@ -158,6 +164,10 @@ end
 
 function MyVector3:get ()
   return self.x, self.y, self.z
+end
+
+function MyVector3:isZero ()
+  return self.x == 0 and self.y == 0 and self.z == 0
 end
 
 -- 剧情类

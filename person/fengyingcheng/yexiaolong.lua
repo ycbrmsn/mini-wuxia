@@ -1,5 +1,5 @@
 -- 叶小龙
-Yexiaolong = MyActor:new(MyConstant.YEXIAOLONG_ACTOR_ID)
+Yexiaolong = BaseActor:new(MyMap.ACTOR.YEXIAOLONG_ACTOR_ID)
 
 function Yexiaolong:new ()
   local o = {
@@ -29,7 +29,7 @@ end
 
 -- 在几点想做什么
 function Yexiaolong:wantAtHour (hour)
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  local mainIndex = StoryHelper:getMainStoryIndex()
   if (mainIndex == 1) then
     if (hour == 7) then
       self:wantFreeInArea({ self.homeAreaPositions })
@@ -43,9 +43,9 @@ function Yexiaolong:wantAtHour (hour)
 end
 
 function Yexiaolong:doItNow ()
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  local mainIndex = StoryHelper:getMainStoryIndex()
   if (mainIndex == 1) then
-    local hour = MyTimeHelper:getHour()
+    local hour = TimeHelper:getHour()
     if (hour >= 7 and hour < 19) then
       self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
@@ -67,24 +67,24 @@ end
 
 function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   local nickname
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
-  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainIndex == 1 and mainProgress < 5) then
     nickname = '年轻人'
   else
     nickname = PlayerHelper:getNickname(playerid)
   end
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self.action:speak(playerid, nickname, '，你撞我是想试试你的实力吗？')
+    self:speakTo(playerid, 0, nickname, '，你撞我是想试试你的实力吗？')
   elseif (self.think == 'sleep') then
-    self.action:speak(playerid, nickname, '，我要睡觉了，不要惹我哟。')
+    self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要惹我哟。')
   else
-    self.action:speak(playerid, nickname, '，找我有事吗？')
+    self:speakTo(playerid, 0, nickname, '，找我有事吗？')
   end
 end
 
 function Yexiaolong:defaultCollidePlayerEvent (playerid, isPlayerInFront)
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
+  local mainIndex = StoryHelper:getMainStoryIndex()
   if (mainIndex ~= 2) then
     self.action:stopRun()
     self:collidePlayer(playerid, isPlayerInFront)
@@ -94,8 +94,8 @@ end
 
 function Yexiaolong:candleEvent (myPlayer, candle)
   local nickname
-  local mainIndex = MyStoryHelper:getMainStoryIndex()
-  local mainProgress = MyStoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainIndex == 1 and mainProgress < 5) then
     nickname = '年轻人'
   else
@@ -104,13 +104,13 @@ function Yexiaolong:candleEvent (myPlayer, candle)
   if (self.think == 'sleep' and candle.isLit) then
     self.action:stopRun()
     if (self.wants[1].style == 'sleeping') then
-      self.action:speak(myPlayer.objid, nickname, '，你想吃棍子吗？不要碰蜡烛。')
+      self:speakTo(myPlayer.objid, 0, nickname, '，你想吃棍子吗？不要碰蜡烛。')
     else
-      self.action:speak(myPlayer.objid, nickname, '，我要睡觉了，离蜡烛远点。')
+      self:speakTo(myPlayer.objid, 0, nickname, '，我要睡觉了，离蜡烛远点。')
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playAngry(1)
-    MyTimeHelper:callFnAfterSecond (function (p)
+    TimeHelper:callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end

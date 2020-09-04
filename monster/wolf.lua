@@ -1,16 +1,16 @@
 -- 恶狼
-Wolf = MyActor:new(MyConstant.WOLF_ACTOR_ID)
+Wolf = BaseActor:new(MyMap.ACTOR.WOLF_ACTOR_ID)
 
 function Wolf:new ()
   local o = {
-    objid = MyConstant.WOLF_ACTOR_ID,
+    objid = MyMap.ACTOR.WOLF_ACTOR_ID,
     expData = {
       level = 3,
       exp = 20
     },
     fallOff = {
-      { MyConstant.ITEM.APPLE_ID, 1, 20 }, -- 苹果
-      { MyConstant.ITEM.COIN_ID, 1, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 20 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 1, 30 } -- 铜板
     },
     monsterPositions = {
       { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置
@@ -58,7 +58,7 @@ function Wolf:generateMonsters (num)
     local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper:getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -68,25 +68,25 @@ end
 -- 定时生成怪物
 function Wolf:timerGenerate (num)
   num = num or 10
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 -- 狂牛
-Ox = MyActor:new(MyConstant.OX_ACTOR_ID)
+Ox = BaseActor:new(MyMap.ACTOR.OX_ACTOR_ID)
 
 function Ox:new ()
   local o = {
-    objid = MyConstant.OX_ACTOR_ID,
+    objid = MyMap.ACTOR.OX_ACTOR_ID,
     expData = {
       level = 7,
       exp = 25
     },
     fallOff = {
-      { MyConstant.ITEM.APPLE_ID, 1, 20 }, -- 苹果
-      { MyConstant.ITEM.COIN_ID, 1, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 20 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 1, 30 } -- 铜板
     },
     monsterPositions = {
       { x = -174, y = 7, z = -16 }, -- 狂牛区域
@@ -128,7 +128,7 @@ function Ox:generateMonsters (num)
     local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = MyAreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper:getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -138,7 +138,7 @@ end
 -- 定时生成怪物
 function Ox:timerGenerate (num)
   num = num or 10
-  MyTimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)

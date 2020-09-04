@@ -1,5 +1,5 @@
 -- 钱多
-Qianduo = MyActor:new(MyConstant.QIANDUO_ACTOR_ID)
+Qianduo = BaseActor:new(MyMap.ACTOR.QIANDUO_ACTOR_ID)
 
 function Qianduo:new ()
   local o = {
@@ -41,7 +41,7 @@ function Qianduo:wantAtHour (hour)
 end
 
 function Qianduo:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then

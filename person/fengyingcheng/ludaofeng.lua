@@ -1,5 +1,5 @@
 -- 陆道风
-Ludaofeng = MyActor:new(MyConstant.LUDAOFENG_ACTOR_ID)
+Ludaofeng = BaseActor:new(MyMap.ACTOR.LUDAOFENG_ACTOR_ID)
 
 function Ludaofeng:new ()
   local o = {
@@ -59,7 +59,7 @@ function Ludaofeng:wantAtHour (hour)
 end
 
 function Ludaofeng:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 19) then

@@ -1,5 +1,5 @@
 -- 孙孔武
-Sunkongwu = MyActor:new(MyConstant.SUNKONGWU_ACTOR_ID)
+Sunkongwu = BaseActor:new(MyMap.ACTOR.SUNKONGWU_ACTOR_ID)
 
 function Sunkongwu:new ()
   local o = {
@@ -47,7 +47,7 @@ function Sunkongwu:wantAtHour (hour)
 end
 
 function Sunkongwu:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then

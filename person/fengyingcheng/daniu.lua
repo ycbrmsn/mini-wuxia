@@ -1,5 +1,5 @@
 -- 大牛
-Daniu = MyActor:new(MyConstant.DANIU_ACTOR_ID)
+Daniu = BaseActor:new(MyMap.ACTOR.DANIU_ACTOR_ID)
 
 function Daniu:new ()
   local o = {
@@ -37,7 +37,7 @@ function Daniu:wantAtHour (hour)
 end
 
 function Daniu:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 22) then
     self:wantAtHour(6)
   else

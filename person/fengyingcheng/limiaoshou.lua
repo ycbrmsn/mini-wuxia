@@ -1,5 +1,5 @@
 -- 李妙手
-Limiaoshou = MyActor:new(MyConstant.LIMIAOSHOU_ACTOR_ID)
+Limiaoshou = BaseActor:new(MyMap.ACTOR.LIMIAOSHOU_ACTOR_ID)
 
 function Limiaoshou:new ()
   local o = {
@@ -41,7 +41,7 @@ function Limiaoshou:wantAtHour (hour)
 end
 
 function Limiaoshou:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then

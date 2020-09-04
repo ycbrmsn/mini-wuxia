@@ -1,5 +1,5 @@
 -- 千兵卫
-Qianbingwei = MyActor:new(MyConstant.QIANBINGWEI_ACTOR_ID)
+Qianbingwei = BaseActor:new(MyMap.ACTOR.QIANBINGWEI_ACTOR_ID)
 
 function Qianbingwei:new ()
   local o = {
@@ -33,7 +33,7 @@ function Qianbingwei:wantAtHour (hour)
 end
 
 function Qianbingwei:doItNow ()
-  local hour = MyTimeHelper:getHour()
+  local hour = TimeHelper:getHour()
   if (hour >= 6 and hour < 21) then
     self:wantAtHour(6)
   else
@@ -71,7 +71,7 @@ function Qianbingwei:candleEvent (myPlayer, candle)
       self:speakTo(myPlayer.objid, 0, '我……')
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
-    MyTimeHelper:callFnAfterSecond (function (p)
+    TimeHelper:callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
