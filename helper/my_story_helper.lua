@@ -15,11 +15,9 @@ end
 function MyStoryHelper:atHour (hour)
   StoryHelper:atHour(hour)
   -- body
-  if (hour == 0) then
-    StoryHelper:reduceRemainDay()
-  end
   if (hour == 9) then
-    if (StoryHelper.mainIndex == 1 and StoryHelper.mainProgress == #StoryHelper.stories[1].tips) then
+    -- LogHelper:debug(StoryHelper:getMainStoryIndex(), '-', StoryHelper:getMainStoryProgress(), '-', #story1.tips)
+    if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == #story1.tips) then
       StoryHelper:forward('出发，前往学院')
       story2:goToCollege()
     end

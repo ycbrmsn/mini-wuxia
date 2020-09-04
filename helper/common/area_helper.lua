@@ -113,7 +113,7 @@ end
 function AreaHelper:initPosByPosData (data, positions)
   for i, v in ipairs(data) do
     local pos = MyPosition:new(v[1], v[2], v[3])
-    table.insert(data, pos)
+    table.insert(positions, pos)
   end
 end
 

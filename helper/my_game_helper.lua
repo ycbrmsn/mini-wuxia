@@ -39,6 +39,7 @@ end
 -- 世界时间到[n]点
 function MyGameHelper:atHour (hour)
   GameHelper:atHour(hour)
+  MyStoryHelper:atHour(hour)
 end
 
 -- 世界时间到[n]秒

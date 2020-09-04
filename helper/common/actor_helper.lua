@@ -204,7 +204,7 @@ function ActorHelper:resumeClickActor (objid)
   if (myActor) then
     if (myActor.wants and #myActor.wants > 0) then
       local want = myActor.wants[1]
-      if (want.style == 'lookingAt') then
+      if (want.style == 'lookAt' or want.style == 'lookingAt') then
         want.currentRestTime = 5
         TimeHelper:delFnContinueRuns(myActor.objid .. 'lookat')
       end

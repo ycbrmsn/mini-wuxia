@@ -381,6 +381,7 @@ function BaseActor:initActor (initPosition)
     --   AreaHelper:clearAllWoodenFence(areaid)
     -- end
     self:wantAtHour()
+    LogHelper:debug('初始化', self:getName(), '完成')
     return true
   else
     return false

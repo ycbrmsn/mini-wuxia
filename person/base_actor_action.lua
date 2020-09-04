@@ -291,6 +291,9 @@ function BaseActorAction:lookAt (objid)
     y = y + ActorHelper:getEyeHeight(objid)
   end
   local x0, y0, z0 = ActorHelper:getPosition(self.myActor.objid)
+  if (not(x0)) then
+    return
+  end
   if (x == x0 and z == z0) then -- 如果人物就在需要看向的位置上，则不做什么
 
   else

@@ -11,8 +11,8 @@ function Wolf:new ()
       exp = 20
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 20 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 1, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 1, 20 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 1, 1, 30 } -- 铜板
     },
     monsterPositions = {
       { x = 160, y = 8, z = 16 }, -- 恶狼区域1位置
@@ -87,8 +87,8 @@ function Ox:new ()
       exp = 25
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 20 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 1, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 1, 20 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 1, 3, 30 } -- 铜板
     },
     monsterPositions = {
       { x = -174, y = 7, z = -16 }, -- 狂牛区域
@@ -157,8 +157,8 @@ function QiangdaoLouluo:new ()
       exp = 25
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 30 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 5, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 1, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 2, 4, 30 } -- 铜板
     },
     initPosition = { x = 34, y = 7, z = 327 },
     toPosition = { x = -363, y = 7, z = 556 },
@@ -201,7 +201,7 @@ function QiangdaoLouluo:initStoryMonsters ()
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
-    self.action = MyActorAction:new(self)
+    self.action = BaseActorAction:new(self)
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
@@ -299,8 +299,8 @@ function QiangdaoXiaotoumu:new ()
       exp = 40
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 30 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 10, 30 } -- 铜板
+      { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 4, 8, 30 } -- 铜板
     },
     initPosition = { x = 33, y = 7, z = 334 },
     toPosition = { x = -363, y = 7, z = 556 },
@@ -332,7 +332,7 @@ function QiangdaoXiaotoumu:initStoryMonsters ()
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
-    self.action = MyActorAction:new(self)
+    self.action = BaseActorAction:new(self)
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
@@ -427,8 +427,8 @@ function Guard:new ()
       exp = 60
     },
     fallOff = {
-      { 12003, 1, 20 }, -- 短剑
-      { MyMap.ITEM.COIN_ID, 15, 20 } -- 铜板
+      { MyWeaponAttr.bronzeSword.levelIds[1], 1, 1, 5 }, -- 青铜剑
+      { MyMap.ITEM.COIN_ID, 5, 8, 20 } -- 铜板
     },
     initPositions = {
       MyPosition:new(-39.5, 7, 478.5), -- 南城门卫兵位置
@@ -449,7 +449,7 @@ function Guard:new ()
     },
     initAreas = {},  -- 进城区域，对象数组长度5
     initAreas2 = {}, -- 进城后区域，数值数组长度4
-    savePositions = {
+    safePositions = {
       MyPosition:new(-35.5, 8.5, 464.5), -- 南
       MyPosition:new(52.5, 8.5, 552.5), -- 东
       MyPosition:new(-36.5, 8.5, 640.5), -- 北
@@ -481,7 +481,7 @@ function Guard:init ()
   for i, v in ipairs(self.initPositions2) do
     table.insert(self.initAreas2, AreaHelper:getAreaByPos(v))
   end
-  self.action = MyActorAction:new(self)
+  self.action = BaseActorAction:new(self)
   TimeHelper:repeatUtilSuccess(self.actorid, 'initGuard', function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
@@ -569,7 +569,7 @@ function Guard:checkTokenArea (objid, areaid)
           xt = -0.5
         end
         ActorHelper:appendSpeed(objid, xt, yt, zt)
-        player.action:runTo({ self.savePositions[i] }, function ()
+        player.action:runTo({ self.safePositions[i] }, function ()
           player:thinkTo(objid, 0, '还是不要乱跑比较好。')
         end)
       end

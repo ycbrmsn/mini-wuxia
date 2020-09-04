@@ -63,7 +63,10 @@ function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront) end
 function Juyidao:checkAreaPlayer ()
   -- 搜索外圈玩家
   local pos = self:getMyPosition()
-  local playerids = AreaHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
+  if (not(pos)) then
+    return
+  end
+  local playerids = ActorHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
   if (#playerids > 0) then
     -- 如果玩家没被警告，就警告他
     for i, v in ipairs(playerids) do
@@ -80,7 +83,7 @@ function Juyidao:checkAreaPlayer ()
       end
     end
     -- 搜索内圈玩家
-    local playerids2 = AreaHelper:getAllPlayersArroundPos(pos, self.areaSize[1])
+    local playerids2 = ActorHelper:getAllPlayersArroundPos(pos, self.areaSize[1])
     if (#playerids2 > 0) then
       -- 内圈有玩家，则找最近的内圈玩家
       local minDis, minDisPlayerid -- 距离，最近玩家
@@ -162,7 +165,7 @@ function Juyidao:chooseBattleType ()
   self.battleProgress = 1
   self:openAI()
   if (self.battleType > 0) then
-    local playerids = AreaHelper:getAllPlayersArroundPos(self:getMyPosition(), self.areaSize[2])
+    local playerids = ActorHelper:getAllPlayersArroundPos(self:getMyPosition(), self.areaSize[2])
     local skillname
     if (self.battleType == 1) then
       skillname = '疾风斩'

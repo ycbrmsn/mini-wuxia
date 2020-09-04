@@ -23,9 +23,7 @@ function MyBlockHelper:init ()
   -- 前四个位置，第五个区域
   for i, v in ipairs(self.cityGatesData) do
     local cityGate = {}
-    for ii, vv in ipairs(v) do
-      AreaHelper:initPosByPosData(cityGate, vv)
-    end
+    AreaHelper:initPosByPosData(v, cityGate)
     table.insert(cityGate, AreaHelper:getAreaByPos(cityGate[4]))
     table.insert(self.cityGates, cityGate)
   end

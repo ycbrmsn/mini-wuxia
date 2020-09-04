@@ -252,7 +252,7 @@ end
 function TimeHelper:initActor (myActor)
   self:repeatUtilSuccess(myActor.objid, 'initActor', function (myActor)
     return myActor:init()
-  end, 10, myActor)
+  end, 1, myActor)
 end
 
 function TimeHelper:runFnLastRuns (time)

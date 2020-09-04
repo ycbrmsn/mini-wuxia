@@ -1,7 +1,6 @@
 -- 我的区域工具类
 MyAreaHelper = {
-  doorPositionData = {},
-  doorPositions = {
+  doorPositionData = {
     { 31, 8, 2 }, -- 主角家的门
     { 9, 8, -21 }, -- 江枫家的门
     { -13, 8, -21 }, -- 村长家的门
@@ -48,6 +47,7 @@ MyAreaHelper = {
     { 11, 8, 573 }, -- 真宝阁门3
     { 17, 8, 573 }, -- 真宝阁门4
   },
+  doorPositions = {},
   luoyecunPos = MyPosition:new(0, 8, 19), -- 落叶村位置
   pingfengzhaiPos = MyPosition:new(-363, 8, 556), -- 平风寨位置
   playerInHomePos = { x = 31, y = 9, z = 3 },
