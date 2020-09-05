@@ -358,7 +358,12 @@ end
 
 -- 删除方法
 function TimeHelper:delFnContinueRuns (t)
-  self.fnContinueRuns[t] = nil
+  if (self.fnContinueRuns[t]) then
+    self.fnContinueRuns[t] = nil
+    return true
+  else
+    return false
+  end
 end
 
 -- 是否持续执行
