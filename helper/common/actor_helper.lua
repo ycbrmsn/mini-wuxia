@@ -600,7 +600,8 @@ function ActorHelper:actorEnterArea (objid, areaid)
     if (want.toAreaId == areaid) then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
       if (want.style == 'move' or want.style == 'approach') then -- 如果是仅仅前往，则变更想法，并且停下来
         -- LogHelper:debug(myActor:getName() .. '进入了终点区域' .. areaid)
-        AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
+        AreaHelper:removeToArea(myActor) -- 清除终点区域
+        -- AreaHelper:destroyArea(want.toAreaId) 
         local pos = BaseActorActionHelper:getNextPos(want)
         -- LogHelper:debug(myActor:getName(), pos)
         if (pos) then -- 有下一个行动位置
@@ -615,13 +616,15 @@ function ActorHelper:actorEnterArea (objid, areaid)
           myActor:wantStayForAWhile()
         end
       elseif (want.style == 'patrol') then -- 如果是巡逻，则停下来并设定前往目的地
-        AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
+        AreaHelper:removeToArea(myActor) -- 清除终点区域
+        -- AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = BaseActorActionHelper:getNextPos(want)
         -- LogHelper:debug('下一个位置' .. type(want.toPos))
         BaseActorActionHelper:createMoveToPos(want)
       elseif (want.style == 'freeInArea') then -- 区域内自由移动
-        AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
+        AreaHelper:removeToArea(myActor) -- 清除终点区域
+        -- AreaHelper:destroyArea(want.toAreaId) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = BaseActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
         BaseActorActionHelper:createMoveToPos(want)

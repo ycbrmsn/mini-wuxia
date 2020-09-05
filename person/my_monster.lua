@@ -511,7 +511,7 @@ function Guard:initCityGuard (index, o, objids)
     dir = 'W'
   else
     for i, v in ipairs(objids) do
-      ActorHelper:closeAI(v)
+      CreatureHelper:closeAI(v)
       if (i == 1) then
         ActorHelper:setPosition(v, self.lordHousePositions[i])
         ActorHelper:lookToward(v, 'E')
@@ -528,7 +528,7 @@ function Guard:initCityGuard (index, o, objids)
   end
   if (index < 5) then
     for i, v in ipairs(objids) do
-      ActorHelper:closeAI(v)
+      CreatureHelper:closeAI(v)
       ActorHelper:setPosition(v, self.initPositions[(index - 1) * 2 + i])
       ActorHelper:lookToward(v, dir)
     end
