@@ -513,13 +513,13 @@ function Guard:initCityGuard (index, o, objids)
     for i, v in ipairs(objids) do
       CreatureHelper:closeAI(v)
       if (i == 1) then
-        ActorHelper:setPosition(v, self.lordHousePositions[i])
+        ActorHelper:setMyPosition(v, self.lordHousePositions[i])
         ActorHelper:lookToward(v, 'E')
       elseif (i == 2) then
-        ActorHelper:setPosition(v, self.lordHousePositions[i])
+        ActorHelper:setMyPosition(v, self.lordHousePositions[i])
         ActorHelper:lookToward(v, 'W')
       else
-        ActorHelper:setPosition(v, self.lordHousePatrolPositions[i - 2])
+        ActorHelper:setMyPosition(v, self.lordHousePatrolPositions[i - 2])
         local g = BaseActor:new(MyMap.ACTOR.GUARD_ACTOR_ID, v)
         g:wantPatrol('patrol', self.lordHousePatrolPositions, false, i - 2)
         table.insert(self.patrolGuards, g)
@@ -529,7 +529,7 @@ function Guard:initCityGuard (index, o, objids)
   if (index < 5) then
     for i, v in ipairs(objids) do
       CreatureHelper:closeAI(v)
-      ActorHelper:setPosition(v, self.initPositions[(index - 1) * 2 + i])
+      ActorHelper:setMyPosition(v, self.initPositions[(index - 1) * 2 + i])
       ActorHelper:lookToward(v, dir)
     end
   end

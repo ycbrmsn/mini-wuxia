@@ -45,6 +45,13 @@ end
 -- 世界时间到[n]秒
 function MyGameHelper:atSecond (second)
   GameHelper:atSecond(second)
+  -- body
+  if (second == 1) then
+    StoryHelper:setMainStoryIndex(1)
+    StoryHelper:setMainStoryProgress(#story1.tips)
+    StoryHelper:forward('出发，前往学院')
+    story2:goToCollege()
+  end
 end
 
 -- 任意计时器发生变化

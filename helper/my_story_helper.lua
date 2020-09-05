@@ -51,7 +51,7 @@ end
 -- 玩家进入区域
 function MyStoryHelper:playerEnterArea (objid, areaid)
   -- body
-  if (areaid == StoryHelper:getStory(1).areaid) then -- 文羽通知事件
+  if (areaid == story1.areaid) then -- 文羽通知事件
     story1:noticeEvent(areaid)
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
     story1:fasterTime()
@@ -63,8 +63,8 @@ function MyStoryHelper:playerLeaveArea (objid, areaid)
   -- body
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (areaid == StoryHelper:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then -- 跑出强盗区域
-    Story2Helper:comeBack(objid, areaid)
+  if (areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then -- 跑出强盗区域
+    story2:comeBack(objid, areaid)
   end
 end
 
@@ -195,10 +195,10 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
   -- body
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (areaid == StoryHelper:getStory(2).areaid and mainIndex == 2 and mainProgress == 3) then
+  if (areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then
     local actorid = CreatureHelper:getActorID(objid)
     if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
-      Story2Helper:comeBack(objid, areaid)
+      story2:comeBack(objid, areaid)
     end
   end
 end
@@ -222,6 +222,6 @@ end
 function MyStoryHelper:actorDie (objid, toobjid)
   -- body
   if (StoryHelper:getMainStoryIndex() == 2) then
-    Story2Helper:showMessage(objid)
+    story2:showMessage(objid)
   end
 end

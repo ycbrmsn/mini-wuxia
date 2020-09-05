@@ -308,7 +308,7 @@ function Story2:meetBandits (hostPlayer)
     qiangdaoLouluo:setAIActive(true)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, false)
-    end, waitSeconds)
+    end)
     PlayerHelper:everyPlayerEnableMove(true)
   end, waitSeconds)
 end
@@ -409,7 +409,7 @@ function Story2:endWords (player, waitSeconds)
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, true)
-    end, waitSeconds)
+    end)
     -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
     ChatHelper:sendSystemMsg('#G目前剧情到此。')
   end, waitSeconds)
@@ -435,7 +435,7 @@ function Story2:playerBadHurt (objid)
     yexiaolong:speak(0, '住手！')
     for i, v in ipairs(self.xiaotoumus) do
       if (not(v.killed)) then
-        ActorHelper:stopRun(v.objid)
+        CreatureHelper:stopRun(v.objid)
         if (i == 1) then
           qiangdaoXiaotoumu:speak(1, '！！！')
         end
@@ -446,7 +446,7 @@ function Story2:playerBadHurt (objid)
     end
     for i, v in ipairs(self.xiaolouluos) do
       if (not(v.killed)) then
-        ActorHelper:stopRun(v.objid)
+        CreatureHelper:stopRun(v.objid)
         if (i == 1) then
           qiangdaoLouluo:speak(1, '！！！')
         end
