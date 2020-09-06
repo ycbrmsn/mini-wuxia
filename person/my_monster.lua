@@ -495,7 +495,7 @@ function Guard:init ()
       end
     end
     return isAllOk
-  end, 10)
+  end, 1)
 end
 
 function Guard:initCityGuard (index, o, objids)
@@ -549,33 +549,31 @@ function Guard:toPatrol ()
 end
 
 function Guard:checkTokenArea (objid, areaid)
-  local isEnter = false
   for i, v in ipairs(self.initAreas) do
     if (i < 5 and v.areaid == areaid) then
-      local player = PlayerHelper:getPlayer(objid)
-      if (not(player:takeOutItem(MyMap.ITEM.TOKEN_ID))) then
-        self:speakTo(objid, 0, '出示令牌。强闯者，捕。')
-        TimeHelper:callFnCanRun(objid, 'checkToken', function ()
-          MonsterHelper:wantLookAt (v.objids, objid, 5)
-        end, 5)
-        local xt, yt, zt = 0, 0, 0
-        if (i == 1) then
-          zt = -0.5
-        elseif (i == 2) then
-          xt = 0.5
-        elseif (i == 3) then
-          zt = 0.5
-        else
-          xt = -0.5
+      local playerids = AreaHelper:getAllPlayersInAreaId(areaid)
+      local players = {}
+      local hasToken = false
+      for ii, vv in ipairs(playerids) do
+        local player = PlayerHelper:getPlayer(vv)
+        table.insert(players, player)
+        if (player:takeOutItem(MyMap.ITEM.TOKEN_ID)) then
+          hasToken = true
         end
-        ActorHelper:appendSpeed(objid, xt, yt, zt)
-        player.action:runTo({ self.safePositions[i] }, function ()
-          player:thinkTo(objid, 0, '还是不要乱跑比较好。')
-        end)
       end
-      isEnter = true
-      break
+      if (not(hasToken)) then
+        for ii, vv in ipairs(players) do
+          self:speakTo(vv.objid, 0, '出示令牌。强闯者，捕。')
+          TimeHelper:callFnCanRun(vv.objid, 'checkToken', function ()
+            MonsterHelper:wantLookAt(v.objids, vv.objid, 5)
+          end, 5)
+          vv.action:runTo({ self.safePositions[i] }, function ()
+            vv:thinkTo(vv.objid, 0, '还是不要乱跑比较好。')
+          end)
+        end
+      end
+      return true
     end
   end
-  return isEnter
+  return false
 end
