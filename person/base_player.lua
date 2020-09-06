@@ -177,23 +177,12 @@ function BasePlayer:upgrade (addLevel)
   return self.attr:upgrade(addLevel)
 end
 
-function BasePlayer:lookAt (objid)
-  local x, y, z
-  if (type(objid) == 'table') then
-    x, y, z = objid.x, objid.y, objid.z
-  else
-    x, y, z = ActorHelper:getPosition(objid)
-    if (not(x)) then
-      return
-    end
-    y = y + ActorHelper:getEyeHeight(objid)
+-- 玩家看向，默认会旋转镜头
+function BasePlayer:lookAt (toobjid, needRotateCamera)
+  if (type(needRotateCamera) == 'nil') then
+    needRotateCamera = true
   end
-  local x0, y0, z0 = ActorHelper:getPosition(self.objid)
-  y0 = y0 + ActorHelper:getEyeHeight(self.objid) -- 生物位置y是地面上一格，所以要减1
-  local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
-  local faceYaw = MathHelper:getPlayerFaceYaw(myVector3)
-  local facePitch = MathHelper:getActorFacePitch(myVector3)
-  PlayerHelper:rotateCamera(self.objid, faceYaw, facePitch)
+  ActorHelper:lookAt(self.objid, toobjid, needRotateCamera)
 end
 
 function BasePlayer:wantLookAt (objid, seconds)

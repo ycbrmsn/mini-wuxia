@@ -260,13 +260,13 @@ function Story2:meetBandits (hostPlayer)
   waitSeconds = waitSeconds + 2
   qiangdaoLouluo:speak(waitSeconds, '买路财，老大。')
   TimeHelper:callFnAfterSecond(function ()
-    MonsterHelper:lookAt(xiaolouluoId, xiaotoumuId)
+    ActorHelper:lookAt(xiaolouluoId, xiaotoumuId)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
   qiangdaoXiaotoumu:speak(waitSeconds, '你个笨蛋，山野村民，身上能有什么财。')
   TimeHelper:callFnAfterSecond(function ()
-    MonsterHelper:lookAt(xiaotoumuId, xiaolouluoId)
+    ActorHelper:lookAt(xiaotoumuId, xiaolouluoId)
     MonsterHelper:playAct(xiaotoumuId, ActorHelper.ACT.ANGRY)
   end, waitSeconds)
 
@@ -284,8 +284,8 @@ function Story2:meetBandits (hostPlayer)
   waitSeconds = waitSeconds + 2
   qiangdaoLouluo:speak(waitSeconds, '小子，留下令牌来。')
   TimeHelper:callFnAfterSecond(function ()
-    MonsterHelper:lookAt(xiaolouluoId, hostPlayer.objid)
-    MonsterHelper:lookAt(xiaotoumuId, hostPlayer.objid)
+    ActorHelper:lookAt(xiaolouluoId, hostPlayer.objid)
+    ActorHelper:lookAt(xiaotoumuId, hostPlayer.objid)
     MonsterHelper:playAct(xiaolouluoId, ActorHelper.ACT.ATTACK)
   end, waitSeconds)
 
@@ -440,7 +440,7 @@ function Story2:playerBadHurt (objid)
           qiangdaoXiaotoumu:speak(1, '！！！')
         end
         TimeHelper:callFnAfterSecond(function ()
-          MonsterHelper:lookAt(v.objid, yexiaolong.objid)
+          ActorHelper:lookAt(v.objid, yexiaolong.objid)
         end, 2)
       end
     end
@@ -451,7 +451,7 @@ function Story2:playerBadHurt (objid)
           qiangdaoLouluo:speak(1, '！！！')
         end
         TimeHelper:callFnAfterSecond(function ()
-          MonsterHelper:lookAt(v.objid, yexiaolong.objid)
+          ActorHelper:lookAt(v.objid, yexiaolong.objid)
         end, 2)
       end
     end
@@ -511,7 +511,7 @@ function Story2:playerBadHurt (objid)
           local pos = ActorHelper:getDistancePosition(v[1], -1.5)
           yexiaolong:setPosition(pos)
           yexiaolong:lookAt(v[1])
-          MonsterHelper:lookAt(v[1], yexiaolong.objid)
+          ActorHelper:lookAt(v[1], yexiaolong.objid)
           local attackPos = ActorHelper:getDistancePosition(v[1], -1)
           WorldHelper:playAttackEffect(attackPos)
           WorldHelper:playBeAttackedSoundOnPos(attackPos)

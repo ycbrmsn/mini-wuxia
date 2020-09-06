@@ -2,7 +2,6 @@
 BaseActorAction = {
   myActor = nil,
   maxCantMoveTime = 5,
-  speakColor = '#ceeeeee'
 }
 
 function BaseActorAction:new (myActor)
@@ -279,31 +278,9 @@ function BaseActorAction:goToBed (isNow)
   end
 end
 
-function BaseActorAction:lookAt (objid)
-  local x, y, z
-  if (type(objid) == 'table') then
-    x, y, z = objid.x, objid.y, objid.z
-  else
-    x, y, z = ActorHelper:getPosition(objid)
-    if (not(x)) then -- 人物退出游戏等异常
-      return
-    end
-    y = y + ActorHelper:getEyeHeight(objid)
-  end
-  local x0, y0, z0 = ActorHelper:getPosition(self.myActor.objid)
-  if (not(x0)) then
-    return
-  end
-  if (x == x0 and z == z0) then -- 如果人物就在需要看向的位置上，则不做什么
-
-  else
-    y0 = y0 + ActorHelper:getEyeHeight(self.myActor.objid) -- 生物位置y是地面上一格，所以要减1?
-    local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
-    local faceYaw = MathHelper:getActorFaceYaw(myVector3)
-    local facePitch = MathHelper:getActorFacePitch(myVector3)
-    self.myActor:setFaceYaw(faceYaw)
-    self.myActor:setFacePitch(facePitch)
-  end
+-- 生物看向
+function BaseActorAction:lookAt (toobjid)
+  ActorHelper:lookAt(self.myActor.objid, toobjid)
 end
 
 function BaseActorAction:freeTime (want)

@@ -556,6 +556,68 @@ function ActorHelper:getAliveActors (objids)
   return aliveObjids
 end
 
+-- 角色看向 执行者、目标、是否需要旋转镜头（三维视角需要旋转）
+function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
+  if (type(objid) == 'table') then -- 如果执行者是多个（数组）
+    for i, v in ipairs(objid) do
+      ActorHelper:lookAt(v, toobjid, needRotateCamera)
+    end
+  else -- 单个执行者
+    local x, y, z
+    if (type(toobjid) == 'table') then -- 如果目标是个位置（字典）
+      x, y, z = toobjid.x, toobjid.y, toobjid.z
+    else -- 目标是个角色
+      x, y, z = ActorHelper:getPosition(toobjid)
+      if (not(x)) then -- 取不到目标角色数据
+        return
+      end
+      y = y + ActorHelper:getEyeHeight(toobjid)
+    end
+    local x0, y0, z0 = ActorHelper:getPosition(objid)
+    if (not(x0)) then -- 取不到执行者数据
+      return
+    end
+    y0 = y0 + ActorHelper:getEyeHeight(objid)
+    local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
+    if (ActorHelper:isPlayer(objid) and needRotateCamera) then -- 如果执行者是三维视角玩家
+      local faceYaw, facePitch
+      if (x ~= x0 or z ~= z0) then -- 不在同一竖直位置上
+        faceYaw = MathHelper:getPlayerFaceYaw(myVector3)
+        facePitch = MathHelper:getActorFacePitch(myVector3)
+      else -- 在同一竖直位置上
+        faceYaw = ActorHelper:getFaceYaw(objid)
+        if (y0 < y1) then -- 向上
+          facePitch = -90
+        elseif (y0 > y1) then -- 向下
+          facePitch = 90
+        else -- 水平
+          facePitch = 0
+        end
+      end
+      PlayerHelper:rotateCamera(objid, faceYaw, facePitch)
+    else -- 执行者是生物或二维视角玩家
+      local facePitch
+      if (x ~= x0 or z ~= z0) then -- 不在同一竖直位置上
+        local faceYaw = MathHelper:getActorFaceYaw(myVector3)
+        ActorHelper:setFaceYaw(objid, faceYaw)
+        facePitch = MathHelper:getActorFacePitch(myVector3)
+      else -- 在同一竖直位置上
+        if (y0 < y1) then -- 向上
+          facePitch = -90
+        elseif (y0 > y1) then -- 向下
+          facePitch = 90
+        else -- 水平
+          facePitch = 0
+        end
+      end
+      local result = ActorHelper:setFacePitch(objid, facePitch)
+      if (not(result)) then
+        LogHelper:debug(myVector3)
+      end
+    end
+  end
+end
+
 -- 设置生物可移动状态
 function ActorHelper:setEnableMoveState (objid, switch)
   return self:setActionAttrState(objid, CREATUREATTR.ENABLE_MOVE, switch)

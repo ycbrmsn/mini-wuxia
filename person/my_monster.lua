@@ -254,7 +254,7 @@ end
 function QiangdaoLouluo:lookAt (objid, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    MonsterHelper:lookAt(v, objid)
+    ActorHelper:lookAt(v, objid)
   end
 end
 
@@ -385,7 +385,7 @@ end
 function QiangdaoXiaotoumu:lookAt (objid, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    MonsterHelper:lookAt(v, objid)
+    ActorHelper:lookAt(v, objid)
   end
 end
 
