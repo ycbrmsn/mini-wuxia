@@ -143,6 +143,8 @@ function BaseActorAction:execute ()
     elseif (want.style == 'sleep') then
       want.style = 'sleeping'
       self:playSleep()
+    elseif (want.style == 'sleeping') then
+      -- 暂不处理
     elseif (want.style == 'wake') then
       self.myActor:doItNow()
       -- self.myActor:putOutCandleAndGoToBed()
