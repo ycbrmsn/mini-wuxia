@@ -38,10 +38,11 @@ function MyBlockHelper:initBlocks ()
   end
 end
 
-function MyBlockHelper:checkCityGates (args)
-  if (args.blockid == 724) then -- 开关
+-- 检查城门开关
+function MyBlockHelper:checkCityGateSwitch (blockid, pos)
+  if (blockid == 724) then -- 开关
     for i, v in ipairs(self.cityGates) do
-      if (v[1]:equals(args)) then -- 找到开关
+      if (v[1]:equalBlockPos(pos)) then -- 找到开关
         if (BlockHelper:getBlockSwitchStatus(v[1])) then -- 打开
           if (BlockHelper:getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
             AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
@@ -55,10 +56,11 @@ function MyBlockHelper:checkCityGates (args)
           BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
           BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
         end
-        break
+        return true
       end
     end
   end
+  return false
 end
 
 

@@ -47,7 +47,7 @@ function MonsterHelper:wantLookAt (objid, toobjid, seconds)
     t = objid .. 'lookat'
   end
   TimeHelper:callFnContinueRuns(function ()
-    self:lookAt(objid, toobjid)
+    ActorHelper:lookAt(objid, toobjid)
   end, seconds, t)
 end
 

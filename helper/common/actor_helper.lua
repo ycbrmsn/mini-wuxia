@@ -586,9 +586,9 @@ function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
         facePitch = MathHelper:getActorFacePitch(myVector3)
       else -- 在同一竖直位置上
         faceYaw = ActorHelper:getFaceYaw(objid)
-        if (y0 < y1) then -- 向上
+        if (y0 < y) then -- 向上
           facePitch = -90
-        elseif (y0 > y1) then -- 向下
+        elseif (y0 > y) then -- 向下
           facePitch = 90
         else -- 水平
           facePitch = 0
@@ -602,9 +602,9 @@ function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
         ActorHelper:setFaceYaw(objid, faceYaw)
         facePitch = MathHelper:getActorFacePitch(myVector3)
       else -- 在同一竖直位置上
-        if (y0 < y1) then -- 向上
+        if (y0 < y) then -- 向上
           facePitch = -90
-        elseif (y0 > y1) then -- 向下
+        elseif (y0 > y) then -- 向下
           facePitch = 90
         else -- 水平
           facePitch = 0

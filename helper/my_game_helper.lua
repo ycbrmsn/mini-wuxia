@@ -47,10 +47,11 @@ function MyGameHelper:atSecond (second)
   GameHelper:atSecond(second)
   -- body
   if (second == 1) then
-    StoryHelper:setMainStoryIndex(1)
-    StoryHelper:setMainStoryProgress(#story1.tips)
-    StoryHelper:forward('出发，前往学院')
-    story2:goToCollege()
+    -- StoryHelper:setMainStoryIndex(1)
+    -- StoryHelper:setMainStoryProgress(#story1.tips)
+    -- StoryHelper:forward('出发，前往学院')
+    -- story2:goToCollege()
+    PlayerHelper:getHostPlayer():setPosition(-99, 7, 554)
   end
 end
 

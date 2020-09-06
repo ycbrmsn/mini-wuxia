@@ -34,8 +34,10 @@ end
 -- 停止跑
 function CreatureHelper:stopRun (objid)
   self:closeAI(objid)
+  ActorHelper:setEnableMoveState(objid, false)
   local pos = ActorHelper:getMyPosition(objid)
   ActorHelper:tryMoveToPos(objid, pos.x, pos.y, pos.z)
+  ActorHelper:setEnableMoveState(objid, true)
 end
 
 -- 关门

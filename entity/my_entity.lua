@@ -114,11 +114,19 @@ function MyPosition:isPosition (pos)
   return pos and pos.TYPE and pos.TYPE == self.TYPE
 end
 
-function MyPosition:equals (myPosition)
-  if (type(myPosition) ~= 'table') then
+function MyPosition:equals (pos)
+  if (type(pos) ~= 'table') then
     return false
   end
-  return myPosition.x == self.x and myPosition.y == self.y and myPosition.z == self.z
+  return pos.x == self.x and pos.y == self.y and pos.z == self.z
+end
+
+function MyPosition:equalBlockPos (pos)
+  if (type(pos) ~= 'table') then
+    return false
+  end
+  local x, y, z = math.floor(self.x) + 0.5, math.floor(self.y) + 0.5, math.floor(self.z) + 0.5
+  return pos.x == x and pos.y == y and pos.z == z
 end
 
 -- 从右起每四位代表一个坐标值（负数有问题）

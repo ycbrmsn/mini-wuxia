@@ -47,6 +47,7 @@ function MyPlayerHelper:playerClickBlock (objid, blockid, x, y, z)
   if (MyBed:isBed(blockid)) then
     -- 处理床
     PlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
+  elseif (MyBlockHelper:checkCityGateSwitch(blockid, MyPosition:new(x, y, z))) then
   end
 end
 
