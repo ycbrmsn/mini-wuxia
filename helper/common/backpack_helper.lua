@@ -127,7 +127,8 @@ end
 function BackpackHelper:discardItem (playerid, gridid, num)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Backpack:discardItem(playerid, gridid, num)
-  end, '丢弃背包某个格子里的道具', 'gridid=', gridid)
+  end, '丢弃背包某个格子里的道具', 'playerid=', playerid, ',gridid=', gridid,
+    ',num=', num)
 end
 
 -- 获取背包格道具ID(返回itemid, num)
@@ -142,4 +143,11 @@ function BackpackHelper:getGridNum (playerid, gridid)
   return CommonHelper:callOneResultMethod(function (p)
     return Backpack:getGridNum(playerid, gridid)
   end, '获取背包某个格子的道具数量', 'playerid=', playerid, ',gridid=', gridid)
+end
+
+-- 清空全部背包(包含背包栏、快捷栏、装备栏)
+function BackpackHelper:clearAllPack (playerid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Backpack:clearAllPack(playerid)
+  end, ' 清空全部背包', 'playerid=', playerid)
 end

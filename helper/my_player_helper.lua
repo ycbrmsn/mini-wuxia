@@ -5,7 +5,7 @@ MyPlayerHelper = {}
 
 -- 玩家进入游戏
 function MyPlayerHelper:playerEnterGame (objid)
-  PlayerHelper:playerEnterGame(objid)
+  local isEntered = PlayerHelper:playerEnterGame(objid)
   MyStoryHelper:playerEnterGame(objid)
   -- body
   if (not(logPaper)) then
@@ -14,6 +14,9 @@ function MyPlayerHelper:playerEnterGame (objid)
   -- 检测玩家是否有江湖日志，如果没有则放进背包
   if (not(logPaper:hasItem(objid))) then
     logPaper:newItem(objid, 1, true)
+  end
+  if (not(isEntered)) then -- 没有进入过游戏，则给一颗守护宝石
+    BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1)
   end
 end
 
@@ -101,6 +104,17 @@ function MyPlayerHelper:playerDie (objid, toobjid)
   PlayerHelper:playerDie(objid, toobjid)
   MyStoryHelper:playerDie(objid, toobjid)
   -- body
+  local num = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.PROTECT_GEM_ID) -- 守护宝石数量
+  if (num == 0) then -- 玩家没有守护宝石
+    if (PlayerHelper:isMainPlayer(objid)) then -- 房主
+      PlayerHelper:setGameResults(objid, 2) -- 游戏结束
+    else -- 其他玩家
+      BackpackHelper:clearAllPack(objid)
+      logPaper:newItem(objid, 1, true)
+    end
+  else
+    BackpackHelper:removeGridItemByItemID(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 移除一颗宝石
+  end
 end
 
 -- 玩家复活

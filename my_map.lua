@@ -17,6 +17,7 @@ MyMap = {
     GAME_DATA_MAIN_PROGRESS_ID = 4289, -- 主线剧情进度数据
     GAME_DATA_LEVEL_ID = 4290, -- 人物等级数据
     GAME_DATA_EXP_ID = 4291, -- 人物经验数据
+    PROTECT_GEM_ID = 4294, -- 守护宝石
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID

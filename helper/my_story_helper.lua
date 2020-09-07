@@ -35,7 +35,13 @@ function MyStoryHelper:playerEnterGame (objid)
       PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
     end
   else
-    player:setPosition(hostPlayer:getPosition())
+    local hostPlayer = PlayerHelper:getHostPlayer()
+    if (hostPlayer) then
+      player:setPosition(hostPlayer:getPosition())
+    else
+      player:setPosition(self.initPosition) -- 初始位置
+      PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+    end
   end
 
   -- 播放背景音乐
