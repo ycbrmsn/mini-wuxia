@@ -389,9 +389,9 @@ function PlayerHelper:playerAttackHit (objid, toobjid)
 end
 
 -- 玩家造成伤害
-function PlayerHelper:playerDamageActor (objid, toobjid)
+function PlayerHelper:playerDamageActor (objid, toobjid, hurtlv)
   local key = PlayerHelper:generateDamageKey(objid, toobjid)
-  TimeHelper:setFrameInfo(key, true)
+  TimeHelper:setFrameInfo(key, hurtlv)
   PlayerHelper:showActorHp(objid, toobjid)
 end
 
@@ -408,7 +408,7 @@ function PlayerHelper:playerDefeatActor (playerid, objid)
 end
 
 -- 玩家受到伤害
-function PlayerHelper:playerBeHurt (objid, toobjid)
+function PlayerHelper:playerBeHurt (objid, toobjid, hurtlv)
   if (SkillHelper:isFlying(objid)) then -- 玩家在御剑飞行，则飞行失控
     local player = PlayerHelper:getPlayer(objid)
     SkillHelper:stopFly(objid, ItemHelper:getItem(player.hold))

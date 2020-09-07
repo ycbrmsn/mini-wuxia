@@ -106,7 +106,7 @@ function MyStoryHelper:playerAttackHit (objid, toobjid)
 end
 
 -- 玩家造成伤害
-function MyStoryHelper:playerDamageActor (objid, toobjid)
+function MyStoryHelper:playerDamageActor (objid, toobjid, hurtlv)
   -- body
 end
 
@@ -116,7 +116,7 @@ function MyStoryHelper:playerDefeatActor (playerid, objid)
 end
 
 -- 玩家受到伤害
-function MyStoryHelper:playerBeHurt (objid, toobjid)
+function MyStoryHelper:playerBeHurt (objid, toobjid, hurtlv)
   -- body
   local hp = PlayerHelper:getHp(objid)
   if (hp and hp == 1) then -- 重伤
