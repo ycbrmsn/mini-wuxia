@@ -18,6 +18,7 @@ MyMap = {
     GAME_DATA_LEVEL_ID = 4290, -- 人物等级数据
     GAME_DATA_EXP_ID = 4291, -- 人物经验数据
     PROTECT_GEM_ID = 4294, -- 守护宝石
+    ANIMAL_BONE_ID = 4295, -- 兽骨
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID
@@ -49,6 +50,7 @@ MyMap = {
     QIANGDAO_XIAOTOUMU_ACTOR_ID = 12, -- 强盗小头目ID
     GUARD_ACTOR_ID = 15, -- 卫兵（剑）
     OX_ACTOR_ID = 17, -- 狂牛
+    DOG_ACTOR_ID = 43, -- 野狗
 
     -- boss
     JUYIDAO_ACTOR_ID = 42, -- 橘一刀

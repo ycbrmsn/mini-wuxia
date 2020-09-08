@@ -1,17 +1,90 @@
 -- 怪物
 
+-- 野狗
+Dog = BaseActor:new(MyMap.ACTOR.DOG_ACTOR_ID)
+
+function Dog:new ()
+  local o = {
+    objid = self.actorid,
+    expData = {
+      level = 3,
+      exp = 10
+    },
+    fallOff = {
+      { MyMap.ITEM.ANIMAL_BONE_ID, 1, 1, 20 }, -- 兽骨
+      { MyMap.ITEM.COIN_ID, 1, 1, 30 } -- 铜板
+    },
+    monsterPositions = {
+      MyPosition:new(-75, 7, -75), -- 生成区域内位置
+    },
+    monsterAreas = {},
+    tipPositions = {
+      MyPosition:new(-75, 8, -75) -- 村外山泉
+    },
+    areaids = {}, -- 提示区域
+    areaName = '村外山泉'
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function Dog:init ()
+  -- 怪物定时生成区域
+  for i, v in ipairs(self.monsterPositions) do
+    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+  end
+  -- 提示区域
+  table.insert(self.areaids, -1)
+  table.insert(self.areaids, AreaHelper:getAreaByPos(self.tipPositions[1]))
+  self.generate = function ()
+    self:generateMonsters()
+  end
+  return true
+end
+
+function Dog:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '野狗'
+  end
+  return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function Dog:generateMonsters (num)
+  num = num or 10
+  for i, v in ipairs(self.monsterAreas) do
+    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    if (curNum < num) then
+      for i = 1, num - curNum do
+        local pos = AreaHelper:getRandomAirPositionInArea(v)
+        self:newMonster(pos.x, pos.y, pos.z, 1)
+      end
+    end
+  end
+end
+
+-- 定时生成怪物
+function Dog:timerGenerate (num)
+  num = num or 10
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters(num)
+    return false
+  end, 60)
+end
+
 -- 恶狼
 Wolf = BaseActor:new(MyMap.ACTOR.WOLF_ACTOR_ID)
 
 function Wolf:new ()
   local o = {
-    objid = MyMap.ACTOR.WOLF_ACTOR_ID,
+    objid = self.actorid,
     expData = {
-      level = 3,
-      exp = 20
+      level = 5,
+      exp = 25
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 1, 20 }, -- 苹果
+      { MyMap.ITEM.ANIMAL_BONE_ID, 1, 2, 20 }, -- 兽骨
       { MyMap.ITEM.COIN_ID, 1, 1, 30 } -- 铜板
     },
     monsterPositions = {
@@ -23,7 +96,7 @@ function Wolf:new ()
       MyPosition:new(122.5, 7.5, 3.5), -- 恶狼谷口位置
       MyPosition:new(123.5, 7.5, 3.5) -- 恶狼谷口后位置
     },
-    areaids = {},
+    areaids = {}, -- 提示区域
     areaName = '恶狼谷'
   }
   setmetatable(o, self)
@@ -81,19 +154,22 @@ Ox = BaseActor:new(MyMap.ACTOR.OX_ACTOR_ID)
 
 function Ox:new ()
   local o = {
-    objid = MyMap.ACTOR.OX_ACTOR_ID,
+    objid = self.actorid,
     expData = {
       level = 7,
       exp = 25
     },
     fallOff = {
-      { MyMap.ITEM.APPLE_ID, 1, 1, 20 }, -- 苹果
+      { MyMap.ITEM.ANIMAL_BONE_ID, 2, 3, 20 }, -- 兽骨
       { MyMap.ITEM.COIN_ID, 1, 3, 30 } -- 铜板
     },
     monsterPositions = {
       { x = -174, y = 7, z = -16 }, -- 狂牛区域
     },
     monsterAreas = {},
+    tipPositions = {
+      { x = -175, y = 8, z = 5 }
+    },
     areaids = {},
     areaName = '狂牛草原'
   }
@@ -109,7 +185,7 @@ function Ox:init ()
   end
   -- 狂牛草原提示区域
   table.insert(self.areaids, -1)
-  table.insert(self.areaids, AreaHelper:getAreaByPos(self.monsterPositions[1]))
+  table.insert(self.areaids, AreaHelper:getAreaByPos(self.tipPositions[1]))
   self.generate = function ()
     self:generateMonsters()
   end
@@ -151,9 +227,9 @@ QiangdaoLouluo = BaseActor:new(MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID)
 
 function QiangdaoLouluo:new ()
   local o = {
-    objid = MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID,
+    objid = self.actorid,
     expData = {
-      level = 5,
+      level = 7,
       exp = 25
     },
     fallOff = {
@@ -293,9 +369,9 @@ QiangdaoXiaotoumu = BaseActor:new(MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID)
 
 function QiangdaoXiaotoumu:new ()
   local o = {
-    objid = MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID,
+    objid = self.actorid,
     expData = {
-      level = 7,
+      level = 10,
       exp = 40
     },
     fallOff = {
@@ -416,12 +492,12 @@ function QiangdaoXiaotoumu:timerGenerate (num)
   end, 60)
 end
 
--- 卫兵
+-- 卫兵（剑）
 Guard = BaseActor:new(MyMap.ACTOR.GUARD_ACTOR_ID)
 
 function Guard:new ()
   local o = {
-    objid = MyMap.ACTOR.GUARD_ACTOR_ID,
+    objid = self.actorid,
     expData = {
       level = 10,
       exp = 60
