@@ -5,7 +5,9 @@ MyBlockHelper = {
   },
   unableDestroyed = {
     BlockHelper.switchid,
-    BlockHelper.doorid
+    BlockHelper.doorid,
+    860, -- 落叶松木门
+    MyMap.BLOCK.COPPER_ORE_ID
   },
   cityGateBlockIds = { 414, 122, 415 }, -- 竖纹、雪堆、电石块
   cityGatesData = { -- 开关、左电石、右电石、右区域
@@ -79,8 +81,10 @@ function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
   local disableMsg = '不可被破坏'
   if (blockid == BlockHelper.switchid) then
     PlayerHelper:showToast(objid, '开关', disableMsg)
-  elseif (blockid == BlockHelper.doorid) then
+  elseif (blockid == BlockHelper.doorid or blockid == 860) then
     PlayerHelper:showToast(objid, '门', disableMsg)
+  elseif (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
+    BackpackHelper:addItem(objid, blockid, 1)
   end
 end
 
@@ -88,6 +92,14 @@ end
 function MyBlockHelper:blockPlaceBy (objid, blockid, x, y, z)
   BlockHelper:blockPlaceBy(objid, blockid, x, y, z)
   -- body
+  if (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
+    -- 一秒后破坏
+    TimeHelper:callFnFastRuns(function ()
+      BlockHelper:destroyBlock(x, y, z)
+      WorldHelper:playPlaceBlockSoundOnPos(MyPosition:new(x, y, z))
+      WorldHelper:spawnItem(x, y, z, blockid, 1)
+    end, 1)
+  end
 end
 
 -- 方块被移除

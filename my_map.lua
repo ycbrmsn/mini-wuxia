@@ -1,7 +1,7 @@
 -- 地图相关数据
 MyMap = {
   BLOCK = {
-    
+    COPPER_ORE_ID = 2036 -- 铜矿石
   },
   ITEM = {
     COIN_ID = 4101, -- 铜板ID
