@@ -59,6 +59,13 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
   -- body
   if (areaid == story1.areaid) then -- 文羽通知事件
     story1:noticeEvent(areaid)
+    -- 玩家看文羽两秒
+    local player = PlayerHelper:getPlayer(objid)
+    TimeHelper:callFnContinueRuns(function ()
+      if (player:isActive()) then
+        player:lookAt(wenyu.objid)
+      end
+    end, 2)
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
     story1:fasterTime()
   end
