@@ -83,10 +83,34 @@ end
 function MyWeapon:newLevel (id, level)
   local o = {
     id = id,
-    level = level,
-    attack = self.attack + math.floor(self.addAttPerLevel * level),
-    defense = self.defense + math.floor(self.addDefPerLevel * level)
+    level = level
   }
+  -- 攻击
+  local addAttack
+  if (self.addAttPerLevel) then
+    addAttack = math.floor(self.addAttPerLevel * level)
+  else
+    addAttack = 0
+  end
+  if (self.meleeAttack) then
+    o.meleeAttack = self.meleeAttack + addAttack
+  end
+  if (self.remoteAttack) then
+    o.remoteAttack = self.remoteAttack + addAttack
+  end
+  -- 防御
+  local addDefense
+  if (self.addDefPerLevel) then
+    addDefense = math.floor(self.addDefPerLevel * level)
+  else
+    addDefense = 0
+  end
+  if (self.meleeDefense) then
+    o.meleeDefense = self.meleeDefense + addDefense
+  end
+  if (self.remoteDefense) then
+    o.remoteDefense = self.remoteDefense + addDefense
+  end
   setmetatable(o, self)
   self.__index = self
   if (o.id) then
@@ -103,12 +127,12 @@ end
 
 function MyWeapon:pickUp (objid)
   local player = PlayerHelper:getPlayer(objid)
-  player:changeAttr(self.attack, self.defense)
+  player:changeAttr(self.meleeAttack, self.remoteAttack, self.meleeDefense, self.remoteDefense)
 end
 
 function MyWeapon:putDown (objid)
   local player = PlayerHelper:getPlayer(objid)
-  player:changeAttr(-self.attack, -self.defense)
+  player:changeAttr(self.meleeAttack, self.remoteAttack, self.meleeDefense, self.remoteDefense, true)
 end
 
 function MyWeapon:useItem (objid)

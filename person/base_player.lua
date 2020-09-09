@@ -236,12 +236,14 @@ function BasePlayer:changeHold (itemid)
   end
 end
 
-function BasePlayer:changeAttr (attack, defense, dodge)
-  self.attr:changeAttr(attack, defense, dodge)
+-- 改变攻防属性
+function BasePlayer:changeAttr (meleeAttack, remoteAttack, meleeDefense, remoteDefense, isMinus)
+  self.attr:changeAttr(meleeAttack, remoteAttack, meleeDefense, remoteDefense, isMinus)
 end
 
-function BasePlayer:showAttr (isMelee)
-  self.attr:showAttr(isMelee)
+-- 显示攻防属性变化
+function BasePlayer:showAttr ()
+  self.attr:showAttr()
 end
 
 -- 恢复血量（加/减血）

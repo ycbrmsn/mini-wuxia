@@ -77,34 +77,39 @@ MyTemplate = {
 MyWeaponAttr = {
   -- 剑
   woodSword = { -- 木剑
-    attack = 10,
-    defense = 5,
+    meleeAttack = 10,
+    meleeDefense = 5,
+    remoteDefense = 5,
     addAttPerLevel = 1,
     addDefPerLevel = 2
   },
   bronzeSword = { -- 青铜剑
-    attack = 22,
-    defense = 5,
+    meleeAttack = 22,
+    meleeDefense = 5,
+    remoteDefense = 5,
     addAttPerLevel = 3,
     addDefPerLevel = 2
   },
   stabTigerSword = { -- 刺虎剑
-    attack = 35,
-    defense = 10,
+    meleeAttack = 35,
+    meleeDefense = 10,
+    remoteDefense = 10,
     addAttPerLevel = 4,
     addDefPerLevel = 4
   },
   drinkBloodSword = { -- 饮血剑
-    attack = 14,
-    defense = 5,
+    meleeAttack = 14,
+    meleeDefense = 5,
+    remoteDefense = 5,
     hp = 5,
     addAttPerLevel = 3,
     addDefPerLevel = 2,
     addHpPerLevel = 2
   },
   strongAttackSword = { -- 闪袭剑
-    attack = 20,
-    defense = 3,
+    meleeAttack = 20,
+    meleeDefense = 3,
+    remoteDefense = 3,
     distance = 1,
     multiple = 2,
     cd = 15,
@@ -116,8 +121,9 @@ MyWeaponAttr = {
     addMultiplePerLevel = 1
   },
   chaseWindSword = { -- 追风剑
-    attack = 30,
-    defense = 10,
+    meleeAttack = 30,
+    meleeDefense = 10,
+    remoteDefense = 10,
     flyTime = 2,
     damage = 5,
     cd = 15,
@@ -131,32 +137,37 @@ MyWeaponAttr = {
 
   -- 刀
   woodKnife = { -- 木刀
-    attack = 13,
-    defense = 2,
+    meleeAttack = 13,
+    meleeDefense = 2,
+    remoteDefense = 2,
     addAttPerLevel = 2,
     addDefPerLevel = 1
   },
   bronzeKnife = { -- 青铜刀
-    attack = 27,
-    defense = 2,
+    meleeAttack = 27,
+    meleeDefense = 2,
+    remoteDefense = 2,
     addAttPerLevel = 4,
     addDefPerLevel = 1
   },
   cutDeerKnife = { -- 割鹿刀
-    attack = 41,
-    defense = 5,
+    meleeAttack = 41,
+    meleeDefense = 5,
+    remoteDefense = 5,
     addAttPerLevel = 6,
     addDefPerLevel = 2
   },
   congealFrostKnife = { -- 凝霜刀
-    attack = 17,
-    defense = 2,
+    meleeAttack = 17,
+    meleeDefense = 2,
+    remoteDefense = 2,
     addAttPerLevel = 4,
     addDefPerLevel = 1
   },
   rejuvenationKnife = { -- 回春刀
-    attack = 25,
-    defense = 5,
+    meleeAttack = 25,
+    meleeDefense = 5,
+    remoteDefense = 5,
     skillTime = 5,
     cd = 15,
     cdReason = '回春技能冷却中',
@@ -166,8 +177,9 @@ MyWeaponAttr = {
     addSkillTimePerLevel = 2
   },
   sealDemonKnife = { -- 封魔刀
-    attack = 35,
-    defense = 5,
+    meleeAttack = 35,
+    meleeDefense = 5,
+    remoteDefense = 5,
     skillRange = 3,
     skillTime = 5,
     cd = 15,
@@ -181,36 +193,31 @@ MyWeaponAttr = {
 
   -- 枪
   woodSpear = { -- 木枪
-    attack = 17,
-    defense = 0,
+    meleeAttack = 17,
     strength = 30,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
   bronzeSpear = { -- 青铜枪
-    attack = 33,
-    defense = 0,
+    meleeAttack = 33,
     strength = 40,
     addAttPerLevel = 5,
     addDefPerLevel = 0
   },
   controlDragonSpear = { -- 御龙枪
-    attack = 51,
-    defense = 0,
+    meleeAttack = 51,
     strength = 50,
     addAttPerLevel = 8,
     addDefPerLevel = 0
   },
   fireTipSpear = { -- 火尖枪
-    attack = 19,
-    defense = 0,
+    meleeAttack = 19,
     strength = 40,
     addAttPerLevel = 5,
     addDefPerLevel = 0
   },
   overlordSpear = { -- 霸王枪
-    attack = 36,
-    defense = 0,
+    meleeAttack = 36,
     strength = 50,
     coverHp = 0.2,
     skillRange = 3,
@@ -223,8 +230,7 @@ MyWeaponAttr = {
     addSkillRangePerLevel = 1
   },
   shockSoulSpear = { -- 慑魂枪
-    attack = 55,
-    defense = 0,
+    meleeAttack = 55,
     strength = 100,
     skillRange = 2,
     skillTime = 1,
@@ -239,32 +245,32 @@ MyWeaponAttr = {
 
   -- 弓
   woodBow = { -- 木弓
-    attack = 15,
-    defense = 0,
+    meleeAttack = 5,
+    remoteAttack = 15,
     addAttPerLevel = 3,
     addDefPerLevel = 0
   },
   bronzeBow = { -- 青铜弓
-    attack = 32,
-    defense = 0,
+    meleeAttack = 10,
+    remoteAttack = 32,
     addAttPerLevel = 5,
     addDefPerLevel = 0
   },
   shootEagleBow = { -- 射雕弓
-    attack = 47,
-    defense = 0,
+    meleeAttack = 15,
+    remoteAttack = 47,
     addAttPerLevel = 8,
     addDefPerLevel = 0
   },
   swallowSoulBow = { -- 噬魂弓
-    attack = 17,
-    defense = 0,
+    meleeAttack = 5,
+    remoteAttack = 17,
     addAttPerLevel = 5,
     addDefPerLevel = 0
   },
   fallStarBow = { -- 坠星弓
-    attack = 35,
-    defense = 0,
+    meleeAttack = 12,
+    remoteAttack = 35,
     skillRange = 8,
     cd = 15,
     cdReason = '坠星技能冷却中',
@@ -274,8 +280,8 @@ MyWeaponAttr = {
     addSkillRangePerLevel = 1
   },
   oneByOneBow = { -- 连珠弓
-    attack = 47,
-    defense = 0,
+    meleeAttack = 15,
+    remoteAttack = 47,
     arrowNum = 3,
     cd = 15,
     cdReason = '连珠技能冷却中',
@@ -312,4 +318,3 @@ MyWeaponAttr.shootEagleBow.levelIds = { 4172, 4184, 4210, 4234 } -- 射雕弓
 MyWeaponAttr.swallowSoulBow.levelIds = { 4173, 4191, 4214, 4237 } -- 噬魂弓
 MyWeaponAttr.fallStarBow.levelIds = { 4174, 4193, 4216, 4242 } -- 坠星弓
 MyWeaponAttr.oneByOneBow.levelIds = { 4175, 4197, 4221, 4245 } -- 连珠弓
-
