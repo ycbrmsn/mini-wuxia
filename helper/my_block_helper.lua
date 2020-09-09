@@ -21,6 +21,7 @@ MyBlockHelper = {
 
 -- 初始化
 function MyBlockHelper:init ()
+  MyBlockHelper:initBlocks()
   -- body
   -- 前四个位置，第五个区域
   for i, v in ipairs(self.cityGatesData) do
@@ -85,6 +86,7 @@ function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
     PlayerHelper:showToast(objid, '门', disableMsg)
   elseif (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
     BackpackHelper:addItem(objid, blockid, 1)
+    PlayerHelper:showToast(objid, '获得一个铜矿石')
   end
 end
 
@@ -95,7 +97,7 @@ function MyBlockHelper:blockPlaceBy (objid, blockid, x, y, z)
   if (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
     -- 一秒后破坏
     TimeHelper:callFnFastRuns(function ()
-      BlockHelper:destroyBlock(x, y, z)
+      BlockHelper:replaceBlock(BLOCKID.AIR, x, y, z)
       WorldHelper:playPlaceBlockSoundOnPos(MyPosition:new(x, y, z))
       WorldHelper:spawnItem(x, y, z, blockid, 1)
     end, 1)
