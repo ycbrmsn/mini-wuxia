@@ -81,7 +81,7 @@ function Wolf:new ()
     objid = self.actorid,
     expData = {
       level = 5,
-      exp = 25
+      exp = 18
     },
     fallOff = {
       { MyMap.ITEM.ANIMAL_BONE_ID, 1, 2, 20 }, -- 兽骨
@@ -157,7 +157,7 @@ function Ox:new ()
     objid = self.actorid,
     expData = {
       level = 7,
-      exp = 25
+      exp = 23
     },
     fallOff = {
       { MyMap.ITEM.ANIMAL_BONE_ID, 2, 3, 20 }, -- 兽骨
@@ -229,7 +229,7 @@ function QiangdaoLouluo:new ()
   local o = {
     objid = self.actorid,
     expData = {
-      level = 7,
+      level = 8,
       exp = 25
     },
     fallOff = {
@@ -371,8 +371,8 @@ function QiangdaoXiaotoumu:new ()
   local o = {
     objid = self.actorid,
     expData = {
-      level = 10,
-      exp = 40
+      level = 12,
+      exp = 35
     },
     fallOff = {
       { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
