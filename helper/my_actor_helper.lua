@@ -56,6 +56,20 @@ function MyActorHelper:actorAttackHit (objid, toobjid)
   MyStoryHelper:actorAttackHit(objid, toobjid)
 end
 
+-- 生物击败目标
+function MyActorHelper:actorBeat (objid, toobjid)
+  ActorHelper:actorBeat(objid, toobjid)
+  MyStoryHelper:actorBeat(objid, toobjid)
+  -- body
+  if (ActorHelper:isPlayer(toobjid)) then -- 目标是玩家
+    local player = PlayerHelper:getPlayer(toobjid)
+    player.beatBy = CreatureHelper:getActorID(objid)
+    TimeHelper:callFnFastRuns(function ()
+      player.beatBy = nil
+    end, 4)
+  end
+end
+
 -- 生物行为改变
 function MyActorHelper:actorChangeMotion (objid, actormotion)
   ActorHelper:actorChangeMotion(objid, actormotion)

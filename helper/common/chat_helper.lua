@@ -25,6 +25,31 @@ end
 -- UI工具类
 UIHelper = {}
 
+-- 设置左标题
+function UIHelper:setLeftTitle (...)
+  UIHelper:setGBattleUI('left_title', StringHelper:concat(...))
+end
+
+-- 设置右标题
+function UIHelper:setRightTitle (...)
+  UIHelper:setGBattleUI('right_title', StringHelper:concat(...))
+end
+
+-- 设置左描述
+function UIHelper:setLeftDesc (...)
+  UIHelper:setGBattleUI('left_desc', StringHelper:concat(...))
+end
+
+-- 设置左简述
+function UIHelper:setLeftLittleDesc (...)
+  UIHelper:setGBattleUI('left_little_desc', StringHelper:concat(...))
+end
+
+-- 设置右简述
+function UIHelper:setRightLittleDesc (...)
+  UIHelper:setGBattleUI('right_little_desc', StringHelper:concat(...))
+end
+
 -- 封装原水接口
 
 -- 世界坐标转换到小地图

@@ -226,6 +226,11 @@ function MyStoryHelper:actorAttackHit (objid, toobjid)
   -- body
 end
 
+-- 生物击败目标
+function MyStoryHelper:actorBeat (objid, toobjid)
+  -- body
+end
+
 -- 生物行为改变
 function MyStoryHelper:actorChangeMotion (objid, actormotion)
   -- body

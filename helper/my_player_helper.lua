@@ -107,7 +107,15 @@ function MyPlayerHelper:playerDie (objid, toobjid)
   local num = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.PROTECT_GEM_ID) -- 守护宝石数量
   if (num == 0) then -- 玩家没有守护宝石
     if (PlayerHelper:isMainPlayer(objid)) then -- 房主
-      PlayerHelper:setGameResults(objid, 2) -- 游戏结束
+      -- 等待其他事件的一些取值得到后结束游戏
+      TimeHelper:callFnFastRuns(function ()
+        local player = PlayerHelper:getPlayer(objid)
+        if (player.beatBy) then
+          player.finalBeatBy = player.beatBy
+        end
+        -- PlayerHelper:setGameResults(objid, 2) -- 游戏结束
+        PlayerHelper:setGameWin(objid)
+      end, 1)
     else -- 其他玩家
       BackpackHelper:clearAllPack(objid)
       logPaper:newItem(objid, 1, true)

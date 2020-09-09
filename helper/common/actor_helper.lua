@@ -744,6 +744,11 @@ function ActorHelper:actorAttackHit (objid, toobjid)
   end
 end
 
+-- 生物击败目标
+function ActorHelper:actorBeat (objid, toobjid)
+  -- body
+end
+
 -- 生物行为改变（仅开启AI有效）
 function ActorHelper:actorChangeMotion (objid, actormotion)
   local actor = ActorHelper:getActor(objid)
