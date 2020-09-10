@@ -654,8 +654,14 @@ end
 function ActorHelper:actorEnterArea (objid, areaid)
   local myActor = self:getActor(objid)
   local doorPos = AreaHelper.allDoorAreas[areaid]
-  if (doorPos) then -- 如果门位置存在，说明这是门区域，则打开这个门
+  if (doorPos) then -- 确定是门位置，则打开这个门
     BlockHelper:openDoor(doorPos.x, doorPos.y, doorPos.z)
+  else -- 不确定是不是门位置，则判断，规定两格大小的都是门位置
+    local isDoorArea, pos = AreaHelper:isDoorArea(areaid)
+    if (isDoorArea) then
+      AreaHelper.allDoorAreas[areaid] = pos
+      BlockHelper:openDoor(pos.x, pos.y, pos.z)
+    end
   end
   if (myActor and myActor.wants) then -- 找到了一个actor，并且这个actor有想法
     local want = myActor.wants[1]

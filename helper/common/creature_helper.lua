@@ -54,6 +54,12 @@ function CreatureHelper:closeDoor (objid, areaid)
     else
       BlockHelper:closeDoor(doorPos.x, doorPos.y, doorPos.z)
     end
+  else -- 不确定是不是门的位置
+    local isDoorArea, pos = AreaHelper:isDoorArea(areaid)
+    if (isDoorArea) then
+      AreaHelper.allDoorAreas[areaid] = pos
+      CreatureHelper:closeDoor(objid, areaid)
+    end
   end
 end
 

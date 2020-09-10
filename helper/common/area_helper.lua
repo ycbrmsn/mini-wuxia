@@ -126,6 +126,25 @@ function AreaHelper:initAreaByPosData (data, areas)
   end
 end
 
+-- 是否是门区域，规定水平两格大小的区域都是门区域
+function AreaHelper:isDoorArea (areaid)
+  local posBeg, posEnd = AreaHelper:getAreaRectRange(areaid)
+  if (posBeg) then -- 区域有效
+    if (posBeg.y == posEnd.y and MathHelper:getDistance(posBeg, posEnd) == 1) then
+      if (BlockHelper:isAirBlock(posBeg.x, posBeg.y, posBeg.z)) then
+        return true, posEnd
+      elseif (BlockHelper:isAirBlock(posEnd.x, posEnd.y, posEnd.z)) then
+        return true, posBeg
+      else
+        return false
+      end
+    else
+      return false
+    end 
+  end
+  return false
+end
+
 -- 封装原始接口
 
 -- 根据中心位置创建矩形区域
@@ -191,7 +210,7 @@ function AreaHelper:getAllPlayersInAreaRange (posBeg, posEnd)
   end, '获取区域范围内全部玩家', 'posBeg=', posBeg, ',posEnd=', posEnd)
 end
 
--- 获取区域范围
+-- 获取区域范围，返回区域起始点位置
 function AreaHelper:getAreaRectRange (areaid)
   return CommonHelper:callTwoResultMethod(function (p)
     return Area:getAreaRectRange(areaid)
@@ -228,4 +247,9 @@ function AreaHelper:fillBlock (areaid, blockid, face)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Area:fillBlock(areaid, blockid, face)
   end, '用方块填充区域', 'areaid=', areaid, ',blockid=', blockid, ',face=', face)
+end
+
+-- 检测区域内是否有某个方块
+function AreaHelper:blockInArea (areaid, blockid)
+  return Area:blockInArea(areaid, blockid) == ErrorCode.OK
 end
