@@ -709,3 +709,80 @@ function Erniu:playerClickEvent (objid)
     end, 2)
   end
 end
+
+-- 慕容笑天
+Murongxiaotian = BaseActor:new(MyMap.ACTOR.MURONGXIAOTIAN_ACTOR_ID)
+
+function Murongxiaotian:new ()
+  local o = {
+    objid = 4398848435,
+    initPosition = MyPosition:new(12.5, 8.5, 506.5), -- 慕容府大厅
+    bedData = {
+      MyPosition:new(8.5, 9.5, 505.5), -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向
+    },
+    candlePositions = {
+      MyPosition:new(8.5, 9.5, 507.5)
+    },
+    hallAreaPositions = {
+      MyPosition:new(11.5, 8.5, 511.5), -- 门口
+      MyPosition:new(14.5, 8.5, 505.5) -- 尽头沙发旁
+    },
+    studyAreaPositions = {
+      MyPosition:new(6.5, 8.5, 509.5), -- 凳子旁
+      MyPosition:new(4.5, 8.5, 510.5) -- 书架旁
+    }
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 默认想法
+function Murongxiaotian:defaultWant ()
+  self:wantFreeInArea({ self.hallAreaPositions })
+end
+
+-- 在几点想做什么
+function Murongxiaotian:wantAtHour (hour)
+  if (hour == 6) then
+    self:wantFreeInArea({ self.studyAreaPositions })
+  elseif (hour == 8) then
+    self:wantFreeInArea({ self.hallAreaPositions })
+  elseif (hour == 19) then
+    self:wantFreeInArea({ self.studyAreaPositions })
+  elseif (hour == 22) then
+    self:putOutCandleAndGoToBed({ self.candlePositions[1] })
+  end
+end
+
+function Murongxiaotian:doItNow ()
+  local hour = TimeHelper:getHour()
+  if (hour >= 6 and hour < 8) then
+    self:wantAtHour(6)
+  elseif (hour >= 8 and hour < 19) then
+    self:wantAtHour(8)
+  elseif (hour >= 19 and hour < 22) then
+    self:wantAtHour(19)
+  else
+    self:wantAtHour(22)
+  end
+end
+
+-- 初始化
+function Murongxiaotian:init ()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    self:doItNow()
+  end
+  return initSuc
+end
+
+function Murongxiaotian:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  self:speakTo(playerid, 0, '来者是客，不如坐下聊一聊。')
+end
+
+function Murongxiaotian:candleEvent (myPlayer, candle)
+  
+end

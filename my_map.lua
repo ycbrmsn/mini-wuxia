@@ -43,6 +43,7 @@ MyMap = {
     SUNKONGWU_ACTOR_ID = 31, -- 孙孔武
     LIMIAOSHOU_ACTOR_ID = 32, -- 李妙手
     QIANDUO_ACTOR_ID = 33, -- 钱多
+    MURONGXIAOTIAN_ACTOR_ID = 44, -- 慕容笑天
 
     -- 怪物ID
     WOLF_ACTOR_ID = 11, -- 恶狼ID

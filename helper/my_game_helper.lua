@@ -84,7 +84,7 @@ function MyGameHelper:atSecond (second)
     -- StoryHelper:setMainStoryProgress(#story1.tips)
     -- StoryHelper:forward('出发，前往学院')
     -- story2:goToCollege()
-    -- PlayerHelper:getHostPlayer():setPosition(224.5, 8.5, 69.5)
+    PlayerHelper:getHostPlayer():setPosition(14.5, 8.5, 510)
   end
 end
 
