@@ -73,6 +73,10 @@ function Dog:timerGenerate (num)
   end, 60)
 end
 
+function Dog:getAttackSpeak (name)
+  return '汪汪'
+end
+
 -- 恶狼
 Wolf = BaseActor:new(MyMap.ACTOR.WOLF_ACTOR_ID)
 

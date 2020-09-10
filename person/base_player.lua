@@ -20,7 +20,7 @@ end
 
 function BasePlayer:speak (afterSeconds, ...)
   if (afterSeconds > 0) then
-    self.action:speakToAllAfterSecond(afterSeconds, ...)
+    self.action:speakAfterSeconds(afterSeconds, ...)
   else
     self.action:speakToAll(...)
   end
@@ -29,7 +29,7 @@ end
 function BasePlayer:speakTo (playerids, afterSeconds, ...)
   if (type(playerids) == 'number') then
     if (afterSeconds > 0) then
-      self.action:speakAfterSecond(playerids, afterSeconds, ...)
+      self.action:speakToAfterSeconds(playerids, afterSeconds, ...)
     else
       self.action:speak(playerids, ...)
     end
@@ -42,18 +42,18 @@ end
 
 function BasePlayer:thinks (afterSeconds, ...)
   if (afterSeconds > 0) then
-    self.action:speakInHeartToAllAfterSecond(afterSeconds, ...)
+    self.action:thinkAfterSeconds(afterSeconds, ...)
   else
-    self.action:speakInHeartToAll(...)
+    self.action:think(...)
   end
 end
 
 function BasePlayer:thinkTo (playerids, afterSeconds, ...)
   if (type(playerids) == 'number') then
     if (afterSeconds > 0) then
-      self.action:speakInHeartAfterSecond(playerids, afterSeconds, ...)
+      self.action:thinkToAfterSeconds(playerids, afterSeconds, ...)
     else
-      self.action:speakInHeart(playerids, ...)
+      self.action:thinkTo(playerids, ...)
     end
   elseif (type(playerids) == 'table') then
     for i, v in ipairs(playerids) do

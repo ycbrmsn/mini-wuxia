@@ -12,6 +12,17 @@ function ChatHelper:sendMsg (objid, ...)
   ChatHelper:sendSystemMsg(StringHelper:concat(...), objid)
 end
 
+-- 说
+function ChatHelper:speak (name, toobjid, ...)
+  ChatHelper:sendMsg(toobjid, name, '：', StringHelper.speakColor, ...)
+end
+
+-- 想
+function ChatHelper:think (name, toobjid, ...)
+  local content = StringHelper:concat(...)
+  ChatHelper:sendMsg(toobjid, name, '：', StringHelper.speakColor, '（', content, StringHelper.speakColor, '）')
+end
+
 -- 封装原始接口
 
 -- 发送系统消息，默认发送给所有玩家

@@ -165,15 +165,16 @@ function BaseActorAction:execute ()
 end
 
 -- 生物表达
-function BaseActorAction:express (targetuin, startStr, finishStr, ...)
-  local content = StringHelper:concat(...)
-  local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
-  ChatHelper:sendSystemMsg(message, targetuin)
-end
+-- function BaseActorAction:express (targetuin, startStr, finishStr, ...)
+--   local content = StringHelper:concat(...)
+--   local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
+--   ChatHelper:sendSystemMsg(message, targetuin)
+-- end
 
 -- 生物说话
 function BaseActorAction:speak (targetuin, ...)
-  self:express(targetuin, '：' .. StringHelper.speakColor, '', ...)
+  -- self:express(targetuin, '：' .. StringHelper.speakColor, '', ...)
+  ChatHelper:speak(self.myActor:getName(), targetuin, ...)
 end
 
 function BaseActorAction:speakToAll (...)
@@ -181,40 +182,49 @@ function BaseActorAction:speakToAll (...)
 end
 
 -- 生物心想
-function BaseActorAction:speakInHeart (targetuin, ...)
-  self:express(targetuin, '：' .. StringHelper.speakColor .. '（', StringHelper.speakColor .. '）', ...)
+function BaseActorAction:thinkTo (targetuin, ...)
+  -- self:express(targetuin, '：' .. StringHelper.speakColor .. '（', StringHelper.speakColor .. '）', ...)
+  ChatHelper:think(self.myActor:getName(), targetuin, ...)
 end
 
-function BaseActorAction:speakInHeartToAll (...)
-  self:speakInHeart(nil, ...)
+function BaseActorAction:think (...)
+  self:thinkTo(nil, ...)
 end
 
 -- 生物几秒后表达
-function BaseActorAction:expressAfterSecond (targetuin, startStr, finishStr, second, ...)
-  local content = StringHelper:concat(...)
-  local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
-  TimeHelper:callFnAfterSecond (function (p)
-    ChatHelper:sendSystemMsg(p.message, p.targetuin)
-  end, second, { targetuin = targetuin, message = message })
-end
+-- function BaseActorAction:expressAfterSecond (targetuin, startStr, finishStr, second, ...)
+--   local content = StringHelper:concat(...)
+--   local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
+--   TimeHelper:callFnAfterSecond (function (p)
+--     ChatHelper:sendSystemMsg(p.message, p.targetuin)
+--   end, second, { targetuin = targetuin, message = message })
+-- end
 
 -- 生物几秒后说话
-function BaseActorAction:speakAfterSecond (targetuin, second, ...)
-  self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor, '', second, ...)
+function BaseActorAction:speakToAfterSeconds (targetuin, second, ...)
+  -- self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor, '', second, ...)
+  local content = StringHelper:concat(...)
+  TimeHelper:callFnAfterSecond (function (p)
+    self:speak(targetuin, content)
+  end, second)
 end
 
-function BaseActorAction:speakToAllAfterSecond (second, ...)
-  self:speakAfterSecond(nil, second, ...)
+function BaseActorAction:speakAfterSeconds (second, ...)
+  self:speakToAfterSeconds(nil, second, ...)
 end
 
 -- 生物几秒后心想
-function BaseActorAction:speakInHeartAfterSecond (targetuin, second, ...)
-  self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor .. '（',
-    StringHelper.speakColor .. '）', second, ...)
+function BaseActorAction:thinkToAfterSeconds (targetuin, second, ...)
+  -- self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor .. '（',
+  --   StringHelper.speakColor .. '）', second, ...)
+  local content = StringHelper:concat(...)
+  TimeHelper:callFnAfterSecond (function (p)
+    self:thinkTo(targetuin, content)
+  end, second)
 end
 
-function BaseActorAction:speakInHeartToAllAfterSecond (second, ...)
-  self:speakInHeartAfterSecond(nil, second, ...)
+function BaseActorAction:thinkAfterSeconds (second, ...)
+  self:thinkToAfterSeconds(nil, second, ...)
 end
 
 function BaseActorAction:lightCandle (think, isNow, candlePositions)

@@ -13,3 +13,15 @@ function MyMonsterHelper:init ()
   local monsterModels = { qiangdaoXiaotoumu, qiangdaoLouluo, dog, wolf, ox }
   MonsterHelper:init(monsterModels)
 end
+
+function MyMonsterHelper:getMonsterModel (objid)
+  local actorid = CreatureHelper:getActorID(objid)
+  if (actorid) then
+    for i, v in ipairs(MonsterHelper:getMonsterModels()) do
+      if (v.actorid == actorid) then
+        return v
+      end
+    end
+  end
+  return nil
+end

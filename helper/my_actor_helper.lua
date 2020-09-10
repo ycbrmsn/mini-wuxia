@@ -74,6 +74,16 @@ end
 function MyActorHelper:actorChangeMotion (objid, actormotion)
   ActorHelper:actorChangeMotion(objid, actormotion)
   MyStoryHelper:actorChangeMotion(objid, actormotion)
+  -- body
+  if (actormotion == CREATUREMOTION.ATK_MELEE) then -- 近战攻击
+    local monsterModel = MyMonsterHelper:getMonsterModel(objid)
+    if (monsterModel) then
+      TimeHelper:callFnCanRun(monsterModel.actorid, 'atk', function ()
+        monsterModel:attackSpeak()
+      end, 10)
+    end
+  end
+  LogHelper:debug(CreatureHelper:getActorName(objid), actormotion)
 end
 
 -- 生物死亡

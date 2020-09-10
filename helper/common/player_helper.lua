@@ -161,19 +161,19 @@ end
 
 function PlayerHelper:everyPlayerSpeakAfterSecond (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
-    v.action:speakAfterSecond(v.objid, second, ...)
+    v.action:speakToAfterSeconds(v.objid, second, ...)
   end
 end
 
 function PlayerHelper:everyPlayerSpeakToAllAfterSecond (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
-    v.action:speakToAllAfterSecond(second, ...)
+    v.action:speakAfterSeconds(second, ...)
   end
 end
 
 function PlayerHelper:everyPlayerSpeakInHeartAfterSecond (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
-    v.action:speakInHeartAfterSecond(v.objid, second, ...)
+    v.action:thinkToAfterSeconds(v.objid, second, ...)
   end
 end
 
