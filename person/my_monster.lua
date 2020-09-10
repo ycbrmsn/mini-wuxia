@@ -73,8 +73,8 @@ function Dog:timerGenerate (num)
   end, 60)
 end
 
-function Dog:getAttackSpeak (name)
-  return '汪汪'
+function Dog:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '汪汪')
 end
 
 -- 恶狼
@@ -153,6 +153,10 @@ function Wolf:timerGenerate (num)
   end, 60)
 end
 
+function Wolf:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '嗷呜')
+end
+
 -- 狂牛
 Ox = BaseActor:new(MyMap.ACTOR.OX_ACTOR_ID)
 
@@ -224,6 +228,10 @@ function Ox:timerGenerate (num)
     self:generateMonsters(num)
     return false
   end, 60)
+end
+
+function Ox:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '哞')
 end
 
 -- 强盗喽罗
@@ -368,6 +376,10 @@ function QiangdaoLouluo:timerGenerate (num)
   end, 60)
 end
 
+function QiangdaoLouluo:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '小子，把财物都交出来')
+end
+
 -- 强盗小头目
 QiangdaoXiaotoumu = BaseActor:new(MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID)
 
@@ -494,6 +506,10 @@ function QiangdaoXiaotoumu:timerGenerate (num)
     self:generateMonsters(num)
     return false
   end, 60)
+end
+
+function QiangdaoXiaotoumu:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '小子，纳命来')
 end
 
 -- 卫兵（剑）
