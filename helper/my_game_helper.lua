@@ -38,6 +38,8 @@ function MyGameHelper:getDesc (player)
         return '守财奴', '为守财，美好人间又白来', '强盗小喽罗'
       elseif (finalBeatBy == MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID) then
         return '锤死者', '功夫差，竟被两拳锤趴下', '强盗小头目'
+      elseif (finalBeatBy == MyMap.ACTOR.QIANGDAO_DATOUMU_ACTOR_ID) then
+        return '无畏者', '胆子大，独闯大营三秒挂', '强盗大头目'
       end
     end
   end

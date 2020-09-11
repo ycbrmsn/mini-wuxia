@@ -6,7 +6,8 @@ MyStoryHelper = {
 function MyStoryHelper:init ()
   story1 = Story1:new()
   story2 = Story2:new()
-  StoryHelper:setStorys({ story1, story2 })
+  story3 = Story3:new()
+  StoryHelper:setStorys({ story1, story2, story3 })
 end
 
 -- 事件
@@ -104,6 +105,12 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
       PlayerHelper:setItemDisableThrow(objid, itemid)
       StoryHelper:forward('得到风颖城通行令牌')
       story1:finishNoticeEvent(objid)
+    end
+  elseif (mainIndex == 3) then -- 剧情三
+    if (itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID) then
+      StoryHelper:forward('与高先生交谈')
+    elseif (itemid == MyMap.ITEM.GAME_DATA_GET_WEAPON_ID) then
+      StoryHelper:forward('领取新生武器')
     end
   end
 end
