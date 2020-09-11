@@ -281,6 +281,7 @@ function QiangdaoLouluo:init ()
   self.generate = function ()
     self:generateMonsters()
     qiangdaoXiaotoumu:generateMonsters()
+    qiangdaoDatoumu:generateMonsters()
   end
   return true
 end
@@ -501,7 +502,7 @@ end
 
 -- 定时生成怪物
 function QiangdaoXiaotoumu:timerGenerate (num)
-  num = num or 5
+  num = num or 1
   TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
@@ -510,6 +511,69 @@ end
 
 function QiangdaoXiaotoumu:attackSpeak (toobjid)
   ChatHelper:speak(self:getName(), toobjid, '小子，纳命来')
+end
+
+-- 强盗大头目
+QiangdaoDatoumu = BaseActor:new(MyMap.ACTOR.QIANGDAO_DATOUMU_ACTOR_ID)
+
+function QiangdaoDatoumu:new ()
+  local o = {
+    objid = self.actorid,
+    expData = {
+      level = 15,
+      exp = 45
+    },
+    fallOff = {
+      { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 5, 15, 100 } -- 铜板
+    },
+    begPos = MyPosition:new(282, 19, -12), -- 起点位置
+    endPos = MyPosition:new(224, 8, 63), -- 终点位置
+    monsterPositions = {
+      MyPosition:new(271, 18, 12)
+    }
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function QiangdaoDatoumu:init ()
+  self.generate = function ()
+    self:generateMonsters()
+  end
+  return true
+end
+
+function QiangdaoDatoumu:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '强盗大头目'
+  end
+  return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function QiangdaoDatoumu:generateMonsters (num)
+  num = num or 1
+  local curNum = MonsterHelper:getMonsterNumByPos(self.begPos, self.endPos, self.actorid)
+  for i, v in ipairs(self.monsterPositions) do
+    if (curNum < num) then
+      self:newMonster(v.x, v.y, v.z, num - curNum)
+    end
+  end
+end
+
+-- 定时生成怪物
+function QiangdaoDatoumu:timerGenerate (num)
+  num = num or 1
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters(num)
+    return false
+  end, 120)
+end
+
+function QiangdaoDatoumu:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '小子，我看你是活腻了')
 end
 
 -- 卫兵（剑）

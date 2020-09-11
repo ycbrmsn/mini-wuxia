@@ -44,6 +44,7 @@ MyMap = {
     LIMIAOSHOU_ACTOR_ID = 32, -- 李妙手
     QIANDUO_ACTOR_ID = 33, -- 钱多
     MURONGXIAOTIAN_ACTOR_ID = 44, -- 慕容笑天
+    GAOXIAOHU_ACTOR_ID = 45, -- 高小虎
 
     -- 怪物ID
     WOLF_ACTOR_ID = 11, -- 恶狼ID
@@ -52,6 +53,7 @@ MyMap = {
     GUARD_ACTOR_ID = 15, -- 卫兵（剑）
     OX_ACTOR_ID = 17, -- 狂牛
     DOG_ACTOR_ID = 43, -- 野狗
+    QIANGDAO_DATOUMU_ACTOR_ID = 46, -- 强盗大头目
 
     -- boss
     JUYIDAO_ACTOR_ID = 42, -- 橘一刀

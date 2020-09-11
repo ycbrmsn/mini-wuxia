@@ -87,14 +87,15 @@ function MyActorHelper:actorChangeMotion (objid, actormotion)
           local playerids = ActorHelper:getAllPlayersArroundPos(pos, self.speakDim, objid)
           if (playerids and #playerids > 0) then
             for i, v in ipairs(playerids) do
-              monsterModel:attackSpeak(v)
+              if (monsterModel.attackSpeak) then
+                monsterModel:attackSpeak(v)
+              end
             end
           end
         end
       end, 10)
     end
   end
-  -- LogHelper:debug(CreatureHelper:getActorName(objid), actormotion)
 end
 
 -- 生物死亡

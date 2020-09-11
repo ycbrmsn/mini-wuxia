@@ -6,6 +6,7 @@ MyBlockHelper = {
   unableDestroyed = {
     BlockHelper.switchid,
     BlockHelper.doorid,
+    BlockHelper.bedid,
     860, -- 落叶松木门
     MyMap.BLOCK.COPPER_ORE_ID
   },
@@ -65,7 +66,6 @@ function MyBlockHelper:checkCityGateSwitch (blockid, pos)
   end
   return false
 end
-
 
 -- 事件
 

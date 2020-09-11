@@ -144,6 +144,23 @@ function MonsterHelper:getMonsterNum (areaid, actorid)
   return curNum
 end
 
+-- 根据起始位置形成的区域查询怪物数量
+function MonsterHelper:getMonsterNumByPos (begPos, endPos, actorid)
+  local num, objids = WorldHelper:getActorsByBox(OBJ_TYPE.OBJTYPE_CREATURE, begPos.x,
+    begPos.y, begPos.z, endPos.x, endPos.y, endPos.z)
+  if (not(actorid)) then
+    return num
+  end
+  local curNum = 0
+  for i, v in ipairs(objids) do
+    local actid = CreatureHelper:getActorID(v)
+    if (actid and actid == actorid) then
+      curNum = curNum + 1
+    end
+  end
+  return curNum
+end
+
 -- 怪物行动
 function MonsterHelper:execute ()
   for k, v in pairs(self.monsters) do
