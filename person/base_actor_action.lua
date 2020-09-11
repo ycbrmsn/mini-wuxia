@@ -164,16 +164,8 @@ function BaseActorAction:execute ()
   end
 end
 
--- 生物表达
--- function BaseActorAction:express (targetuin, startStr, finishStr, ...)
---   local content = StringHelper:concat(...)
---   local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
---   ChatHelper:sendSystemMsg(message, targetuin)
--- end
-
 -- 生物说话
 function BaseActorAction:speak (targetuin, ...)
-  -- self:express(targetuin, '：' .. StringHelper.speakColor, '', ...)
   ChatHelper:speak(self.myActor:getName(), targetuin, ...)
 end
 
@@ -183,7 +175,6 @@ end
 
 -- 生物心想
 function BaseActorAction:thinkTo (targetuin, ...)
-  -- self:express(targetuin, '：' .. StringHelper.speakColor .. '（', StringHelper.speakColor .. '）', ...)
   ChatHelper:think(self.myActor:getName(), targetuin, ...)
 end
 
@@ -191,18 +182,8 @@ function BaseActorAction:think (...)
   self:thinkTo(nil, ...)
 end
 
--- 生物几秒后表达
--- function BaseActorAction:expressAfterSecond (targetuin, startStr, finishStr, second, ...)
---   local content = StringHelper:concat(...)
---   local message = StringHelper:concat(self.myActor:getName(), startStr, content, finishStr)
---   TimeHelper:callFnAfterSecond (function (p)
---     ChatHelper:sendSystemMsg(p.message, p.targetuin)
---   end, second, { targetuin = targetuin, message = message })
--- end
-
 -- 生物几秒后说话
 function BaseActorAction:speakToAfterSeconds (targetuin, second, ...)
-  -- self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor, '', second, ...)
   local content = StringHelper:concat(...)
   TimeHelper:callFnAfterSecond (function (p)
     self:speak(targetuin, content)
@@ -215,8 +196,6 @@ end
 
 -- 生物几秒后心想
 function BaseActorAction:thinkToAfterSeconds (targetuin, second, ...)
-  -- self:expressAfterSecond(targetuin, '：' .. StringHelper.speakColor .. '（',
-  --   StringHelper.speakColor .. '）', second, ...)
   local content = StringHelper:concat(...)
   TimeHelper:callFnAfterSecond (function (p)
     self:thinkTo(targetuin, content)
@@ -302,10 +281,7 @@ function BaseActorAction:freeTime (want)
   if (not(pos)) then
     return
   end
-  local areaid = AreaHelper:createFreeTimeArea(pos)
-  pos = AreaHelper:getRandomPos(areaid)
-  AreaHelper:destroyArea(areaid)
-  self:runTo(pos)
+  self:runTo(AreaHelper:getFreeTimePos(pos))
 end
 
 function BaseActorAction:freeAndAlert (want)
@@ -315,8 +291,5 @@ function BaseActorAction:freeAndAlert (want)
   if (not(pos)) then
     return
   end
-  local areaid = AreaHelper:createFreeTimeArea(pos)
-  pos = AreaHelper:getRandomPos(areaid)
-  AreaHelper:destroyArea(areaid)
-  self:runTo(pos, want.speed)
+  self:runTo(AreaHelper:getFreeTimePos(pos), want.speed)
 end

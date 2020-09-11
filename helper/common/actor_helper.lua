@@ -661,6 +661,8 @@ function ActorHelper:actorEnterArea (objid, areaid)
     if (isDoorArea) then
       AreaHelper.allDoorAreas[areaid] = pos
       BlockHelper:openDoor(pos.x, pos.y, pos.z)
+    elseif (type(isDoorArea) == 'nil') then
+      LogHelper:debug(CreatureHelper:getActorName(objid))
     end
   end
   if (myActor and myActor.wants) then -- 找到了一个actor，并且这个actor有想法

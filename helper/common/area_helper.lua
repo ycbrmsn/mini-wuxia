@@ -141,8 +141,23 @@ function AreaHelper:isDoorArea (areaid)
     else
       return false
     end 
+  else
+    return nil
   end
   return false
+end
+
+-- 获得附近的一个随机位置
+function AreaHelper:getRandomPosAround (pos, range)
+  local x = pos.x + math.random() * range * 2 - range
+  local y = pos.y + math.random() * range * 2 - range
+  local z = pos.z + math.random() * range * 2 - range
+  return MyPosition:new(x, y, z)
+end
+
+-- 获得自由移动位置
+function AreaHelper:getFreeTimePos (pos)
+  return AreaHelper:getRandomPosAround(pos, 10)
 end
 
 -- 封装原始接口
