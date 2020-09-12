@@ -111,7 +111,7 @@ function Story2:goToCollege ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  PlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '出发咯!')
+  PlayerHelper:everyPlayerSpeak(waitSeconds, '出发咯!')
   PlayerHelper:everyPlayerDoSomeThing(function (p)
     p.action:playHappy()
   end, waitSeconds)
@@ -140,16 +140,16 @@ function Story2:goToCollege ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 1
-  PlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
+  PlayerHelper:everyPlayerSpeak(waitSeconds, '！！！')
   PlayerHelper:everyPlayerDoSomeThing(function (p)
     p.action:playDown()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
   if (#PlayerHelper:getAllPlayers() > 1) then
-    PlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我们。')
+    PlayerHelper:everyPlayerSpeak(waitSeconds, '先生，等等我们。')
   else
-    PlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '先生，等等我。')
+    PlayerHelper:everyPlayerSpeak(waitSeconds, '先生，等等我。')
   end
 
   waitSeconds = waitSeconds + 1
@@ -171,10 +171,10 @@ function Story2:goToCollege ()
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 10
-  PlayerHelper:everyPlayerSpeakAfterSecond(waitSeconds, '呼呼。先生跑得真快。')
+  PlayerHelper:everyPlayerSpeakToSelf(waitSeconds, '呼呼。先生跑得真快。')
 
   waitSeconds = waitSeconds + 10
-  PlayerHelper:everyPlayerSpeakAfterSecond(waitSeconds, '呼呼。这条路真长啊。不知道还要跑多久。')
+  PlayerHelper:everyPlayerSpeakToSelf(waitSeconds, '呼呼。这条路真长啊。不知道还要跑多久。')
 end
 
 -- 先生暂时离开
@@ -231,7 +231,7 @@ function Story2:teacherLeaveForAWhile (myPlayer)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 3
-  PlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '这里的树木好茂密啊！')
+  PlayerHelper:everyPlayerThinkToSelf(waitSeconds, '这里的树木好茂密啊！')
 end
 
 -- 遭遇强盗
@@ -247,7 +247,7 @@ function Story2:meetBandits (hostPlayer)
     qiangdaoXiaotoumu:lookAt(hostPlayer.objid)
     qiangdaoLouluo:lookAt(hostPlayer.objid)
   end, waitSeconds)
-  PlayerHelper:everyPlayerSpeakToAllAfterSecond(waitSeconds, '！！！')
+  PlayerHelper:everyPlayerSpeak(waitSeconds, '！！！')
 
   waitSeconds = waitSeconds + 2
   qiangdaoXiaotoumu:speak(waitSeconds, '此树乃吾栽，此路亦吾开。欲从此路过，留下……')
@@ -395,14 +395,14 @@ function Story2:endWords (player, waitSeconds)
   waitSeconds = waitSeconds + 2
   TimeHelper:callFnAfterSecond(function ()
     yexiaolong:wantMove('goToCollege', self.toCollegePositions)
-    PlayerHelper:everyPlayerSpeakToAllAfterSecond(1, '先生慢行。')
+    PlayerHelper:everyPlayerSpeak(1, '先生慢行。')
     PlayerHelper:everyPlayerDoSomeThing(function (p)
       p.action:playFree2()
     end)
   end, waitSeconds)
 
   waitSeconds = waitSeconds + 2
-  PlayerHelper:everyPlayerSpeakInHeartAfterSecond(waitSeconds, '先生又离开了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
+  PlayerHelper:everyPlayerThinkToSelf(waitSeconds, '先生又离开了。不会又发生什么吧。不知道风颖城是什么样子的。好期待。')
   PlayerHelper:everyPlayerEnableMove(true, waitSeconds)
 
   TimeHelper:callFnAfterSecond(function ()

@@ -206,3 +206,32 @@ function MyStory:checkData (data)
     LogHelper:debug(data.title, '剧情提示为空')
   end
 end
+
+-- 等待时间类，用于剧情对话中
+WaitSeconds = {}
+
+function WaitSeconds:new (time)
+  time = time or 0
+  local o = { time = time }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 增加
+function WaitSeconds:add (seconds)
+  self.time = self.time + seconds
+end
+
+-- 获得当前值
+function WaitSeconds:get ()
+  return self.time
+end
+
+-- 获得当前值后增加
+function WaitSeconds:use (seconds)
+  seconds = seconds or 2
+  local time = self:get()
+  self:add(seconds)
+  return time
+end

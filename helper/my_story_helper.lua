@@ -208,6 +208,15 @@ end
 -- 生物进入区域
 function MyStoryHelper:actorEnterArea (objid, areaid)
   -- body
+  if (areaid == story3.startArea) then -- 剧情三开启区域
+    AreaHelper:destroyArea(areaid)
+    local mainIndex = StoryHelper:getMainStoryIndex()
+    local mainProgress = StoryHelper:getMainStoryProgress()
+    if (mainIndex == 2 and mainProgress == #story2.tips) then
+      StoryHelper:forward('来到学院')
+      story3:comeToCollege()
+    end
+  end
 end
 
 -- 生物离开区域

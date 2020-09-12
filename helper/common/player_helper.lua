@@ -159,19 +159,19 @@ function PlayerHelper:setEveryPlayerPosition (x, y, z, afterSeconds)
   end, afterSeconds)
 end
 
-function PlayerHelper:everyPlayerSpeakAfterSecond (second, ...)
+function PlayerHelper:everyPlayerSpeakToSelf (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
     v.action:speakToAfterSeconds(v.objid, second, ...)
   end
 end
 
-function PlayerHelper:everyPlayerSpeakToAllAfterSecond (second, ...)
+function PlayerHelper:everyPlayerSpeak (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
     v.action:speakAfterSeconds(second, ...)
   end
 end
 
-function PlayerHelper:everyPlayerSpeakInHeartAfterSecond (second, ...)
+function PlayerHelper:everyPlayerThinkToSelf (second, ...)
   for i, v in ipairs(self:getAllPlayers()) do
     v.action:thinkToAfterSeconds(v.objid, second, ...)
   end
