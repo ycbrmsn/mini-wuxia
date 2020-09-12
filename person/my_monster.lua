@@ -254,7 +254,8 @@ function QiangdaoLouluo:new ()
     monsterPositions = {
       { x = 229, y = 8, z = 49 },
       { x = 255, y = 8, z = 45 },
-      { x = 243, y = 14, z = -4 }
+      { x = 243, y = 15, z = -4 },
+      { x = 277, y = 14, z = 34 }
     },
     monsterAreas = {},
     encampmentPositions = {
@@ -401,7 +402,8 @@ function QiangdaoXiaotoumu:new ()
     monsterPositions = {
       { x = 229, y = 8, z = 49 },
       { x = 255, y = 8, z = 45 },
-      { x = 243, y = 14, z = -4 }
+      { x = 243, y = 15, z = -4 },
+      { x = 277, y = 14, z = 34 }
     },
     monsterAreas = {}
   }

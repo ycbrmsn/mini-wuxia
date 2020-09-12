@@ -48,6 +48,7 @@ MyMap = {
     QIANDUO_ACTOR_ID = 33, -- 钱多
     MURONGXIAOTIAN_ACTOR_ID = 44, -- 慕容笑天
     GAOXIAOHU_ACTOR_ID = 45, -- 高小虎
+    YUEWUSHUANG_ACTOR_ID = 47, -- 月无双
 
     -- 怪物ID
     WOLF_ACTOR_ID = 11, -- 恶狼ID
