@@ -22,6 +22,7 @@ MyMap = {
     CHEST_GAO_ID = 4302, -- 高小虎给的宝箱
     GAME_DATA_TALK_WITH_GAO_ID = 4303, -- 与高小虎交谈的数据
     GAME_DATA_GET_WEAPON_ID = 4304, -- 领取新生武器的数据
+    GAME_DATA_JIANGHUO_EXP_ID = 4308, -- 江火的经验的数据
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID
@@ -49,6 +50,7 @@ MyMap = {
     MURONGXIAOTIAN_ACTOR_ID = 44, -- 慕容笑天
     GAOXIAOHU_ACTOR_ID = 45, -- 高小虎
     YUEWUSHUANG_ACTOR_ID = 47, -- 月无双
+    JIANGHUO_ACTOR_ID = 48, -- 江火
 
     -- 怪物ID
     WOLF_ACTOR_ID = 11, -- 恶狼ID

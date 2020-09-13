@@ -22,9 +22,13 @@ function MyActorHelper:init ()
   limiaoshou = Limiaoshou:new()
   qianduo = Qianduo:new()
   murongxiaotian = Murongxiaotian:new()
+  gaoxiaohu = Gaoxiaohu:new()
+  yuewushuang = Yuewushuang:new()
+  jianghuo = Jianghuo:new()
   juyidao = Juyidao:new()
   local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, 
-      erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, juyidao }
+      erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, juyidao,
+      yuewushuang, jianghuo }
   for i, v in ipairs(myActors) do
     TimeHelper:initActor(v)
     -- LogHelper:debug('创建', v:getName(), '完成')

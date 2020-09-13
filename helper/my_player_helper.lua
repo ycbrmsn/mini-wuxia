@@ -65,6 +65,11 @@ function MyPlayerHelper:playerAddItem (objid, itemid, itemnum)
   PlayerHelper:playerAddItem(objid, itemid, itemnum)
   MyStoryHelper:playerAddItem(objid, itemid, itemnum)
   -- body
+  local player = PlayerHelper:getPlayer(objid)
+  if (itemid == MyMap.ITEM.GAME_DATA_JIANGHUO_EXP_ID) then -- 江火的经验
+    player:gainExp(500)
+    BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+  end
 end
 
 -- 玩家使用道具

@@ -786,3 +786,288 @@ end
 function Murongxiaotian:candleEvent (myPlayer, candle)
   
 end
+
+-- 高小虎
+Gaoxiaohu = BaseActor:new(MyMap.ACTOR.GAOXIAOHU_ACTOR_ID)
+
+function Gaoxiaohu:new ()
+  local o = {
+    objid = 4399954659,
+    initPosition = MyPosition:new(-16, 7.5, 594), -- 学院大门口内
+    bedData = {
+      MyPosition:new(5.5, 8.5, 593.5), -- 床尾位置
+      ActorHelper.FACE_YAW.NORTH -- 床尾朝向
+    },
+    candlePositions = {
+      MyPosition:new(12.5, 8.5, 592.5), -- 最里面的蜡烛
+      MyPosition:new(12.5, 8.5, 597.5),
+      MyPosition:new(5.5, 8.5, 597.5),
+    },
+    trainAreaPositions = {
+      MyPosition:new(3.5, 7.5, 592.5), -- 演武场墙角
+      MyPosition:new(-14.5, 7.5, 609.5) -- 演武场墙角
+    },
+    classroomAreaPositions = {
+      MyPosition:new(6.5, 8.5, 597.5), -- 门口蜡烛旁
+      MyPosition:new(11.5, 8.5, 592.5) -- 墙内蜡烛旁
+    },
+    classRoomPos = MyPosition:new(5.5, 7.5, 595.5) -- 教室里位置
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 默认想法
+function Gaoxiaohu:defaultWant ()
+  self:wantDoNothing()
+end
+
+-- 在几点想做什么
+function Gaoxiaohu:wantAtHour (hour)
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
+    self:wantDoNothing()
+  else
+    if (hour == 6) then
+      self:wantFreeInArea({ self.classroomAreaPositions })
+    elseif (hour == 8) then
+      self:stayInClass()
+    elseif (hour == 12) then
+      self:wantFreeTime()
+    elseif (hour == 14) then
+      self:wantFreeInArea({ self.trainAreaPositions })
+    elseif (hour == 20) then
+      self:lightCandle()
+      self:nextWantFreeInArea({ self.classroomAreaPositions })
+    elseif (hour == 22) then
+      self:putOutCandleAndGoToBed()
+    end
+  end
+end
+
+function Gaoxiaohu:doItNow ()
+  local hour = TimeHelper:getHour()
+  if (hour >= 6 and hour < 8) then
+    self:wantAtHour(6)
+  elseif (hour >= 8 and hour < 12) then
+    self:wantAtHour(8)
+  elseif (hour >= 12 and hour < 14) then
+    self:wantAtHour(12)
+  elseif (hour >= 14 and hour < 20) then
+    self:wantAtHour(14)
+  elseif (hour >= 20 and hour < 22) then
+    self:wantAtHour(20)
+  else
+    self:wantAtHour(22)
+  end
+end
+
+-- 初始化
+function Gaoxiaohu:init ()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    self:doItNow()
+  end
+  return initSuc
+end
+
+function Gaoxiaohu:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  self:speakTo(playerid, 0, '做做任务，也会有所收获。')
+end
+
+function Gaoxiaohu:candleEvent (myPlayer, candle)
+  
+end
+
+-- 呆在教室
+function Gaoxiaohu:stayInClass ()
+  self:wantMove('class', { self.classRoomPos })
+  self:nextWantLookAt(nil, self.candlePositions[2], 1)
+end
+
+-- 月无双
+Yuewushuang = BaseActor:new(MyMap.ACTOR.YUEWUSHUANG_ACTOR_ID)
+
+function Yuewushuang:new ()
+  local o = {
+    objid = 4401861750,
+    initPosition = MyPosition:new(-16, 7.5, 595.5), -- 学院大门口内
+    bedData = {
+      MyPosition:new(21.5, 8.5, 596.5), -- 床尾位置
+      ActorHelper.FACE_YAW.SOUTH -- 床尾朝向
+    },
+    candlePositions = {
+      MyPosition:new(14.5, 8.5, 597.5), -- 门口蜡烛
+      MyPosition:new(14.5, 8.5, 592.5), -- 内墙蜡烛
+    },
+    trainAreaPositions = {
+      MyPosition:new(3.5, 7.5, 592.5), -- 演武场墙角
+      MyPosition:new(-14.5, 7.5, 609.5) -- 演武场墙角
+    },
+    dormitoryAreaPositions = {
+      MyPosition:new(15.5, 8.5, 592.5), -- 宿舍蜡烛旁
+      MyPosition:new(21.5, 8.5, 597.5) -- 宿舍角落
+    },
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 默认想法
+function Yuewushuang:defaultWant ()
+  self:wantDoNothing()
+end
+
+-- 在几点想做什么
+function Yuewushuang:wantAtHour (hour)
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
+    self:wantDoNothing()
+  else
+    if (hour == 6) then
+      self:wantFreeInArea({ self.dormitoryAreaPositions })
+    elseif (hour == 8) then
+      self:wantFreeInArea({ self.trainAreaPositions })
+    elseif (hour == 12) then
+      self:wantFreeTime()
+    elseif (hour == 14) then
+      self:wantFreeInArea({ self.trainAreaPositions })
+    elseif (hour == 20) then
+      self:lightCandle()
+      self:nextWantFreeInArea({ self.dormitoryAreaPositions })
+    elseif (hour == 22) then
+      self:putOutCandleAndGoToBed()
+    end
+  end
+end
+
+function Yuewushuang:doItNow ()
+  local hour = TimeHelper:getHour()
+  if (hour >= 6 and hour < 8) then
+    self:wantAtHour(6)
+  elseif (hour >= 8 and hour < 12) then
+    self:wantAtHour(8)
+  elseif (hour >= 12 and hour < 14) then
+    self:wantAtHour(12)
+  elseif (hour >= 14 and hour < 20) then
+    self:wantAtHour(14)
+  elseif (hour >= 20 and hour < 22) then
+    self:wantAtHour(20)
+  else
+    self:wantAtHour(22)
+  end
+end
+
+-- 初始化
+function Yuewushuang:init ()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    self:doItNow()
+  end
+  return initSuc
+end
+
+function Yuewushuang:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  self:speakTo(playerid, 0, '我也刚来学院，希望能够变得很厉害。')
+end
+
+function Yuewushuang:candleEvent (myPlayer, candle)
+  if (self.think == 'sleep' and candle.isLit) then
+    self:speakTo(playerid, 0, '明天还要训练呢，早点休息。')
+  end
+end
+
+-- 江火
+Jianghuo = BaseActor:new(MyMap.ACTOR.JIANGHUO_ACTOR_ID)
+
+function Jianghuo:new ()
+  local o = {
+    objid = 4402063235,
+    initPosition = MyPosition:new(-5.5, 7.5, 599.5), -- 学院演武场内
+    bedData = {
+      MyPosition:new(17.5, 8.5, 608.5), -- 床尾位置
+      ActorHelper.FACE_YAW.SOUTH -- 床尾朝向
+    },
+    candlePositions = {
+      MyPosition:new(14.5, 8.5, 604.5), -- 门口蜡烛
+      MyPosition:new(14.5, 8.5, 609.5), -- 内墙蜡烛
+    },
+    trainAreaPositions = {
+      MyPosition:new(3.5, 7.5, 592.5), -- 演武场墙角
+      MyPosition:new(-14.5, 7.5, 609.5) -- 演武场墙角
+    },
+    dormitoryAreaPositions = {
+      MyPosition:new(15.5, 8.5, 609.5), -- 宿舍蜡烛旁
+      MyPosition:new(21.5, 8.5, 604.5) -- 宿舍角落
+    },
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 默认想法
+function Jianghuo:defaultWant ()
+  self:wantDoNothing()
+end
+
+-- 在几点想做什么
+function Jianghuo:wantAtHour (hour)
+  if (hour == 6) then
+    self:wantFreeInArea({ self.dormitoryAreaPositions })
+  elseif (hour == 8) then
+    self:wantFreeInArea({ self.trainAreaPositions })
+  elseif (hour == 12) then
+    self:wantFreeTime()
+  elseif (hour == 14) then
+    self:wantFreeInArea({ self.trainAreaPositions })
+  elseif (hour == 20) then
+    self:lightCandle()
+    self:nextWantFreeInArea({ self.dormitoryAreaPositions })
+  elseif (hour == 22) then
+    self:putOutCandleAndGoToBed()
+  end
+end
+
+function Jianghuo:doItNow ()
+  local hour = TimeHelper:getHour()
+  if (hour >= 6 and hour < 8) then
+    self:wantAtHour(6)
+  elseif (hour >= 8 and hour < 12) then
+    self:wantAtHour(8)
+  elseif (hour >= 12 and hour < 14) then
+    self:wantAtHour(12)
+  elseif (hour >= 14 and hour < 20) then
+    self:wantAtHour(14)
+  elseif (hour >= 20 and hour < 22) then
+    self:wantAtHour(20)
+  else
+    self:wantAtHour(22)
+  end
+end
+
+-- 初始化
+function Jianghuo:init ()
+  local initSuc = self:initActor(self.initPosition)
+  if (initSuc) then
+    self:doItNow()
+  end
+  return initSuc
+end
+
+function Jianghuo:collidePlayer (playerid, isPlayerInFront)
+  local nickname = PlayerHelper:getNickname(playerid)
+  self:speakTo(playerid, 0, '我来学院没多久，就觉得自己厉害了许多。')
+end
+
+function Jianghuo:candleEvent (myPlayer, candle)
+  if (self.think == 'sleep' and candle.isLit) then
+    self:speakTo(playerid, 0, '睡觉睡觉，明天再闹。')
+  end
+end
