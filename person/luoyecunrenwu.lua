@@ -6,6 +6,7 @@ Yangwanli = BaseActor:new(MyMap.ACTOR.YANGWANLI_ACTOR_ID)
 function Yangwanli:new ()
   local o = {
     objid = 4315385574,
+    unableBeKilled = true,
     initPosition = MyPosition:new(-11.5, 8.5, -10.5), -- 屋内
     bedData = {
       MyPosition:new(-6.5, 9.5, -10.5), -- 床尾位置
@@ -129,6 +130,7 @@ Wangdali = BaseActor:new(MyMap.ACTOR.WANGDALI_ACTOR_ID)
 function Wangdali:new ()
   local o = {
     objid = 4339145592,
+    unableBeKilled = true,
     initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
       MyPosition:new(-25.5, 10.5, -46.5), -- 床尾位置
@@ -253,6 +255,7 @@ Miaolan = BaseActor:new(MyMap.ACTOR.MIAOLAN_ACTOR_ID)
 function Miaolan:new ()
   local o = {
     objid = 4314184974,
+    unableBeKilled = true,
     initPosition = MyPosition:new(-33.5, 8.5, -13.5), -- 药店柜台后
     bedData = {
       MyPosition:new(-29.5, 14.5, -14.5), -- 床尾位置
@@ -402,6 +405,7 @@ Huaxiaolou = BaseActor:new(MyMap.ACTOR.HUAXIAOLOU_ACTOR_ID)
 function Huaxiaolou:new ()
   local o = {
     objid = 4301071935,
+    unableBeKilled = true,
     initPosition = MyPosition:new(10.5, 9.5, -42.5),
     bedData = {
       MyPosition:new(9.5, 10.5, -41.5), -- 床尾位置
@@ -547,6 +551,7 @@ Jiangfeng = BaseActor:new(MyMap.ACTOR.JIANGFENG_ACTOR_ID)
 function Jiangfeng:new ()
   local o = {
     objid = 4313483881,
+    unableBeKilled = true,
     initPosition = MyPosition:new(8.5, 8.5, -17.5),
     bedData = {
       MyPosition:new(6.5, 9.5, -12.5), -- 床尾位置
@@ -689,6 +694,7 @@ Jiangyu = BaseActor:new(MyMap.ACTOR.JIANGYU_ACTOR_ID)
 function Jiangyu:new ()
   local o = {
     objid = 4313483879,
+    unableBeKilled = true,
     initPosition = MyPosition:new(10.5, 8.5, -13.5),
     bedData = {
       MyPosition:new(12.5, 9.5, -12.5), -- 床尾位置
@@ -827,6 +833,7 @@ Wenyu = BaseActor:new(MyMap.ACTOR.WENYU_ACTOR_ID)
 function Wenyu:new ()
   local o = {
     objid = 4315385572,
+    unableBeKilled = true,
     initPosition = MyPosition:new(24.5, 8.5, -9.5), -- 屋内
     bedData1 = {
       MyPosition:new(20.5, 9.5, -8.5), -- 床尾位置1

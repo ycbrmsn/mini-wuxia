@@ -81,13 +81,21 @@ function BaseActor:enableMove (switch)
 end
 
 function BaseActor:openAI ()
-  CreatureHelper:openAI(self.objid)
-  self.isAIOpened = true
+  if (CreatureHelper:openAI(self.objid)) then
+    self.isAIOpened = true
+    return true
+  else
+    return false
+  end
 end
 
 function BaseActor:closeAI ()
-  CreatureHelper:closeAI(self.objid)
-  self.isAIOpened = false
+  if (CreatureHelper:closeAI(self.objid)) then
+    self.isAIOpened = false
+    return true
+  else
+    return false
+  end
 end
 
 function BaseActor:runTo (pos, speed)
@@ -380,6 +388,10 @@ function BaseActor:initActor (initPosition)
     if (self.maxHp) then
       CreatureHelper:setMaxHp(self.objid, self.maxHp)
       CreatureHelper:setHp(self.objid, self.maxHp)
+    end
+    -- 如果生物不可被杀死，则设置不可被杀死
+    if (self.unableBeKilled) then
+      ActorHelper:setEnableBeKilledState(objid, false)
     end
     -- 清除木围栏
     -- local areaid = AreaHelper:getAreaByPos(initPosition)
