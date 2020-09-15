@@ -14,7 +14,9 @@ function Story3:new ()
       '拿着新武器好开心。接下来做什么呢，要不要找先生问问。',
       '先生让我去消灭强盗大头目，我觉得目前对我来说还是挺难的，我得好好准备一番。',
     },
-    startPos = MyPosition:new(-19, 7, 584),
+    posBeg = MyPosition:new(-31, 7, 590),
+    posEnd = MyPosition:new(-7, 8, 576),
+    startPos = MyPosition:new(-19, 7, 584), -- 区域内的一个点，暂时没用
     startArea = -99,
     yexiaolongInitPos = MyPosition:new(-17, 7.5, 593),
     gaoxiaohuInitPos = MyPosition:new(-16, 7.5, 594),
@@ -24,7 +26,7 @@ function Story3:new ()
   self:checkData(data)
 
   if (StoryHelper:getMainStoryIndex() < 3) then -- 剧情没有进展到3时
-    data.startArea = AreaHelper:getAreaByPos(data.startPos)
+    data.startArea = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
   end
 
   setmetatable(data, self)
@@ -53,7 +55,7 @@ function Story3:comeToCollege ()
   gaoxiaohu:setPosition(self.gaoxiaohuInitPos)
   yuewushuang:setPosition(self.yuewushuangInitPos)
 
-  local ws = WaitSeconds:new()
+  local ws = WaitSeconds:new(1)
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '希望我能在这里学得一身本事。')
   yexiaolong:lookAt(gaoxiaohu, ws:get())
