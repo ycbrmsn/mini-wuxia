@@ -19,6 +19,7 @@ MyMap = {
     GAME_DATA_EXP_ID = 4291, -- 人物经验数据
     PROTECT_GEM_ID = 4294, -- 守护宝石
     ANIMAL_BONE_ID = 4295, -- 兽骨
+    MUSIC_PLAYER_ID = 4297, -- 音乐播放器
     CHEST_GAO_ID = 4302, -- 高小虎给的宝箱
     GAME_DATA_TALK_WITH_GAO_ID = 4303, -- 与高小虎交谈的数据
     GAME_DATA_GET_WEAPON_ID = 4304, -- 领取新生武器的数据
