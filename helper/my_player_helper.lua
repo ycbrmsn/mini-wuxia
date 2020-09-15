@@ -177,13 +177,34 @@ function MyPlayerHelper:playerDismountActor (objid, toobjid)
 end
 
 -- 聊天输出界面变化
-function MyPlayerHelper:playerInputContent(objid, content)
+function MyPlayerHelper:playerInputContent (objid, content)
   PlayerHelper:playerInputContent(objid, content)
   MyStoryHelper:playerInputContent(objid, content)
 end
 
 -- 输入字符串
-function MyPlayerHelper:playerNewInputContent(objid, content)
+function MyPlayerHelper:playerNewInputContent (objid, content)
   PlayerHelper:playerNewInputContent(objid, content)
   MyStoryHelper:playerNewInputContent(objid, content)
+end
+
+-- 按键被按下
+function MyPlayerHelper:playerInputKeyDown (objid, vkey)
+  PlayerHelper:playerInputKeyDown(objid, vkey)
+  MyStoryHelper:playerInputKeyDown(objid, vkey)
+  -- body
+end
+
+-- 按键处于按下状态
+function MyPlayerHelper:playerInputKeyOnPress (objid, vkey)
+  PlayerHelper:playerInputKeyOnPress(objid, vkey)
+  MyStoryHelper:playerInputKeyOnPress(objid, vkey)
+  -- body
+end
+
+-- 按键松开
+function MyPlayerHelper:playerInputKeyUp (objid, vkey)
+  PlayerHelper:playerInputKeyUp(objid, vkey)
+  MyStoryHelper:playerInputKeyUp(objid, vkey)
+  -- body
 end
