@@ -221,7 +221,8 @@ end
 function BaseActorActionHelper:updateActionState (myActor)
   if (myActor.wants) then
     local style = myActor.wants[1].style
-    if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'doNothing' or style == 'sleep') then
+    if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'freeAttack'
+      or style == 'doNothing' or style == 'sleep') then
       -- myActor:enableMove(true)
       myActor:closeAI()
     elseif (style == 'dontMove') then

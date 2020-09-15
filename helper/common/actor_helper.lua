@@ -709,7 +709,7 @@ function ActorHelper:actorEnterArea (objid, areaid)
         want.currentRestTime = want.restTime
         want.toPos = BaseActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
         BaseActorActionHelper:createMoveToPos(want)
-        myActor.action:playAttack()
+        myActor.action:playAttack(2)
       else -- 其他情况，不明
         -- do nothing
       end

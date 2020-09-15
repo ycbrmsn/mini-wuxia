@@ -22,14 +22,15 @@ function BaseActorAction:isForceMove ()
   if (want.currentRestTime > 0) then -- 如果在休息，也不是
     return false
   end
-  return (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach')
+  return (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' 
+    or want.style == 'freeAttack' or want.style == 'approach')
 end
 
 -- 跑到指定地点
 function BaseActorAction:runTo (pos, speed)
   speed = speed or self.myActor.defaultSpeed
-  -- local x, y, z = math.floor(pos.x) + 0.5, math.floor(pos.y) + 0.5, math.floor(pos.z) + 0.5
-  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x, pos.y, pos.z, speed)
+  local x, y, z = math.floor(pos.x) + 0.5, math.floor(pos.y) + 0.5, math.floor(pos.z) + 0.5
+  return ActorHelper:tryMoveToPos(self.myActor.objid, x, y, z, speed)
 end
 
 -- 传送到指定地点
