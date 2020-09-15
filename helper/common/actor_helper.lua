@@ -156,7 +156,7 @@ function ActorHelper:handleNextWant (myActor)
   elseif (nextWant.style == 'approach') then
     BaseActorActionHelper:createApproachToPos(nextWant)
     myActor.action:execute()
-  elseif (nextWant.style == 'freeInArea') then
+  elseif (nextWant.style == 'freeInArea' or nextWant.style == 'freeAttack') then
     nextWant.toPos = BaseActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
     BaseActorActionHelper:createMoveToPos(nextWant)
     -- LogHelper:debug(myActor:getName() .. '开始闲逛')
@@ -704,6 +704,12 @@ function ActorHelper:actorEnterArea (objid, areaid)
         want.currentRestTime = want.restTime
         want.toPos = BaseActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
         BaseActorActionHelper:createMoveToPos(want)
+      elseif (want.style == 'freeAttack') then -- 区域自由攻击
+        AreaHelper:removeToArea(myActor) -- 清除终点区域
+        want.currentRestTime = want.restTime
+        want.toPos = BaseActorActionHelper:getFreeInAreaPos(myActor.freeInAreaIds)
+        BaseActorActionHelper:createMoveToPos(want)
+        myActor.action:playAttack()
       else -- 其他情况，不明
         -- do nothing
       end

@@ -943,11 +943,11 @@ function Yuewushuang:wantAtHour (hour)
     if (hour == 6) then
       self:wantFreeInArea({ self.dormitoryAreaPositions })
     elseif (hour == 8) then
-      self:wantFreeInArea({ self.trainAreaPositions })
+      self:wantFreeAttack({ self.trainAreaPositions })
     elseif (hour == 12) then
       self:wantFreeTime()
     elseif (hour == 14) then
-      self:wantFreeInArea({ self.trainAreaPositions })
+      self:wantFreeAttack({ self.trainAreaPositions })
     elseif (hour == 20) then
       self:lightCandle()
       self:nextWantFreeInArea({ self.dormitoryAreaPositions })
@@ -1034,11 +1034,11 @@ function Jianghuo:wantAtHour (hour)
   if (hour == 6) then
     self:wantFreeInArea({ self.dormitoryAreaPositions })
   elseif (hour == 8) then
-    self:wantFreeInArea({ self.trainAreaPositions })
+    self:wantFreeAttack({ self.trainAreaPositions })
   elseif (hour == 12) then
     self:wantFreeTime()
   elseif (hour == 14) then
-    self:wantFreeInArea({ self.trainAreaPositions })
+    self:wantFreeAttack({ self.trainAreaPositions })
   elseif (hour == 20) then
     self:lightCandle()
     self:nextWantFreeInArea({ self.dormitoryAreaPositions })

@@ -128,7 +128,8 @@ function BaseActorAction:execute ()
       self.myActor:stopRun()
     end
   else
-    if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
+    if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea'
+      or want.style == 'freeAttack' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
       if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
         self:transmitTo(want.toPos)
         self.myActor.cantMoveTime = 0

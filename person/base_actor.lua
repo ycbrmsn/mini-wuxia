@@ -259,6 +259,10 @@ function BaseActor:wantFreeInArea (think, posPairs)
   self.want:wantFreeInArea(think, posPairs)
 end
 
+function BaseActor:wantFreeAttack (think, posPairs)
+  self.want:wantFreeAttack(think, posPairs)
+end
+
 -- 生物默认想法，可重写
 function BaseActor:defaultWant ()
   self:wantFreeTime()
@@ -301,6 +305,10 @@ end
 -- 生物接下来想在区域内自由活动
 function BaseActor:nextWantFreeInArea (think, posPairs)
   self.want:nextWantFreeInArea(think, posPairs)
+end
+
+function BaseActor:nextWantFreeAttack (think, positions)
+  self.want:nextWantFreeAttack(think, posPairs)
 end
 
 function BaseActor:nextWantDoNothing (think)
