@@ -15,7 +15,10 @@ function Story3:new ()
       '先生让我去消灭强盗大头目，我觉得目前对我来说还是挺难的，我得好好准备一番。',
     },
     startPos = MyPosition:new(-19, 7, 584),
-    startArea = -99
+    startArea = -99,
+    yexiaolongInitPos = MyPosition:new(-17, 7.5, 593),
+    gaoxiaohuInitPos = MyPosition:new(-16, 7.5, 594),
+    yuewushuangInitPos = MyPosition:new(-16, 7.5, 595.5)
   }
   self:checkData(data)
 
@@ -33,6 +36,8 @@ function Story3:comeToCollege ()
   local px = 0
   PlayerHelper:everyPlayerDoSomeThing(function (player)
     player:setPosition(self.startPos.x + x, self.startPos.y, self.startPos.z)
+    PlayerHelper:changeVMode(player.objid, VIEWPORTTYPE.BACKVIEW)
+    PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.SOUTH, 0)
     if (px == 0) then
       px = 1
     elseif (px > 0) then
@@ -41,39 +46,54 @@ function Story3:comeToCollege ()
       px = 1 - px
     end
   end)
+  local hostPlayer = PlayerHelper:getHostPlayer()
   PlayerHelper:everyPlayerEnableMove(false)
+  yexiaolong:setPosition(self.yexiaolongInitPos)
+  gaoxiaohu:setPosition(self.gaoxiaohuInitPos)
+  yuewushuang:setPosition(self.yuewushuangInitPos)
 
   local ws = WaitSeconds:new()
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '希望我能在这里学得一身本事。')
+  yexiaolong:lookAt(gaoxiaohu, ws:get())
+  gaoxiaohu:lookAt(yexiaolong, ws:get())
+  yuewushuang:lookAt(yexiaolong, ws:get())
   yexiaolong:speak(ws:use(), '小高小高，我终于找到你了。')
   PlayerHelper:everyPlayerThinkToSelf(ws:use(), '咦，是先生的声音。进去看看。')
   StoryHelper:forward('再见先生')
   gaoxiaohu:speak(ws:use(), '说了多少遍了，叫我小虎，别把我叫矮了。你也回来了。')
   yexiaolong:speak(ws:use(), '回来一阵子了，一直没找到你。小高，看看你的新学生。')
   gaoxiaohu:speak(ws:use(), '每次你都这样，真受不了你。我身边这位就是我新收的学生，月无双。')
-
+  gaoxiaohu:lookAt(yuewushuang, ws:get())
   gaoxiaohu:speak(ws:use(), '这位就是之前跟你提起过的叶先生。')
+  yuewushuang:lookAt(yexiaolong, ws:get())
+  yexiaolong:lookAt(yuewushuang, ws:get())
   yuewushuang:speak(ws:use(), '见过叶先生。')
   yexiaolong:speak(ws:use(), '不错……')
-
+  gaoxiaohu:lookAt(yexiaolong, ws:get())
   gaoxiaohu:speak(ws:use(), '那是，为此，我可是走遍了十里八乡。你的学生呢？')
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生先生。')
-
+  yexiaolong:lookAt(hostPlayer, ws:get())
+  gaoxiaohu:lookAt(hostPlayer, ws:get())
+  yuewushuang:lookAt(hostPlayer, ws:get())
   yexiaolong:speak(ws:use(), '哦，你来了。')
-
+  yexiaolong:lookAt(gaoxiaohu, ws:get())
   yexiaolong:speak(ws:use(), '这就是我的学生了。虽然看上去弱不禁风，不过我们也是经过了强盗的洗礼。')
+  gaoxiaohu:lookAt(yexiaolong, ws:get())
   gaoxiaohu:speak(ws:use(), '强盗？还有强盗敢打劫你？')
   yexiaolong:speak(ws:use(), '回来的路上我发现了强盗的埋伏，就交给学生处理了。')
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '！！！')
   gaoxiaohu:speak(ws:use(), '没想到现在强盗这么猖獗了。这事我们得好好说说。')
   yexiaolong:speak(ws:use(), '是得好好说说。一会儿再说吧，找你老半天，累死我了，我先去歇歇脚。')
   gaoxiaohu:speak(ws:use(), '好好好。')
-
+  yexiaolong:lookAt(hostPlayer, ws:use())
   yexiaolong:speak(ws:use(), '这位是学院的高先生。学院任务主要就是他在负责，学院的事找他就对了。')
+  PlayerHelper:everyPlayerLookAt(gaoxiaohu, ws:get())
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '高先生好。')
+  gaoxiaohu:lookAt(hostPlayer, ws:get())
   gaoxiaohu:speak(ws:use(), '嗯……')
   yexiaolong:speak(ws:use(), '好了，我先走了。')
+  PlayerHelper:everyPlayerLookAt(yexiaolong, ws:get())
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生走好。')
   StoryHelper:forward('3先生离开')
 end

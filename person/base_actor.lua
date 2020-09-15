@@ -147,8 +147,14 @@ function BaseActor:setFacePitch (pitch)
 end
 
 -- 看向某人/某处
-function BaseActor:lookAt (objid)
-  self.action:lookAt(objid)
+function BaseActor:lookAt (objid, afterSeconds)
+  if (afterSeconds and afterSeconds > 0) then
+    TimeHelper:callFnAfterSecond(function ()
+      self.action:lookAt(objid)
+    end, afterSeconds)
+  else
+    self.action:lookAt(objid)
+  end
 end
 
 function BaseActor:speak (afterSeconds, ...)

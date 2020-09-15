@@ -556,7 +556,7 @@ function ActorHelper:getAliveActors (objids)
   return aliveObjids
 end
 
--- 角色看向 执行者、目标、是否需要旋转镜头（三维视角需要旋转）
+-- 角色看向 执行者、目标、是否需要旋转镜头（三维视角需要旋转），toobjid可以是objid、位置、玩家、生物
 function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
   if (type(objid) == 'table') then -- 如果执行者是多个（数组）
     for i, v in ipairs(objid) do
@@ -564,9 +564,15 @@ function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
     end
   else -- 单个执行者
     local x, y, z
-    if (type(toobjid) == 'table') then -- 如果目标是个位置（字典）
-      x, y, z = toobjid.x, toobjid.y, toobjid.z
-    else -- 目标是个角色
+    if (type(toobjid) == 'table') then
+      -- 判断是不是玩家或者生物
+      if (toobjid.objid) then -- 玩家或生物
+        toobjid = toobjid.objid
+      else -- 是个位置
+        x, y, z = toobjid.x, toobjid.y, toobjid.z
+      end
+    end
+    if (not(x)) then -- 不是位置
       x, y, z = ActorHelper:getPosition(toobjid)
       if (not(x)) then -- 取不到目标角色数据
         return

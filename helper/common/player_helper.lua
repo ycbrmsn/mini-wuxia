@@ -201,6 +201,12 @@ function PlayerHelper:everyPlayerAddBuff (buffid, bufflv, customticks, afterSeco
   end, afterSeconds)
 end
 
+function PlayerHelper:everyPlayerLookAt (toobjid, afterSeconds)
+  self:everyPlayerDoSomeThing(function (player)
+    player:lookAt(toobjid)
+  end, afterSeconds)
+end
+
 -- 改变玩家视角模式
 function PlayerHelper:changeVMode (objid, viewmode, islock)
   viewmode = viewmode or VIEWPORTTYPE.BACKVIEW
