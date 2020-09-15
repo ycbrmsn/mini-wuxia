@@ -29,7 +29,7 @@ end
 function BaseActorAction:runTo (pos, speed)
   speed = speed or self.myActor.defaultSpeed
   -- local x, y, z = math.floor(pos.x) + 0.5, math.floor(pos.y) + 0.5, math.floor(pos.z) + 0.5
-  return ActorHelper:tryMoveToPos(self.myActor.objid, x, y, z, speed)
+  return ActorHelper:tryMoveToPos(self.myActor.objid, pos.x, pos.y, pos.z, speed)
 end
 
 -- 传送到指定地点

@@ -391,7 +391,7 @@ function BaseActor:initActor (initPosition)
     end
     -- 如果生物不可被杀死，则设置不可被杀死
     if (self.unableBeKilled) then
-      ActorHelper:setEnableBeKilledState(objid, false)
+      ActorHelper:setEnableBeKilledState(self.objid, false)
     end
     -- 清除木围栏
     -- local areaid = AreaHelper:getAreaByPos(initPosition)
