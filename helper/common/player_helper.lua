@@ -107,12 +107,14 @@ function PlayerHelper:showActorHp (objid, toobjid)
   local t = 'showActorHp' .. toobjid
   TimeHelper:delFnFastRuns(t)
   TimeHelper:callFnFastRuns(function ()
-    if (hp and hp <= 0) then
-      self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
-    else
-      hp = math.ceil(hp)
-      self:showToast(objid, StringHelper:concat(actorname, '剩余生命：', 
-        StringHelper:number2String(hp)))
+    if (hp) then
+      if (hp <= 0) then
+        self:showToast(objid, StringHelper:concat(actorname, '已死亡'))
+      else
+        hp = math.ceil(hp)
+        self:showToast(objid, StringHelper:concat(actorname, '剩余生命：', 
+          StringHelper:number2String(hp)))
+      end
     end
   end, 0.1, t)
 end
