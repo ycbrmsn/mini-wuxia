@@ -94,6 +94,10 @@ function BaseActorAction:playHappy (afterSeconds)
   self:playAct(ActorHelper.ACT.HAPPY, afterSeconds)
 end
 
+function BaseActorAction:playThank (afterSeconds)
+  self:playAct(ActorHelper.ACT.THANK, afterSeconds)
+end
+
 function BaseActorAction:playAct (act, afterSeconds)
   if (afterSeconds) then
     TimeHelper:callFnAfterSecond (function (p)

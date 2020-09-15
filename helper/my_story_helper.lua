@@ -69,6 +69,14 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
     end, 2)
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
     story1:fasterTime()
+  elseif (story3 and areaid == story3.startArea) then -- 剧情三开启区域
+    AreaHelper:destroyArea(areaid)
+    local mainIndex = StoryHelper:getMainStoryIndex()
+    local mainProgress = StoryHelper:getMainStoryProgress()
+    if (mainIndex == 2 and mainProgress == #story2.tips) then
+      StoryHelper:forward('来到学院')
+      story3:comeToCollege()
+    end
   end
 end
 
@@ -225,15 +233,6 @@ end
 -- 生物进入区域
 function MyStoryHelper:actorEnterArea (objid, areaid)
   -- body
-  if (areaid == story3.startArea) then -- 剧情三开启区域
-    AreaHelper:destroyArea(areaid)
-    local mainIndex = StoryHelper:getMainStoryIndex()
-    local mainProgress = StoryHelper:getMainStoryProgress()
-    if (mainIndex == 2 and mainProgress == #story2.tips) then
-      StoryHelper:forward('来到学院')
-      story3:comeToCollege()
-    end
-  end
 end
 
 -- 生物离开区域
@@ -241,7 +240,7 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
   -- body
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then
+  if (story2 and story2.areaid and areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then
     local actorid = CreatureHelper:getActorID(objid)
     if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
       story2:comeBack(objid, areaid)

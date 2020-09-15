@@ -87,6 +87,8 @@ function MyGameHelper:atSecond (second)
     -- StoryHelper:forward('出发，前往学院')
     -- story2:goToCollege()
     PlayerHelper:getHostPlayer():setPosition(-18.5, 7.5, 595.5)
+    yexiaolong:wantDoNothing()
+    yexiaolong:setPosition(-18.5, 7.5, 595.5)
   end
 end
 

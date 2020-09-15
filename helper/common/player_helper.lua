@@ -189,9 +189,9 @@ function PlayerHelper:everyPlayerEnableMove (enable, afterSeconds)
   end, afterSeconds)
 end
 
-function PlayerHelper:everyPlayerRunTo (positions, callback, param, afterSeconds)
+function PlayerHelper:everyPlayerRunTo (positions, callback, afterSeconds)
   self:everyPlayerDoSomeThing(function (player)
-    player.action:runTo(positions, callback, param)
+    player.action:runTo(positions, callback, player)
   end, afterSeconds)
 end
 
