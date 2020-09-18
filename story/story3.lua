@@ -21,7 +21,10 @@ function Story3:new ()
     yexiaolongInitPos = MyPosition:new(-17, 7.5, 593),
     gaoxiaohuInitPos = MyPosition:new(-16, 7.5, 594),
     yuewushuangInitPos = MyPosition:new(-16, 7.5, 595.5),
-    playerPos = MyPosition:new(-20, 7.5, 594.5)
+    playerPos = MyPosition:new(-20, 7.5, 594.5),
+    airWallPosBeg = MyPosition:new(-19, 10, 592), -- 空气墙起点
+    airWallPosEnd = MyPosition:new(-19, 7, 596), -- 空气墙终点
+    airWallArea = nil
   }
   self:checkData(data)
 
@@ -54,6 +57,8 @@ function Story3:comeToCollege ()
   yexiaolong:setPosition(self.yexiaolongInitPos)
   gaoxiaohu:setPosition(self.gaoxiaohuInitPos)
   yuewushuang:setPosition(self.yuewushuangInitPos)
+  self.airWallArea = AreaHelper:createAreaRectByRange(self.airWallPosBeg, self.airWallPosEnd)
+  AreaHelper:fillBlock(self.airWallArea, 1001) -- 区域填充空气墙
 
   local ws = WaitSeconds:new(1)
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
@@ -105,6 +110,9 @@ function Story3:comeToCollege ()
   yexiaolong:speak(ws:use(), '是得好好说说。一会儿再说吧，找你老半天，累死我了，我先去歇歇脚。')
   gaoxiaohu:speak(ws:use(), '好好好。')
   yexiaolong:lookAt(hostPlayer, ws:get())
+  PlayerHelper:everyPlayerDoSomeThing(function (player)
+    player.action:playStand()
+  end, ws:get())
   yexiaolong:speak(ws:use(), '这位是学院的高先生。学院任务主要就是他在负责，学院的事找他就对了。')
   PlayerHelper:everyPlayerLookAt(gaoxiaohu, ws:get())
   PlayerHelper:everyPlayerDoSomeThing(function (player)
@@ -120,6 +128,7 @@ function Story3:comeToCollege ()
   end, ws:get())
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生走好。')
   TimeHelper:callFnAfterSecond(function ()
+    AreaHelper:clearAllBlock(self.airWallArea, 1001) -- 清除空气墙
     StoryHelper:forward('3先生离开')
     PlayerHelper:everyPlayerEnableMove(true)
     gaoxiaohu:doItNow()
