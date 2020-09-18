@@ -411,7 +411,7 @@ function Story2:endWords (player, waitSeconds)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, true)
     end)
     -- ChatHelper:sendSystemMsg('时间有限，作者剧情就做到这里了。游戏结束标志没有设置。风颖城也还没有做完。主要把落叶村人物的作息完成了。后面的内容，作者会继续更新。希望你们喜欢，谢谢。')
-    ChatHelper:sendSystemMsg('#G目前剧情到此。')
+    -- ChatHelper:sendSystemMsg('#G目前剧情到此。')
   end, waitSeconds)
 end
 
@@ -479,8 +479,8 @@ function Story2:playerBadHurt (objid)
   waitSeconds = waitSeconds + 2
   TimeHelper:callFnAfterSecond(function ()
     local num = #PlayerHelper:getAllPlayers() * 2
-    yexiaolong:speak(0, '这里有', num, '瓶回血药剂。剩下的交给我吧。')
-    BackpackHelper:addItem(player.objid, MyMap.ITEM.POTION_ID, num) -- 回血药剂
+    yexiaolong:speak(0, '这里有', num, '粒生血丹。剩下的交给我吧。')
+    BackpackHelper:addItem(player.objid, MyMap.ITEM.CREATE_BLOOD_PILL_ID, num) -- 生血丹
     yexiaolong:lookAt(player.objid)
     -- player:lookAt(yexiaolong.objid)
   end, waitSeconds)
@@ -719,18 +719,18 @@ end
 function Story2:recover (player)
   local mainProgress = StoryHelper:getMainStoryProgress()
   local hostPlayer = PlayerHelper:getHostPlayer()
-  if (mainProgress == 1) then -- 村口集合
+  if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
     if (player == hostPlayer) then
       story2:goToCollege()
     else
       player:setMyPosition(hostPlayer:getMyPosition())
     end
-  elseif (mainProgress == 2) then -- 开始奔跑
-    PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.NORTH, 0)
-    player:setMyPosition(story2.eventPositions[1])
-    if (player == hostPlayer) then
-      story2:meetBandits(hostPlayer)
-    end
+  -- elseif (mainProgress == 2) then -- 开始奔跑
+  --   PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.NORTH, 0)
+  --   player:setMyPosition(story2.eventPositions[1])
+  --   if (player == hostPlayer) then
+  --     story2:meetBandits(hostPlayer)
+  --   end
   elseif (mainProgress == 3) then -- 路遇强盗
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内

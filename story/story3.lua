@@ -16,7 +16,7 @@ function Story3:new ()
     },
     posBeg = MyPosition:new(-31, 7, 590),
     posEnd = MyPosition:new(-7, 8, 576),
-    startPos = MyPosition:new(-19, 7, 584), -- 区域内的一个点，暂时没用
+    startPos = MyPosition:new(-19, 7, 584), -- 剧情开始位置
     startArea = -99,
     yexiaolongInitPos = MyPosition:new(-17, 7.5, 593),
     gaoxiaohuInitPos = MyPosition:new(-16, 7.5, 594),
@@ -28,7 +28,7 @@ function Story3:new ()
   }
   self:checkData(data)
 
-  if (StoryHelper:getMainStoryIndex() < 3) then -- 剧情没有进展到3时
+  if (StoryHelper:getMainStoryIndex() <= 3) then -- 剧情没有超过3时
     data.startArea = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
   end
 
@@ -135,4 +135,18 @@ function Story3:comeToCollege ()
     yuewushuang:doItNow()
     yexiaolong:doItNow()
   end, ws:get())
+end
+
+function Story3:recover (player)
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  local hostPlayer = PlayerHelper:getHostPlayer()
+  PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
+  if (mainProgress == 1 or mainProgress == 2) then
+    player:enableMove(true)
+    if (player == hostPlayer) then
+      story3:comeToCollege()
+    else
+      player:setMyPosition(hostPlayer:getMyPosition())
+    end
+  end
 end
