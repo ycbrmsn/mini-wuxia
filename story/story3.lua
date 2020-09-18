@@ -133,5 +133,6 @@ function Story3:comeToCollege ()
     PlayerHelper:everyPlayerEnableMove(true)
     gaoxiaohu:doItNow()
     yuewushuang:doItNow()
+    yexiaolong:doItNow()
   end, ws:get())
 end
