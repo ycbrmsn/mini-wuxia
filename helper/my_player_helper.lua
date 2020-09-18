@@ -96,6 +96,17 @@ function MyPlayerHelper:playerUseItem (objid, toobjid, itemid, itemnum)
   end
 end
 
+-- 玩家消耗道具
+function MyPlayerHelper:playerConsumeItem (objid, toobjid, itemid, itemnum)
+  PlayerHelper:playerConsumeItem(objid, toobjid, itemid, itemnum)
+  MyStoryHelper:playerConsumeItem(objid, toobjid, itemid, itemnum)
+  -- body
+  if (itemid == MyMap.ITEM.WINE_ID) then -- 最香酒
+    ActorHelper:addBuff(objid, 17, 2, 3600)
+    ActorHelper:addBuff(objid, 18, 2, 3600)
+  end
+end
+
 -- 玩家攻击命中
 function MyPlayerHelper:playerAttackHit (objid, toobjid)
   PlayerHelper:playerAttackHit(objid, toobjid)

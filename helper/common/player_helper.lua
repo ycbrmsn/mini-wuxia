@@ -386,6 +386,11 @@ function PlayerHelper:playerUseItem (objid, toobjid, itemid, itemnum)
   ItemHelper:useItem(objid, itemid)
 end
 
+-- 玩家消耗道具
+function PlayerHelper:playerConsumeItem (objid, toobjid, itemid, itemnum)
+  -- body
+end
+
 -- 玩家攻击命中
 function PlayerHelper:playerAttackHit (objid, toobjid)
   local itemid = PlayerHelper:getCurToolID(objid)

@@ -12,6 +12,7 @@ MyMap = {
     YANGWANLI_PACKAGE_ID = 4117, -- 村长包裹
     APPLE_ID = 4125, -- 苹果
     CREATE_BLOOD_PILL_ID = 4142, -- 生血丹
+    WINE_ID = 4256, -- 最香酒
     CARRIAGE_LUOYECUN_ID = 4285, -- 落叶村车票
     CARRIAGE_PINGFENGZHAI_ID = 4286, -- 平风寨车票
     GAME_DATA_MAIN_INDEX_ID = 4288, -- 主线剧情序号
