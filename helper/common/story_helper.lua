@@ -2,38 +2,21 @@
 StoryHelper = {
   mainIndex = 1,
   mainProgress = 1,
-  progressNames = {},
-  storyRemainDays = 0, -- 当前剧情剩余天数
   stories = {}
 }
 
 -- 剧情前进
-function StoryHelper:forward (progressName, isBranch)
-  if (self:isProgressNameExist(progressName)) then
+function StoryHelper:forward (mainIndex, mainProgress)
+  if (mainIndex ~= self.mainIndex or mainProgress ~= self.mainProgress) then
     return
   end
-  if (isBranch) then -- 支线，暂未设计
-    
-  else
-    table.insert(self.progressNames, progressName)
-    self.mainProgress = self.mainProgress + 1
-    if (self.mainProgress > #self.stories[self.mainIndex].tips) then
-      self.mainIndex = self.mainIndex + 1
-      self.mainProgress = 1
-    end
-    local hostPlayer = PlayerHelper:getHostPlayer()
-    GameDataHelper:updateGameData(hostPlayer)
+  self.mainProgress = self.mainProgress + 1
+  if (self.mainProgress > #self.stories[self.mainIndex].tips) then
+    self.mainIndex = self.mainIndex + 1
+    self.mainProgress = 1
   end
-end
-
--- 剧情进度名是否存在
-function StoryHelper:isProgressNameExist (progressName)
-  for i, v in ipairs(self.progressNames) do
-    if (v == progressName) then
-      return true
-    end
-  end
-  return false
+  local hostPlayer = PlayerHelper:getHostPlayer()
+  GameDataHelper:updateGameData(hostPlayer)
 end
 
 -- 获得主线剧情序号
@@ -56,27 +39,10 @@ function StoryHelper:setMainStoryProgress (mainProgress)
   self.mainProgress = mainProgress
 end
 
--- 获得剩余剧情天数（目前弃用）
-function StoryHelper:getMainStoryRemainDays ()
-  return self.storyRemainDays
-end
-
--- 获得主线剧情信息
-function StoryHelper:getMainStoryInfo ()
-  return self.stories[self:getMainStoryIndex()]
-end
-
 -- 获得剧情标题和内容
 function StoryHelper:getMainStoryTitleAndTip ()
-  local story = self:getMainStoryInfo()
+  local story = self:getStory()
   return story.title, story.tips[self:getMainStoryProgress()]
-end
-
--- 减少剩余天数（目前弃用）
-function StoryHelper:reduceRemainDay ()
-  if (self.storyRemainDays > 0) then
-    self.storyRemainDays = self.storyRemainDays - 1
-  end
 end
 
 -- 获取剧情
@@ -111,6 +77,6 @@ end
 -- 世界时间到[n]点
 function StoryHelper:atHour (hour)
   if (hour == 0) then
-    self:reduceRemainDay()
+    StoryHelper:forward(1, #story1.tips - 1)
   end
 end

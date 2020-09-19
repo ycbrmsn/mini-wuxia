@@ -43,7 +43,7 @@ function Story1:noticeEvent (areaid)
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu:speak(0, content)
-  StoryHelper:forward('文羽找我有事')
+  StoryHelper:forward(1, 1)
 end
 
 -- 时间快速流逝
@@ -54,12 +54,10 @@ function Story1:fasterTime ()
     -- 时间快速流逝
     self.isFasterTime = true
     TimeHelper:repeatUtilSuccess(666, 'fasterTime', function ()
-      -- local storyRemainDays = StoryHelper:getMainStoryRemainDays()
       local hour = TimeHelper:getHour()
       if (StoryHelper:getMainStoryProgress() < #self.tips) then
         hour = 0
         TimeHelper:setHour(hour)
-        StoryHelper:forward('剧情一过了一天')
         return false
       else
         if (hour < 8) then
@@ -78,35 +76,35 @@ end
 -- 结束通知事件
 function Story1:finishNoticeEvent (objid)
   -- 设置对话人物不可移动
-  local myPlayer = PlayerHelper:getPlayer(objid)
-  myPlayer:enableMove(false, true)
+  local player = PlayerHelper:getPlayer(objid)
+  player:enableMove(false, true)
   yexiaolong:enableMove(false)
   yexiaolong:wantStayForAWhile(100)
   -- 开始对话
-  yexiaolong:speak(0, '你顺利地通过了考验，不错。嗯……')
-  yexiaolong:thinks(3, '我的任务是至少招一名学员，应该可以了。')
-  yexiaolong.action:playThink(3)
+  local ws = WaitSeconds:new(1)
+  yexiaolong:speak(ws:use(3), '你顺利地通过了考验，不错。嗯……')
+  yexiaolong.action:playThink(ws:get())
+  yexiaolong:thinks(ws:use(3), '我的任务是至少招一名学员，应该可以了。')
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
+  yexiaolong.action:playStand(ws:get())
   if (hour < 9) then
-    -- StoryHelper.storyRemainDays = 0
-    yexiaolong:speak(6, '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
-    StoryHelper:forward('准备出发')
+    yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
+    StoryHelper:forward(1, self.tips - 1)
   else
-    -- StoryHelper.storyRemainDays = 1
-    yexiaolong:speak(6, '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
+    yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
-  yexiaolong.action:playStand(6)
-  myPlayer:speak(8, '好的。')
-  yexiaolong:speak(10, '嗯，那去准备吧。')
-  yexiaolong.action:playHi(10)
-  TimeHelper:callFnAfterSecond (function (p)
-    p.myPlayer:enableMove(true, true)
+  player:speak(ws:use(), '好的。')
+  yexiaolong.action:playHi(ws:get())
+  yexiaolong:speak(ws:get(), '嗯，那去准备吧。')
+  TimeHelper:callFnAfterSecond (function ()
+    player:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
-  end, 10, { myPlayer = myPlayer })
+  end, ws:get())
 end
 
+-- 事件废弃
 function Story1:playerBadHurt (objid)
   local player = PlayerHelper:getPlayer(objid)
   local pos
