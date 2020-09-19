@@ -51,7 +51,6 @@ local playerClickActor = function (event)
   LogHelper:call(function ()
     MyPlayerHelper:playerClickActor(objid, toobjid)
   end)
-  
 end
 
 -- eventobjid, toobjid, itemid, itemnum
