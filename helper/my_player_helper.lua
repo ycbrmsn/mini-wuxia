@@ -240,3 +240,10 @@ function MyPlayerHelper:playerInputKeyUp (objid, vkey)
   MyStoryHelper:playerInputKeyUp(objid, vkey)
   -- body
 end
+
+-- 等级发生改变
+function MyPlayerHelper:playerLevelModelUpgrade (objid, toobjid)
+  PlayerHelper:playerLevelModelUpgrade(objid, toobjid)
+  MyStoryHelper:playerLevelModelUpgrade(objid, toobjid)
+  -- body
+end
