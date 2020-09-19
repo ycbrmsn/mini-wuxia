@@ -82,13 +82,13 @@ function MyGameHelper:atSecond (second)
   GameHelper:atSecond(second)
   -- body
   if (second == 1) then
-    StoryHelper:setMainStoryIndex(2)
-    StoryHelper:setMainStoryProgress(#story2.tips)
-    -- StoryHelper:forward('出发，前往学院')
-    -- story2:goToCollege()
-    PlayerHelper:getHostPlayer():setPosition(-18.5, 7.5, 595.5)
-    yexiaolong:wantDoNothing()
-    yexiaolong:setPosition(-18.5, 7.5, 595.5)
+    -- StoryHelper:setMainStoryIndex(2)
+    -- StoryHelper:setMainStoryProgress(#story2.tips)
+    -- -- StoryHelper:forward('出发，前往学院')
+    -- -- story2:goToCollege()
+    -- PlayerHelper:getHostPlayer():setPosition(-18.5, 7.5, 595.5)
+    -- yexiaolong:wantDoNothing()
+    -- yexiaolong:setPosition(-18.5, 7.5, 595.5)
   end
 end
 

@@ -15,9 +15,6 @@ function MyPlayerHelper:playerEnterGame (objid)
   if (not(logPaper:hasItem(objid))) then
     logPaper:newItem(objid, 1, true)
   end
-  if (not(isEntered)) then -- 没有进入过游戏，则给一颗守护宝石
-    BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1)
-  end
 end
 
 -- 玩家离开游戏

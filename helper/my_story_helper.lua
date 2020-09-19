@@ -34,12 +34,13 @@ function MyStoryHelper:playerEnterGame (objid)
       TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
       player:setPosition(self.initPosition) -- 初始位置
       PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+      BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
     end
-  else
+  else -- 其他玩家
     local hostPlayer = PlayerHelper:getHostPlayer()
     if (hostPlayer) then
       player:setPosition(hostPlayer:getPosition())
-    else
+    else -- 没有房主
       player:setPosition(self.initPosition) -- 初始位置
       PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
     end
