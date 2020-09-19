@@ -150,9 +150,9 @@ function MyPlayerHelper:playerDie (objid, toobjid)
         if (player.beatBy) then
           player.finalBeatBy = player.beatBy
         end
-        -- PlayerHelper:setGameResults(objid, 2) -- 游戏结束
-        PlayerHelper:setGameWin(objid)
-      end, 1)
+        GameHelper:doGameEnd()
+        -- PlayerHelper:setGameWin(objid)
+      end, 0.1)
     else -- 其他玩家
       BackpackHelper:clearAllPack(objid)
       logPaper:newItem(objid, 1, true)

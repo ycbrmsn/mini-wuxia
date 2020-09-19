@@ -1,5 +1,7 @@
 -- 我的游戏工具类
-MyGameHelper = {}
+MyGameHelper = {
+  index = 1,
+}
 
 function MyGameHelper:setGBattleUI ()
   local player = PlayerHelper:getHostPlayer()
@@ -62,6 +64,7 @@ end
 function MyGameHelper:runGame ()
   GameHelper:runGame()
   -- body
+  -- self.index = self.index + 1
 end
 
 -- 结束游戏
