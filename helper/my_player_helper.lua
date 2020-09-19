@@ -8,8 +8,6 @@ function MyPlayerHelper:playerEnterGame (objid)
   local isEntered = PlayerHelper:playerEnterGame(objid)
   MyStoryHelper:playerEnterGame(objid)
   -- body
-  local player = PlayerHelper:getPlayer(objid)
-  player:init()
 end
 
 -- 玩家离开游戏
