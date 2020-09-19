@@ -26,6 +26,9 @@ MyMap = {
     GAME_DATA_TALK_WITH_GAO_ID = 4303, -- 与高小虎交谈的数据
     GAME_DATA_GET_WEAPON_ID = 4304, -- 领取新生武器的数据
     GAME_DATA_JIANGHUO_EXP_ID = 4308, -- 江火的经验的数据
+    FASTER_RUN_PILL1_ID = 4310, -- 速行丸
+    FASTER_RUN_PILL2_ID = 4311, -- 疾行丸
+    FASTER_RUN_PILL3_ID = 4312, -- 神行丸
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID

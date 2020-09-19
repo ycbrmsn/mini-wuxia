@@ -104,6 +104,12 @@ function MyPlayerHelper:playerConsumeItem (objid, toobjid, itemid, itemnum)
   if (itemid == MyMap.ITEM.WINE_ID) then -- 最香酒
     ActorHelper:addBuff(objid, 17, 2, 3600)
     ActorHelper:addBuff(objid, 18, 2, 3600)
+  elseif (itemid == MyMap.ITEM.FASTER_RUN_PILL1_ID) then -- 速行丸
+    ActorHelper:addBuff(objid, ActorHelper.BUFF.FASTER_RUN, 1, 3600)
+  elseif (itemid == MyMap.ITEM.FASTER_RUN_PILL2_ID) then -- 疾行丸
+    ActorHelper:addBuff(objid, ActorHelper.BUFF.FASTER_RUN, 2, 3600)
+  elseif (itemid == MyMap.ITEM.FASTER_RUN_PILL3_ID) then -- 神行丸
+    ActorHelper:addBuff(objid, ActorHelper.BUFF.FASTER_RUN, 3, 3600)
   end
 end
 
