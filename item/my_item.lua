@@ -1,17 +1,7 @@
 -- 我的道具类
 
 -- 江湖日志类
-LogPaper = BaseItem:new()
-
-function LogPaper:new ()
-  local o = {
-    id = MyMap.ITEM.LOG_PAPER_ID,
-  }
-  setmetatable(o, self)
-  self.__index = self
-  ItemHelper:register(o)
-  return o
-end
+LogPaper = BaseItem:new({ id = MyMap.ITEM.LOG_PAPER_ID })
 
 -- 获取日志
 function LogPaper:getContent ()

@@ -8,13 +8,8 @@ function MyPlayerHelper:playerEnterGame (objid)
   local isEntered = PlayerHelper:playerEnterGame(objid)
   MyStoryHelper:playerEnterGame(objid)
   -- body
-  if (not(logPaper)) then
-    logPaper = LogPaper:new()
-  end
-  -- 检测玩家是否有江湖日志，如果没有则放进背包
-  if (not(logPaper:hasItem(objid))) then
-    logPaper:newItem(objid, 1, true)
-  end
+  local player = PlayerHelper:getPlayer(objid)
+  player:init()
 end
 
 -- 玩家离开游戏
@@ -155,7 +150,6 @@ function MyPlayerHelper:playerDie (objid, toobjid)
       end, 0.1)
     else -- 其他玩家
       BackpackHelper:clearAllPack(objid)
-      logPaper:newItem(objid, 1, true)
     end
   else
     BackpackHelper:removeGridItemByItemID(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 移除一颗宝石
@@ -167,6 +161,8 @@ function MyPlayerHelper:playerRevive (objid, toobjid)
   PlayerHelper:playerRevive(objid, toobjid)
   MyStoryHelper:playerRevive(objid, toobjid)
   -- body
+  local player = PlayerHelper:getPlayer(objid)
+  player:init()
 end
 
 -- 玩家选择快捷栏

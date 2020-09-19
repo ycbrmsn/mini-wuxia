@@ -18,6 +18,11 @@ function BasePlayer:new (o)
   return o
 end
 
+-- 初始化方法，用于重写
+function BasePlayer:init ()
+  -- body
+end
+
 function BasePlayer:speak (afterSeconds, ...)
   if (afterSeconds > 0) then
     self.action:speakAfterSeconds(afterSeconds, ...)
