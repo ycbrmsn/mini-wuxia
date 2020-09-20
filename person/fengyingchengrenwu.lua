@@ -333,7 +333,11 @@ end
 function Yexiaolong:playerClickEvent (objid)
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (mainIndex == 3 and mainProgress == 3) then
+  if (mainIndex == 1 and mainProgress == #story1.tips - 1) then
+    self:speakTo(objid, 0, '你先去准备准备，我们明天巳时出发。')
+  elseif (mainIndex == 1 and mainProgress == #story1.tips) then
+    self:speakTo(objid, 0, '准备得怎么样了，我们巳时就要出发了。')
+  elseif (mainIndex == 3 and mainProgress == 3) then
     self:speakTo(objid, 0, '你先去找小高，我要歇一歇。')
   end
 end

@@ -11,7 +11,8 @@ function Story1:new ()
       '好像听到文羽在叫我。我得去问问他到底发生了什么。',
       '文羽告诉我风颖城的武术学院又要开始招生了，让我去问问村长。记得村长家在村中央，门对面就是喷泉。',
       '村长说学院的先生在客栈，不知道我能不能入先生的法眼呢。客栈我知道，就在喷泉旁边，有竹栅栏围着的。',
-      '我得到了先生的认可。明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
+      '我完成了任务，先生给了我一块令牌。',
+      '明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
       '今日巳时，就要出发了。想想还真有点迫不及待。'
     },
     posBeg = { x = 29, y = 8, z = 1 },
@@ -83,14 +84,14 @@ function Story1:finishNoticeEvent (objid)
   -- 开始对话
   local ws = WaitSeconds:new(1)
   yexiaolong:speak(ws:use(3), '你顺利地通过了考验，不错。嗯……')
-  yexiaolong.action:playThink(ws:get())
-  yexiaolong:thinks(ws:use(3), '我的任务是至少招一名学员，应该可以了。')
+  yexiaolong:thinks(ws:get(), '我的任务是至少招一名学员，应该可以了。')
+  yexiaolong.action:playThink(ws:use(2))
+  yexiaolong:speak(ws:get(), '这是风颖城的通行令牌，你收好，没有它可是进不了风颖城的。')
+  yexiaolong.action:playStand(ws:use(3))
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
-  yexiaolong.action:playStand(ws:get())
   if (hour < 9) then
     yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
-    StoryHelper:forward(1, self.tips - 1)
   else
     yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
   end
@@ -101,6 +102,10 @@ function Story1:finishNoticeEvent (objid)
     player:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
+    StoryHelper:forward(1, 5)
+    if (hour < 9) then
+      StoryHelper:forward(1, self.tips - 1)
+    end
   end, ws:get())
 end
 
@@ -123,7 +128,9 @@ end
 
 function Story1:recover (player)
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (mainProgress >= 5) then
+  if (mainProgress == 5) then
+    story1:finishNoticeEvent(player.objid)
+  elseif (mainProgress > 5) then
     player:enableMove(true)
   end
 end

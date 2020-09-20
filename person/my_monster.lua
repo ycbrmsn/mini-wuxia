@@ -248,8 +248,8 @@ function QiangdaoLouluo:new ()
       { MyMap.ITEM.APPLE_ID, 1, 1, 30 }, -- 苹果
       { MyMap.ITEM.COIN_ID, 2, 4, 30 } -- 铜板
     },
-    initPosition = { x = 34, y = 7, z = 327 },
-    toPosition = { x = -363, y = 7, z = 556 },
+    initPosition = { x = 34, y = 7, z = 327 }, -- 剧情二初始化位置
+    -- toPosition = { x = -363, y = 7, z = 556 },
     monsters = {},
     monsterPositions = {
       { x = 229, y = 8, z = 49 },
@@ -279,6 +279,7 @@ function QiangdaoLouluo:init ()
   for i, v in ipairs(self.encampmentPositions) do
     table.insert(self.areaids, AreaHelper:getAreaByPos(v))
   end
+  self.action = BaseActorAction:new(self)
   self.generate = function ()
     self:generateMonsters()
     qiangdaoXiaotoumu:generateMonsters()
@@ -291,13 +292,12 @@ function QiangdaoLouluo:initStoryMonsters ()
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
-    self.action = BaseActorAction:new(self)
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
-    self:setPositions({self.toPosition})
+    -- self:setPositions({self.toPosition})
     -- 清除木围栏
-    AreaHelper:clearAllWoodenFence(areaid)
+    -- AreaHelper:clearAllWoodenFence(areaid)
   end
 end
 
@@ -397,7 +397,7 @@ function QiangdaoXiaotoumu:new ()
       { MyMap.ITEM.COIN_ID, 4, 8, 30 } -- 铜板
     },
     initPosition = { x = 33, y = 7, z = 334 },
-    toPosition = { x = -363, y = 7, z = 556 },
+    -- toPosition = { x = -363, y = 7, z = 556 },
     monsters = {},
     monsterPositions = {
       { x = 229, y = 8, z = 49 },
@@ -417,6 +417,7 @@ function QiangdaoXiaotoumu:init ()
   for i, v in ipairs(self.monsterPositions) do
     table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
   end
+  self.action = BaseActorAction:new(self)
   self.generate = function ()
     self:generateMonsters()
   end
@@ -427,13 +428,12 @@ function QiangdaoXiaotoumu:initStoryMonsters ()
   local areaid = AreaHelper:getAreaByPos(self.initPosition)
   local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
-    self.action = BaseActorAction:new(self)
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
-    self:setPositions({self.toPosition})
+    -- self:setPositions({self.toPosition})
     -- 清除木围栏
-    AreaHelper:clearAllWoodenFence(areaid)
+    -- AreaHelper:clearAllWoodenFence(areaid)
   end
 end
 
