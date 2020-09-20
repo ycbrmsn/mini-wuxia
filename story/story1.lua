@@ -15,6 +15,8 @@ function Story1:new ()
       '明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
       '今日巳时，就要出发了。想想还真有点迫不及待。'
     },
+    noticeEventIndex = 1,
+    finishNoticeEventIndex = 1,
     posBeg = { x = 29, y = 8, z = 1 },
     posEnd = { x = 31, y = 9, z = 1 },
     createPos = { x = 28, y = 7, z = -28 },
@@ -33,6 +35,16 @@ end
 
 -- 文羽通知事件
 function Story1:noticeEvent (areaid)
+  if (not(wenyu) or not(wenyu:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:noticeEvent(areaid)
+    end, 1)
+    if (self.noticeEventIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：文羽未找到，请找到文羽继续后续剧情')
+    end
+    self.noticeEventIndex = self.noticeEventIndex + 1
+    return
+  end
   AreaHelper:destroyArea(areaid)
   local createPos = story1.createPos
   wenyu:setPosition(createPos.x, createPos.y, createPos.z)
@@ -76,13 +88,26 @@ end
 
 -- 结束通知事件
 function Story1:finishNoticeEvent (objid)
+  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:finishNoticeEvent(objid)
+    end, 1)
+    if (self.finishNoticeEventIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
+    end
+    self.finishNoticeEventIndex = self.finishNoticeEventIndex + 1
+    return
+  end
   -- 设置对话人物不可移动
   local player = PlayerHelper:getPlayer(objid)
-  player:enableMove(false, true)
-  yexiaolong:enableMove(false)
-  yexiaolong:wantStayForAWhile(100)
+  local ws = WaitSeconds:new()
+  TimeHelper:callFnAfterSecond (function ()
+    player:enableMove(false, true)
+    yexiaolong:enableMove(false)
+    yexiaolong:wantStayForAWhile(100)
+    yexiaolong:lookAt(objid)
+  end, ws:get())
   -- 开始对话
-  local ws = WaitSeconds:new(1)
   yexiaolong:speak(ws:use(3), '你顺利地通过了考验，不错。嗯……')
   yexiaolong:thinks(ws:get(), '我的任务是至少招一名学员，应该可以了。')
   yexiaolong.action:playThink(ws:use(2))
@@ -109,7 +134,7 @@ function Story1:finishNoticeEvent (objid)
   end, ws:get())
 end
 
--- 事件废弃
+-- 重伤事件废弃
 function Story1:playerBadHurt (objid)
   local player = PlayerHelper:getPlayer(objid)
   local pos
@@ -129,7 +154,11 @@ end
 function Story1:recover (player)
   local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainProgress == 5) then
-    story1:finishNoticeEvent(player.objid)
+    if (PlayerHelper:isMainPlayer(player.objid)) then -- 房主
+      story1:finishNoticeEvent(player.objid)
+    else
+      player:enableMove(true)
+    end
   elseif (mainProgress > 5) then
     player:enableMove(true)
   end

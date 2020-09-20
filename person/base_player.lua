@@ -30,6 +30,11 @@ function BasePlayer:initMyPlayer ()
   -- body
 end
 
+-- 是否是房主
+function BasePlayer:isHostPlayer ()
+  return PlayerHelper:isMainPlayer(self.objid)
+end
+
 function BasePlayer:speak (afterSeconds, ...)
   if (afterSeconds > 0) then
     self.action:speakAfterSeconds(afterSeconds, ...)

@@ -14,6 +14,7 @@ function Story3:new ()
       '拿着新武器好开心。接下来做什么呢，要不要找先生问问。',
       '先生让我去消灭强盗大头目，我觉得目前对我来说还是挺难的，我得好好准备一番。',
     },
+    comeToCollegeIndex = 1,
     posBeg = MyPosition:new(-31, 7, 590),
     posEnd = MyPosition:new(-7, 8, 576),
     startPos = MyPosition:new(-19, 7, 584), -- 剧情开始位置
@@ -39,6 +40,25 @@ end
 
 -- 来到学院
 function Story3:comeToCollege ()
+  local name
+  if (not(yexiaolong and yexiaolong:isFind())) then -- 校验叶小龙
+    name = '叶小龙'
+  elseif (not(yexiaolong and yexiaolong:isFind())) then -- 校验高小虎
+    name = '高小虎'
+  elseif (not(yuewushuang and yuewushuang:isFind())) then -- 校验月无双
+    name = '月无双'
+  end
+  if (name) then
+    TimeHelper:callFnAfterSecond(function ()
+      self:comeToCollege()
+    end, 1)
+    if (self.comeToCollegeIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：', name, '未找到，请找到', name, '继续后续剧情')
+    end
+    self.comeToCollegeIndex = self.comeToCollegeIndex + 1
+    return
+  end
+
   local px = 0
   PlayerHelper:everyPlayerDoSomeThing(function (player)
     player:setPosition(self.startPos.x + px, self.startPos.y, self.startPos.z)
@@ -60,7 +80,7 @@ function Story3:comeToCollege ()
   self.airWallArea = AreaHelper:createAreaRectByRange(self.airWallPosBeg, self.airWallPosEnd)
   AreaHelper:fillBlock(self.airWallArea, 1001) -- 区域填充空气墙
 
-  local ws = WaitSeconds:new(1)
+  local ws = WaitSeconds:new()
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '希望我能在这里学得一身本事。')
   yexiaolong:lookAt(gaoxiaohu, ws:get())

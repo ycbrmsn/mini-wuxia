@@ -9,12 +9,17 @@ function Story2:new ()
     tips = {
       '终于到了出发的时间了。我好激动。',
       '先生带着我向学院出发了。只是，没想到是要用跑的。',
+      '竟然出现了强盗！',
       '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
       '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
       '我……我竟然被一伙强盗打败了。还好先生及时赶到。',
-      -- '#G目前剧情到此。'
+      '先生要先离开？',
       '先生先离开了。风颖城，我来了。'
     },
+    goToCollegeIndex = 1,
+    wipeOutQiangdaoIndex = 1,
+    endWordsIndex = 1,
+    playerBadHurtIndex = 1,
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
       { x = 0, y = 7, z = 20 }
@@ -84,6 +89,17 @@ end
 
 -- 前往学院
 function Story2:goToCollege ()
+  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:goToCollege()
+    end, 1)
+    if (self.goToCollegeIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
+    end
+    self.goToCollegeIndex = self.goToCollegeIndex + 1
+    return
+  end
+
   PlayerHelper:everyPlayerNotify('约定的时间到了')
   -- 初始化所有人位置
   local idx = 1
@@ -92,7 +108,18 @@ function Story2:goToCollege ()
     p:wantLookAt(yexiaolong, 2)
     idx = idx + 1
   end)
-  yexiaolong:wantMove('goToCollege', { self.yexiaolongInitPosition[2] })
+  
+  xpcall(function ()
+    yexiaolong:wantMove('goToCollege', { self.yexiaolongInitPosition[2] })
+  end, function (err)
+    local mainProgress = StoryHelper:getMainStoryProgress()
+    local hostPlayer = PlayerHelper:getHostPlayer()
+    if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
+      LogHelper:error('这个问题作者还没时间处理，请跑到叶小龙身边，然后退出游戏重新进入')
+    else
+      LogHelper:error(err)
+    end
+  end)
   yexiaolong:setPosition(self.yexiaolongInitPosition[1])
   PlayerHelper:changeVMode()
   PlayerHelper:everyPlayerEnableMove(false)
@@ -160,7 +187,7 @@ function Story2:teacherLeaveForAWhile (myPlayer)
   myPlayer:speak(0, '先生，这是快要到了吗？')
   PlayerHelper:everyPlayerEnableMove(false)
 
-  local ws = WaitSeconds:new(1)
+  local ws = WaitSeconds:new()
   myPlayer.action:playThink(ws:use())
   yexiaolong:speak(ws:use(), '……')
   myPlayer:speak(ws:use(), '先生？')
@@ -185,7 +212,7 @@ function Story2:teacherLeaveForAWhile (myPlayer)
     for i, v in ipairs(PlayerHelper:getAllPlayers()) do
       if (i == 1) then
         v.action:runTo(self.eventPositions, function ()
-          self:meetBandits(v)
+          self:meetBandits()
         end)
       else
         v.action:runTo(self.eventPositions)
@@ -198,7 +225,8 @@ function Story2:teacherLeaveForAWhile (myPlayer)
 end
 
 -- 遭遇强盗
-function Story2:meetBandits (hostPlayer)
+function Story2:meetBandits ()
+  local hostPlayer = PlayerHelper:getHostPlayer()
   StoryHelper:forward(2, 2)
   story2:initQiangdao()
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
@@ -243,6 +271,7 @@ function Story2:meetBandits (hostPlayer)
   TimeHelper:callFnAfterSecond(function (p)
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerNotify('注意，你不能离此地过远')
+    StoryHelper:forward(2, 3)
     qiangdaoXiaotoumu:setAIActive(true)
     qiangdaoLouluo:setAIActive(true)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
@@ -254,8 +283,19 @@ end
 
 -- 消灭强盗
 function Story2:wipeOutQiangdao ()
+  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:wipeOutQiangdao()
+    end, 1)
+    if (self.wipeOutQiangdaoIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
+    end
+    self.wipeOutQiangdaoIndex = self.wipeOutQiangdaoIndex + 1
+    return
+  end
+
   local hostPlayer = PlayerHelper:getHostPlayer()
-  StoryHelper:forward(2, 3)
+  StoryHelper:forward(2, 4)
   PlayerHelper:everyPlayerEnableMove(false)
   yexiaolong:thinks(0, '算算时间，应该清理得差不多了。去看看怎么样了。')
   local ws = WaitSeconds:new(2)
@@ -287,8 +327,8 @@ function Story2:wipeOutQiangdao ()
   PlayerHelper:everyPlayerDoSomeThing (function (p)
     BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
     if (p == hostPlayer) then
-      StoryHelper:forward(2, 4)
       StoryHelper:forward(2, 5)
+      StoryHelper:forward(2, 6)
       self:endWords(hostPlayer)
     end
   end, ws:get())
@@ -296,6 +336,17 @@ end
 
 -- 结束语
 function Story2:endWords (player)
+  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:endWords(player)
+    end, 1)
+    if (self.endWordsIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
+    end
+    self.endWordsIndex = self.endWordsIndex + 1
+    return
+  end
+
   local ws = WaitSeconds:new(3)
   yexiaolong:speak(ws:use(3), '前面不远就是风颖城了。通行令牌已经给你，你出示令牌就可以进城了。')
   yexiaolong:speak(ws:use(3), '进城后你可以先四处逛逛。记得来学院报到。学院在东北方。')
@@ -317,6 +368,7 @@ function Story2:endWords (player)
   PlayerHelper:everyPlayerEnableMove(true, ws:get())
 
   TimeHelper:callFnAfterSecond(function ()
+    StoryHelper:forward(2, 7)
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, true)
@@ -331,14 +383,25 @@ function Story2:playerBadHurt (objid)
   if (self.standard == 2) then
     return
   end
+  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+    TimeHelper:callFnAfterSecond(function ()
+      self:playerBadHurt(objid)
+    end, 1)
+    if (self.playerBadHurtIndex % 10 == 1) then
+      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
+    end
+    self.playerBadHurtIndex = self.playerBadHurtIndex + 1
+    return
+  end
+
   self.standard = 2
-  StoryHelper:forward(2, 3)
   StoryHelper:forward(2, 4)
+  StoryHelper:forward(2, 5)
   local player = PlayerHelper:getPlayer(objid)
   PlayerHelper:changeVMode()
   player:enableBeAttacked(false)
   player:enableMove(false, true)
-  local ws = WaitSeconds:new(1)
+  local ws = WaitSeconds:new()
   yexiaolong:thinks(ws:use(), '果然还是太勉强了吗？')
   TimeHelper:callFnAfterSecond(function ()
     yexiaolong:speak(0, '住手！')
@@ -407,7 +470,7 @@ function Story2:playerBadHurt (objid)
       table.sort(monsters, function (a, b)
         return a[2] > b[2]
       end)
-      local wss = WaitSeconds:new(1)
+      local wss = WaitSeconds:new()
       for i, v in ipairs(monsters) do
         TimeHelper:callFnAfterSecond(function ()
           local pos = ActorHelper:getDistancePosition(v[1], -1.5)
@@ -454,8 +517,8 @@ function Story2:playerBadHurt (objid)
       TimeHelper:callFnAfterSecond(function ()
         yexiaolong:lookAt(player.objid)
         yexiaolong:speak(0, '不错，这么快就又能动弹了。')
-        StoryHelper:forward(2, 5)
-        self:endWords(player, 2)
+        StoryHelper:forward(2, 6)
+        self:endWords(player)
       end, wss:get())
     end
   end, ws:get())
@@ -627,9 +690,8 @@ end
 
 function Story2:recover (player)
   local mainProgress = StoryHelper:getMainStoryProgress()
-  local hostPlayer = PlayerHelper:getHostPlayer()
   if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
-    if (player == hostPlayer) then
+    if (player:isHostPlayer()) then
       story2:goToCollege()
     else
       player:setMyPosition(hostPlayer:getMyPosition())
@@ -642,25 +704,38 @@ function Story2:recover (player)
   --   end
   elseif (mainProgress == 3) then -- 路遇强盗
     story2:initQiangdao(true)
+    story2:meetBandits()
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
-  elseif (mainProgress == 4) then -- 消灭了强盗
+  elseif (mainProgress == 4) then -- 开打
+    story2:initQiangdao(true)
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
+    if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
+      player:setMyPosition(story2.eventPositions[1])
+    end
+  elseif (mainProgress == 5) then -- 消灭了强盗
     PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
-    if (player == hostPlayer) then
+    if (player:isHostPlayer()) then
       story2:wipeOutQiangdao()
     end
-  elseif (mainProgress == 5) then -- 被强盗打败
+  elseif (mainProgress == 6) then -- 被强盗打败
     story2:initQiangdao(true)
     PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
-    if (player == hostPlayer) then
+    if (player:isHostPlayer()) then
       story2:playerBadHurt(player.objid)
     end
-  elseif (mainProgress == 6) then -- 先生离开
+  elseif (mainProgress == 7) then -- 先生要先离开？
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
+    player:enableBeAttacked(true) -- 能被攻击
+    if (player:isHostPlayer()) then
+      story2:endWords(player)
+    end
+  elseif (mainProgress == #self.tips) then -- 先生离开
     PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     player:enableBeAttacked(true) -- 能被攻击
     -- 剧情二结束
