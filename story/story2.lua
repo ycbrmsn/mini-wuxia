@@ -16,10 +16,6 @@ function Story2:new ()
       '先生要先离开？',
       '先生先离开了。风颖城，我来了。'
     },
-    goToCollegeIndex = 1,
-    wipeOutQiangdaoIndex = 1,
-    endWordsIndex = 1,
-    playerBadHurtIndex = 1,
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
       { x = 0, y = 7, z = 20 }
@@ -89,14 +85,11 @@ end
 
 -- 前往学院
 function Story2:goToCollege ()
-  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:goToCollege()
     end, 1)
-    if (self.goToCollegeIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
-    end
-    self.goToCollegeIndex = self.goToCollegeIndex + 1
+    StoryHelper:showInitError('goToCollege', '叶小龙')
     return
   end
 
@@ -108,18 +101,7 @@ function Story2:goToCollege ()
     p:wantLookAt(yexiaolong, 2)
     idx = idx + 1
   end)
-  
-  xpcall(function ()
-    yexiaolong:wantMove('goToCollege', { self.yexiaolongInitPosition[2] })
-  end, function (err)
-    local mainProgress = StoryHelper:getMainStoryProgress()
-    local hostPlayer = PlayerHelper:getHostPlayer()
-    if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
-      LogHelper:error('这个问题作者还没时间处理，请跑到叶小龙身边，然后退出游戏重新进入')
-    else
-      LogHelper:error(err)
-    end
-  end)
+  yexiaolong:wantMove('goToCollege', { self.yexiaolongInitPosition[2] })
   yexiaolong:setPosition(self.yexiaolongInitPosition[1])
   PlayerHelper:changeVMode()
   PlayerHelper:everyPlayerEnableMove(false)
@@ -283,14 +265,11 @@ end
 
 -- 消灭强盗
 function Story2:wipeOutQiangdao ()
-  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:wipeOutQiangdao()
     end, 1)
-    if (self.wipeOutQiangdaoIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
-    end
-    self.wipeOutQiangdaoIndex = self.wipeOutQiangdaoIndex + 1
+    StoryHelper:showInitError('wipeOutQiangdao', '叶小龙')
     return
   end
 
@@ -336,14 +315,11 @@ end
 
 -- 结束语
 function Story2:endWords (player)
-  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:endWords(player)
     end, 1)
-    if (self.endWordsIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
-    end
-    self.endWordsIndex = self.endWordsIndex + 1
+    StoryHelper:showInitError('endWords', '叶小龙')
     return
   end
 
@@ -383,14 +359,11 @@ function Story2:playerBadHurt (objid)
   if (self.standard == 2) then
     return
   end
-  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:playerBadHurt(objid)
     end, 1)
-    if (self.playerBadHurtIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
-    end
-    self.playerBadHurtIndex = self.playerBadHurtIndex + 1
+    StoryHelper:showInitError('playerBadHurt', '叶小龙')
     return
   end
 

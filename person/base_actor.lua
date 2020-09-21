@@ -12,7 +12,8 @@ BaseActor = {
   timername = 'myActorTimer',
   wants = nil,
   isAIOpened = true,
-  sealTimes = 0 -- 封魔叠加次数
+  isInit = false, -- 是否初始化完成
+  sealTimes = 0, -- 封魔叠加次数
 }
 
 function BaseActor:new (actorid, objid)
@@ -413,6 +414,7 @@ function BaseActor:initActor (initPosition)
       ActorHelper:setEnableBeKilledState(self.objid, false)
     end
     self:wantAtHour()
+    self.isInit = true
     LogHelper:debug('初始化', self:getName(), '完成')
     return true
   else
@@ -424,6 +426,11 @@ end
 function BaseActor:isFind ()
   local actorid = CreatureHelper:getActorID(self.objid)
   return actorid and actorid == self.actorid
+end
+
+-- 是否完成初始化
+function BaseActor:isFinishInit ()
+  return self.isInit
 end
 
 function BaseActor:collidePlayer (playerid, isPlayerInFront)

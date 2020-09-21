@@ -15,8 +15,6 @@ function Story1:new ()
       '明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
       '今日巳时，就要出发了。想想还真有点迫不及待。'
     },
-    noticeEventIndex = 1,
-    finishNoticeEventIndex = 1,
     posBeg = { x = 29, y = 8, z = 1 },
     posEnd = { x = 31, y = 9, z = 1 },
     createPos = { x = 28, y = 7, z = -28 },
@@ -35,14 +33,11 @@ end
 
 -- 文羽通知事件
 function Story1:noticeEvent (areaid)
-  if (not(wenyu) or not(wenyu:isFind())) then -- 校验
+  if (not(wenyu) or not(wenyu:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:noticeEvent(areaid)
     end, 1)
-    if (self.noticeEventIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：文羽未找到，请找到文羽继续后续剧情')
-    end
-    self.noticeEventIndex = self.noticeEventIndex + 1
+    StoryHelper:showInitError('noticeEvent', '文羽')
     return
   end
   AreaHelper:destroyArea(areaid)
@@ -88,14 +83,11 @@ end
 
 -- 结束通知事件
 function Story1:finishNoticeEvent (objid)
-  if (not(yexiaolong) or not(yexiaolong:isFind())) then -- 校验
+  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
     TimeHelper:callFnAfterSecond(function ()
       self:finishNoticeEvent(objid)
     end, 1)
-    if (self.finishNoticeEventIndex % 10 == 1) then
-      ChatHelper:sendMsg(nil, '地图错误：叶小龙未找到，请找到叶小龙继续后续剧情')
-    end
-    self.finishNoticeEventIndex = self.finishNoticeEventIndex + 1
+    StoryHelper:showInitError('finishNoticeEvent', '叶小龙')
     return
   end
   -- 设置对话人物不可移动
@@ -132,23 +124,6 @@ function Story1:finishNoticeEvent (objid)
       StoryHelper:forward(1, self.tips - 1)
     end
   end, ws:get())
-end
-
--- 重伤事件废弃
-function Story1:playerBadHurt (objid)
-  local player = PlayerHelper:getPlayer(objid)
-  local pos
-  for i, v in ipairs(miaolan.firstFloorBedPositions) do
-    pos = v
-    if (AreaHelper:isAirArea(v)) then
-      break
-    end
-  end
-  player:setPosition(pos)
-  PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.SOUTH, 0)
-  player.action:playDown(1)
-  PlayerHelper:changeViewMode(objid)
-  player:thinkTo(objid, 0, '没想到我又受重伤了。')
 end
 
 function Story1:recover (player)
