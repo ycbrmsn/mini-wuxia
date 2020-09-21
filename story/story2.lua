@@ -209,12 +209,15 @@ end
 -- 遭遇强盗
 function Story2:meetBandits ()
   local hostPlayer = PlayerHelper:getHostPlayer()
-  StoryHelper:forward(2, 2)
-  story2:initQiangdao()
+  if (StoryHelper:forward(2, 2)) then
+    story2:initQiangdao()
+  else
+    story2:initQiangdao(true)
+  end
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
   local xiaolouluoId = qiangdaoLouluo.monsters[1]
 
-  local ws = WaitSeconds:new(2)
+  local ws = WaitSeconds:new(1)
   TimeHelper:callFnAfterSecond(function (p)
     PlayerHelper:everyPlayerEnableMove(false)
     qiangdaoXiaotoumu:lookAt(hostPlayer.objid)
@@ -512,6 +515,17 @@ function Story2:initQiangdao (notFirst)
         end
       end
     end
+    LogHelper:debug('小头目：', #qiangdaoXiaotoumu.monsters, ',喽罗：', #qiangdaoLouluo.monsters)
+    local mainProgress = StoryHelper:getMainStoryProgress()
+    if (mainProgress == 3) then
+      qiangdaoXiaotoumu:setAIActive(false)
+      qiangdaoLouluo:setAIActive(false)
+    elseif (mainProgress == 4) then -- 开打
+
+    elseif (mainProgress == 5) then -- 被打败
+      qiangdaoXiaotoumu:setAIActive(false)
+      qiangdaoLouluo:setAIActive(false)
+    end
   else -- 第一次初始化
     qiangdaoXiaotoumu:initStoryMonsters()
     qiangdaoLouluo:initStoryMonsters()
@@ -669,14 +683,7 @@ function Story2:recover (player)
     else
       player:setMyPosition(hostPlayer:getMyPosition())
     end
-  -- elseif (mainProgress == 2) then -- 开始奔跑
-  --   PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.NORTH, 0)
-  --   player:setMyPosition(story2.eventPositions[1])
-  --   if (player == hostPlayer) then
-  --     story2:meetBandits(hostPlayer)
-  --   end
   elseif (mainProgress == 3) then -- 路遇强盗
-    story2:initQiangdao(true)
     story2:meetBandits()
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
@@ -698,7 +705,6 @@ function Story2:recover (player)
     end
   elseif (mainProgress == 6) then -- 被强盗打败
     story2:initQiangdao(true)
-    PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     if (player:isHostPlayer()) then
       story2:playerBadHurt(player.objid)
     end

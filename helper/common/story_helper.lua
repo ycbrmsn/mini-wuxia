@@ -9,7 +9,7 @@ StoryHelper = {
 -- 剧情前进
 function StoryHelper:forward (mainIndex, mainProgress)
   if (mainIndex ~= self.mainIndex or mainProgress ~= self.mainProgress) then
-    return
+    return false
   end
   self.mainProgress = self.mainProgress + 1
   if (self.mainProgress > #self.stories[self.mainIndex].tips) then
@@ -18,6 +18,7 @@ function StoryHelper:forward (mainIndex, mainProgress)
   end
   local hostPlayer = PlayerHelper:getHostPlayer()
   GameDataHelper:updateGameData(hostPlayer)
+  return true
 end
 
 -- 获得主线剧情序号
