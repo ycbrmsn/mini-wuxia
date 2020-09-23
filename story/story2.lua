@@ -212,7 +212,12 @@ function Story2:meetBandits ()
   if (StoryHelper:forward(2, 2)) then
     story2:initQiangdao()
   else
-    story2:initQiangdao(true)
+    if (not(story2:initQiangdao(true))) then
+      TimeHelper:callFnFastRuns(function ()
+        self:meetBandits()
+      end, 0.1)
+      return false
+    end
   end
   local xiaotoumuId = qiangdaoXiaotoumu.monsters[1]
   local xiaolouluoId = qiangdaoLouluo.monsters[1]
@@ -503,31 +508,51 @@ end
 -- 初始化所有强盗
 function Story2:initQiangdao (notFirst)
   if (notFirst) then -- 再次初始化
+    if (not(self.initQiangdaoTimes)) then -- 初始化强盗次数
+      self.initQiangdaoTimes = 1
+    else
+      self.initQiangdaoTimes = self.initQiangdaoTimes + 1
+    end
     local areaid = AreaHelper:getAreaByPos(self.eventPositions[1])
     local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
+    local monsters1, monsters2 = {}, {}
     if (objids and #objids > 0) then
       LogHelper:debug('总数：', #objids)
       for i, objid in ipairs(objids) do
         local actorid = CreatureHelper:getActorID(objid)
         if (actorid == qiangdaoLouluo.actorid) then
-          table.insert(qiangdaoLouluo.monsters, objid)
+          table.insert(monsters2, objid)
         elseif (actorid == qiangdaoXiaotoumu.actorid) then
-          table.insert(qiangdaoXiaotoumu.monsters, objid)
+          table.insert(monsters1, objid)
         end
       end
+    end
+    if (#monsters1 ~= #qiangdaoXiaotoumu.monsters) then -- 数量不等，则重新赋值小头目
+      qiangdaoXiaotoumu.monsters = monsters1
+    end
+    if (#monsters2 ~= #qiangdaoXiaotoumu.monsters) then -- 数量不等，则重新赋值喽罗
+      qiangdaoLouluo.monsters = monsters2
     end
     LogHelper:debug('小头目：', #qiangdaoXiaotoumu.monsters, ',喽罗：', #qiangdaoLouluo.monsters)
     local mainProgress = StoryHelper:getMainStoryProgress()
     if (mainProgress == 3) then -- 相遇
       qiangdaoXiaotoumu:setAIActive(false)
       qiangdaoLouluo:setAIActive(false)
+      if (#qiangdaoXiaotoumu.monsters + #qiangdaoLouluo.monsters < 11) then -- 未找到所有强盗
+        return false
+      end
       qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPositions)
       qiangdaoLouluo:setPositions(story2.louluoPositions)
     elseif (mainProgress == 4) then -- 开打
-
+      if (self.initQiangdaoTimes < 10) then
+        return false
+      end
     elseif (mainProgress == 5) then -- 被打败
       qiangdaoXiaotoumu:setAIActive(false)
       qiangdaoLouluo:setAIActive(false)
+      if (self.initQiangdaoTimes < 10) then
+        return false
+      end
     end
   else -- 第一次初始化
     qiangdaoXiaotoumu:initStoryMonsters()
@@ -543,6 +568,7 @@ function Story2:initQiangdao (notFirst)
   for i, objid in ipairs(qiangdaoLouluo.monsters) do
     table.insert(story2.xiaolouluos, { objid = objid, killed = false })
   end
+  return true
 end
 
 -- 初始化位置
@@ -687,18 +713,19 @@ function Story2:recover (player)
       player:setMyPosition(hostPlayer:getMyPosition())
     end
   elseif (mainProgress == 3) then -- 路遇强盗
-    TimeHelper:callFnAfterSecond(function ()
-      story2:meetBandits()
-    end, 1)
+    story2:meetBandits()
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
   elseif (mainProgress == 4) then -- 开打
-    TimeHelper:callFnAfterSecond(function ()
-      story2:initQiangdao(true)
-    end, 1)
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
+    if (not(story2:initQiangdao(true))) then
+      TimeHelper:callFnFastRuns(function ()
+        self:recover(player)
+      end, 0.1)
+      return
+    end
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
@@ -711,9 +738,12 @@ function Story2:recover (player)
       story2:wipeOutQiangdao()
     end
   elseif (mainProgress == 6) then -- 被强盗打败
-    TimeHelper:callFnAfterSecond(function ()
-      story2:initQiangdao(true)
-    end, 1)
+    if (not(story2:initQiangdao(true))) then
+      TimeHelper:callFnFastRuns(function ()
+        self:recover(player)
+      end, 0.1)
+      return
+    end
     if (player:isHostPlayer()) then
       story2:playerBadHurt(player.objid)
     end

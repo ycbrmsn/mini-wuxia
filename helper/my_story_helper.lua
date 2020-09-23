@@ -88,7 +88,7 @@ function MyStoryHelper:playerLeaveArea (objid, areaid)
   -- body
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then -- 跑出强盗区域
+  if (mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid) then -- 跑出强盗区域
     story2:comeBack(objid, areaid)
   end
 end
@@ -253,7 +253,7 @@ function MyStoryHelper:actorLeaveArea (objid, areaid)
   -- body
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
-  if (story2 and story2.areaid and areaid == story2.areaid and mainIndex == 2 and mainProgress == 3) then
+  if (mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid) then
     local actorid = CreatureHelper:getActorID(objid)
     if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
       story2:comeBack(objid, areaid)
