@@ -544,13 +544,13 @@ function Story2:initQiangdao (notFirst)
       qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPositions)
       qiangdaoLouluo:setPositions(story2.louluoPositions)
     elseif (mainProgress == 4) then -- 开打
-      if (self.initQiangdaoTimes < 10) then
+      if (self.initQiangdaoTimes < 20) then
         return false
       end
     elseif (mainProgress == 5) then -- 被打败
       qiangdaoXiaotoumu:setAIActive(false)
       qiangdaoLouluo:setAIActive(false)
-      if (self.initQiangdaoTimes < 10) then
+      if (self.initQiangdaoTimes < 20) then
         return false
       end
     end

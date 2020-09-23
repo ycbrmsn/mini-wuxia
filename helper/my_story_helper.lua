@@ -165,9 +165,9 @@ function MyStoryHelper:playerBeHurt (objid, toobjid, hurtlv)
     end
     local mainIndex = StoryHelper:getMainStoryIndex()
     local mainProgress = StoryHelper:getMainStoryProgress()
-    if (mainIndex == 1) then -- 在落叶村受重伤
-      story1:playerBadHurt(objid)
-    elseif (mainIndex == 2 and mainProgress == 3) then -- 杀强盗受重伤
+    -- if (mainIndex == 1) then -- 在落叶村受重伤
+    --   story1:playerBadHurt(objid)
+    if (mainIndex == 2 and mainProgress == 4) then -- 杀强盗受重伤
       story2:playerBadHurt(objid)
     end
   end
