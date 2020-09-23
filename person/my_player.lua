@@ -24,11 +24,17 @@ function MyPlayer:initMyPlayer ()
   if (not(LogPaper:hasItem(self.objid))) then
     LogPaper:newItem(self.objid, 1, true)
   end
+  local curMaxHp = PlayerHelper:getMaxHp(self.objid)
+  local curHp = PlayerHelper:getHp(self.objid)
   local level = self:getLevel()
-  if (level) then
+  if (curMaxHp and curHp and level) then
     local hp = self.initHp + level * self.attr.addMaxHp
-    PlayerHelper:setMaxHp(self.objid, hp)
-    PlayerHelper:setHp(self.objid, hp)
+    if (curMaxHp ~= hp) then -- 当前最大值与实际最大值不等
+      PlayerHelper:setMaxHp(self.objid, hp)
+    end
+    if (curMaxHp == curHp) then -- 满血
+      PlayerHelper:setHp(self.objid, hp)
+    end
   else
     LogHelper:error('重置玩家生命值失败，建议重新进入游戏')
   end

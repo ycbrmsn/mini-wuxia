@@ -16,10 +16,12 @@ end
 function MyStoryHelper:atHour (hour)
   StoryHelper:atHour(hour)
   -- body
-  if (hour == 9) then
+  if (hour == 0) then
+    StoryHelper:forward(1, #story1.tips - 1)
+  elseif (hour == 9) then
     -- LogHelper:debug(StoryHelper:getMainStoryIndex(), '-', StoryHelper:getMainStoryProgress(), '-', #story1.tips)
-    if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == #story1.tips) then
-      StoryHelper:forward(1, #story1.tips)
+    -- if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == #story1.tips) then
+    if (StoryHelper:forward(1, #story1.tips)) then
       story2:goToCollege()
     end
   end

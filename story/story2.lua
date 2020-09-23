@@ -506,6 +506,7 @@ function Story2:initQiangdao (notFirst)
     local areaid = AreaHelper:getAreaByPos(self.eventPositions[1])
     local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
     if (objids and #objids > 0) then
+      LogHelper:debug('总数：', #objids)
       for i, objid in ipairs(objids) do
         local actorid = CreatureHelper:getActorID(objid)
         if (actorid == qiangdaoLouluo.actorid) then
@@ -517,9 +518,11 @@ function Story2:initQiangdao (notFirst)
     end
     LogHelper:debug('小头目：', #qiangdaoXiaotoumu.monsters, ',喽罗：', #qiangdaoLouluo.monsters)
     local mainProgress = StoryHelper:getMainStoryProgress()
-    if (mainProgress == 3) then
+    if (mainProgress == 3) then -- 相遇
       qiangdaoXiaotoumu:setAIActive(false)
       qiangdaoLouluo:setAIActive(false)
+      qiangdaoXiaotoumu:setPositions(story2.xiaotoumuPositions)
+      qiangdaoLouluo:setPositions(story2.louluoPositions)
     elseif (mainProgress == 4) then -- 开打
 
     elseif (mainProgress == 5) then -- 被打败
