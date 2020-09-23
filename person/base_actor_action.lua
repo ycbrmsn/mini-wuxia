@@ -39,8 +39,9 @@ function BaseActorAction:transmitTo (pos)
 end
 
 function BaseActorAction:stopRun ()
-  self.myActor:closeAI()
-  self:runTo(MyPosition:new(self.myActor:getPosition()))
+  -- self.myActor:closeAI()
+  -- self:runTo(MyPosition:new(self.myActor:getPosition()))
+  CreatureHelper:stopRun(self.myActor.objid)
 end
 
 function BaseActorAction:playHi (afterSeconds)
