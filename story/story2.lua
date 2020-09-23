@@ -687,13 +687,17 @@ function Story2:recover (player)
       player:setMyPosition(hostPlayer:getMyPosition())
     end
   elseif (mainProgress == 3) then -- 路遇强盗
-    story2:meetBandits()
+    TimeHelper:callFnAfterSecond(function ()
+      story2:meetBandits()
+    end, 1)
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
     end
   elseif (mainProgress == 4) then -- 开打
-    story2:initQiangdao(true)
+    TimeHelper:callFnAfterSecond(function ()
+      story2:initQiangdao(true)
+    end, 1)
     PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(AreaHelper:objInArea(story2.areaid, player.objid))) then -- 不在区域内则移动到区域内
       player:setMyPosition(story2.eventPositions[1])
@@ -707,7 +711,9 @@ function Story2:recover (player)
       story2:wipeOutQiangdao()
     end
   elseif (mainProgress == 6) then -- 被强盗打败
-    story2:initQiangdao(true)
+    TimeHelper:callFnAfterSecond(function ()
+      story2:initQiangdao(true)
+    end, 1)
     if (player:isHostPlayer()) then
       story2:playerBadHurt(player.objid)
     end
