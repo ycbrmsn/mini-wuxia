@@ -32,14 +32,14 @@ function CreatureHelper:openAI (objid)
 end
 
 -- 停止跑
-function CreatureHelper:stopRun (objid)
+function CreatureHelper:stopRun (objid, speed)
   self:closeAI(objid)
   local x, y, z = ActorHelper:getFaceDirection(objid)
   -- ActorHelper:setEnableMoveState(objid, false)
   -- TimeHelper:callFnFastRuns(function ()
     local pos = ActorHelper:getMyPosition(objid)
     if (pos and x) then
-      ActorHelper:tryMoveToPos(objid, pos.x + x, pos.y + y, pos.z + z)
+      ActorHelper:tryMoveToPos(objid, pos.x + x, pos.y + y, pos.z + z, speed)
       -- ActorHelper:setEnableMoveState(objid, true)
     end
   -- end, 1)

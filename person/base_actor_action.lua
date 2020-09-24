@@ -41,7 +41,7 @@ end
 function BaseActorAction:stopRun ()
   -- self.myActor:closeAI()
   -- self:runTo(MyPosition:new(self.myActor:getPosition()))
-  CreatureHelper:stopRun(self.myActor.objid)
+  CreatureHelper:stopRun(self.myActor.objid, self.myActor.defaultSpeed or 300)
 end
 
 function BaseActorAction:playHi (afterSeconds)
