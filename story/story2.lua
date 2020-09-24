@@ -315,8 +315,7 @@ function Story2:wipeOutQiangdao ()
   PlayerHelper:everyPlayerDoSomeThing (function (p)
     BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
     if (p == hostPlayer) then
-      StoryHelper:forward(2, 5)
-      StoryHelper:forward(2, 6)
+      StoryHelper:forward(2, 5, 7)
       self:endWords(hostPlayer)
     end
   end, ws:get())
@@ -353,7 +352,7 @@ function Story2:endWords (player)
   PlayerHelper:everyPlayerEnableMove(true, ws:get())
 
   TimeHelper:callFnAfterSecond(function ()
-    StoryHelper:forward(2, 7)
+    StoryHelper:forward(2, 8)
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, true)
@@ -377,8 +376,7 @@ function Story2:playerBadHurt (objid)
   end
 
   self.standard = 2
-  StoryHelper:forward(2, 4)
-  StoryHelper:forward(2, 5)
+  StoryHelper:forward(2, 4, 5)
   local player = PlayerHelper:getPlayer(objid)
   PlayerHelper:changeVMode()
   player:enableBeAttacked(false)
@@ -432,6 +430,7 @@ function Story2:playerBadHurt (objid)
     yexiaolong:speak(0, '这里有', num, '粒生血丹。剩下的交给我吧。')
     BackpackHelper:addItem(player.objid, MyMap.ITEM.CREATE_BLOOD_PILL_ID, num) -- 生血丹
     yexiaolong:lookAt(player.objid)
+    StoryHelper:forward(2, 6)
     -- player:lookAt(yexiaolong.objid)
   end, ws:use())
   TimeHelper:callFnAfterSecond(function ()
@@ -441,6 +440,7 @@ end
 
 -- 叶小龙灭强盗
 function Story2:yexiaolongWipeOutQiangdao (player)
+  self.standard = 2
   player = player or PlayerHelper:getHostPlayer()
   local monsters = {}
   for i, v in ipairs(self.xiaotoumus) do
@@ -506,7 +506,7 @@ function Story2:yexiaolongWipeOutQiangdao (player)
     TimeHelper:callFnAfterSecond(function ()
       yexiaolong:lookAt(player.objid)
       yexiaolong:speak(0, '不错，这么快就又能动弹了。')
-      StoryHelper:forward(2, 6)
+      StoryHelper:forward(2, 7)
       self:endWords(player)
     end, wss:get())
   end
@@ -554,7 +554,7 @@ function Story2:initQiangdao (notFirst)
       if (self.initQiangdaoTimes < 20) then
         return false
       end
-    elseif (mainProgress == 5) then -- 被打败
+    elseif (mainProgress == 6 or mainProgress == 7) then -- 被打败/叶小龙打强盗
       qiangdaoXiaotoumu:setAIActive(false)
       qiangdaoLouluo:setAIActive(false)
       if (self.initQiangdaoTimes < 20) then
@@ -687,7 +687,9 @@ function Story2:comeBack (objid, areaid)
     -- PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
   end
   ActorHelper:appendSpeed(objid, x, y, z)
-  ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
+  local player = PlayerHelper:getPlayer(objid)
+  player.action:runTo({ pos })
+  -- ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
 end
 
 -- 干掉了强盗小头目事件

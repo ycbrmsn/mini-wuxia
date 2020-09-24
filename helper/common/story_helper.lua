@@ -7,11 +7,15 @@ StoryHelper = {
 }
 
 -- 剧情前进
-function StoryHelper:forward (mainIndex, mainProgress)
+function StoryHelper:forward (mainIndex, mainProgress, endProgress)
   if (mainIndex ~= self.mainIndex or mainProgress ~= self.mainProgress) then
     return false
   end
-  self.mainProgress = self.mainProgress + 1
+  if (endProgress) then
+    self.mainProgress = self.endProgress + 1
+  else
+    self.mainProgress = self.mainProgress + 1
+  end
   if (self.mainProgress > #self.stories[self.mainIndex].tips) then
     self.mainIndex = self.mainIndex + 1
     self.mainProgress = 1
