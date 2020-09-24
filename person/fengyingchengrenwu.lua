@@ -192,6 +192,7 @@ function Yexiaolong:new ()
       MyPosition:new(25.5, 10.5, -33.5) -- 柜子上
     },
     -- 剧情三
+    story3InitPosition = MyPosition:new(-17, 7.5, 593),
     bedData2 = {
       MyPosition:new(5.5, 8.5, 608.5), -- 床尾位置
       ActorHelper.FACE_YAW.SOUTH -- 床尾朝向南
@@ -234,6 +235,8 @@ function Yexiaolong:wantAtHour (hour)
     elseif (hour == 22) then
       self:putOutCandleAndGoToBed()
     end
+  elseif (mainIndex == 2 and mainProgress == #story2.tips) then
+    self:wantMove('init', { self.story3InitPosition })
   elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
     self.candlePositions = self.candlePositions2
     if (hour == 6) then

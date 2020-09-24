@@ -13,6 +13,7 @@ function Story2:new ()
       '这群可恶的强盗，居然要抢我的通行令。没办法了，先消灭他们再说。',
       '可恶的强盗终于被我消灭了。看来我还是很厉害的嘛。',
       '我……我竟然被一伙强盗打败了。还好先生及时赶到。',
+      '先生消灭了强盗，好帅呀。',
       '先生要先离开？',
       '先生先离开了。风颖城，我来了。'
     },
@@ -434,75 +435,81 @@ function Story2:playerBadHurt (objid)
     -- player:lookAt(yexiaolong.objid)
   end, ws:use())
   TimeHelper:callFnAfterSecond(function ()
-    local monsters = {}
-    for i, v in ipairs(self.xiaotoumus) do
-      if (not(v.killed)) then
-        local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
-        table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
-      end
-    end
-    for i, v in ipairs(self.xiaolouluos) do
-      if (not(v.killed)) then
-        local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
-        table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
-      end
-    end
-    if (#monsters > 0) then
-      table.sort(monsters, function (a, b)
-        return a[2] > b[2]
-      end)
-      local wss = WaitSeconds:new()
-      for i, v in ipairs(monsters) do
-        TimeHelper:callFnAfterSecond(function ()
-          local pos = ActorHelper:getDistancePosition(v[1], -1.5)
-          yexiaolong:setPosition(pos)
-          yexiaolong:lookAt(v[1])
-          ActorHelper:lookAt(v[1], yexiaolong.objid)
-          local attackPos = ActorHelper:getDistancePosition(v[1], -1)
-          WorldHelper:playAttackEffect(attackPos)
-          WorldHelper:playBeAttackedSoundOnPos(attackPos)
-          local dstPos = ActorHelper:getMyPosition(v[1])
-          ActorHelper:appendFixedSpeed(v[1], 2, pos, dstPos)
-          local actorid = CreatureHelper:getActorID(v[1])
-          if (actorid == MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID) then
-            qiangdaoLouluo:speak(0, '啊！')
-          else
-            qiangdaoXiaotoumu:speak(0, '啊！')
-          end
-          -- yexiaolong.action:playAttack()
-          TimeHelper:callFnFastRuns(function ()
-            ActorHelper:killSelf(v[1])
-          end, 0.3)
-          TimeHelper:callFnAfterSecond(function ()
-            WorldHelper:stopAttackEffect(attackPos)
-          end, 2)
-        end, wss:use(1))
-      end
-
-      wss:use(1)
-      yexiaolong:speak(wss:get(), '高手，就是这么寂寞。')
-      yexiaolong.action:playHappy(wss:use())
-
-      local idx = 1
-      PlayerHelper:everyPlayerDoSomeThing(function (p)
-        local pos = yexiaolong:getDistancePosition(idx + 1.5)
-        p:setPosition(pos)
-        p:wantLookAt(yexiaolong, 2)
-        if (p ~= player) then
-          p:enableMove(false, true)
-        end
-        idx = idx + 1
-      end, wss:use(1))
-      player:speak(wss:use(), '先生，你好厉害。')
-      yexiaolong:thinks(wss:use(), '不是我厉害，而是你太菜。')
-      TimeHelper:callFnAfterSecond(function ()
-        yexiaolong:lookAt(player.objid)
-        yexiaolong:speak(0, '不错，这么快就又能动弹了。')
-        StoryHelper:forward(2, 6)
-        self:endWords(player)
-      end, wss:get())
-    end
+    self:yexiaolongWipeOutQiangdao(player)
   end, ws:get())
+end
+
+-- 叶小龙灭强盗
+function Story2:yexiaolongWipeOutQiangdao (player)
+  player = player or PlayerHelper:getHostPlayer()
+  local monsters = {}
+  for i, v in ipairs(self.xiaotoumus) do
+    if (not(v.killed)) then
+      local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
+      table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
+    end
+  end
+  for i, v in ipairs(self.xiaolouluos) do
+    if (not(v.killed)) then
+      local mPos = MyPosition:new(ActorHelper:getPosition(v.objid))
+      table.insert(monsters, { v.objid, WorldHelper:calcDistance(playerPos, mPos) })
+    end
+  end
+  if (#monsters > 0) then
+    table.sort(monsters, function (a, b)
+      return a[2] > b[2]
+    end)
+    local wss = WaitSeconds:new()
+    for i, v in ipairs(monsters) do
+      TimeHelper:callFnAfterSecond(function ()
+        local pos = ActorHelper:getDistancePosition(v[1], -1.5)
+        yexiaolong:setPosition(pos)
+        yexiaolong:lookAt(v[1])
+        ActorHelper:lookAt(v[1], yexiaolong.objid)
+        local attackPos = ActorHelper:getDistancePosition(v[1], -1)
+        WorldHelper:playAttackEffect(attackPos)
+        WorldHelper:playBeAttackedSoundOnPos(attackPos)
+        local dstPos = ActorHelper:getMyPosition(v[1])
+        ActorHelper:appendFixedSpeed(v[1], 2, pos, dstPos)
+        local actorid = CreatureHelper:getActorID(v[1])
+        if (actorid == MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID) then
+          qiangdaoLouluo:speak(0, '啊！')
+        else
+          qiangdaoXiaotoumu:speak(0, '啊！')
+        end
+        -- yexiaolong.action:playAttack()
+        TimeHelper:callFnFastRuns(function ()
+          ActorHelper:killSelf(v[1])
+        end, 0.3)
+        TimeHelper:callFnAfterSecond(function ()
+          WorldHelper:stopAttackEffect(attackPos)
+        end, 2)
+      end, wss:use(1))
+    end
+
+    wss:use(1)
+    yexiaolong:speak(wss:get(), '高手，就是这么寂寞。')
+    yexiaolong.action:playHappy(wss:use())
+
+    local idx = 1
+    PlayerHelper:everyPlayerDoSomeThing(function (p)
+      local pos = yexiaolong:getDistancePosition(idx + 1.5)
+      p:setPosition(pos)
+      p:wantLookAt(yexiaolong, 2)
+      if (p ~= player) then
+        p:enableMove(false, true)
+      end
+      idx = idx + 1
+    end, wss:use(1))
+    player:speak(wss:use(), '先生，你好厉害。')
+    yexiaolong:thinks(wss:use(), '不是我厉害，而是你太菜。')
+    TimeHelper:callFnAfterSecond(function ()
+      yexiaolong:lookAt(player.objid)
+      yexiaolong:speak(0, '不错，这么快就又能动弹了。')
+      StoryHelper:forward(2, 6)
+      self:endWords(player)
+    end, wss:get())
+  end
 end
 
 -- 初始化所有强盗
@@ -738,6 +745,7 @@ function Story2:recover (player)
       story2:wipeOutQiangdao()
     end
   elseif (mainProgress == 6) then -- 被强盗打败
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
     if (not(story2:initQiangdao(true))) then
       TimeHelper:callFnFastRuns(function ()
         self:recover(player)
@@ -747,7 +755,18 @@ function Story2:recover (player)
     if (player:isHostPlayer()) then
       story2:playerBadHurt(player.objid)
     end
-  elseif (mainProgress == 7) then -- 先生要先离开？
+  elseif (mainProgress == 7) then -- 先生赐了药，就去灭强盗
+    PlayerHelper:setPlayerEnableBeKilled(player.objid, false) -- 不能被杀死
+    if (not(story2:initQiangdao(true))) then
+      TimeHelper:callFnFastRuns(function ()
+        self:recover(player)
+      end, 0.1)
+      return
+    end
+    if (player:isHostPlayer()) then
+      story2:yexiaolongWipeOutQiangdao()
+    end
+  elseif (mainProgress == 8) then -- 先生要先离开？
     PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
     player:enableBeAttacked(true) -- 能被攻击
     if (player:isHostPlayer()) then
