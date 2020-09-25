@@ -29,6 +29,7 @@ MyMap = {
     FASTER_RUN_PILL1_ID = 4310, -- 速行丸
     FASTER_RUN_PILL2_ID = 4311, -- 疾行丸
     FASTER_RUN_PILL3_ID = 4312, -- 神行丸
+    SAVE_GAME_ID = 4313, -- 保存游戏道具物品
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID

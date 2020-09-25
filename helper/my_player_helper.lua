@@ -41,6 +41,11 @@ function MyPlayerHelper:playerClickBlock (objid, blockid, x, y, z)
     -- 处理床
     PlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
   elseif (MyBlockHelper:checkCityGateSwitch(blockid, MyPosition:new(x, y, z))) then
+  elseif (blockid == SaveGame.blockid) then -- 储物箱
+    local itemid = PlayerHelper:getCurToolID(objid)
+    if (itemid and itemid == MyMap.ITEM.SAVE_GAME_ID) then -- 手持保存游戏道具将删除储物箱
+      WorldContainerHelper:removeStorageBox(math.floor(x), math.floor(y), math.floor(z))
+    end
   end
 end
 

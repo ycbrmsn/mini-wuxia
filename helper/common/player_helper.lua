@@ -724,3 +724,9 @@ function PlayerHelper:setGameResults (objid, result)
     return Player:setGameResults(objid, result)
   end, '设置玩家比赛结果', 'objid=', objid, ',result=', result)
 end
+
+function PlayerHelper:openBoxByPos (objid, x, y, z)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:openBoxByPos(objid, x, y, z)
+  end, '打开可以操作的箱子', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
+end
