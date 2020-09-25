@@ -1,5 +1,7 @@
 -- 我的剧情工具类
 MyStoryHelper = {
+  initWoodPos = MyPosition:new(31, 5, 10), -- 游戏开始时的一个标志木头位置
+  woodid = 201,
   initPosition = MyPosition:new(29.5, 9.5, 7.5),
 }
 
@@ -8,6 +10,14 @@ function MyStoryHelper:init ()
   story2 = Story2:new()
   story3 = Story3:new()
   StoryHelper:setStorys({ story1, story2, story3 })
+end
+
+function MyStoryHelper:replaceInitBlock (pos)
+  if (not(BlockHelper:replaceBlock(200, pos.x, pos.y, pos.z))) then
+    TimeHelper:callFnAfterSecond(function ()
+      MyStoryHelper:replaceInitBlock(pos)
+    end, 1)
+  end
 end
 
 -- 事件
@@ -32,11 +42,28 @@ function MyStoryHelper:playerEnterGame (objid)
   -- body
   local player = PlayerHelper:getPlayer(objid)
   if (PlayerHelper:isMainPlayer(objid)) then -- 本地玩家
-    if (not(GameDataHelper:updateStoryData())) then -- 刚开始游戏
-      TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
-      player:setPosition(self.initPosition) -- 初始位置
-      PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
-      BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
+    if (not(GameDataHelper:updateStoryData())) then -- 未找到游戏数据文件
+      -- 判断是否刚进入游戏，等待1s后检测
+      TimeHelper:callFnAfterSecond(function ()
+        local blockid = BlockHelper:getBlockID(self.initWoodPos.x, self.initWoodPos.y, self.initWoodPos.z)
+        if (blockid and blockid == self.woodid) then -- 刚进入游戏
+          -- GameDataHelper:updateMainIndex()
+          -- GameDataHelper:updateMainProgress()
+          TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
+          player:setPosition(self.initPosition) -- 初始位置
+          PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+          BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
+          -- 3秒后替换掉初始方块
+          TimeHelper:callFnAfterSecond(function ()
+            MyStoryHelper:replaceInitBlock(self.initWoodPos)
+          end, 3)
+        else -- 再次进入游戏
+
+        end
+        StoryHelper:recover() -- 初始化剧情
+      end, 1)
+    else -- 找到数据文件
+      StoryHelper:recover(player) -- 恢复剧情
     end
   else -- 其他玩家
     local hostPlayer = PlayerHelper:getHostPlayer()
@@ -50,7 +77,6 @@ function MyStoryHelper:playerEnterGame (objid)
 
   -- 播放背景音乐
   MusicHelper:startBGM(objid, 1, true)
-  StoryHelper:recover(player) -- 恢复剧情
 end
 
 -- 玩家离开游戏

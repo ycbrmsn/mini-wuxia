@@ -143,3 +143,41 @@ function SaveGame:useItem (objid)
   self:putInItem(objid, dstPos)
   self:putInItem(objid, MyPosition:new(dstPos.x, dstPos.y + 1, dstPos.z), BACKPACK_TYPE.INVENTORY)
 end
+
+-- 加载进度
+LoadGame = BaseItem:new({
+  id = MyMap.ITEM.LOAD_GAME_ID,
+})
+
+function LoadGame:useError (objid)
+  ChatHelper:sendMsg(objid, '加载进度道具仅房主使用有效')
+end
+
+function LoadGame:itemLostError (objid, name)
+  ChatHelper:sendMsg(objid, '加载错误：#G游戏数据', name, '#n道具遗失，请找到后重新加载')
+end
+
+function LoadGame:loadOver (objid)
+  ChatHelper:sendMsg(objid, '游戏加载完成')
+end
+
+function LoadGame:useItem (objid)
+  if (PlayerHelper:isMainPlayer(objid)) then -- 房主
+    local numA = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID)
+    local numB = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID)
+    if (not(numA) or numA == 0) then
+      self:itemLostError(objid, 'A')
+      return
+    end
+    if (not(numB) or numB == 0) then
+      self:itemLostError(objid, 'B')
+      return
+    end
+    -- 数据存在，则开始加载
+    local player = PlayerHelper:getPlayer(objid)
+    StoryHelper:recover(player) -- 恢复剧情
+    self:loadOver(objid)
+  else -- 其他玩家
+    self:useError(objid)
+  end
+end

@@ -6,9 +6,9 @@ function GameDataHelper:updateStoryData ()
   local player = PlayerHelper:getHostPlayer()
   local mainIndex = BackpackHelper:getItemNumAndGrid(player.objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID)
   local mainProgress = BackpackHelper:getItemNumAndGrid(player.objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID)
-  if (mainIndex == 0) then -- 游戏刚开始
-    self:updateMainIndex()
-    self:updateMainProgress()
+  if (mainIndex == 0 or mainProgress == 0) then -- 未找到游戏数据文件
+    -- self:updateMainIndex()
+    -- self:updateMainProgress()
     return false
   else -- 再次回到游戏
     StoryHelper:setMainStoryIndex(mainIndex)

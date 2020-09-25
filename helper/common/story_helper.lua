@@ -72,9 +72,11 @@ function StoryHelper:recover (player)
   if (#self.stories == 0) then
     MyStoryHelper:init()
   end
-  local story = self:getStory()
-  if (story) then -- 如果存在剧情
-    story:recover(player)
+  if (player and PlayerHelper:isMainPlayer(player.objid)) then
+    local story = self:getStory()
+    if (story) then -- 如果存在剧情
+      story:recover(player)
+    end
   end
 end
 
@@ -83,7 +85,7 @@ function StoryHelper:showInitError (key, name)
   key = key or 'defaultInitKey'
   name = name or '必需角色'
   self.initKey[key] = self.initKey[key] or 1
-  if (self.initKey[key] % 10 == 5) then
+  if (self.initKey[key] % 30 == 5) then
     ChatHelper:sendMsg(nil, '地图错误：', name, '未找到，找到', name, '后方可继续后续剧情')
   end
   self.initKey[key] = self.initKey[key] + 1
