@@ -154,7 +154,7 @@ function LoadGame:useError (objid)
 end
 
 function LoadGame:itemLostError (objid, name)
-  ChatHelper:sendMsg(objid, '加载错误：#G游戏数据', name, '#n道具遗失，请找到后重新加载')
+  ChatHelper:sendMsg(objid, '加载错误：#G游戏数据', name, '#n遗失，请找到后重新加载')
 end
 
 function LoadGame:loadOver (objid)
@@ -175,8 +175,10 @@ function LoadGame:useItem (objid)
     end
     -- 数据存在，则开始加载
     local player = PlayerHelper:getPlayer(objid)
-    StoryHelper:recover(player) -- 恢复剧情
-    self:loadOver(objid)
+    GameDataHelper:updateStoryData()
+    if (StoryHelper:recover(player)) then -- 恢复剧情
+      self:loadOver(objid)
+    end
   else -- 其他玩家
     self:useError(objid)
   end

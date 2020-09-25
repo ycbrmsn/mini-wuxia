@@ -20,10 +20,6 @@ end
 
 -- 自定义初始化
 function MyPlayer:initMyPlayer ()
-  -- 检测玩家是否有江湖日志，如果没有则放进背包
-  if (not(LogPaper:hasItem(self.objid))) then
-    LogPaper:newItem(self.objid, 1, true)
-  end
   local curMaxHp = PlayerHelper:getMaxHp(self.objid)
   local curHp = PlayerHelper:getHp(self.objid)
   local level = self:getLevel()

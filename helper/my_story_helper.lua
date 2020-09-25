@@ -47,12 +47,16 @@ function MyStoryHelper:playerEnterGame (objid)
       TimeHelper:callFnAfterSecond(function ()
         local blockid = BlockHelper:getBlockID(self.initWoodPos.x, self.initWoodPos.y, self.initWoodPos.z)
         if (blockid and blockid == self.woodid) then -- 刚进入游戏
-          -- GameDataHelper:updateMainIndex()
-          -- GameDataHelper:updateMainProgress()
+          GameDataHelper:updateMainIndex()
+          GameDataHelper:updateMainProgress()
+          StoryHelper.alreadyLoad = true
           TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
           player:setPosition(self.initPosition) -- 初始位置
           PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+          LogPaper:newItem(objid, 1, true) -- 江湖日志
           BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
+          SaveGame:newItem(objid, 1, true) -- 保存游戏
+          LoadGame:newItem(objid, 1, true) -- 加载进度
           -- 3秒后替换掉初始方块
           TimeHelper:callFnAfterSecond(function ()
             MyStoryHelper:replaceInitBlock(self.initWoodPos)
