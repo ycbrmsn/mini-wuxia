@@ -155,6 +155,7 @@ function MyPlayerHelper:playerDie (objid, toobjid)
   if (mainIndex == 1 or mainIndex == 2) then
     local pos = MyStoryHelper.initPosition
     PlayerHelper:reviveToPos(objid, pos.x, pos.y, pos.z)
+    ActorHelper:setMyPosition(objid, pos)
   elseif (mainIndex == 3) then
     local pos = MyStoryHelper.initPosition3
     PlayerHelper:reviveToPos(objid, pos.x, pos.y, pos.z)
@@ -183,6 +184,12 @@ function MyPlayerHelper:playerRevive (objid, toobjid)
   -- body
   local player = PlayerHelper:getPlayer(objid)
   player:init()
+  local num = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.PROTECT_GEM_ID) -- 守护宝石数量
+  if (not(num) or num == 0) then
+    if (ActorHelper:hasBuff(objid, MyMap.BUFF.PROTECT_ID)) then -- 有守护状态
+      ActorHelper:removeBuff(objid, MyMap.BUFF.PROTECT_ID) -- 移除
+    end
+  end
 end
 
 -- 玩家选择快捷栏
