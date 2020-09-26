@@ -730,3 +730,9 @@ function PlayerHelper:openBoxByPos (objid, x, y, z)
     return Player:openBoxByPos(objid, x, y, z)
   end, '打开可以操作的箱子', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
 end
+
+function PlayerHelper:reviveToPos (objid, x, y, z)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Player:reviveToPos(objid, x, y, z)
+  end, '复活玩家到指定点', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
+end

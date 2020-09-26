@@ -3,6 +3,7 @@ MyStoryHelper = {
   initWoodPos = MyPosition:new(31, 5, 10), -- 游戏开始时的一个标志木头位置
   woodid = 201,
   initPosition = MyPosition:new(29.5, 9.5, 7.5),
+  initPosition3 = MyPosition:new(19.5, 8.5, 605.5),
 }
 
 function MyStoryHelper:init ()
@@ -53,10 +54,12 @@ function MyStoryHelper:playerEnterGame (objid)
           TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
           player:setPosition(self.initPosition) -- 初始位置
           PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
-          LogPaper:newItem(objid, 1, true) -- 江湖日志
-          BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
-          SaveGame:newItem(objid, 1, true) -- 保存游戏
-          LoadGame:newItem(objid, 1, true) -- 加载进度
+          if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
+            LogPaper:newItem(objid, 1, true) -- 江湖日志
+            BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
+            SaveGame:newItem(objid, 1, true) -- 保存游戏
+            LoadGame:newItem(objid, 1, true) -- 加载进度
+          end
           -- 3秒后替换掉初始方块
           TimeHelper:callFnAfterSecond(function ()
             MyStoryHelper:replaceInitBlock(self.initWoodPos)

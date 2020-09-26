@@ -73,7 +73,7 @@ MyMap = {
     JUYIDAO_ACTOR_ID = 42, -- 橘一刀
   },
   BUFF = {
-    
+    PROTECT_ID = 50000001, -- 守护状态
   },
   CUSTOM = {
     INIT_HOUR = 7, -- 初始时间

@@ -140,23 +140,40 @@ function MyPlayerHelper:playerDie (objid, toobjid)
   MyStoryHelper:playerDie(objid, toobjid)
   -- body
   local num = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.PROTECT_GEM_ID) -- 守护宝石数量
-  if (num == 0) then -- 玩家没有守护宝石
-    if (PlayerHelper:isMainPlayer(objid)) then -- 房主
-      -- 等待其他事件的一些取值得到后结束游戏
-      TimeHelper:callFnFastRuns(function ()
-        local player = PlayerHelper:getPlayer(objid)
-        if (player.beatBy) then
-          player.finalBeatBy = player.beatBy
-        end
-        GameHelper:doGameEnd()
-        -- PlayerHelper:setGameWin(objid)
-      end, 0.1)
-    else -- 其他玩家
-      BackpackHelper:clearAllPack(objid)
+  if (num > 0) then
+    if (ActorHelper:hasBuff(objid, MyMap.BUFF.PROTECT_ID)) then -- 有守护状态
+      if (BackpackHelper:removeGridItemByItemID(objid, MyMap.ITEM.PROTECT_GEM_ID, 1)) then -- 移除一颗宝石
+        local pos = ActorHelper:getMyPosition(objid)
+        PlayerHelper:reviveToPos(objid, pos.x, pos.y, pos.z)
+        return
+      end
     end
-  else
-    BackpackHelper:removeGridItemByItemID(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 移除一颗宝石
   end
+  -- 不满足条件则根据剧情移动到对应位置
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if (mainIndex == 1 or mainIndex == 2) then
+    local pos = MyStoryHelper.initPosition
+    PlayerHelper:reviveToPos(objid, pos.x, pos.y, pos.z)
+  elseif (mainIndex == 3) then
+    local pos = MyStoryHelper.initPosition3
+    PlayerHelper:reviveToPos(objid, pos.x, pos.y, pos.z)
+  end
+  -- if (num == 0) then -- 玩家没有守护宝石
+    -- if (PlayerHelper:isMainPlayer(objid)) then -- 房主
+    --   -- 等待其他事件的一些取值得到后结束游戏
+    --   TimeHelper:callFnFastRuns(function ()
+    --     local player = PlayerHelper:getPlayer(objid)
+    --     if (player.beatBy) then
+    --       player.finalBeatBy = player.beatBy
+    --     end
+    --     GameHelper:doGameEnd()
+    --     -- PlayerHelper:setGameWin(objid)
+    --   end, 0.1)
+    -- else -- 其他玩家
+    --   BackpackHelper:clearAllPack(objid)
+    -- end
+  -- end
 end
 
 -- 玩家复活

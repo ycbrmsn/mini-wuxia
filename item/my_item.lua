@@ -217,3 +217,14 @@ function LoadGame:useItem (objid)
     self:useError(objid)
   end
 end
+
+-- 守护宝石
+ProtectGem = BaseItem:new({ id = MyMap.ITEM.PROTECT_GEM_ID })
+
+function ProtectGem:useItem (objid)
+  if (ActorHelper:hasBuff(objid, MyMap.BUFF.PROTECT_ID)) then -- 有守护状态
+    ActorHelper:removeBuff(objid, MyMap.BUFF.PROTECT_ID)
+  else -- 没有
+    ActorHelper:addBuff(objid, MyMap.BUFF.PROTECT_ID, 1)
+  end
+end
