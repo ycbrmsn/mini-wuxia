@@ -85,12 +85,29 @@ function SaveGame:putInItem (objid, pos, category)
 end
 
 function SaveGame:useItem (objid)
-  -- 检测附件是否有储物箱
+  if (not(PlayerHelper:isMainPlayer(objid))) then -- 不是房主
+    ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
+    return
+  end
+
+  -- 判断剧情是否加载
+  if (not(StoryHelper:isLoad())) then
+    ChatHelper:sendMsg(objid, '当前剧情未加载，无法保存')
+    return
+  end
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  ChatHelper:sendMsg(objid, '#G游戏数据A#n与#G游戏数据B#n的数量应分别是#G',
+    StringHelper:int2Chinese(mainIndex), '#n、#G', StringHelper:int2Chinese(mainProgress),
+    '#n，请确保数量正确')
+
+  -- 检测附近是否有储物箱
   local pos = ActorHelper:getMyPosition(objid)
   pos.x, pos.y, pos.z = math.floor(pos.x), math.floor(pos.y), math.floor(pos.z)
   local positions = AreaHelper:getBlockPositionsAround(pos, { x = 5, y = 5, z = 5 }, self.blockid)
   if (#positions > 0) then
     PlayerHelper:openBoxByPos(objid, positions[1].x, positions[1].y, positions[1].z)
+    ChatHelper:sendMsg(objid, '附近发现储物箱')
     return
   end
 
@@ -150,7 +167,7 @@ LoadGame = BaseItem:new({
 })
 
 function LoadGame:useError (objid)
-  ChatHelper:sendMsg(objid, '加载进度道具仅房主使用有效')
+  ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
 end
 
 function LoadGame:itemLostError (objid, name)
