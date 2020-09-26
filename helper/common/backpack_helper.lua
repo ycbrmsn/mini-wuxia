@@ -106,14 +106,14 @@ function BackpackHelper:swapGridItem (playerid, gridsrc, griddst)
   end, '交换背包道具', 'playerid=', playerid, ',gridsrc=', gridsrc, ',griddst=', griddst)
 end
 
--- 通过道具格移除道具
+-- 移除背包格内一定数量道具，通过道具格移除，默认全部移除
 function BackpackHelper:removeGridItem (playerid, gridid, num)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Backpack:removeGridItem(playerid, gridid, num)
   end, '通过道具格移除道具', 'playerid=', playerid, ',gridid=', gridid, ',num=', num)
 end
 
--- 移除背包内道具
+-- 移除背包内一定数量道具，通过道具ID移除，默认全部移除
 function BackpackHelper:removeGridItemByItemID (playerid, itemid, num)
   return CommonHelper:callOneResultMethod(function (p)
     return Backpack:removeGridItemByItemID(playerid, itemid, num)

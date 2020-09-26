@@ -49,7 +49,7 @@ function MyStoryHelper:playerEnterGame (objid)
         if (blockid and blockid == self.woodid) then -- 刚进入游戏
           GameDataHelper:updateMainIndex()
           GameDataHelper:updateMainProgress()
-          StoryHelper.alreadyLoad = true
+          StoryHelper:setLoad(true)
           TimeHelper:setHour(MyMap.CUSTOM.INIT_HOUR)
           player:setPosition(self.initPosition) -- 初始位置
           PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)

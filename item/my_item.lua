@@ -161,23 +161,40 @@ function LoadGame:loadOver (objid)
   ChatHelper:sendMsg(objid, '游戏加载完成')
 end
 
+-- 检测游戏数据
+function LoadGame:checkData (objid, numA, numB)
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if (mainIndex == numA and mainProgress == numB) then
+    ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据正常')
+  else
+    GameDataHelper:updateMainIndex()
+    GameDataHelper:updateMainProgress()
+    ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整正常')
+  end
+end
+
 function LoadGame:useItem (objid)
   if (PlayerHelper:isMainPlayer(objid)) then -- 房主
     local numA = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID)
     local numB = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID)
-    if (not(numA) or numA == 0) then
-      self:itemLostError(objid, 'A')
-      return
-    end
-    if (not(numB) or numB == 0) then
-      self:itemLostError(objid, 'B')
-      return
-    end
-    -- 数据存在，则开始加载
-    local player = PlayerHelper:getPlayer(objid)
-    GameDataHelper:updateStoryData()
-    if (StoryHelper:recover(player)) then -- 恢复剧情
-      self:loadOver(objid)
+    if (StoryHelper:isLoad()) then
+      self:checkData(objid, numA, numB)
+    else
+      if (not(numA) or numA == 0) then
+        self:itemLostError(objid, 'A')
+        return
+      end
+      if (not(numB) or numB == 0) then
+        self:itemLostError(objid, 'B')
+        return
+      end
+      -- 数据存在，则开始加载
+      local player = PlayerHelper:getPlayer(objid)
+      GameDataHelper:updateStoryData()
+      if (StoryHelper:recover(player)) then -- 恢复剧情
+        self:loadOver(objid)
+      end
     end
   else -- 其他玩家
     self:useError(objid)

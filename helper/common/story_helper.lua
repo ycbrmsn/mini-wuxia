@@ -12,7 +12,7 @@ function StoryHelper:forward (mainIndex, mainProgress, endProgress)
   if (mainIndex ~= self.mainIndex or mainProgress ~= self.mainProgress) then
     return false
   end
-  self.alreadyLoad = true
+  StoryHelper:setLoad(true)
   if (endProgress) then
     self.mainProgress = self.endProgress + 1
   else
@@ -77,16 +77,25 @@ function StoryHelper:recover (player)
   if (player and PlayerHelper:isMainPlayer(player.objid)) then
     local story = self:getStory()
     if (story) then -- 如果存在剧情
-      if (self.alreadyLoad) then
-        ChatHelper:sendMsg(player.objid, '剧情已经加载过了')
+      if (StoryHelper:isLoad()) then
         return false
       else
-        self.alreadyLoad = true
+        StoryHelper:setLoad(true)
         story:recover(player)
         return true
       end
     end
   end
+end
+
+-- 剧情是否已经加载过
+function StoryHelper:isLoad ()
+  return self.alreadyLoad
+end
+
+-- 设置剧情加载情况
+function StoryHelper:setLoad (isLoad)
+  self.alreadyLoad = isLoad
 end
 
 -- 显示初始化剧情错误
