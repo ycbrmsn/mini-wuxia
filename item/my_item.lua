@@ -183,11 +183,17 @@ function LoadGame:checkData (objid, numA, numB)
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
   if (mainIndex == numA and mainProgress == numB) then
-    ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据正常')
+    if (GameDataHelper:updateMainIndex() and GameDataHelper:updateMainProgress()) then
+      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据正常')
+    else
+      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整失败')
+    end
   else
-    GameDataHelper:updateMainIndex()
-    GameDataHelper:updateMainProgress()
-    ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整正常')
+    if (GameDataHelper:updateMainIndex() and GameDataHelper:updateMainProgress()) then
+      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整正常')
+    else
+      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整失败')
+    end
   end
 end
 

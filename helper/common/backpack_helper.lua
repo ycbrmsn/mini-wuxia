@@ -77,6 +77,27 @@ function BackpackHelper:getCurShotcutGrid (playerid)
   return PlayerHelper:getCurShotcut(playerid) + 1000
 end
 
+-- 获取玩家某种背包格的第一个空的背包格，从快捷栏到背包栏
+function BackpackHelper:getFirstEmptyGridByBartype (playerid, bartype)
+  local begGrid, endGrid = BackpackHelper:getBackpackBarIDRange(bartype)
+  for i = begGrid, endGrid do
+    local itemid, num = BackpackHelper:getGridItemID(playerid, i)
+    if (itemid and itemid == 0) then
+      return i
+    end
+  end
+  return nil
+end
+
+-- 获取玩家第一个空的背包格，从快捷栏到背包栏
+function BackpackHelper:getFirstEmptyGrid (playerid)
+  local gridid = BackpackHelper:getFirstEmptyGridByBartype(playerid, BACKPACK_TYPE.SHORTCUT)
+  if (not(gridid)) then
+    gridid = BackpackHelper:getFirstEmptyGridByBartype(playerid, BACKPACK_TYPE.INVENTORY)
+  end
+  return gridid
+end
+
 -- 封装原始接口
 
 -- 添加道具到背包
@@ -97,6 +118,14 @@ function BackpackHelper:getItemNumByBackpackBar (playerid, bartype, itemid)
     return Backpack:getItemNumByBackpackBar(playerid, bartype, itemid)
   end, '获取背包持有某个道具总数量', 'playerid=', playerid, ',bartype=', bartype,
     ',itemid=', itemid)
+end
+
+-- 移动背包道具，默认全部转移
+function BackpackHelper:moveGridItem (playerid, gridsrc, griddst, num)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Backpack:moveGridItem(playerid, gridsrc, griddst, num)
+  end, '移动背包道具', 'playerid=', playerid, ',gridsrc=', gridsrc, ',griddst=',
+    griddst, ',num=', num)
 end
 
 -- 交换背包道具
@@ -162,4 +191,11 @@ function BackpackHelper:clearAllPack (playerid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Backpack:clearAllPack(playerid)
   end, ' 清空全部背包', 'playerid=', playerid)
+end
+
+-- 获取道具背包栏ID范围(起始ID~结束ID) BACKPACK_TYPE.SHORTCUT、BACKPACK_TYPE.INVENTORY、BACKPACK_TYPE.EQUIP
+function BackpackHelper:getBackpackBarIDRange (bartype)
+  return CommonHelper:callTwoResultMethod(function (p)
+    return Backpack:getBackpackBarIDRange(bartype)
+  end, '获取道具背包栏ID范围', 'bartype=', bartype)
 end
