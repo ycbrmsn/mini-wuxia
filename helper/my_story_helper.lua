@@ -65,7 +65,9 @@ function MyStoryHelper:playerEnterGame (objid)
             MyStoryHelper:replaceInitBlock(self.initWoodPos)
           end, 3)
         else -- 再次进入游戏
-
+          TimeHelper:callFnAfterSecond(function ()
+            StoryHelper:loadTip(objid)
+          end, 2)
         end
         StoryHelper:recover() -- 初始化剧情
       end, 1)

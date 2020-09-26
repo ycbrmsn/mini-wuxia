@@ -109,6 +109,17 @@ function StoryHelper:showInitError (key, name)
   self.initKey[key] = self.initKey[key] + 1
 end
 
+-- 进入未加载提示
+function StoryHelper:loadTip (objid, seconds)
+  seconds = seconds or 30
+  if (not(StoryHelper:isLoad())) then
+    ChatHelper:sendMsg(objid, '当前游戏进度未加载，请加载进度')
+    TimeHelper:callFnAfterSecond(function ()
+      StoryHelper:loadTip(objid, seconds)
+    end, seconds)
+  end
+end
+
 -- 事件
 
 -- 世界时间到[n]点
