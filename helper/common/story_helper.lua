@@ -82,6 +82,7 @@ function StoryHelper:recover (player)
       else
         StoryHelper:setLoad(true)
         story:recover(player)
+        ChatHelper:sendMsg(objid, '游戏进度加载完成')
         return true
       end
     end

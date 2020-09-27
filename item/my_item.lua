@@ -216,7 +216,7 @@ function LoadGame:useItem (objid)
       local player = PlayerHelper:getPlayer(objid)
       GameDataHelper:updateStoryData()
       if (StoryHelper:recover(player)) then -- 恢复剧情
-        self:loadOver(objid)
+        -- self:loadOver(objid)
       end
     end
   else -- 其他玩家
