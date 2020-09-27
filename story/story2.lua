@@ -17,6 +17,17 @@ function Story2:new ()
       '先生要先离开？',
       '先生先离开了。风颖城，我来了。'
     },
+    prepose = {
+      ['该出发了'] = 1,
+      ['跑步去学院'] = 2,
+      ['出现强盗'] = 3,
+      ['我要消灭强盗'] = 4,
+      ['消灭强盗'] = 5,
+      ['被强盗击败'] = 6,
+      ['先生消灭强盗'] = 7,
+      ['先生要离开'] = 8,
+      ['临近风颖城'] = 9,
+    },
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
       { x = 0, y = 7, z = 20 }
@@ -157,7 +168,7 @@ function Story2:goToCollege ()
     PlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
   end, ws:get())
   TimeHelper:callFnAfterSecond(function (p)
-    StoryHelper:forward(2, 1)
+    StoryHelper:forward(2, '该出发了')
   end, ws:use(10))
 
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(10), '呼呼。先生跑得真快。')
@@ -210,7 +221,7 @@ end
 -- 遭遇强盗
 function Story2:meetBandits ()
   local hostPlayer = PlayerHelper:getHostPlayer()
-  if (StoryHelper:forward(2, 2)) then
+  if (StoryHelper:forward(2, '跑步去学院')) then
     story2:initQiangdao()
   else
     if (not(story2:initQiangdao(true))) then
@@ -262,7 +273,7 @@ function Story2:meetBandits ()
   TimeHelper:callFnAfterSecond(function (p)
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerNotify('注意，你不能离此地过远')
-    StoryHelper:forward(2, 3)
+    StoryHelper:forward(2, '出现强盗')
     qiangdaoXiaotoumu:setAIActive(true)
     qiangdaoLouluo:setAIActive(true)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
@@ -283,7 +294,7 @@ function Story2:wipeOutQiangdao ()
   end
 
   local hostPlayer = PlayerHelper:getHostPlayer()
-  StoryHelper:forward(2, 4)
+  StoryHelper:forward(2, '我要消灭强盗')
   PlayerHelper:everyPlayerEnableMove(false)
   yexiaolong:thinks(0, '算算时间，应该清理得差不多了。去看看怎么样了。')
   local ws = WaitSeconds:new(2)
@@ -315,7 +326,7 @@ function Story2:wipeOutQiangdao ()
   PlayerHelper:everyPlayerDoSomeThing (function (p)
     BackpackHelper:addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
     if (p == hostPlayer) then
-      StoryHelper:forward(2, 5, 7)
+      StoryHelper:forward(2, '消灭强盗', '先生消灭强盗')
       self:endWords(hostPlayer)
     end
   end, ws:get())
@@ -352,7 +363,7 @@ function Story2:endWords (player)
   PlayerHelper:everyPlayerEnableMove(true, ws:get())
 
   TimeHelper:callFnAfterSecond(function ()
-    StoryHelper:forward(2, 8)
+    StoryHelper:forward(2, '先生要离开')
     PlayerHelper:changeVMode(nil, VIEWPORTTYPE.MAINVIEW)
     PlayerHelper:everyPlayerDoSomeThing (function (p)
       PlayerHelper:setPlayerEnableBeKilled(p.objid, true)
@@ -376,7 +387,7 @@ function Story2:playerBadHurt (objid)
   end
 
   self.standard = 2
-  StoryHelper:forward(2, 4, 5)
+  StoryHelper:forward(2, '我要消灭强盗', '消灭强盗')
   local player = PlayerHelper:getPlayer(objid)
   PlayerHelper:changeVMode()
   player:enableBeAttacked(false)
@@ -430,7 +441,7 @@ function Story2:playerBadHurt (objid)
     yexiaolong:speak(0, '这里有', num, '粒生血丹。剩下的交给我吧。')
     BackpackHelper:addItem(player.objid, MyMap.ITEM.CREATE_BLOOD_PILL_ID, num) -- 生血丹
     yexiaolong:lookAt(player.objid)
-    StoryHelper:forward(2, 6)
+    StoryHelper:forward(2, '被强盗击败')
     -- player:lookAt(yexiaolong.objid)
   end, ws:use())
   TimeHelper:callFnAfterSecond(function ()
@@ -506,7 +517,7 @@ function Story2:yexiaolongWipeOutQiangdao (player)
     TimeHelper:callFnAfterSecond(function ()
       yexiaolong:lookAt(player.objid)
       yexiaolong:speak(0, '不错，这么快就又能动弹了。')
-      StoryHelper:forward(2, 7)
+      StoryHelper:forward(2, '先生消灭强盗')
       self:endWords(player)
     end, wss:get())
   end
@@ -779,4 +790,8 @@ function Story2:recover (player)
     player:enableBeAttacked(true) -- 能被攻击
     -- 剧情二结束
   end
+end
+
+function Story2:getProgressPrepose (name)
+  return self.prepose[name]
 end

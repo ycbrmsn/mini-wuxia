@@ -28,11 +28,11 @@ function MyStoryHelper:atHour (hour)
   StoryHelper:atHour(hour)
   -- body
   if (hour == 0) then
-    StoryHelper:forward(1, #story1.tips - 1)
+    StoryHelper:forward(1, '明日出发')
   elseif (hour == 9) then
     -- LogHelper:debug(StoryHelper:getMainStoryIndex(), '-', StoryHelper:getMainStoryProgress(), '-', #story1.tips)
     -- if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == #story1.tips) then
-    if (StoryHelper:forward(1, #story1.tips)) then
+    if (StoryHelper:forward(1, '今日出发')) then
       story2:goToCollege()
     end
   end
@@ -97,22 +97,21 @@ end
 function MyStoryHelper:playerEnterArea (objid, areaid)
   -- body
   if (areaid == story1.areaid) then -- 文羽通知事件
-    story1:noticeEvent(areaid)
-    -- 玩家看文羽两秒
-    local player = PlayerHelper:getPlayer(objid)
-    TimeHelper:callFnContinueRuns(function ()
-      if (player:isActive()) then
-        player:lookAt(wenyu.objid)
-      end
-    end, 2)
+    if (StoryHelper:check(1, '闲来无事')) then
+      story1:noticeEvent(areaid)
+      -- 玩家看文羽两秒
+      local player = PlayerHelper:getPlayer(objid)
+      TimeHelper:callFnContinueRuns(function ()
+        if (player:isActive()) then
+          player:lookAt(wenyu.objid)
+        end
+      end, 2)
+    end
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
     story1:fasterTime()
   elseif (story3 and areaid == story3.startArea) then -- 剧情三开启区域
-    AreaHelper:destroyArea(areaid)
-    local mainIndex = StoryHelper:getMainStoryIndex()
-    local mainProgress = StoryHelper:getMainStoryProgress()
-    if (mainIndex == 2 and mainProgress == #story2.tips) then
-      StoryHelper:forward(2, #story2.tips)
+    if (StoryHelper:forward(2, '临近风颖城')) then
+      AreaHelper:destroyArea(areaid)
       story3:comeToCollege()
     end
   end
@@ -144,21 +143,23 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
   local mainIndex = StoryHelper:getMainStoryIndex()
   if (mainIndex == 1) then -- 剧情一
     if (itemid == MyMap.ITEM.WENYU_PACKAGE_ID) then -- 文羽包裹
-      StoryHelper:forward(1, 2)
+      StoryHelper:forward(1, '文羽通知')
     elseif (itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
-      StoryHelper:forward(1, 3)
+      StoryHelper:forward(1, '文羽的礼物')
     elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌
       PlayerHelper:setItemDisableThrow(objid, itemid)
-      StoryHelper:forward(1, 4)
+      StoryHelper:forward(1, '村长的礼物')
       story1:finishNoticeEvent(objid)
     end
   elseif (mainIndex == 3) then -- 剧情三
     if (itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID) then
-      StoryHelper:forward(1, 3)
-      BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      if (StoryHelper:forward(1, '对话高先生')) then
+        BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      end
     elseif (itemid == MyMap.ITEM.GAME_DATA_GET_WEAPON_ID) then
-      StoryHelper:forward(1, 4)
-      BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      if (StoryHelper:forward(1, '新生武器')) then
+        BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      end
     end
   end
 end

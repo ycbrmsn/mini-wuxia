@@ -15,6 +15,15 @@ function Story1:new ()
       '明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
       '今日巳时，就要出发了。想想还真有点迫不及待。'
     },
+    prepose = {
+      ['闲来无事'] = 1,
+      ['文羽通知'] = 2,
+      ['文羽的礼物'] = 3,
+      ['村长的礼物'] = 4,
+      ['获得令牌'] = 5,
+      ['明日出发'] = 6,
+      ['今日出发'] = 7
+    },
     posBeg = { x = 29, y = 8, z = 1 },
     posEnd = { x = 31, y = 9, z = 1 },
     createPos = { x = 28, y = 7, z = -28 },
@@ -51,7 +60,7 @@ function Story1:noticeEvent (areaid)
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu:speak(0, content)
-  StoryHelper:forward(1, 1)
+  StoryHelper:forward(1, '闲来无事')
 end
 
 -- 时间快速流逝
@@ -119,9 +128,10 @@ function Story1:finishNoticeEvent (objid)
     player:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
-    StoryHelper:forward(1, 5)
     if (hour < 9) then
-      StoryHelper:forward(1, self.tips - 1)
+      StoryHelper:forward(1, '获得令牌', '明日出发')
+    else
+      StoryHelper:forward(1, '获得令牌')
     end
   end, ws:get())
 end
@@ -137,4 +147,8 @@ function Story1:recover (player)
   elseif (mainProgress > 5) then
     player:enableMove(true)
   end
+end
+
+function Story1:getProgressPrepose (name)
+  return self.prepose[name]
 end

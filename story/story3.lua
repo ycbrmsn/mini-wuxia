@@ -14,6 +14,14 @@ function Story3:new ()
       '拿着新武器好开心。接下来做什么呢，要不要找先生问问。',
       '先生让我去消灭强盗大头目，我觉得目前对我来说还是挺难的，我得好好准备一番。',
     },
+    prepose = {
+      ['来到学院'] = 1,
+      ['先生的声音'] = 2,
+      ['对话高先生'] = 3,
+      ['新生武器'] = 4,
+      ['先生的任务'] = 5,
+      ['准备消灭大头目'] = 6,
+    },
     posBeg = MyPosition:new(-31, 7, 590),
     posEnd = MyPosition:new(-7, 8, 576),
     startPos = MyPosition:new(-19, 7, 584), -- 剧情开始位置
@@ -90,7 +98,7 @@ function Story3:comeToCollege ()
   end, ws:get())
   PlayerHelper:everyPlayerThinkToSelf(ws:use(), '咦，是先生的声音。进去看看。')
   TimeHelper:callFnAfterSecond(function ()
-    StoryHelper:forward(3, 1)
+    StoryHelper:forward(3, '来到学院')
   end, ws:get())
   gaoxiaohu:speak(ws:use(), '说了多少遍了，叫我小虎，别把我叫矮了。你也回来了。')
   yexiaolong:speak(ws:use(), '回来一阵子了，一直没找到你。小高，看看你的新学生。')
@@ -145,7 +153,7 @@ function Story3:comeToCollege ()
   PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生走好。')
   TimeHelper:callFnAfterSecond(function ()
     AreaHelper:clearAllBlock(self.airWallArea, 1001) -- 清除空气墙
-    StoryHelper:forward(3, 2)
+    StoryHelper:forward(3, '先生的声音')
     PlayerHelper:everyPlayerEnableMove(true)
     gaoxiaohu:doItNow()
     yuewushuang:doItNow()
@@ -165,4 +173,8 @@ function Story3:recover (player)
       player:setMyPosition(hostPlayer:getMyPosition())
     end
   end
+end
+
+function Story3:getProgressPrepose (name)
+  return self.prepose[name]
 end

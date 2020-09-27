@@ -7,14 +7,21 @@ StoryHelper = {
   alreadyLoad = false, -- 是否已经加载了
 }
 
--- 剧情前进
+-- 检查剧情前置条件是否满足
+function StoryHelper:check (mainIndex, mainProgress)
+  mainProgress = StoryHelper:getRealProgress(mainProgress)
+  return mainIndex == self.mainIndex and mainProgress == self.mainProgress
+end
+
+-- 剧情前进 两个progress都是要跳到剧情的前置
 function StoryHelper:forward (mainIndex, mainProgress, endProgress)
-  if (mainIndex ~= self.mainIndex or mainProgress ~= self.mainProgress) then
+  if (not(StoryHelper:check(mainIndex, mainProgress))) then
     return false
   end
   StoryHelper:setLoad(true)
   if (endProgress) then
-    self.mainProgress = self.endProgress + 1
+    endProgress = StoryHelper:getRealProgress(endProgress)
+    self.mainProgress = endProgress + 1
   else
     self.mainProgress = self.mainProgress + 1
   end
@@ -25,6 +32,15 @@ function StoryHelper:forward (mainIndex, mainProgress, endProgress)
   local hostPlayer = PlayerHelper:getHostPlayer()
   GameDataHelper:updateGameData(hostPlayer)
   return true
+end
+
+-- 获得实际进度序数
+function StoryHelper:getRealProgress (progress)
+  if (type(progress) == 'string') then -- 是别名
+    local story = StoryHelper:getStory(mainIndex)
+    progress = story:getProgressPrepose(progress) or -1 -- 找不到就-1
+  end
+  return progress
 end
 
 -- 获得主线剧情序号
