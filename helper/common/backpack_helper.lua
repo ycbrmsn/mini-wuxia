@@ -190,7 +190,7 @@ end
 function BackpackHelper:clearAllPack (playerid)
   return CommonHelper:callIsSuccessMethod(function (p)
     return Backpack:clearAllPack(playerid)
-  end, ' 清空全部背包', 'playerid=', playerid)
+  end, '清空全部背包', 'playerid=', playerid)
 end
 
 -- 获取道具背包栏ID范围(起始ID~结束ID) BACKPACK_TYPE.SHORTCUT、BACKPACK_TYPE.INVENTORY、BACKPACK_TYPE.EQUIP
@@ -198,4 +198,18 @@ function BackpackHelper:getBackpackBarIDRange (bartype)
   return CommonHelper:callTwoResultMethod(function (p)
     return Backpack:getBackpackBarIDRange(bartype)
   end, '获取道具背包栏ID范围', 'bartype=', bartype)
+end
+
+-- 未测试过
+function BackpackHelper:actEquipUpByResID (playerid, resid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Backpack:actEquipUpByResID(playerid, resid)
+  end, '玩家穿上装备', 'playerid=', playerid, ',resid=', resid)
+end
+
+-- 测试无效
+function BackpackHelper:actEquipOffByEquipID (playerid, resid)
+  return CommonHelper:callIsSuccessMethod(function (p)
+    return Backpack:actEquipOffByEquipID(playerid, resid)
+  end, '玩家脱下装备栏装备', 'playerid=', playerid, ',resid=', resid)
 end

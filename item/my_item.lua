@@ -24,14 +24,6 @@ SaveGame = BaseItem:new({
   blockid = 801, -- 储物箱id
 })
 
-function SaveGame:numError (objid)
-  ChatHelper:sendMsg(objid, '附近储物箱数目异常，请挖掘掉多余的储物箱')
-end
-
-function SaveGame:existError (objid)
-  ChatHelper:sendMsg(objid, '附近已存在储物箱，无法创建')
-end
-
 function SaveGame:createError (objid)
   ChatHelper:sendMsg(objid, '创建储物箱失败。请找一个空旷的位置进行保存')
 end
@@ -61,45 +53,56 @@ function SaveGame:takeOutItem (objid, pos)
 end
 
 -- BACKPACK_TYPE.SHORTCUT、BACKPACK_TYPE.INVENTORY
-function SaveGame:putInItem (objid, pos, category)
-  category = category or BACKPACK_TYPE.SHORTCUT
-  local min, max, gap
-  if (category == BACKPACK_TYPE.SHORTCUT) then
-    min, max, gap = 0, 7, 1000
-  elseif (category == BACKPACK_TYPE.INVENTORY) then
-    min, max, gap = 0, 39, 0
-  else
-    min, max, gap = 0, 0, 0
-  end
+function SaveGame:putInItem (objid, pos, bartype)
+  bartype = bartype or BACKPACK_TYPE.SHORTCUT
+  local min, max = BackpackHelper:getBackpackBarIDRange(bartype)
   for i = min, max do
-    local gridid = i + gap
-    local durcur, durmax = BackpackHelper:getGridDurability(objid, gridid)
+    local durcur, durmax = BackpackHelper:getGridDurability(objid, i)
     if (durcur == -1 or durcur == durmax) then -- 无耐久或满耐久
-      local itemid, num = BackpackHelper:getGridItemID(objid, gridid)
+      local itemid, num = BackpackHelper:getGridItemID(objid, i)
       local realNum = WorldContainerHelper:addStorageItem(pos.x, pos.y, pos.z, itemid, num)
       if (realNum) then
-        BackpackHelper:removeGridItem(objid, gridid, realNum)
+        BackpackHelper:removeGridItem(objid, i, realNum)
       end
     end
   end
 end
 
-function SaveGame:useItem (objid)
-  if (not(PlayerHelper:isMainPlayer(objid))) then -- 不是房主
-    ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
-    return
+-- 脱下所有装备
+function SaveGame:takeOffEquip (objid)
+  local min, max = BackpackHelper:getBackpackBarIDRange(BACKPACK_TYPE.EQUIP)
+  for i = min, max do
+    local itemid, num = BackpackHelper:getGridItemID(objid, i)
+    if (itemid and itemid ~= 0) then
+      local gridid = BackpackHelper:getFirstEmptyGridByBartype(objid, BACKPACK_TYPE.INVENTORY)
+      if (gridid) then
+        BackpackHelper:moveGridItem(objid, i, gridid)
+      end
+    end
   end
+end
+
+function SaveGame:showDataNum (objid)
+  if (PlayerHelper:isMainPlayer(objid)) then
+    local mainIndex = StoryHelper:getMainStoryIndex()
+    local mainProgress = StoryHelper:getMainStoryProgress()
+    ChatHelper:sendMsg(objid, '#G游戏数据A#n与#G游戏数据B#n的数量应分别是#G',
+      StringHelper:int2Chinese(mainIndex), '#n、#G', StringHelper:int2Chinese(mainProgress),
+      '#n，请确保数量正确')
+  end
+end
+
+function SaveGame:useItem (objid)
+  -- if (not(PlayerHelper:isMainPlayer(objid))) then -- 不是房主
+  --   ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
+  --   return
+  -- end
 
   -- 判断剧情是否加载
   if (not(StoryHelper:isLoad())) then
     ChatHelper:sendMsg(objid, '当前剧情未加载，无法保存')
     return
   end
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
-  ChatHelper:sendMsg(objid, '#G游戏数据A#n与#G游戏数据B#n的数量应分别是#G',
-    StringHelper:int2Chinese(mainIndex), '#n、#G', StringHelper:int2Chinese(mainProgress),
-    '#n，请确保数量正确')
 
   -- 检测附近是否有储物箱
   local pos = ActorHelper:getMyPosition(objid)
@@ -108,6 +111,7 @@ function SaveGame:useItem (objid)
   if (#positions > 0) then
     PlayerHelper:openBoxByPos(objid, positions[1].x, positions[1].y, positions[1].z)
     ChatHelper:sendMsg(objid, '附近发现储物箱')
+    SaveGame:showDataNum(objid)
     return
   end
 
@@ -157,8 +161,11 @@ function SaveGame:useItem (objid)
   end
   -- 创建成功
   PlayerHelper:openBoxByPos(objid, math.floor(dstPos.x), math.floor(dstPos.y), math.floor(dstPos.z))
-  self:putInItem(objid, dstPos)
-  self:putInItem(objid, MyPosition:new(dstPos.x, dstPos.y + 1, dstPos.z), BACKPACK_TYPE.INVENTORY)
+  SaveGame:putInItem(objid, dstPos)
+  SaveGame:putInItem(objid, dstPos, BACKPACK_TYPE.EQUIP)
+  SaveGame:putInItem(objid, MyPosition:new(dstPos.x, dstPos.y + 1, dstPos.z), BACKPACK_TYPE.INVENTORY)
+  SaveGame:takeOffEquip(objid)
+  SaveGame:showDataNum(objid)
 end
 
 -- 加载进度
