@@ -153,11 +153,11 @@ function MyStoryHelper:playerAddItem (objid, itemid, itemnum)
     end
   elseif (mainIndex == 3) then -- 剧情三
     if (itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID) then
-      if (StoryHelper:forward(1, '对话高先生')) then
+      if (StoryHelper:forward(3, '对话高先生')) then
         BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
       end
     elseif (itemid == MyMap.ITEM.GAME_DATA_GET_WEAPON_ID) then
-      if (StoryHelper:forward(1, '新生武器')) then
+      if (StoryHelper:forward(3, '新生武器')) then
         BackpackHelper:removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
       end
     end

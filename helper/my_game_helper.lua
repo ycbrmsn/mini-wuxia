@@ -92,12 +92,13 @@ function MyGameHelper:atSecond (second)
       -- StoryHelper:setMainStoryProgress(#story1.tips)
       -- StoryHelper:forward(1, #story1.tips)
       -- story2:goToCollege()
-    end
+      
     -- StoryHelper:setMainStoryIndex(2)
     -- StoryHelper:setMainStoryProgress(#story2.tips)
     -- PlayerHelper:getHostPlayer():setPosition(-18.5, 7.5, 595.5)
     -- yexiaolong:wantDoNothing()
     -- yexiaolong:setPosition(-18.5, 7.5, 595.5)
+    end
   end
 end
 
