@@ -74,7 +74,7 @@ function Dog:timerGenerate (num)
 end
 
 function Dog:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '汪汪')
+  ChatHelper:speak(self:getName(), toobjid, '汪汪。')
 end
 
 -- 恶狼
@@ -154,7 +154,7 @@ function Wolf:timerGenerate (num)
 end
 
 function Wolf:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '嗷呜')
+  ChatHelper:speak(self:getName(), toobjid, '嗷呜……')
 end
 
 -- 狂牛
@@ -231,7 +231,7 @@ function Ox:timerGenerate (num)
 end
 
 function Ox:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '哞')
+  ChatHelper:speak(self:getName(), toobjid, '哞……')
 end
 
 -- 强盗喽罗
@@ -379,7 +379,13 @@ function QiangdaoLouluo:timerGenerate (num)
 end
 
 function QiangdaoLouluo:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子，把财物都交出来')
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if (mainIndex == 2 and mainProgress < #story2.tips) then
+    ChatHelper:speak(self:getName(), toobjid, '小子，把令牌交出来！')
+  else
+    ChatHelper:speak(self:getName(), toobjid, '小子，把财物都交出来！')
+  end
 end
 
 -- 强盗小头目
@@ -512,7 +518,13 @@ function QiangdaoXiaotoumu:timerGenerate (num)
 end
 
 function QiangdaoXiaotoumu:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子，纳命来')
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if (mainIndex == 2 and mainProgress < #story2.tips) then
+    ChatHelper:speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
+  else
+    ChatHelper:speak(self:getName(), toobjid, '小子，纳命来！')
+  end
 end
 
 -- 强盗大头目
@@ -575,7 +587,7 @@ function QiangdaoDatoumu:timerGenerate (num)
 end
 
 function QiangdaoDatoumu:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子，我看你是活腻了')
+  ChatHelper:speak(self:getName(), toobjid, '小子，我看你是活腻了！')
 end
 
 -- 卫兵（剑）

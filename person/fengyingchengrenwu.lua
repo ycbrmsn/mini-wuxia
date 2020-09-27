@@ -340,8 +340,10 @@ function Yexiaolong:playerClickEvent (objid)
     self:speakTo(objid, 0, '你先去准备准备，我们明天巳时出发。')
   elseif (mainIndex == 1 and mainProgress == #story1.tips) then
     self:speakTo(objid, 0, '准备得怎么样了，我们巳时就要出发了。')
-  elseif (mainIndex == 3 and mainProgress == 3) then
+  elseif (mainIndex == 3 and mainProgress >= 3 and mainProgress <= 5) then
     self:speakTo(objid, 0, '你先去找小高，我要歇一歇。')
+  elseif (mainProgress == 3 and mainProgress == 6) then
+    self:speakTo(objid, 0, '目前没有什么事情。')
   end
 end
 
@@ -982,6 +984,14 @@ end
 function Gaoxiaohu:stayInClass ()
   self:wantMove('class', { self.classRoomPos })
   self:nextWantLookAt(nil, self.candlePositions[2], 1)
+end
+
+function Gaoxiaohu:playerClickEvent (objid)
+  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainProgress = StoryHelper:getMainStoryProgress()
+  if (mainProgress == 3 and mainProgress == 4) then
+    self:speakTo(objid, 0, '真宝阁就在学院斜对面。')
+  end
 end
 
 -- 月无双
