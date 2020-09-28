@@ -355,7 +355,15 @@ function BaseActor:defaultPlayerClickEvent (playerid)
   local actorTeam = CreatureHelper:getTeam(self.objid)
   local playerTeam = PlayerHelper:getTeam(playerid)
   if (actorTeam ~= 0 and actorTeam == playerTeam) then -- 有队伍并且同队
-    self.action:stopRun()
+    local pos = self:getMyPosition()
+    if (not(AreaHelper:isAirArea(pos))) then -- 生物不在空气中，则移动到玩家位置
+      local player = PlayerHelper:getPlayer(playerid)
+      local newPos = player:getDistancePosition(1)
+      self:setPosition(newPos)
+      ChatHelper:sendMsg(playerid, '你把', self:getName(), '拉了过来')
+    else
+      self.action:stopRun()
+    end
     self:wantLookAt(nil, playerid, 60)
     self:playerClickEvent(playerid)
   end
