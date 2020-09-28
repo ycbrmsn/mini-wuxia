@@ -55,7 +55,7 @@ function Story1:noticeEvent (areaid)
   wenyu:wantMove('notice', { story1.movePos })
   local content = StringHelper:join(PlayerHelper:getAllPlayerNames(), '、')
   local subject = '你'
-  if (#PlayerHelper:getAllPlayers() > 1) then 
+  if (#PlayerHelper:getActivePlayers() > 1) then 
     subject = '你们'
   end
   content = StringHelper:concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')

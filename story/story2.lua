@@ -120,7 +120,7 @@ function Story2:goToCollege ()
   -- 说话
   local ws = WaitSeconds:new(2)
   local hostPlayer = PlayerHelper:getHostPlayer()
-  local playerNum = #PlayerHelper:getAllPlayers()
+  local playerNum = #PlayerHelper:getActivePlayers()
   if (playerNum == 1) then
     yexiaolong:speak(ws:get(), '不错，你准时到了。那我们出发吧。')
   else
@@ -149,24 +149,24 @@ function Story2:goToCollege ()
   PlayerHelper:everyPlayerDoSomeThing(function (p)
     p.action:playDown()
   end, ws:use(2))
-  if (#PlayerHelper:getAllPlayers() > 1) then
+  if (#PlayerHelper:getActivePlayers() > 1) then
     PlayerHelper:everyPlayerSpeak(ws:use(1), '先生，等等我们。')
   else
     PlayerHelper:everyPlayerSpeak(ws:use(1), '先生，等等我。')
   end
-  TimeHelper:callFnAfterSecond(function (p)
-    PlayerHelper:everyPlayerEnableMove(true) -- 玩家可以行动
-    for i, v in ipairs(PlayerHelper:getAllPlayers()) do
-      if (i == 1) then
-        v.action:runTo(self.movePositions2, function ()
-          self:teacherLeaveForAWhile(v)
-        end)
-      else
-        v.action:runTo(self.movePositions2)
-      end
+
+  PlayerHelper:everyPlayerDoSomeThing(function (player)
+    player:enableMove(enable, true) -- 玩家可以行动
+    if (PlayerHelper:isMainPlayer(player.objid)) then
+      player.action:runTo(self.movePositions2, function ()
+        self:teacherLeaveForAWhile(player)
+      end)
+    else
+      player.action:runTo(self.movePositions2)
     end
-    PlayerHelper:everyPlayerAddBuff(ActorHelper.BUFF.FASTER_RUN, 4, 6000)
+    ActorHelper:addBuff(player.objid, ActorHelper.BUFF.FASTER_RUN, 4, 6000)
   end, ws:get())
+
   TimeHelper:callFnAfterSecond(function (p)
     StoryHelper:forward(2, '该出发了')
   end, ws:use(10))
@@ -177,42 +177,39 @@ function Story2:goToCollege ()
 end
 
 -- 先生暂时离开
-function Story2:teacherLeaveForAWhile (myPlayer)
-  myPlayer:speak(0, '先生，这是快要到了吗？')
+function Story2:teacherLeaveForAWhile (player)
+  player:speak(0, '先生，这是快要到了吗？')
   PlayerHelper:everyPlayerEnableMove(false)
 
   local ws = WaitSeconds:new()
-  myPlayer.action:playThink(ws:use())
+  player.action:playThink(ws:use())
   yexiaolong:speak(ws:use(), '……')
-  myPlayer:speak(ws:use(), '先生？')
+  player:speak(ws:use(), '先生？')
   yexiaolong:speak(ws:use(), '……')
   TimeHelper:callFnAfterSecond(function (p)
     yexiaolong:setFaceYaw(ActorHelper.FACE_YAW.SOUTH)
-    local playerNum = #PlayerHelper:getAllPlayers()
+    local playerNum = #PlayerHelper:getActivePlayers()
     if (playerNum == 1) then
       yexiaolong:speak(0, '人有三急，你先行一步，我去去就来。')
     else
       yexiaolong:speak(0, '人有三急，你们先行，我去去就来。')
     end
   end, ws:use(1))
-  myPlayer:speak(ws:get(), '好的。')
-  myPlayer.action:playFree2(ws:use(1))
+  player:speak(ws:get(), '好的。')
+  player.action:playFree2(ws:use(1))
   TimeHelper:callFnAfterSecond(function (p)
     yexiaolong:wantMove('leaveForAWhile', self.leaveForAWhilePositions)
   end, ws:use())
-  TimeHelper:callFnAfterSecond(function (p)
-    PlayerHelper:everyPlayerEnableMove(true)
 
-    for i, v in ipairs(PlayerHelper:getAllPlayers()) do
-      if (i == 1) then
-        v.action:runTo(self.eventPositions, function ()
-          self:meetBandits()
-        end)
-      else
-        v.action:runTo(self.eventPositions)
-      end
+  PlayerHelper:everyPlayerDoSomeThing(function (player)
+    player:enableMove(enable, true) -- 玩家可以行动
+    if (PlayerHelper:isMainPlayer(player.objid)) then
+      player.action:runTo(self.eventPositions, function ()
+        self:meetBandits()
+      end)
+    else
+      player.action:runTo(self.eventPositions)
     end
-
   end, ws:use(3))
 
   PlayerHelper:everyPlayerThinkToSelf(ws:get(), '这里的树木好茂密啊！')
@@ -317,7 +314,7 @@ function Story2:wipeOutQiangdao ()
   yexiaolong:speak(ws:use(3), '如此，回去之后定又会被小高嘲笑。不错不错。')
   yexiaolong:speak(ws:get(), '现在嘛……惩奸除恶的少年侠士。快哉。')
   yexiaolong.action:playHappy(ws:use(3))
-  local playerNum = #PlayerHelper:getAllPlayers()
+  local playerNum = #PlayerHelper:getActivePlayers()
   if (playerNum == 1) then
     yexiaolong:speak(ws:get(), '对了，我这里恰好有把小剑，挺适合你现在用的。就给你好了。')
   else
@@ -437,7 +434,7 @@ function Story2:playerBadHurt (objid)
     -- end, ws:get() + 2)
   end, ws:use())
   TimeHelper:callFnAfterSecond(function ()
-    local num = #PlayerHelper:getAllPlayers() * 2
+    local num = #PlayerHelper:getActivePlayers() * 2
     yexiaolong:speak(0, '这里有', num, '粒生血丹。剩下的交给我吧。')
     BackpackHelper:addItem(player.objid, MyMap.ITEM.CREATE_BLOOD_PILL_ID, num) -- 生血丹
     yexiaolong:lookAt(player.objid)
@@ -692,15 +689,16 @@ function Story2:comeBack (objid, areaid)
     pos.z = 356
     z = -1
   end
-  if (ActorHelper:isPlayer(objid)) then
+  ActorHelper:appendSpeed(objid, x, y, z)
+  if (ActorHelper:isPlayer(objid)) then -- 玩家
     PlayerHelper:showToast(objid, '你不能跑得太远')
     -- local player = PlayerHelper:getPlayer(objid)
     -- PlayerHelper:setPosition(objid, pos.x, pos.y, pos.z)
+    local player = PlayerHelper:getPlayer(objid)
+    player.action:runTo({ pos })
+  else -- 强盗
+    ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
   end
-  ActorHelper:appendSpeed(objid, x, y, z)
-  local player = PlayerHelper:getPlayer(objid)
-  player.action:runTo({ pos })
-  -- ActorHelper:tryNavigationToPos(objid, pos.x, pos.y, pos.z, false)
 end
 
 -- 干掉了强盗小头目事件
