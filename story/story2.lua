@@ -156,7 +156,7 @@ function Story2:goToCollege ()
   end
 
   PlayerHelper:everyPlayerDoSomeThing(function (player)
-    player:enableMove(enable, true) -- 玩家可以行动
+    player:enableMove(true, true) -- 玩家可以行动
     if (PlayerHelper:isMainPlayer(player.objid)) then
       player.action:runTo(self.movePositions2, function ()
         self:teacherLeaveForAWhile(player)
@@ -202,7 +202,7 @@ function Story2:teacherLeaveForAWhile (player)
   end, ws:use())
 
   PlayerHelper:everyPlayerDoSomeThing(function (player)
-    player:enableMove(enable, true) -- 玩家可以行动
+    player:enableMove(true, true) -- 玩家可以行动
     if (PlayerHelper:isMainPlayer(player.objid)) then
       player.action:runTo(self.eventPositions, function ()
         self:meetBandits()
