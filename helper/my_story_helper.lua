@@ -13,11 +13,26 @@ function MyStoryHelper:init ()
   StoryHelper:setStorys({ story1, story2, story3 })
 end
 
+-- 替换初始方块
 function MyStoryHelper:replaceInitBlock (pos)
   if (not(BlockHelper:replaceBlock(200, pos.x, pos.y, pos.z))) then
     TimeHelper:callFnAfterSecond(function ()
       MyStoryHelper:replaceInitBlock(pos)
     end, 1)
+  end
+end
+
+-- 不同玩家给不同的礼物
+function MyStoryHelper:diffPersonDiffPresents (player)
+  if (player.objid == 807364131) then -- 作者
+    BackpackHelper:addItem(player.objid, MyMap.ITEM.PROTECT_GEM_ID, 5)
+    BackpackHelper:addItem(player.objid, 4246, 1) -- 慑魂枪
+    ChatHelper:sendMsg(player.objid, '欢迎', player:getName(), '，作者额外送你5个',
+      ItemHelper:getItemName(MyMap.ITEM.PROTECT_GEM_ID))
+  elseif (player.objid == 865147101) then -- 懒懒小朋友
+    BackpackHelper:addItem(player.objid, MyMap.ITEM.PROTECT_GEM_ID, 5)
+    ChatHelper:sendMsg(player.objid, '欢迎', player:getName(), '小朋友，作者额外送你5个',
+      ItemHelper:getItemName(MyMap.ITEM.PROTECT_GEM_ID))
   end
 end
 
@@ -59,6 +74,7 @@ function MyStoryHelper:playerEnterGame (objid)
             BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
             SaveGame:newItem(objid, 1, true) -- 保存游戏
             LoadGame:newItem(objid, 1, true) -- 加载进度
+            MyStoryHelper:diffPersonDiffPresents(player)
           end
           -- 3秒后替换掉初始方块
           TimeHelper:callFnAfterSecond(function ()
