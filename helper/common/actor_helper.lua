@@ -717,6 +717,12 @@ function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
   end
 end
 
+-- 是否在水中
+function ActorHelper:isInWater (objid)
+  local pos = ActorHelper:getMyPosition(objid)
+  return AreaHelper:isWaterArea(pos)
+end
+
 -- 设置生物可移动状态
 function ActorHelper:setEnableMoveState (objid, switch)
   return self:setActionAttrState(objid, CREATUREATTR.ENABLE_MOVE, switch)
@@ -914,7 +920,7 @@ function ActorHelper:getActionAttrState (objid, actionattr)
   end, '获取生物行为状态', 'objid=', objid, ',actionattr=', actionattr)
 end
 
--- 获取生物位置
+-- 获取生物位置，返回x, y, z
 function ActorHelper:getPosition (objid)
   return CommonHelper:callThreeResultMethod(function (p)
     return Actor:getPosition(objid)

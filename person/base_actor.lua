@@ -451,11 +451,11 @@ function BaseActor:defaultPlayerClickEvent (playerid)
       self.wants[1].style = 'wake'
     end
     local pos = self:getMyPosition()
-    if (not(AreaHelper:isAirArea(pos))) then -- 生物不在空气中，则移动到玩家位置
+    if (ActorHelper:isInWater(self.objid)) then -- 生物在水中，则移动到玩家位置
       local player = PlayerHelper:getPlayer(playerid)
       local newPos = player:getDistancePosition(1)
       self:setPosition(newPos)
-      ChatHelper:sendMsg(playerid, '你把', self:getName(), '拉了过来')
+      ChatHelper:sendMsg(playerid, '你把', self:getName(), '从水里捞了过来')
     else
       self.action:stopRun()
     end

@@ -13,6 +13,13 @@ function AreaHelper:isAirArea (pos)
   return BlockHelper:isAirBlock(pos.x, pos.y, pos.z) and BlockHelper:isAirBlock(pos.x, pos.y + 1, pos.z)
 end
 
+-- 是否是水区域（3静态水4水）
+function AreaHelper:isWaterArea (pos)
+  local blockid1 = BlockHelper:getBlockID(pos.x, pos.y, pos.z)
+  local blockid2 = BlockHelper:getBlockID(pos.x, pos.y + 1, pos.z)
+  return blockid1 == 3 or blockid1 == 4 or blockid2 == 3 or blockid2 == 4
+end
+
 function AreaHelper:removeToArea (myActor)
   if (myActor and myActor.wants) then
     local want = myActor.wants[1]
