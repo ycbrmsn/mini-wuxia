@@ -792,14 +792,14 @@ function Erniu:playerClickEvent (objid)
     self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
     TimeHelper:callFnFastRuns(function ()
       local player = PlayerHelper:getPlayer(objid)
-      player:setMyPosition(PositionHelper.luoyecunPos)
+      player:setMyPosition(MyAreaHelper.luoyecunPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
     ItemHelper:removeCurTool(objid)
     self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
     TimeHelper:callFnFastRuns(function ()
       local player = PlayerHelper:getPlayer(objid)
-      player:setMyPosition(PositionHelper.pingfengzhaiPos)
+      player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
     end, 2)
   end
 end
