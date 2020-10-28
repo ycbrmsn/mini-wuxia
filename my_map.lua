@@ -1,7 +1,7 @@
 -- 地图相关数据
 MyMap = {
   BLOCK = {
-    COPPER_ORE_ID = 2036 -- 铜矿石
+    COPPER_ORE_ID = 2036, -- 铜矿石
   },
   ITEM = {
     COIN_ID = 4101, -- 铜板ID
@@ -31,10 +31,33 @@ MyMap = {
     FASTER_RUN_PILL3_ID = 4312, -- 神行丸
     SAVE_GAME_ID = 4313, -- 保存游戏道具物品
     LOAD_GAME_ID = 4314, -- 加载进度道具物品
+    EGG1_ID = 4316, -- 落叶村生物蛋
+    EGG2_ID = 4317, -- 风颖城生物蛋甲
+    EGG3_ID = 4318, -- 风颖城生物蛋乙
 
     ARROW_ID = 4130, -- 箭矢ID
     QUIVER_ID = 4133, -- 箭袋ID
-    COMMON_PROJECTILE_ID = 4159 -- 通用投掷物ID
+    COMMON_PROJECTILE_ID = 4159, -- 通用投掷物ID
+
+    YANGWANLI_EGG_ID = 4097, -- 杨万里生物蛋ID
+    WANGDALI_EGG_ID = 4098, -- 王大力生物蛋ID
+    MIAOLAN_EGG_ID = 4099, -- 苗兰生物蛋ID
+    HUAXIAOLOU_EGG_ID = 4103, -- 花小楼生物蛋ID
+    JIANGFENG_EGG_ID = 4104, -- 江枫生物蛋ID
+    JIANGYU_EGG_ID = 4107, -- 江渔生物蛋ID
+    WENYU_EGG_ID = 4100, -- 文羽生物蛋ID
+    LUDAOFENG_EGG_ID = 4113, -- 陆道风生物蛋ID
+    QIANBINGWEI_EGG_ID = 4114, -- 千兵卫生物蛋ID
+    YEXIAOLONG_EGG_ID = 4108, -- 叶小龙生物蛋ID
+    GAOXIAOHU_EGG_ID = 4300, -- 高小虎生物蛋ID
+    JIANGHUO_EGG_ID = 4306, -- 江火生物蛋ID
+    YUEWUSHUANG_EGG_ID = 4305, -- 月无双生物蛋ID
+    SUNKONGWU_EGG_ID = 4271, -- 孙孔武生物蛋ID
+    LIMIAOSHOU_EGG_ID = 4272, -- 李妙手生物蛋ID
+    MURONGXIAOTIAN_EGG_ID = 4299, -- 慕容笑天生物蛋ID
+    QIANDUO_EGG_ID = 4274, -- 钱多生物蛋ID
+    DANIU_EGG_ID = 4258, -- 大牛生物蛋ID
+    ERNIU_EGG_ID = 4284, -- 二牛生物蛋ID
   },
   ACTOR = {
     -- 落叶村人物

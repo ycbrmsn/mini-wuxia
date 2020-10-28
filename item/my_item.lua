@@ -241,3 +241,47 @@ function ProtectGem:useItem (objid)
     ActorHelper:addBuff(objid, MyMap.BUFF.PROTECT_ID, 1)
   end
 end
+
+-- 落叶村生物蛋
+Egg1 = BaseItem:new({ id = MyMap.ITEM.EGG1_ID })
+
+function Egg1:getItemid (index)
+  if (index == 0) then
+    return MyMap.ITEM.YANGWANLI_EGG_ID
+  elseif (index == 1) then
+    return MyMap.ITEM.WANGDALI_EGG_ID
+  elseif (index == 2) then
+    return MyMap.ITEM.MIAOLAN_EGG_ID
+  elseif (index == 3) then
+    return MyMap.ITEM.HUAXIAOLOU_EGG_ID
+  elseif (index == 4) then
+    return MyMap.ITEM.JIANGFENG_EGG_ID
+  elseif (index == 5) then
+    return MyMap.ITEM.JIANGYU_EGG_ID
+  elseif (index == 6) then
+    return MyMap.ITEM.WENYU_EGG_ID
+  else
+    return nil
+  end
+end
+
+function Egg1:selectItem (objid, index)
+  local itemid = self:getItemid(index)
+  if (itemid) then
+    ChatHelper:sendMsg(objid, '使用将获得', ItemHelper:getItemName(itemid))
+  else
+    ChatHelper:sendMsg(objid, '无对应生物')
+  end
+end
+
+function Egg1:useItem (objid)
+  local index = PlayerHelper:getCurShotcut(objid)
+  local itemid = self:getItemid(index)
+  if (itemid) then
+    if (BackpackHelper:addItem(objid, itemid, 1)) then
+      BackpackHelper:removeGridItemByItemID(objid, self.id, 1)
+    end
+  else
+    ChatHelper:sendMsg(objid, '无对应生物')
+  end
+end
