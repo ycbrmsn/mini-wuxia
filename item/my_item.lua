@@ -242,8 +242,42 @@ function ProtectGem:useItem (objid)
   end
 end
 
+-- 生物蛋
+Egg = BaseItem:new()
+
+function Egg:new (o)
+  o = o or {}
+  if (o.id) then
+    ItemHelper:register(o)
+  end
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function Egg:selectItem (objid, index)
+  local itemid = self:getItemid(index)
+  if (itemid) then
+    ChatHelper:sendMsg(objid, '使用将获得', ItemHelper:getItemName(itemid))
+  else
+    ChatHelper:sendMsg(objid, '无对应生物')
+  end
+end
+
+function Egg:useItem (objid)
+  local index = PlayerHelper:getCurShotcut(objid)
+  local itemid = self:getItemid(index)
+  if (itemid) then
+    if (BackpackHelper:addItem(objid, itemid, 1)) then
+      BackpackHelper:removeGridItemByItemID(objid, self.id, 1)
+    end
+  else
+    ChatHelper:sendMsg(objid, '无对应生物')
+  end
+end
+
 -- 落叶村生物蛋
-Egg1 = BaseItem:new({ id = MyMap.ITEM.EGG1_ID })
+Egg1 = Egg:new({ id = MyMap.ITEM.EGG1_ID })
 
 function Egg1:getItemid (index)
   if (index == 0) then
@@ -265,23 +299,42 @@ function Egg1:getItemid (index)
   end
 end
 
-function Egg1:selectItem (objid, index)
-  local itemid = self:getItemid(index)
-  if (itemid) then
-    ChatHelper:sendMsg(objid, '使用将获得', ItemHelper:getItemName(itemid))
+-- 风颖城生物蛋甲
+Egg2 = Egg:new({ id = MyMap.ITEM.EGG2_ID })
+
+function Egg2:getItemid (index)
+  if (index == 0) then
+    return MyMap.ITEM.LUDAOFENG_EGG_ID
+  elseif (index == 1) then
+    return MyMap.ITEM.QIANBINGWEI_EGG_ID
+  elseif (index == 2) then
+    return MyMap.ITEM.YEXIAOLONG_EGG_ID
+  elseif (index == 3) then
+    return MyMap.ITEM.GAOXIAOHU_EGG_ID
+  elseif (index == 4) then
+    return MyMap.ITEM.JIANGHUO_EGG_ID
+  elseif (index == 5) then
+    return MyMap.ITEM.YUEWUSHUANG_EGG_ID
+  elseif (index == 6) then
+    return MyMap.ITEM.SUNKONGWU_EGG_ID
   else
-    ChatHelper:sendMsg(objid, '无对应生物')
+    return MyMap.ITEM.LIMIAOSHOU_EGG_ID
   end
 end
 
-function Egg1:useItem (objid)
-  local index = PlayerHelper:getCurShotcut(objid)
-  local itemid = self:getItemid(index)
-  if (itemid) then
-    if (BackpackHelper:addItem(objid, itemid, 1)) then
-      BackpackHelper:removeGridItemByItemID(objid, self.id, 1)
-    end
+-- 风颖城生物蛋乙
+Egg3 = Egg:new({ id = MyMap.ITEM.EGG3_ID })
+
+function Egg3:getItemid (index)
+  if (index == 0) then
+    return MyMap.ITEM.MURONGXIAOTIAN_EGG_ID
+  elseif (index == 1) then
+    return MyMap.ITEM.QIANDUO_EGG_ID
+  elseif (index == 2) then
+    return MyMap.ITEM.DANIU_EGG_ID
+  elseif (index == 3) then
+    return MyMap.ITEM.ERNIU_EGG_ID
   else
-    ChatHelper:sendMsg(objid, '无对应生物')
+    return nil
   end
 end
