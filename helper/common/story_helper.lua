@@ -15,6 +15,17 @@ end
 
 -- 剧情前进 两个progress都是要跳到剧情的前置
 function StoryHelper:forward (mainIndex, mainProgress, endProgress)
+  if (StoryHelper:forward2(mainIndex, mainProgress, endProgress)) then
+    local hostPlayer = PlayerHelper:getHostPlayer()
+    GameDataHelper:updateGameData(hostPlayer)
+    return true
+  else
+    return false
+  end
+end
+
+-- 剧情前进，不更新剧情数据道具
+function StoryHelper:forward2 (mainIndex, mainProgress, endProgress)
   if (not(StoryHelper:check(mainIndex, mainProgress))) then
     return false
   end
@@ -29,9 +40,13 @@ function StoryHelper:forward (mainIndex, mainProgress, endProgress)
     self.mainIndex = self.mainIndex + 1
     self.mainProgress = 1
   end
-  local hostPlayer = PlayerHelper:getHostPlayer()
-  GameDataHelper:updateGameData(hostPlayer)
   return true
+end
+
+-- 剧情跳转
+function StoryHelper:goTo (mainIndex, mainProgress)
+  self.mainIndex = mainIndex
+  self.mainProgress = mainProgress
 end
 
 -- 获得实际进度序数
@@ -63,6 +78,11 @@ function StoryHelper:setMainStoryProgress (mainProgress)
   self.mainProgress = mainProgress
 end
 
+-- 获得主线剧情序号与进度号
+function StoryHelper:getIndexAndProgress ()
+  return StoryHelper:getMainStoryIndex(), StoryHelper:getMainStoryProgress()
+end
+
 -- 获得剧情标题和内容
 function StoryHelper:getMainStoryTitleAndTip ()
   local story = self:getStory()
@@ -78,6 +98,11 @@ end
 -- 新增剧情
 function StoryHelper:addStory (story)
   table.insert(self.stories, story)
+end
+
+-- 获取所有剧情
+function StoryHelper:getStorys ()
+  return self.stories
 end
 
 -- 设置剧情

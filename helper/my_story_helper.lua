@@ -295,6 +295,11 @@ function MyStoryHelper:playerLevelModelUpgrade (objid, toobjid)
   -- body
 end
 
+-- 属性变化
+function MyStoryHelper:playerChangeAttr (objid, playerattr)
+  -- body
+end
+
 -- 生物进入区域
 function MyStoryHelper:actorEnterArea (objid, areaid)
   -- body
@@ -339,4 +344,9 @@ function MyStoryHelper:actorDie (objid, toobjid)
   if (StoryHelper:getMainStoryIndex() == 2) then
     story2:showMessage(objid)
   end
+end
+
+-- 容器内有道具取出
+function MyStoryHelper:backpackItemTakeOut (blockid, x, y, z, itemid, itemnum)
+  -- body
 end
