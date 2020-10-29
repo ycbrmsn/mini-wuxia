@@ -59,6 +59,16 @@ function MyPlayerHelper:playerClickActor (objid, toobjid)
   -- else
   --   SkillHelper:flyStatic(toobjid)
   -- end
+  -- if (ActorHelper:hasBuff(objid, MyMap.BUFF.SEAL_ID)) then
+  --   ActorHelper:removeBuff(objid, MyMap.BUFF.SEAL_ID)
+  -- else
+  --   ActorHelper:addBuff(objid, MyMap.BUFF.SEAL_ID, 1)
+  -- end
+  -- if (ActorHelper:hasBuff(objid, MyMap.BUFF.IMPRISON_ID)) then
+  --   ActorHelper:removeBuff(objid, MyMap.BUFF.IMPRISON_ID)
+  -- else
+  --   ActorHelper:addBuff(objid, MyMap.BUFF.IMPRISON_ID, 1)
+  -- end
 end
 
 -- 玩家获得道具

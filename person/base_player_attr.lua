@@ -276,7 +276,7 @@ function BasePlayerAttr:setImprisoned (active)
   if (active) then
     -- 设置囚禁标志用于不能使用主动技能
     self.cantUseSkillReasons.imprisoned = self.cantUseSkillReasons.imprisoned + 1
-    ChatHelper:sendSystemMsg('你被慑魂枪震慑了灵魂，无法做出有效行为', self.myActor.objid)
+    ChatHelper:sendSystemMsg('你被震慑了灵魂，无法做出有效行为', self.myActor.objid)
   else 
     -- 返回true表示已不是囚禁状态
     self.cantUseSkillReasons.imprisoned = self.cantUseSkillReasons.imprisoned - 1
