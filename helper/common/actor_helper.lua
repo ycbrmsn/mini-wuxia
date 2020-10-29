@@ -891,11 +891,19 @@ end
 
 -- 生物获得状态效果
 function ActorHelper:actorAddBuff (objid, buffid, bufflvl)
+  local actor = ActorHelper:getActor(objid)
+  if (actor) then
+    actor:addBuff(buffid, bufflvl)
+  end
   -- body
 end
 
 -- 生物失去状态效果
 function ActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
+  local actor = ActorHelper:getActor(objid)
+  if (actor) then
+    actor:removeBuff(buffid, bufflvl)
+  end
   -- body
 end
 

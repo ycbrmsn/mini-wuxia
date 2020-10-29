@@ -491,6 +491,16 @@ function BaseActor:changeMotion (actormotion)
   -- body
 end
 
+-- 获得状态
+function BaseActor:addBuff (buffid, bufflvl)
+  -- body
+end
+
+-- 移除状态
+function BaseActor:removeBuff (buffid, bufflvl)
+  -- body
+end
+
 -- 设置囚禁状态
 function BaseActor:setImprisoned (active)
   if (active) then
