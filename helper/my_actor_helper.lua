@@ -116,14 +116,14 @@ function MyActorHelper:actorAddBuff (objid, buffid, bufflvl)
   if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
     local actor = ActorHelper:getActor(objid)
     if (actor) then
-      actor:setSealed(true)
+      -- actor:setSealed(true)
     else
       MonsterHelper:sealMonster(objid)
     end
   elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
     local actor = ActorHelper:getActor(objid)
     if (actor) then
-      actor:setImprisoned(true)
+      -- actor:setImprisoned(true)
     else
       MonsterHelper:imprisonMonster(objid)
     end
@@ -138,16 +138,16 @@ function MyActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
   if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
     local actor = ActorHelper:getActor(objid)
     if (actor) then
-      canCancel = actor:setSealed(false)
+      -- actor:setSealed(false)
     else
-      canCancel = MonsterHelper:cancelSealMonster(objid)
+      MonsterHelper:cancelSealMonster(objid)
     end
   elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
     local actor = ActorHelper:getActor(objid)
     if (actor) then
-      canCancel = actor:setImprisoned(false)
+      -- actor:setImprisoned(false)
     else
-      canCancel = MonsterHelper:cancelImprisonMonster(objid)
+      MonsterHelper:cancelImprisonMonster(objid)
     end
   end
 end
