@@ -59,6 +59,20 @@ local actorDie = function (event)
   end)
 end
 
+-- eventobjid, buffid, bufflvl
+local actorAddBuff = function (event)
+  LogHelper:call(function ()
+    MyActorHelper:actorAddBuff(event.eventobjid, event.buffid, event.bufflvl)
+  end)
+end
+
+-- eventobjid, buffid, bufflvl
+local actorRemoveBuff = function (event)
+  LogHelper:call(function ()
+    MyActorHelper:actorRemoveBuff(event.eventobjid, event.buffid, event.bufflvl)
+  end)
+end
+
 -- eventobjid, toobjid(opt), blockid(opt), x, y, z
 local actorProjectileHit = function (event)
   local projectileid, toobjid, blockid = event.eventobjid, event.toobjid, event.blockid
@@ -132,6 +146,9 @@ ScriptSupportEvent:registerEvent([=[Actor.AttackHit]=], actorAttackHit) -- 生�
 ScriptSupportEvent:registerEvent([=[Actor.Beat]=], actorBeat) -- 生物击败玩家/生物
 ScriptSupportEvent:registerEvent([=[Actor.ChangeMotion]=], actorChangeMotion) -- 生物行为状态变更
 ScriptSupportEvent:registerEvent([=[Actor.Die]=], actorDie) -- 生物死亡
+ScriptSupportEvent:registerEvent([=[Actor.AddBuff]=], actorAddBuff) -- 生物获得状态效果
+ScriptSupportEvent:registerEvent([=[Actor.RemoveBuff]=], actorRemoveBuff) -- 生物失去状态效果
+
 ScriptSupportEvent:registerEvent([=[Actor.Projectile.Hit]=], actorProjectileHit) -- 投掷物击中
 ScriptSupportEvent:registerEvent([=[Missile.Create]=], missileCreate) -- 投掷物被创建
 ScriptSupportEvent:registerEvent([=[Block.DestroyBy]=], blockDestroyBy) -- 方块被破坏

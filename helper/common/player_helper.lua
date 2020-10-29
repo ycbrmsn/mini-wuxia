@@ -558,6 +558,16 @@ function PlayerHelper:playerChangeAttr (objid, playerattr)
   -- body
 end
 
+-- 玩家获得状态效果
+function PlayerHelper:playerAddBuff (objid, buffid, bufflvl)
+  -- body
+end
+
+-- 玩家失去状态效果
+function PlayerHelper:playerRemoveBuff (objid, buffid, bufflvl)
+  -- body
+end
+
 -- 封装原始接口
 
 -- 获取玩家昵称

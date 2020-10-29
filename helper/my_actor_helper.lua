@@ -107,3 +107,47 @@ function MyActorHelper:actorDie (objid, toobjid)
   ActorHelper:actorDie(objid, toobjid)
   MyStoryHelper:actorDie(objid, toobjid)
 end
+
+-- 生物获得状态效果
+function MyActorHelper:actorAddBuff (objid, buffid, bufflvl)
+  ActorHelper:actorAddBuff(objid, buffid, bufflvl)
+  MyStoryHelper:actorAddBuff(objid, buffid, bufflvl)
+  -- body
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+    local actor = ActorHelper:getActor(objid)
+    if (actor) then
+      actor:setSealed(true)
+    else
+      MonsterHelper:sealMonster(objid)
+    end
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+    local actor = ActorHelper:getActor(objid)
+    if (actor) then
+      actor:setImprisoned(true)
+    else
+      MonsterHelper:imprisonMonster(objid)
+    end
+  end
+end
+
+-- 生物失去状态效果
+function MyActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
+  ActorHelper:actorRemoveBuff(objid, buffid, bufflvl)
+  MyStoryHelper:actorRemoveBuff(objid, buffid, bufflvl)
+  -- body
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+    local actor = ActorHelper:getActor(objid)
+    if (actor) then
+      canCancel = actor:setSealed(false)
+    else
+      canCancel = MonsterHelper:cancelSealMonster(objid)
+    end
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+    local actor = ActorHelper:getActor(objid)
+    if (actor) then
+      canCancel = actor:setImprisoned(false)
+    else
+      canCancel = MonsterHelper:cancelImprisonMonster(objid)
+    end
+  end
+end

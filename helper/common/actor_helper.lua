@@ -889,6 +889,16 @@ function ActorHelper:actorDie (objid, toobjid)
   MonsterHelper:actorDie(objid, toobjid)
 end
 
+-- 生物获得状态效果
+function ActorHelper:actorAddBuff (objid, buffid, bufflvl)
+  -- body
+end
+
+-- 生物失去状态效果
+function ActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
+  -- body
+end
+
 -- 封装原始接口
 
 -- 向目标位置移动

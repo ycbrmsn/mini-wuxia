@@ -97,6 +97,8 @@ MyMap = {
   },
   BUFF = {
     PROTECT_ID = 50000001, -- 守护状态
+    SEAL_ID = 50000002, -- 封魔状态
+    IMPRISON_ID = 50000003, -- 慑魂状态
   },
   CUSTOM = {
     INIT_HOUR = 7, -- 初始时间

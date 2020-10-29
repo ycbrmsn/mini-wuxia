@@ -212,14 +212,16 @@ function SealDemonKnife:useItem1 (objid)
   AreaHelper:destroyArea(areaid)
   if (#objids > 0) then
     ItemHelper:recordUseSkill(objid, self.id, self.cd)
+    local ticks = (self.skillTime + self.level * self.addSkillTimePerLevel) * 20
     for i, v in ipairs(objids) do
-      SkillHelper:sealActor(v)
+      ActorHelper:addBuff(v, MyMap.BUFF.SEAL_ID, 1, ticks)
+      -- SkillHelper:sealActor(v)
     end
-    TimeHelper:callFnFastRuns (function ()
-      for i, v in ipairs(objids) do
-        SkillHelper:cancelSealActor(v)
-      end
-    end, self.skillTime + self.level * self.addSkillTimePerLevel)
+    -- TimeHelper:callFnFastRuns (function ()
+    --   for i, v in ipairs(objids) do
+    --     SkillHelper:cancelSealActor(v)
+    --   end
+    -- end, self.skillTime + self.level * self.addSkillTimePerLevel)
   else
     ChatHelper:sendSystemMsg('封魔技能有效范围内未发现目标', objid)
   end
@@ -309,14 +311,16 @@ function ShockSoulSpear:useItem1 (objid)
   AreaHelper:destroyArea(areaid)
   if (#objids > 0) then
     ItemHelper:recordUseSkill(objid, self.id, self.cd)
+    local ticks = (self.skillTime + self.level * self.addSkillTimePerLevel) * 20
     for i, v in ipairs(objids) do
-      SkillHelper:imprisonActor(v)
+      ActorHelper:addBuff(v, MyMap.BUFF.IMPRISON_ID, 1, ticks)
+      -- SkillHelper:imprisonActor(v)
     end
-    TimeHelper:callFnFastRuns (function ()
-      for i, v in ipairs(objids) do
-        SkillHelper:cancelImprisonActor(v)
-      end
-    end, self.skillTime + self.level * self.addSkillTimePerLevel)
+    -- TimeHelper:callFnFastRuns (function ()
+    --   for i, v in ipairs(objids) do
+    --     SkillHelper:cancelImprisonActor(v)
+    --   end
+    -- end, self.skillTime + self.level * self.addSkillTimePerLevel)
   else
     ChatHelper:sendSystemMsg('慑魂技能有效范围内未发现目标', objid)
   end

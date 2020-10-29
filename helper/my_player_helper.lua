@@ -283,3 +283,29 @@ function MyPlayerHelper:playerChangeAttr (objid, playerattr)
   MyStoryHelper:playerChangeAttr(objid, playerattr)
   -- body
 end
+
+-- 玩家获得状态效果
+function MyPlayerHelper:playerAddBuff (objid, buffid, bufflvl)
+  PlayerHelper:playerAddBuff(objid, buffid, bufflvl)
+  MyStoryHelper:playerAddBuff(objid, buffid, bufflvl)
+  -- body
+  local player = PlayerHelper:getPlayer(objid)
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+    player:setSeal(true)
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+    player:setImprisoned(true)
+  end
+end
+
+-- 玩家失去状态效果
+function MyPlayerHelper:playerRemoveBuff (objid, buffid, bufflvl)
+  PlayerHelper:playerRemoveBuff(objid, buffid, bufflvl)
+  MyStoryHelper:playerRemoveBuff(objid, buffid, bufflvl)
+  -- body
+  local player = PlayerHelper:getPlayer(objid)
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+    player:setSeal(false)
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+    player:setImprisoned(false)
+  end
+end
