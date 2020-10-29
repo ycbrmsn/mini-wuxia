@@ -53,6 +53,12 @@ end
 function MyPlayerHelper:playerClickActor (objid, toobjid)
   PlayerHelper:playerClickActor(objid, toobjid)
   MyStoryHelper:playerClickActor(objid, toobjid)
+  -- body
+  -- if (SkillHelper:isFlying(toobjid)) then
+  --   SkillHelper:stopFly(toobjid)
+  -- else
+  --   SkillHelper:flyStatic(toobjid)
+  -- end
 end
 
 -- 玩家获得道具
