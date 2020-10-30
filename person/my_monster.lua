@@ -246,7 +246,7 @@ function QiangdaoLouluo:new ()
     },
     fallOff = {
       { MyMap.ITEM.APPLE_ID, 1, 1, 30 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 2, 4, 30 } -- 铜板
+      { MyMap.ITEM.COIN_ID, 2, 4, 50 } -- 铜板
     },
     initPosition = { x = 34, y = 7, z = 327 }, -- 剧情二初始化位置
     -- toPosition = { x = -363, y = 7, z = 556 },
@@ -400,7 +400,7 @@ function QiangdaoXiaotoumu:new ()
     },
     fallOff = {
       { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
-      { MyMap.ITEM.COIN_ID, 4, 8, 30 } -- 铜板
+      { MyMap.ITEM.COIN_ID, 4, 8, 50 } -- 铜板
     },
     initPosition = { x = 33, y = 7, z = 334 },
     -- toPosition = { x = -363, y = 7, z = 556 },
@@ -750,4 +750,159 @@ function Guard:checkTokenArea (objid, areaid)
     end
   end
   return false
+end
+
+-- 叛逃士兵（剑）
+Pantaojianshibing = BaseActor:new(MyMap.ACTOR.PANTAOJIANSHIBING_ACTOR_ID)
+
+function Pantaojianshibing:new ()
+  local o = {
+    objid = self.actorid,
+    expData = {
+      level = 15,
+      exp = 32
+    },
+    fallOff = {
+      { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 10, 20, 30 } -- 铜板
+    },
+    monsterPosCouples = {
+      -- 岗哨一楼
+      { MyPosition:new(297, 7, 521), MyPosition:new(303, 7, 528), 2 },
+      { MyPosition:new(297, 7, 563), MyPosition:new(303, 7, 556), 2 },
+      { MyPosition:new(261, 7, 563), MyPosition:new(255, 7, 556), 2 },
+      { MyPosition:new(261, 7, 521), MyPosition:new(255, 7, 528), 2 },
+      -- 仓库
+      { MyPosition:new(286, 7, 563), MyPosition:new(272, 7, 557), 2 },
+      -- 宿舍
+      { MyPosition:new(281, 7, 550), MyPosition:new(265, 7, 534), 4 },
+      -- 主营
+      { MyPosition:new(302, 8, 537), MyPosition:new(292, 8, 547), 3 },
+    },
+    monsterAreaInfos = {},
+    tipPosCouples = {
+      { MyPosition:new(247, 7, 546), MyPosition:new(247, 10, 538) },
+      { MyPosition:new(248, 7, 545), MyPosition:new(248, 10, 539) },
+    },
+    areaids = {},
+    areaName = '叛军营地'
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function Pantaojianshibing:init ()
+  -- 定时生成区域
+  for i, v in ipairs(self.monsterPosCouples) do
+    local areaid = AreaHelper:createAreaRectByRange(v[1], v[2])
+    table.insert(self.monsterAreaInfos, { areaid = areaid, num = v[3] })
+  end
+  -- 提示区域
+  for i, v in ipairs(self.tipPosCouples) do
+    table.insert(self.areaids, AreaHelper:createAreaRectByRange(v[1], v[2]))
+  end
+  self.generate = function ()
+    self:generateMonsters()
+    gongshibing:generateMonsters()
+  end
+  return true
+end
+
+function Pantaojianshibing:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '叛逃士兵'
+  end
+  return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function Pantaojianshibing:generateMonsters ()
+  for i, v in ipairs(self.monsterAreaInfos) do
+    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    for i = 1, v.num - curNum do
+      local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
+      self:newMonster(pos.x, pos.y, pos.z, 1)
+    end
+  end
+end
+
+-- 定时生成怪物
+function Pantaojianshibing:timerGenerate ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters()
+    return false
+  end, 60)
+end
+
+function Pantaojianshibing:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '小子，你来错地方了！')
+end
+
+
+-- 叛逃士兵（弓）
+Pantaogongshibing = BaseActor:new(MyMap.ACTOR.PANTAOGONGSHIBING_ACTOR_ID)
+
+function Pantaogongshibing:new ()
+  local o = {
+    objid = self.actorid,
+    expData = {
+      level = 18,
+      exp = 35
+    },
+    fallOff = {
+      { MyMap.ITEM.APPLE_ID, 1, 2, 30 }, -- 苹果
+      { MyMap.ITEM.COIN_ID, 10, 20, 30 } -- 铜板
+    },
+    monsterPosCouples = {
+      -- 岗哨二楼
+      { MyPosition:new(257, 16, 527), MyPosition:new(256, 16, 525), 1 },
+      { MyPosition:new(257, 16, 559), MyPosition:new(256, 16, 557), 1 },
+      { MyPosition:new(302, 16, 559), MyPosition:new(301, 16, 557), 1 },
+      { MyPosition:new(301, 16, 527), MyPosition:new(302, 16, 525), 1 },
+    },
+    monsterAreaInfos = {},
+  }
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function Pantaogongshibing:init ()
+  -- 定时生成区域
+  for i, v in ipairs(self.monsterPosCouples) do
+    local areaid = AreaHelper:createAreaRectByRange(v[1], v[2])
+    table.insert(self.monsterAreaInfos, { areaid = areaid, num = v[3] })
+  end
+  return true
+end
+
+function Pantaogongshibing:getName ()
+  if (not(self.actorname)) then
+    self.actorname = '叛逃士兵'
+  end
+  return self.actorname
+end
+
+-- 检查各个区域内的怪物数量，少于num只则补充到num只
+function Pantaogongshibing:generateMonsters ()
+  for i, v in ipairs(self.monsterAreaInfos) do
+    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    for i = 1, v.num - curNum do
+      local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
+      self:newMonster(pos.x, pos.y, pos.z, 1)
+    end
+  end
+end
+
+-- 定时生成怪物
+function Pantaogongshibing:timerGenerate ()
+  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+    self:generateMonsters()
+    return false
+  end, 60)
+end
+
+function Pantaogongshibing:attackSpeak (toobjid)
+  ChatHelper:speak(self:getName(), toobjid, '小子看箭！')
 end

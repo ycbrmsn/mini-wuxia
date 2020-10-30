@@ -91,6 +91,8 @@ MyMap = {
     OX_ACTOR_ID = 17, -- 狂牛
     DOG_ACTOR_ID = 43, -- 野狗
     QIANGDAO_DATOUMU_ACTOR_ID = 46, -- 强盗大头目
+    PANTAOJIANSHIBING_ACTOR_ID = 51, -- 叛逃士兵（剑）
+    PANTAOGONGSHIBING_ACTOR_ID = 52, -- 叛逃士兵（弓）
 
     -- boss
     JUYIDAO_ACTOR_ID = 42, -- 橘一刀

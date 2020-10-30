@@ -11,7 +11,10 @@ function MyMonsterHelper:init ()
   ox = Ox:new()
   guard = Guard:new()
   guard:init()
-  local monsterModels = { qiangdaoDatoumu, qiangdaoXiaotoumu, qiangdaoLouluo, dog, wolf, ox }
+  jianshibing = Pantaojianshibing:new()
+  gongshibing = Pantaogongshibing:new()
+  local monsterModels = { qiangdaoDatoumu, qiangdaoXiaotoumu, qiangdaoLouluo, dog, wolf, ox,
+    jianshibing, gongshibing }
   MonsterHelper:init(monsterModels)
 end
 
