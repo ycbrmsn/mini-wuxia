@@ -801,6 +801,20 @@ function Erniu:playerClickEvent (objid)
       local player = PlayerHelper:getPlayer(objid)
       player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
     end, 2)
+  elseif (itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID) then -- 叛军营地
+    ItemHelper:removeCurTool(objid)
+    self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
+    TimeHelper:callFnFastRuns(function ()
+      local player = PlayerHelper:getPlayer(objid)
+      player:setMyPosition(MyAreaHelper.panjunyingdiPos)
+    end, 2)
+  elseif (itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID) then -- 橘山
+    ItemHelper:removeCurTool(objid)
+    self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
+    TimeHelper:callFnFastRuns(function ()
+      local player = PlayerHelper:getPlayer(objid)
+      player:setMyPosition(MyAreaHelper.jushanPos)
+    end, 2)
   end
 end
 

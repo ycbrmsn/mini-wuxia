@@ -49,6 +49,8 @@ MyAreaHelper = {
   },
   doorPositions = {},
   luoyecunPos = MyPosition:new(0, 8, 19), -- 落叶村位置
+  panjunyingdiPos = MyPosition:new(217, 7, 516), -- 叛军营地位置
+  jushanPos = MyPosition:new(278, 7, 676), -- 橘山位置
   pingfengzhaiPos = MyPosition:new(-363, 8, 556), -- 平风寨位置
   playerInHomePos = { x = 31, y = 9, z = 3 },
 }
