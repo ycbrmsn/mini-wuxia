@@ -123,6 +123,7 @@ function Juyidao:alertTo (objid)
     -- 停止移动
     self:wantDontMove('alert')
     -- 看向玩家
+    self:lookAt(objid)
     TimeHelper:callFnFastRuns(function ()
       self:lookAt(objid)
     end, 1)
