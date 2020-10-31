@@ -60,7 +60,7 @@ function StrongAttackSword:useItem1 (objid)
         local initPos = MyPosition:new(targetPos.x, targetPos.y + 0.2, targetPos.z)
         local dirVector3 = MyVector3:new(0, -1, 0)
         local projectileid = WorldHelper:spawnProjectileByDirPos(objid, itemid, initPos, dirVector3) -- 创建投掷物
-        ItemHelper:recordProjectile(projectileid, objid, self, { hurt = self.attack * (self.multiple + self.level * self.addMultiplePerLevel) - MyMap.CUSTOM.PROJECTILE_HURT, pos = playerPos }) -- 记录伤害
+        ItemHelper:recordProjectile(projectileid, objid, self, { hurt = self.meleeAttack * (self.multiple + self.level * self.addMultiplePerLevel) - MyMap.CUSTOM.PROJECTILE_HURT, pos = playerPos }) -- 记录伤害
         break
       end
     end
@@ -139,7 +139,7 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
       local toPos = ActorHelper:getMyPosition(toobjid)
       local distance = MathHelper:getDistance(playerPos, toPos)
       local dam = item.damage + item.level * item.addDamagePerLevel
-      local damage = math.floor(item.attack + distance * dam - MyMap.CUSTOM.PROJECTILE_HURT)
+      local damage = math.floor(item.meleeAttack + distance * dam - MyMap.CUSTOM.PROJECTILE_HURT)
       -- LogHelper:debug(math.floor(distance))
       player:damageActor(toobjid, damage)
     end
@@ -420,7 +420,7 @@ function FallStarBow:useSkill (objid, index)
       local initPos = MyPosition:new(targetPos.x, targetPos.y + 0.2, targetPos.z)
       local dirVector3 = MyVector3:new(0, -1, 0)
       local projectileid = WorldHelper:spawnProjectileByDirPos(objid, itemid, initPos, dirVector3) -- 创建投掷物
-      ItemHelper:recordProjectile(projectileid, objid, self, { hurt = self.attack - MyMap.CUSTOM.PROJECTILE_HURT }) -- 记录伤害
+      ItemHelper:recordProjectile(projectileid, objid, self, { hurt = self.remoteAttack - MyMap.CUSTOM.PROJECTILE_HURT }) -- 记录伤害
     end
     self:useSkill(objid, index + 1)
   end, 2)
@@ -502,7 +502,7 @@ function OneByOneBow:projectileHit (projectileInfo, toobjid, blockid, pos)
       if (isHurt) then -- 造成伤害事件发生了
         superfluousHurt = MyMap.CUSTOM.PROJECTILE_HURT
       end
-      local hurt = item.attack - superfluousHurt - self:addHitTimes(objid) * 10 -- 命中伤害10点递减
+      local hurt = item.remoteAttack - superfluousHurt - self:addHitTimes(objid) * 10 -- 命中伤害10点递减
       local minHurt = 10 - superfluousHurt
       if (hurt < minHurt) then -- 最低伤害10点
         hurt = minHurt
