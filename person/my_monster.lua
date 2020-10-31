@@ -819,7 +819,7 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function Pantaojianshibing:generateMonsters ()
   for i, v in ipairs(self.monsterAreaInfos) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper:getMonsterNum(v.areaid, self.actorid)
     for i = 1, v.num - curNum do
       local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
       self:newMonster(pos.x, pos.y, pos.z, 1)
@@ -887,7 +887,7 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function Pantaogongshibing:generateMonsters ()
   for i, v in ipairs(self.monsterAreaInfos) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper:getMonsterNum(v.areaid, self.actorid)
     for i = 1, v.num - curNum do
       local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
       self:newMonster(pos.x, pos.y, pos.z, 1)
