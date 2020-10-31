@@ -12,6 +12,11 @@ function MyPlayer:new (objid)
   o.action = BasePlayerAction:new(o)
   o.attr = BasePlayerAttr:new(o)
   -- o.attr.expData = { exp = 50 }
+  o.attr.addMeleeAttack = 1 -- 近战攻击
+  o.attr.addRemoteAttack = 1 -- 远程攻击
+  o.attr.addMeleeDefense = 1 -- 近战防御
+  o.attr.addRemoteDefense = 1 -- 远程防御
+  o.attr.addMaxHp = 5 -- 最大生命值
   o.attr.defeatedExp = 0
   setmetatable(o, self)
   self.__index = self
