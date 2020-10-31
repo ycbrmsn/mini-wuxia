@@ -65,6 +65,10 @@ function BaseActor:isActive ()
         ActorHelper:setEnableBeKilledState(self.objid, false)
       end
     end
+    if (self.immuneFall) then -- 不会摔伤
+      LogHelper:debug('免疫摔伤')
+      ActorHelper:setImmuneFall(self.objid, true)
+    end
     return true
   else
     local blockid = BlockHelper:getBlockID(self.x, self.y, self.z)
@@ -413,6 +417,10 @@ function BaseActor:initActor ()
     -- 如果生物不可被杀死，则设置不可被杀死
     if (self.unableBeKilled) then
       ActorHelper:setEnableBeKilledState(self.objid, false)
+    end
+    -- 如果生物不会摔伤，则设置不会摔伤
+    if (self.immuneFall) then
+      ActorHelper:setImmuneFall(self.objid, true)
     end
     self:wantAtHour()
     self.isInit = true

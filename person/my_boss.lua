@@ -7,6 +7,7 @@ function Juyidao:new ()
   local o = {
     objid = 4382796216,
     unableBeKilled = true,
+    immuneFall = true,
     targetObjid = nil,  -- 攻击对象
     targetPlayer = nil, -- 攻击玩家
     alertObjids = {}, -- 警告对象
@@ -24,6 +25,8 @@ function Juyidao:new ()
     tall = 2, -- 高度
     dontDo = true, -- 没有做
     resumed = true, -- 已恢复，可继续战斗
+    isImprisoning = false, -- 慑魂中
+    attackTimes = 0, -- 攻击次数
   }
   setmetatable(o, self)
   self.__index = self
@@ -65,7 +68,7 @@ function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront) end
 function Juyidao:checkAreaPlayer ()
   -- 搜索外圈玩家
   local pos = self:getMyPosition()
-  if (not(pos) or not(self.resumed)) then
+  if (not(pos) or not(self.resumed) or self.isImprisoning) then
     return
   end
   local playerids = ActorHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
@@ -162,8 +165,8 @@ function Juyidao:beBeat ()
 end
 
 -- 选择战斗方式
-function Juyidao:chooseBattleType ()
-  self.battleType = math.random(2, 2)
+function Juyidao:chooseBattleType (battleType)
+  self.battleType = battleType or math.random(1, 3)
   self.battleProgress = 1
   self:openAI()
   if (self.battleType > 0) then
@@ -173,6 +176,7 @@ function Juyidao:chooseBattleType ()
       skillname = '疾风斩'
     elseif (self.battleType == 2) then
       skillname = '旋风斩'
+      self.attackTimes = 0
     elseif (self.battleType == 3) then
       skillname = '坠风斩'
     end
@@ -273,7 +277,7 @@ function Juyidao:jumpAndAttack ()
     if (self.dontDo) then
       self.dontDo = false
       if (self.targetPlayer) then
-        local pos = player:getDistancePosition(2)
+        local pos = self.targetPlayer:getDistancePosition(2)
         pos.y = pos.y + self.tall
         self:setPosition(pos)
       end
@@ -292,11 +296,16 @@ end
 
 -- 攻击命中
 function Juyidao:attackHit (toobjid)
-  if (self.battleType == 1) then
+  if (self.battleType == 1) then -- 迎风
     self.battleProgress = 2
     self:closeAI()
     ActorHelper:appendFixedSpeed(toobjid, 1, self:getMyPosition())
-  elseif (self.battleType == 3) then
+  elseif (self.battleType == 2) then -- 旋风
+    self.attackTimes = self.attackTimes + 1
+    if (self.attackTimes % 10 == 5) then
+      self.battleProgress = 2
+    end
+  elseif (self.battleType == 3) then -- 坠风
     self.dontDo = true
     self.battleProgress = 3
     local player = PlayerHelper:getPlayer(toobjid)
@@ -324,13 +333,30 @@ end
 -- 获得状态
 function Juyidao:addBuff (buffid, bufflvl)
   if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
-
+    if (self.isBattle) then
+      self:chooseBattleType(0)
+    end
+    self:speakAround(nil, 0, '嗯？')
   elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
-
+    self:forceDoNothing()
+    self.isImprisoning = true
+    self:speakAround(nil, 0, '你做了什么？')
   end
 end
 
 -- 移除状态
 function Juyidao:removeBuff (buffid, bufflvl)
-  -- body
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+    if (self.isBattle) then
+      self:chooseBattleType()
+    end
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+    self.isImprisoning = false
+    if (self.isBattle) then
+      self:chooseBattleType()
+      self:wantBattle()
+    else
+      self:defaultWant()
+    end
+  end
 end
