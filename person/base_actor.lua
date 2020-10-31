@@ -66,8 +66,12 @@ function BaseActor:isActive ()
       end
     end
     if (self.immuneFall) then -- 不会摔伤
-      LogHelper:debug('免疫摔伤')
       ActorHelper:setImmuneFall(self.objid, true)
+    end
+    if (self.recoverNow) then -- 恢复生命
+      if (CreatureHelper:setHp(self.objid, CreatureHelper:getMaxHp(self.objid))) then
+        self.recoverNow = false
+      end
     end
     return true
   else

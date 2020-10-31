@@ -15,6 +15,7 @@ function Juyidao:new ()
     areaSize = {
       MyPosition:new(15, 8, 15), MyPosition:new(20, 10, 20)
     }, -- 内外圈区域大小
+    resetSize = { x = 40, y = 40, z = 40 }, -- 周围没有玩家重置位置
     isBattle = false, -- 是否在战斗
     battleType = 1, -- 战斗方式
     battleProgress = 1, -- 战斗阶段
@@ -154,6 +155,14 @@ function Juyidao:finishBattle ()
   end
   self:stopRun()
   self:wantFreeAndAlert()
+  -- 周围没有玩家时重置位置
+  local pos = self:getMyPosition()
+  if (pos) then
+    local objids = ActorHelper:getAllPlayersArroundPos(pos, self.resetSize)
+    if (not(objids) or #objids == 0) then
+      self:setPosition(self.initPosition)
+    end
+  end
 end
 
 -- 被击败
@@ -322,11 +331,23 @@ end
 
 -- 受到伤害
 function Juyidao:beHurt (toobjid, hurtlv)
+  if (not(self.isBattle)) then
+    self:speakAround(nil, 0, '何方鼠辈！')
+  end
   local hp = CreatureHelper:getHp(self.objid)
   if (hp == 1) then
-    self.resumed = false
-    self:finishBattle()
-    self:speakAround(nil, 0, '你赢了')
+    if (self.resumed) then
+      self.resumed = false
+      self:spawnItems()
+      self:finishBattle()
+      self:speakAround(nil, 0, '你赢了，这个给你。')
+      TimeHelper:callFnFastRuns(function ()
+        self.resumed = true
+        self.recoverNow = true
+      end, 60)
+    else
+      self:speakAround(nil, 0, '东西都给你了，你还打……')
+    end
   end
 end
 
@@ -359,4 +380,25 @@ function Juyidao:removeBuff (buffid, bufflvl)
       self:defaultWant()
     end
   end
+end
+
+function Juyidao:spawnItems ()
+  local level
+  local levelRandom = math.random(1, 10)
+  if (levelRandom < 7) then
+    level = 1
+  elseif (levelRandom < 10) then
+    level = 2
+  else
+    level = 3
+  end
+  local itemids = {
+    MyWeaponAttr.strongAttackSword.levelIds[level],
+    MyWeaponAttr.rejuvenationKnife.levelIds[level],
+    MyWeaponAttr.overlordSpear.levelIds[level],
+    MyWeaponAttr.fallStarBow.levelIds[level],
+  }
+  local itemId = itemids[math.random(1, 4)]
+  local pos = self:getMyPosition()
+  WorldHelper:spawnItem(pos.x, pos.y, pos.z, itemId, 1)
 end
