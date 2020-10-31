@@ -6,10 +6,11 @@ Juyidao = BaseActor:new(MyMap.ACTOR.JUYIDAO_ACTOR_ID)
 function Juyidao:new ()
   local o = {
     objid = 4382796216,
+    unableBeKilled = true,
     targetObjid = nil,  -- 攻击对象
     targetPlayer = nil, -- 攻击玩家
     alertObjids = {}, -- 警告对象
-    initPosition = MyPosition:new(65.5, 7.5, 45.5), -- 橘山
+    initPosition = MyPosition:new(328.5, 26.5, 686.5), -- 橘山
     areaSize = {
       MyPosition:new(15, 8, 15), MyPosition:new(20, 10, 20)
     }, -- 内外圈区域大小
@@ -21,7 +22,8 @@ function Juyidao:new ()
     fallSpeed = { 0.07, 0.5 }, -- 阻力
     circleRadius = 5, -- 跑圈半径
     tall = 2, -- 高度
-    dontDo = true -- 没有做
+    dontDo = true, -- 没有做
+    resumed = true, -- 已恢复，可继续战斗
   }
   setmetatable(o, self)
   self.__index = self
@@ -63,7 +65,7 @@ function Juyidao:defaultCollidePlayerEvent (playerid, isPlayerInFront) end
 function Juyidao:checkAreaPlayer ()
   -- 搜索外圈玩家
   local pos = self:getMyPosition()
-  if (not(pos)) then
+  if (not(pos) or not(self.resumed)) then
     return
   end
   local playerids = ActorHelper:getAllPlayersArroundPos(pos, self.areaSize[2])
@@ -307,4 +309,28 @@ end
 
 function Juyidao:changeMotion (actormotion)
   LogHelper:debug('橘一刀当前行为 ', actormotion)
+end
+
+-- 受到伤害
+function Juyidao:beHurt (toobjid, hurtlv)
+  local hp = CreatureHelper:getHp(self.objid)
+  if (hp == 1) then
+    self.resumed = false
+    self:finishBattle()
+    self:speakAround(nil, 0, '你赢了')
+  end
+end
+
+-- 获得状态
+function Juyidao:addBuff (buffid, bufflvl)
+  if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
+
+  elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
+
+  end
+end
+
+-- 移除状态
+function Juyidao:removeBuff (buffid, bufflvl)
+  -- body
 end

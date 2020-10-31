@@ -884,6 +884,15 @@ function ActorHelper:actorChangeMotion (objid, actormotion)
   end
 end
 
+-- 生物受到伤害
+function ActorHelper:actorBeHurt (objid, toobjid, hurtlv)
+  local actor = ActorHelper:getActor(objid)
+  if (actor) then
+    actor:beHurt(toobjid, hurtlv)
+  end
+  -- body
+end
+
 -- 生物死亡
 function ActorHelper:actorDie (objid, toobjid)
   MonsterHelper:actorDie(objid, toobjid)

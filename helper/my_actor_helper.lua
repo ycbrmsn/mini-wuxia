@@ -25,10 +25,10 @@ function MyActorHelper:init ()
   gaoxiaohu = Gaoxiaohu:new()
   yuewushuang = Yuewushuang:new()
   jianghuo = Jianghuo:new()
-  -- juyidao = Juyidao:new()
+  juyidao = Juyidao:new()
   local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, 
-      erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, -- juyidao,
-      yuewushuang, jianghuo }
+      erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, juyidao,
+      yuewushuang, jianghuo, }
   for i, v in ipairs(myActors) do
     TimeHelper:initActor(v)
     -- LogHelper:debug('创建', v:getName(), '完成')
@@ -100,6 +100,13 @@ function MyActorHelper:actorChangeMotion (objid, actormotion)
       end, 10)
     end
   end
+end
+
+-- 生物受到伤害
+function MyActorHelper:actorBeHurt (objid, toobjid, hurtlv)
+  ActorHelper:actorBeHurt(objid, toobjid, hurtlv)
+  MyStoryHelper:actorBeHurt(objid, toobjid, hurtlv)
+  -- body
 end
 
 -- 生物死亡

@@ -17,6 +17,7 @@ BaseActor = {
   talkIndex = {}, -- 对话进度 { playerid -> index }
   talkInfos = {}, -- 对话信息
   defaultTalkMsg = '你好。', -- 默认对话
+  speakDim = { x = 30, y = 30, z = 30 }, -- 默认说话声音传播范围
 }
 
 function BaseActor:new (actorid, objid)
@@ -186,8 +187,17 @@ function BaseActor:speakTo (playerids, afterSeconds, ...)
     end
   elseif (type(playerids) == 'table') then
     for i, v in ipairs(playerids) do
-      self:speakTo(v)
+      self:speakTo(v, afterSeconds, ...)
     end
+  end
+end
+
+function BaseActor:speakAround (dim, afterSeconds, ...)
+  dim = dim or self.speakDim
+  local pos = self:getMyPosition()
+  local objids = ActorHelper:getAllPlayersArroundPos(pos, dim)
+  if (objids and #objids > 0) then
+    self:speakTo(objids, afterSeconds, ...)
   end
 end
 
@@ -488,6 +498,11 @@ end
 
 -- 行为改变
 function BaseActor:changeMotion (actormotion)
+  -- body
+end
+
+-- 受到伤害
+function BaseActor:beHurt (toobjid, hurtlv)
   -- body
 end
 

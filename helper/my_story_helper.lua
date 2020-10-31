@@ -348,6 +348,11 @@ function MyStoryHelper:actorChangeMotion (objid, actormotion)
   -- body
 end
 
+-- 生物受到伤害
+function MyStoryHelper:actorBeHurt (objid, toobjid, hurtlv)
+  -- body
+end
+
 -- 生物死亡
 function MyStoryHelper:actorDie (objid, toobjid)
   -- body
