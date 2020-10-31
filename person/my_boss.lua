@@ -331,7 +331,7 @@ end
 
 -- 受到伤害
 function Juyidao:beHurt (toobjid, hurtlv)
-  if (not(self.isBattle)) then
+  if (not(self.isBattle) and self.resumed) then
     self:speakAround(nil, 0, '何方鼠辈！')
   end
   local hp = CreatureHelper:getHp(self.objid)
