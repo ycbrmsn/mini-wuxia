@@ -72,12 +72,14 @@ end
 -- 方块被破坏
 function MyBlockHelper:blockDestroyBy (objid, blockid, x, y, z)
   BlockHelper:blockDestroyBy(objid, blockid, x, y, z)
+  MyStoryHelper:blockDestroyBy(objid, blockid, x, y, z)
   -- body
 end
 
 -- 完成方块挖掘
 function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
   BlockHelper:blockDigEnd(objid, blockid, x, y, z)
+  MyStoryHelper:blockDigEnd(objid, blockid, x, y, z)
   -- body
   local disableMsg = '不可被破坏'
   if (blockid == BlockHelper.switchid) then
@@ -93,6 +95,7 @@ end
 -- 方块被放置
 function MyBlockHelper:blockPlaceBy (objid, blockid, x, y, z)
   BlockHelper:blockPlaceBy(objid, blockid, x, y, z)
+  MyStoryHelper:blockPlaceBy(objid, blockid, x, y, z)
   -- body
   if (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
     -- 一秒后破坏
@@ -107,11 +110,13 @@ end
 -- 方块被移除
 function MyBlockHelper:blockRemove (blockid, x, y, z)
   BlockHelper:blockRemove(blockid, x, y, z)
+  MyStoryHelper:blockRemove(blockid, x, y, z)
   -- body
 end
 
 -- 方块被触发
 function MyBlockHelper:blockTrigger (objid, blockid, x, y, z)
   BlockHelper:blockTrigger(objid, blockid, x, y, z)
+  MyStoryHelper:blockTrigger(objid, blockid, x, y, z)
   -- body
 end

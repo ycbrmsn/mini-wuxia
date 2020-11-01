@@ -371,6 +371,46 @@ function MyStoryHelper:actorRemoveBuff (objid, buffid, bufflvl)
   -- body
 end
 
+-- 方块被破坏
+function MyStoryHelper:blockDestroyBy (objid, blockid, x, y, z)
+  -- body
+end
+
+-- 完成方块挖掘
+function MyStoryHelper:blockDigEnd (objid, blockid, x, y, z)
+  -- body
+  if (blockid == 422 or blockid == 123) then -- 粗制岩石砖 冰块插件
+    local pos = ActorHelper:getMyPosition(objid)
+    if (pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633) then -- 风颖城范围
+      local player = PlayerHelper:getPlayer(objid)
+      player:enableMove(false, true)
+      guard:speakTo(objid, 0, '你破坏了城墙，请跟我们走一趟。')
+      local ws = WaitSeconds:new(2)
+      player:thinkSelf(ws:use(), '我要怎么做呢？')
+      TimeHelper:callFnAfterSecond(function ()
+        ChatHelper:sendMsg(objid, '请选择对应的快捷栏')
+        ChatHelper:showChooseItems(playerid, { '跟他们走', '誓死反抗' })
+        player.whichChoose = 'breakCity'
+      end, ws:get())
+    end
+  end
+end
+
+-- 方块被放置
+function MyStoryHelper:blockPlaceBy (objid, blockid, x, y, z)
+  -- body
+end
+
+-- 方块被移除
+function MyStoryHelper:blockRemove (blockid, x, y, z)
+  -- body
+end
+
+-- 方块被触发
+function MyStoryHelper:blockTrigger (objid, blockid, x, y, z)
+  -- body
+end
+
 -- 容器内有道具取出
 function MyStoryHelper:backpackItemTakeOut (blockid, x, y, z, itemid, itemnum)
   -- body

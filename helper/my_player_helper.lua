@@ -1,5 +1,20 @@
 -- 我的玩家工具类
-MyPlayerHelper = {}
+MyPlayerHelper = {
+  chooseMap = {
+    breakCity = {
+      [1] = function (player)
+        player.whichChoose = nil
+        player:enableMove(true)
+        player:speakSelf(0, '我愿意跟你们走。')
+      end,
+      [2] = function (player)
+        player.whichChoose = nil
+        player:enableMove(true)
+        player:speakSelf(0, '想让我跟你们走，想都别想！')
+      end,
+    },
+  },
+}
 
 -- 事件
 
