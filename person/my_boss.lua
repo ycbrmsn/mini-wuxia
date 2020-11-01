@@ -20,7 +20,7 @@ function Juyidao:new ()
     battleType = 1, -- 战斗方式
     battleProgress = 1, -- 战斗阶段
     defaultSpeed = 200,
-    speed = { 400, 1200, 2000 }, -- 移动速度
+    speed = { 500, 1200, 2000 }, -- 移动速度
     fallSpeed = { 0.07, 0.5 }, -- 阻力
     circleRadius = 5, -- 跑圈半径
     tall = 2, -- 高度
@@ -28,6 +28,7 @@ function Juyidao:new ()
     resumed = true, -- 已恢复，可继续战斗
     isImprisoning = false, -- 慑魂中
     attackTimes = 0, -- 攻击次数
+    noAttackTime = 0, -- 攻击时间
   }
   setmetatable(o, self)
   self.__index = self
@@ -108,6 +109,10 @@ function Juyidao:checkAreaPlayer ()
       self.targetObjid = minDisPlayerid
       self.targetPlayer = PlayerHelper:getPlayer(self.targetObjid)
       self:startBattle()
+      self.noAttackTime = self.noAttackTime + 1
+      if (self.noAttackTime > 7) then
+        self:chooseBattleType(3)
+      end
     end
   else -- 身边没有玩家
     if (#self.alertObjids > 0) then
@@ -194,6 +199,7 @@ function Juyidao:chooseBattleType (battleType)
       self:speakTo(v, 0, skillname)
     end
   end
+  self.noAttackTime = 0
 end
 
 -- 执行战斗
@@ -279,7 +285,7 @@ function Juyidao:jumpAndAttack ()
       TimeHelper:callFnFastRuns(function ()
         self.dontDo = true
         self.battleProgress = 2
-      end, 1)
+      end, 0.5)
       Actor:appendSpeed(self.objid, 0, self.fallSpeed[2], 0)
     end
     Actor:appendSpeed(self.objid, 0, self.fallSpeed[1], 0)
@@ -306,15 +312,19 @@ end
 
 -- 攻击命中
 function Juyidao:attackHit (toobjid)
-  if (self.battleType == 1) then -- 迎风
+  if (self.battleType == 0) then -- 普通攻击
+    ActorHelper:damageActor(self.objid, toobjid, 5)
+  elseif (self.battleType == 1) then -- 迎风
     self.battleProgress = 2
     self:closeAI()
     ActorHelper:appendFixedSpeed(toobjid, 1, self:getMyPosition())
+    ActorHelper:damageActor(self.objid, toobjid, 11)
   elseif (self.battleType == 2) then -- 旋风
     self.attackTimes = self.attackTimes + 1
     if (self.attackTimes % 10 == 5) then
       self.battleProgress = 2
     end
+    ActorHelper:damageActor(self.objid, toobjid, 6)
   elseif (self.battleType == 3) then -- 坠风
     self.dontDo = true
     self.battleProgress = 3
@@ -323,7 +333,9 @@ function Juyidao:attackHit (toobjid)
     local selfPos = self:getMyPosition()
     selfPos.y = pos.y
     ActorHelper:appendFixedSpeed(toobjid, 2, selfPos)
+    ActorHelper:damageActor(self.objid, toobjid, 12)
   end
+  self.noAttackTime = 0
 end
 
 function Juyidao:changeMotion (actormotion)
