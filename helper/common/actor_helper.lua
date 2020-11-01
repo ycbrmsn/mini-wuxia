@@ -724,6 +724,17 @@ function ActorHelper:isInWater (objid)
   return AreaHelper:isWaterArea(pos)
 end
 
+-- 播放并停止特效
+function ActorHelper:playAndStopBodyEffectById (objid, particleId, scale, time)
+  scale = scale or 1
+  time = time or 3
+  ActorHelper:playBodyEffectById(objid, particleId, scale)
+  local t = 'stopBodyEffect'
+  TimeHelper:callFnLastRun(objid, t, function ()
+    ActorHelper:stopBodyEffectById(objid, particleId)
+  end, time)
+end
+
 -- 设置生物可移动状态
 function ActorHelper:setEnableMoveState (objid, switch)
   return self:setActionAttrState(objid, CREATUREATTR.ENABLE_MOVE, switch)

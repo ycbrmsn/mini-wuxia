@@ -69,7 +69,7 @@ function BaseActor:isActive ()
       ActorHelper:setImmuneFall(self.objid, true)
     end
     if (self.recoverNow) then -- 恢复生命
-      if (CreatureHelper:setHp(self.objid, CreatureHelper:getMaxHp(self.objid))) then
+      if (CreatureHelper:resetHp(self.objid)) then
         self.recoverNow = false
       end
     end

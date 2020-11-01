@@ -334,6 +334,10 @@ end
 function Juyidao:beHurt (toobjid, hurtlv)
   if (not(self.isBattle) and self.resumed) then
     self:speakAround(nil, 0, '何方鼠辈！')
+    TimeHelper:callFnFastRuns(function ()
+      ActorHelper:playAndStopBodyEffectById(self.objid, BaseConstant.BODY_EFFECT.LIGHT26)
+      CreatureHelper:resetHp(self.objid)
+    end, 1)
   end
   local hp = CreatureHelper:getHp(self.objid)
   if (hp == 1) then
