@@ -125,7 +125,7 @@ end
 -- 玩家进入区域
 function MyStoryHelper:playerEnterArea (objid, areaid)
   -- body
-  if (areaid == story1.areaid) then -- 文羽通知事件
+  if (story1 and areaid == story1.areaid) then -- 文羽通知事件
     if (StoryHelper:check(1, '闲来无事')) then
       story1:noticeEvent(areaid)
       -- 玩家看文羽两秒

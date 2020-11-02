@@ -4,8 +4,14 @@ MyPlayerHelper = {
     breakCity = {
       [1] = function (player)
         player.whichChoose = nil
-        player:enableMove(true)
+        local ws = WaitSeconds:new(2)
         player:speakSelf(0, '我愿意跟你走。')
+        guard:speakTo(player.objid, ws:use(), '这样最好了。')
+        TimeHelper:callFnAfterSecond(function ()
+          local pos = MyAreaHelper:getEmptyPrisonPos()
+          player:setMyPosition(pos)
+          player:enableMove(true)
+        end, ws:get())
       end,
       [2] = function (player)
         player.whichChoose = nil

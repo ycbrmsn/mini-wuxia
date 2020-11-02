@@ -53,6 +53,8 @@ MyAreaHelper = {
   jushanPos = MyPosition:new(278, 7, 676), -- 橘山位置
   pingfengzhaiPos = MyPosition:new(-363, 8, 556), -- 平风寨位置
   playerInHomePos = { x = 31, y = 9, z = 3 },
+  prisonAreas = {}, -- 监狱区域
+  prisonPoses = {}, -- 监狱区域中的位置
 }
 
 -- 初始化
@@ -61,6 +63,7 @@ function MyAreaHelper:init ()
   self:initShowToastAreas()
   -- body
   self.playerInHomeAreaId = AreaHelper:getAreaByPos(self.playerInHomePos)
+  MyAreaHelper:initPrisons()
 end
 
 -- 初始化显示飘窗区域
@@ -93,4 +96,26 @@ end
 -- 获取所有的门位置
 function MyAreaHelper:getDoorPositions ()
   return self.doorPositions
+end
+
+-- 初始化监狱区域
+function MyAreaHelper:initPrisons ()
+  for i = 541, 570, 5 do
+    local areaid = AreaHelper:createAreaRectByRange(MyPosition:new(-18, 7, i), MyPosition:new(-16, 9, i + 3))
+    table.insert(self.prisonAreas, areaid)
+    table.insert(self.prisonPoses, MyPosition:new(-17, 8, i + 1))
+  end
+end
+
+-- 获得一间空监狱位置
+function MyAreaHelper:getEmptyPrisonPos ()
+  local pos = self.prisonPoses[1]
+  for i, v in ipairs(self.prisonAreas) do
+    local objids = AreaHelper:getAllPlayersInAreaId(v)
+    if (objids and #objids == 0) then
+      pos = self.prisonPoses[i]
+      break
+    end
+  end
+  return pos
 end
