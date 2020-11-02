@@ -43,6 +43,7 @@ function MyStoryHelper:beatBreakCityPlayer (player)
   TimeHelper:callFnAfterSecond(function ()
     player:enableMove(true)
     ActorHelper:killSelf(player.objid)
+    WorldHelper:despawnActor(player.chooseMap.objid)
     for i, v in ipairs(player.destroyBlock) do
       BlockHelper:placeBlock(v.blockid, v.x, v.y, v.z)
     end
@@ -166,6 +167,7 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
                   TimeHelper:callFnAfterSecond(function ()
                     player:setPosition(self.outCityPos)
                     player:enableMove(true, false)
+                    WorldHelper:despawnActor(objids[1])
                   end, 2)
                 end
               end

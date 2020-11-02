@@ -49,6 +49,7 @@ MyPlayerHelper = {
           local pos = MyAreaHelper:getEmptyPrisonPos()
           player:setMyPosition(pos)
           player:enableMove(true)
+          WorldHelper:despawnActor(player.chooseMap.objid)
           for i, v in ipairs(player.destroyBlock) do
             BlockHelper:placeBlock(v.blockid, v.x, v.y, v.z)
           end
