@@ -13,11 +13,9 @@ function AreaHelper:isAirArea (pos)
   return BlockHelper:isAirBlock(pos.x, pos.y, pos.z) and BlockHelper:isAirBlock(pos.x, pos.y + 1, pos.z)
 end
 
--- 是否是水区域（3静态水4水）
+-- 是否是水区域
 function AreaHelper:isWaterArea (pos)
-  local blockid1 = BlockHelper:getBlockID(pos.x, pos.y, pos.z)
-  local blockid2 = BlockHelper:getBlockID(pos.x, pos.y + 1, pos.z)
-  return blockid1 == 3 or blockid1 == 4 or blockid2 == 3 or blockid2 == 4
+  return BlockHelper:isWater(pos.x, pos.y, pos.z) or BlockHelper:isWater(pos.x, pos.y + 1, pos.z)
 end
 
 function AreaHelper:removeToArea (myActor)
@@ -181,6 +179,20 @@ function AreaHelper:getBlockPositionsAround (pos, dim, blockid)
     end
   end
   return positions
+end
+
+-- 获得一个可以站人的位置
+function AreaHelper:getEmptyPos (player)
+  local pos
+  for i = 3, 2, -1 do
+    for j = 90, 360, 30 do
+      pos = player:getDistancePosition(i, j)
+      if (AreaHelper:isAirArea(pos) and not(BlockHelper:isWater(pos.x, pos.y - 1, pos.z))) then
+        return pos
+      end
+    end
+  end
+  return pos
 end
 
 -- 封装原始接口
