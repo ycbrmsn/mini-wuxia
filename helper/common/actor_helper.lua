@@ -651,7 +651,7 @@ end
 
 -- 角色看向 执行者、目标、是否需要旋转镜头（三维视角需要旋转），toobjid可以是objid、位置、玩家、生物
 function ActorHelper:lookAt (objid, toobjid, needRotateCamera)
-  LogHelper:debug('lookat')
+  -- LogHelper:debug('lookat')
   if (type(objid) == 'table') then -- 如果执行者是多个（数组）
     for i, v in ipairs(objid) do
       ActorHelper:lookAt(v, toobjid, needRotateCamera)
