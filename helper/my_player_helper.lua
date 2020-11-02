@@ -9,14 +9,13 @@ MyPlayerHelper = {
       end,
       [2] = function (player)
         player.whichChoose = nil
-        local objid = player.chooseMap.objid
         local ws = WaitSeconds:new(2)
         player:speakSelf(0, '想让我跟你走，想都别想！')
         guard:speakTo(player.objid, ws:use(1), '那么抱歉了……')
         TimeHelper:callFnAfterSecond(function ()
-          ActorHelper:playAct(objid, ActorHelper.ACT.ATTACK)
-          player:enableMove(true)
+          ActorHelper:playAct(player.chooseMap.objid, ActorHelper.ACT.ATTACK)
           TimeHelper:callFnAfterSecond(function ()
+            player:enableMove(true)
             ActorHelper:killSelf(player.objid)
           end, 1)
         end, ws:get())

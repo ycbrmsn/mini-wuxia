@@ -383,22 +383,34 @@ function MyStoryHelper:blockDigEnd (objid, blockid, x, y, z)
     local pos = ActorHelper:getMyPosition(objid)
     if (pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633) then -- 风颖城范围
       local player = PlayerHelper:getPlayer(objid)
-      local pos = AreaHelper:getEmptyPos(player)
-      local objids = WorldHelper:spawnCreature(pos.x, pos.y, pos.z, guard.actorid, 1)
-      if (objids and #objids > 0) then
-        player:enableMove(false, true)
-        CreatureHelper:closeAI(objids[1])
-        ActorHelper:lookAt(objids[1], objid)
-        player:lookAt(objids[1])
-        guard:speakTo(objid, 0, '你破坏了城墙，请跟我们走一趟。')
-        local ws = WaitSeconds:new(2)
-        player:thinkSelf(ws:use(), '我要怎么做呢？')
+      if (player.whichChoose and player.whichChoose == 'breakCity') then
+        player.whichChoose = nil
+        guard:speakTo(objid, 0, '你还敢挖！！！')
         TimeHelper:callFnAfterSecond(function ()
-          ChatHelper:sendMsg(objid, '请选择对应的快捷栏')
-          ChatHelper:showChooseItems(playerid, { '跟他们走', '誓死反抗' })
-          player.whichChoose = 'breakCity'
-          player.chooseMap = { objid = objids[1] }
-        end, ws:get())
+          ActorHelper:playAct(player.chooseMap.objid, ActorHelper.ACT.ATTACK)
+          TimeHelper:callFnAfterSecond(function ()
+            player:enableMove(true)
+            ActorHelper:killSelf(player.objid)
+          end, 1)
+        end, 1)
+      else
+        local pos = AreaHelper:getEmptyPos(player)
+        local objids = WorldHelper:spawnCreature(pos.x, pos.y, pos.z, guard.actorid, 1)
+        if (objids and #objids > 0) then
+          player:enableMove(false, true)
+          CreatureHelper:closeAI(objids[1])
+          ActorHelper:lookAt(objids[1], objid)
+          player:lookAt(objids[1])
+          guard:speakTo(objid, 0, '你破坏了城墙，请跟我走一趟。')
+          local ws = WaitSeconds:new(2)
+          player:thinkSelf(ws:use(), '我要怎么做呢？')
+          TimeHelper:callFnAfterSecond(function ()
+            ChatHelper:sendMsg(objid, '请选择对应的快捷栏')
+            ChatHelper:showChooseItems(playerid, { '跟他走', '不跟他走' })
+            player.whichChoose = 'breakCity'
+            player.chooseMap = { objid = objids[1] }
+          end, ws:get())
+        end
       end
     end
   end

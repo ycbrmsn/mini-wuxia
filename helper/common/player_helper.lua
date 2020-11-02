@@ -256,6 +256,11 @@ function PlayerHelper:setPlayerEnableBeAttacked (objid, enable)
   return self:setActionAttrState(objid, PLAYERATTR.ENABLE_BEATTACKED, enable)
 end
 
+-- 设置玩家是否可破坏方块
+function PlayerHelper:setPlayerEnableDestroyBlock (objid, enable)
+  return self:setActionAttrState(objid, PLAYERATTR.ENABLE_DESTROYBLOCK, enable)
+end
+
 function PlayerHelper:getHp (objid)
   return self:getAttr(objid, PLAYERATTR.CUR_HP)
 end
