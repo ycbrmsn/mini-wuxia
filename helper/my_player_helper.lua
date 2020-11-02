@@ -1,6 +1,44 @@
 -- 我的玩家工具类
 MyPlayerHelper = {
   chooseMap = {
+    readme = {
+      [1] = function (player)
+        ChatHelper:showChooseItems(playerid, { '游戏简介', '更新内容', '退出' })
+        player.whichChoose = 'readme1'
+      end,
+      [2] = function (player)
+        MyPlayerHelper:exitChoose(player)
+      end, -- 退出
+    },
+    readme1 = {
+      [1] = function (player)
+        ChatHelper:sendMsg(player.objid, '\t\t这是一个简单的角色扮演类游戏，有')
+        ChatHelper:sendMsg(player.objid, '几个简单的剧情。目前剧情还未做完，正')
+        ChatHelper:sendMsg(player.objid, '常情况下月更。', StringHelper:repeatStrs('\t', 10))
+        MyPlayerHelper.chooseMap.readme[1](player)
+      end, -- 游戏简介
+      [2] = function (player)
+        ChatHelper:showChooseItems(playerid, { 'v0.3.4', '返回' })
+        player.whichChoose = 'readmeUpdate'
+      end, -- 更新内容
+      [3] = function (player)
+        MyPlayerHelper:exitChoose(player)
+      end, -- 退出
+    },
+    readmeUpdate = {
+      [1] = function (player)
+        ChatHelper:sendMsg(player.objid, '1.新增叛军营地、橘山。', StringHelper:repeatStrs('\t', 7))
+        ChatHelper:sendMsg(player.objid, '2.新增挖城墙事件。', StringHelper:repeatStrs('\t', 9))
+        ChatHelper:sendMsg(player.objid, '3.调低了升级后玩家增长的属性。', StringHelper:repeatStrs('\t', 3))
+        ChatHelper:sendMsg(player.objid, '4.调高了部分怪物的伤害。', StringHelper:repeatStrs('\t', 6))
+        ChatHelper:sendMsg(player.objid, '5.修复车票无法送达的问题。', StringHelper:repeatStrs('\t', 5))
+        ChatHelper:sendMsg(player.objid, '6.微调了一些其他东西。', StringHelper:repeatStrs('\t', 7))
+        MyPlayerHelper.chooseMap.readme1[2](player)
+      end, -- v0.3.4
+      [2] = function (player)
+        MyPlayerHelper.chooseMap.readme[1](player)
+      end, -- 返回
+    },
     breakCity = {
       [1] = function (player)
         player.whichChoose = nil
@@ -25,6 +63,13 @@ MyPlayerHelper = {
     },
   },
 }
+
+-- 退出选择
+function MyPlayerHelper:exitChoose (player)
+  player.whichChoose = nil
+  player:enableMove(true, true)
+  player:thinkSelf(0, '算了，我都知道了。')
+end
 
 -- 事件
 
@@ -71,6 +116,7 @@ function MyPlayerHelper:playerClickBlock (objid, blockid, x, y, z)
     if (itemid and itemid == MyMap.ITEM.SAVE_GAME_ID) then -- 手持保存游戏道具将删除储物箱
       WorldContainerHelper:removeStorageBox(math.floor(x), math.floor(y), math.floor(z))
     end
+  elseif (MyBlockHelper:clickBookcase(objid, blockid, x, y, z)) then -- 书柜说明
   end
 end
 

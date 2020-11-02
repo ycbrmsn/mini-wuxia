@@ -9,6 +9,7 @@ MyBlockHelper = {
     BlockHelper.bedid,
     428, -- 四格釉面砖
     667, -- 白色硬砂块
+    820, -- 书柜
     860, -- 落叶松木门
     MyMap.BLOCK.COPPER_ORE_ID, -- 铜矿石
     2004, -- 监狱围栏
@@ -74,6 +75,20 @@ function MyBlockHelper:checkCityGateSwitch (blockid, pos)
   return false
 end
 
+-- 点击书柜
+function MyBlockHelper:clickBookcase (objid, blockid, x, y, z)
+  if (blockid == 820 and x == 33.5 and y == 8.5 and z == 7.5) then -- 家里的书柜
+    local player = PlayerHelper:getPlayer(objid)
+    player:enableMove(false, true)
+    player:thinkSelf(0, '这里有一些游戏说明，我要看看吗？')
+    ChatHelper:sendMsg(objid, '选择对应序号的快捷栏进行选择')
+    ChatHelper:showChooseItems(playerid, { '看看', '不看' })
+    player.whichChoose = 'readme'
+    return true
+  end
+  return false
+end
+
 -- 事件
 
 -- 方块被破坏
@@ -102,6 +117,8 @@ function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
     PlayerHelper:showToast(objid, '此地面', disableMsg)
   elseif (blockid == 667) then -- 白色硬砂块
     PlayerHelper:showToast(objid, '围墙', disableMsg)
+  elseif (blockid == 820) then -- 书柜
+    PlayerHelper:showToast(objid, '书柜', disableMsg)
   elseif (blockid >= 2004 and blockid <= 2008) then
     PlayerHelper:showToast(objid, '围栏', disableMsg)
   end
