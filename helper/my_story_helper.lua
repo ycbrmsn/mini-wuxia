@@ -143,6 +143,22 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
       AreaHelper:destroyArea(areaid)
       story3:comeToCollege()
     end
+  else
+    local player = PlayerHelper:getPlayer(objid)
+    -- 监狱区域
+    for i, v in ipairs(MyAreaHelper.prisonAreas) do
+      if (areaid == v) then
+        local timerid = TimerHelper:doAfterSeconds(function ()
+          local pos = player:getMyPosition()
+          if (pos) then
+            TimerHelper:hideTips({ objid }, timerid)
+            player:setPosition(-14.5, pos.y, pos.z)
+          end
+        end, 60)
+        TimerHelper:showTips({ objid }, timerid, '剩余出狱时间：')
+        break
+      end
+    end
   end
 end
 

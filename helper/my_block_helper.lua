@@ -7,8 +7,15 @@ MyBlockHelper = {
     BlockHelper.switchid,
     BlockHelper.doorid,
     BlockHelper.bedid,
+    428, -- 四格釉面砖
+    667, -- 白色硬砂块
     860, -- 落叶松木门
-    MyMap.BLOCK.COPPER_ORE_ID
+    MyMap.BLOCK.COPPER_ORE_ID, -- 铜矿石
+    2004, -- 监狱围栏
+    2005, -- 监狱围栏
+    2006, -- 监狱围栏
+    2007, -- 监狱围栏
+    2008, -- 监狱围栏
   },
   cityGateBlockIds = { 414, 122, 415 }, -- 竖纹、雪堆、电石块
   cityGatesData = { -- 开关、左电石、右电石、右区域
@@ -86,9 +93,17 @@ function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
     PlayerHelper:showToast(objid, '开关', disableMsg)
   elseif (blockid == BlockHelper.doorid or blockid == 860) then
     PlayerHelper:showToast(objid, '门', disableMsg)
+  elseif (blockid == BlockHelper.bedid) then -- 木床
+    PlayerHelper:showToast(objid, '床', disableMsg)
   elseif (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
     BackpackHelper:addItem(objid, blockid, 1)
     PlayerHelper:showToast(objid, '获得一个铜矿石')
+  elseif (blockid == 428) then -- 四格釉面砖
+    PlayerHelper:showToast(objid, '此地面', disableMsg)
+  elseif (blockid == 667) then -- 白色硬砂块
+    PlayerHelper:showToast(objid, '围墙', disableMsg)
+  elseif (blockid >= 2004 and blockid <= 2008) then
+    PlayerHelper:showToast(objid, '围栏', disableMsg)
   end
 end
 
