@@ -75,14 +75,15 @@ function BaseActor:isActive ()
     end
     return true
   else
-    local blockid = BlockHelper:getBlockID(self.x, self.y, self.z)
-    if (blockid and blockid ~= BaseConstant.UNKNOWN_BLOCK) then -- 表示生物不见了（多半是因bug被销毁）
-      local objids = WorldHelper:spawnCreature(self.x, self.y, self.z, self.actorid, 1)
-      if (objids and #objids > 0) then -- 创建生物成功
-        self.objid = objids[1]
-        return true
-      end
-    end
+    -- 以下方法有误，容易同时出现两个NPC，因此不再使用
+    -- local blockid = BlockHelper:getBlockID(self.x, self.y, self.z)
+    -- if (blockid and blockid ~= BaseConstant.UNKNOWN_BLOCK) then -- 表示生物不见了（多半是因bug被销毁）
+    --   local objids = WorldHelper:spawnCreature(self.x, self.y, self.z, self.actorid, 1)
+    --   if (objids and #objids > 0) then -- 创建生物成功
+    --     self.objid = objids[1]
+    --     return true
+    --   end
+    -- end
     return false
   end
 end
