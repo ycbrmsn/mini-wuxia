@@ -49,6 +49,10 @@ MyPlayerHelper = {
           local pos = MyAreaHelper:getEmptyPrisonPos()
           player:setMyPosition(pos)
           player:enableMove(true)
+          for i, v in ipairs(player.destroyBlock) do
+            BlockHelper:placeBlock(v.blockid, v.x, v.y, v.z)
+          end
+          player.destroyBlock = {}
         end, ws:get())
       end,
       [2] = function (player)
