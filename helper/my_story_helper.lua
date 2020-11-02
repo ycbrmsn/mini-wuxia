@@ -2,8 +2,9 @@
 MyStoryHelper = {
   initWoodPos = MyPosition:new(31, 5, 10), -- 游戏开始时的一个标志木头位置
   woodid = 201,
-  initPosition = MyPosition:new(29.5, 9.5, 7.5),
-  initPosition3 = MyPosition:new(19.5, 8.5, 605.5),
+  initPosition = MyPosition:new(29.5, 9.5, 7.5), -- 玩家进入游戏的初始位置
+  initPosition3 = MyPosition:new(19.5, 8.5, 605.5), -- 剧情三的初始位置
+  outCityPos = MyPosition:new(-37, 7, 457), -- 南门外
 }
 
 function MyStoryHelper:init ()
@@ -84,7 +85,7 @@ function MyStoryHelper:playerEnterGame (objid)
           PlayerHelper:rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
           if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
             LogPaper:newItem(objid, 1, true) -- 江湖日志
-            BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 1) -- 给房主一颗守护宝石
+            BackpackHelper:addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 3) -- 给房主三颗守护宝石
             SaveGame:newItem(objid, 1, true) -- 保存游戏
             LoadGame:newItem(objid, 1, true) -- 加载进度
             MyStoryHelper:diffPersonDiffPresents(player)
@@ -153,6 +154,22 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
           if (pos) then
             TimerHelper:hideTips({ objid }, timerid)
             player:setPosition(-14.5, pos.y, pos.z)
+            TimeHelper:callFnAfterSecond(function ()
+              if (not(BackpackHelper:hasItem(player.objid, MyMap.ITEM.TOKEN_ID))) then -- 没有令牌
+                local objids = WorldHelper:spawnCreature(-14.5, pos.y, pos.z - 3, guard.actorid, 1)
+                if (objids and #objids > 0) then
+                  player:enableMove(false, true)
+                  CreatureHelper:closeAI(objids[1])
+                  ActorHelper:lookAt(objids[1], objid)
+                  player:lookAt(objids[1])
+                  guard:speakTo(objid, 0, '由于你没有通行令牌，现在跟我出城。')
+                  TimeHelper:callFnAfterSecond(function ()
+                    player:setPosition(self.outCityPos)
+                    player:enableMove(true, false)
+                  end, 2)
+                end
+              end
+            end, 2)
           end
         end, 60)
         TimerHelper:showTips({ objid }, timerid, '剩余出狱时间：')
