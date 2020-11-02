@@ -8,6 +8,7 @@ function MyPlayer:new (objid)
     finalBeatBy = nil, -- 最终被什么生物击败
     isWinGame = false, -- 是否获得游戏胜利
     initHp = 50, -- 初始生命
+    destroyBlock = {}, -- 破坏的方块（这里仅保存城墙）
   }
   o.action = BasePlayerAction:new(o)
   o.attr = BasePlayerAttr:new(o)

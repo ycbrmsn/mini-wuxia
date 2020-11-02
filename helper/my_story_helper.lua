@@ -36,6 +36,19 @@ function MyStoryHelper:diffPersonDiffPresents (player)
   end
 end
 
+-- 击败挖城墙玩家
+function MyStoryHelper:beatBreakCityPlayer (player)
+  ActorHelper:playAct(player.chooseMap.objid, ActorHelper.ACT.ATTACK)
+  TimeHelper:callFnAfterSecond(function ()
+    player:enableMove(true)
+    ActorHelper:killSelf(player.objid)
+    for i, v in ipairs(player.destroyBlock) do
+      BlockHelper:placeBlock(v.blockid, v.x, v.y, v.z)
+    end
+    player.destroyBlock = {}
+  end, 1)
+end
+
 -- 事件
 
 -- 世界时间到[n]点
@@ -383,15 +396,12 @@ function MyStoryHelper:blockDigEnd (objid, blockid, x, y, z)
     local pos = ActorHelper:getMyPosition(objid)
     if (pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633) then -- 风颖城范围
       local player = PlayerHelper:getPlayer(objid)
+      table.insert(player.destroyBlock, { blockid = blockid, x = x, y = y, z = z })
       if (player.whichChoose and player.whichChoose == 'breakCity') then
         player.whichChoose = nil
         guard:speakTo(objid, 0, '你还敢挖！！！')
         TimeHelper:callFnAfterSecond(function ()
-          ActorHelper:playAct(player.chooseMap.objid, ActorHelper.ACT.ATTACK)
-          TimeHelper:callFnAfterSecond(function ()
-            player:enableMove(true)
-            ActorHelper:killSelf(player.objid)
-          end, 1)
+          MyStoryHelper:beatBreakCityPlayer(player)
         end, 1)
       else
         local pos = AreaHelper:getEmptyPos(player)

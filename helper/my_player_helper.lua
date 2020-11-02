@@ -13,11 +13,7 @@ MyPlayerHelper = {
         player:speakSelf(0, '想让我跟你走，想都别想！')
         guard:speakTo(player.objid, ws:use(1), '那么抱歉了……')
         TimeHelper:callFnAfterSecond(function ()
-          ActorHelper:playAct(player.chooseMap.objid, ActorHelper.ACT.ATTACK)
-          TimeHelper:callFnAfterSecond(function ()
-            player:enableMove(true)
-            ActorHelper:killSelf(player.objid)
-          end, 1)
+          MyStoryHelper:beatBreakCityPlayer(player)
         end, ws:get())
       end,
     },
