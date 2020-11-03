@@ -6,6 +6,7 @@ Yangwanli = BaseActor:new(MyMap.ACTOR.YANGWANLI_ACTOR_ID)
 function Yangwanli:new ()
   local o = {
     objid = 4315385574,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-11.5, 8.5, -10.5), -- 屋内
     bedData = {
@@ -130,6 +131,7 @@ Wangdali = BaseActor:new(MyMap.ACTOR.WANGDALI_ACTOR_ID)
 function Wangdali:new ()
   local o = {
     objid = 4339145592,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
@@ -255,6 +257,7 @@ Miaolan = BaseActor:new(MyMap.ACTOR.MIAOLAN_ACTOR_ID)
 function Miaolan:new ()
   local o = {
     objid = 4314184974,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-33.5, 8.5, -13.5), -- 药店柜台后
     bedData = {
@@ -405,6 +408,7 @@ Huaxiaolou = BaseActor:new(MyMap.ACTOR.HUAXIAOLOU_ACTOR_ID)
 function Huaxiaolou:new ()
   local o = {
     objid = 4301071935,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(10.5, 9.5, -42.5),
     bedData = {
@@ -551,6 +555,7 @@ Jiangfeng = BaseActor:new(MyMap.ACTOR.JIANGFENG_ACTOR_ID)
 function Jiangfeng:new ()
   local o = {
     objid = 4313483881,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(8.5, 8.5, -17.5),
     bedData = {
@@ -694,6 +699,7 @@ Jiangyu = BaseActor:new(MyMap.ACTOR.JIANGYU_ACTOR_ID)
 function Jiangyu:new ()
   local o = {
     objid = 4313483879,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(10.5, 8.5, -13.5),
     bedData = {
@@ -833,6 +839,7 @@ Wenyu = BaseActor:new(MyMap.ACTOR.WENYU_ACTOR_ID)
 function Wenyu:new ()
   local o = {
     objid = 4315385572,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(24.5, 8.5, -9.5), -- 屋内
     bedData1 = {

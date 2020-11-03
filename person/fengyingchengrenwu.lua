@@ -6,6 +6,7 @@ Ludaofeng = BaseActor:new(MyMap.ACTOR.LUDAOFENG_ACTOR_ID)
 function Ludaofeng:new ()
   local o = {
     objid = 4334703245,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-36, 8, 557), -- 议事厅
     movePositions = {
@@ -98,6 +99,7 @@ Qianbingwei = BaseActor:new(MyMap.ACTOR.QIANBINGWEI_ACTOR_ID)
 function Qianbingwei:new ()
   local o = {
     objid = 4334903620,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = { x = -19.5, y = 7.5, z = 527.5 },
     bedData = {
@@ -178,6 +180,7 @@ Yexiaolong = BaseActor:new(MyMap.ACTOR.YEXIAOLONG_ACTOR_ID)
 function Yexiaolong:new ()
   local o = {
     objid = 4315385631,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(27.5, 9.5, -34.5), -- 客栈客房内
     bedData = {
@@ -383,6 +386,7 @@ Sunkongwu = BaseActor:new(MyMap.ACTOR.SUNKONGWU_ACTOR_ID)
 function Sunkongwu:new ()
   local o = {
     objid = 4368929599,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(8.5, 9.5, 566.5), -- 售货处
     doorPosition = MyPosition:new(7.5, 8.5, 559.5), -- 门口位置
@@ -475,6 +479,7 @@ Limiaoshou = BaseActor:new(MyMap.ACTOR.LIMIAOSHOU_ACTOR_ID)
 function Limiaoshou:new ()
   local o = {
     objid = 4369329639,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(17.5, 9.5, 566.5), -- 售货处
     doorPosition = MyPosition:new(18.5, 8.5, 560.5), -- 门口位置
@@ -560,6 +565,7 @@ Qianduo = BaseActor:new(MyMap.ACTOR.QIANDUO_ACTOR_ID)
 function Qianduo:new ()
   local o = {
     objid = 4369930009,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(5.5, 9.5, 574.5), -- 售货处
     doorPosition = MyPosition:new(6.5, 8.5, 579.5), -- 门口位置
@@ -645,6 +651,7 @@ Daniu = BaseActor:new(MyMap.ACTOR.DANIU_ACTOR_ID)
 function Daniu:new ()
   local o = {
     objid = 4367229311,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-48.5, 9.5, 504.5), -- 马厩招待处
     doorPosition = MyPosition:new(-46.5, 8.5, 501.5), -- 门口位置
@@ -711,6 +718,7 @@ Erniu = BaseActor:new(MyMap.ACTOR.ERNIU_ACTOR_ID)
 function Erniu:new ()
   local o = {
     objid = 4372230256,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-53.5, 9.5, 494.5), -- 马厩小房间
     bedData = {
@@ -824,6 +832,7 @@ Murongxiaotian = BaseActor:new(MyMap.ACTOR.MURONGXIAOTIAN_ACTOR_ID)
 function Murongxiaotian:new ()
   local o = {
     objid = 4398848435,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(12.5, 8.5, 506.5), -- 慕容府大厅
     bedData = {
@@ -902,6 +911,7 @@ Gaoxiaohu = BaseActor:new(MyMap.ACTOR.GAOXIAOHU_ACTOR_ID)
 function Gaoxiaohu:new ()
   local o = {
     objid = 4399954659,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-16, 7.5, 594), -- 学院大门口内
     bedData = {
@@ -1014,6 +1024,7 @@ Yuewushuang = BaseActor:new(MyMap.ACTOR.YUEWUSHUANG_ACTOR_ID)
 function Yuewushuang:new ()
   local o = {
     objid = 4401861750,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-16, 7.5, 595.5), -- 学院大门口内
     bedData = {
@@ -1110,6 +1121,7 @@ Jianghuo = BaseActor:new(MyMap.ACTOR.JIANGHUO_ACTOR_ID)
 function Jianghuo:new ()
   local o = {
     objid = 4402063235,
+    isSingleton = true,
     unableBeKilled = true,
     initPosition = MyPosition:new(-5.5, 7.5, 599.5), -- 学院演武场内
     bedData = {

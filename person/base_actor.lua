@@ -427,6 +427,7 @@ function BaseActor:initActor ()
     if (self.immuneFall) then
       ActorHelper:setImmuneFall(self.objid, true)
     end
+    self:keepSingleIfNeed()
     self:wantAtHour()
     self.isInit = true
     LogHelper:debug('初始化', self:getName(), '完成')
@@ -449,6 +450,19 @@ function BaseActor:isFind ()
     end
   end
   return false
+end
+
+-- 保持只有一个，移除其他
+function BaseActor:keepSingleIfNeed ()
+  if (self.isSingleton) then
+    local objids = ActorHelper:getInitActorObjids()
+    for i, objid in ipairs(objids) do
+      local actorid = CreatureHelper:getActorID(objid)
+      if (actorid and actorid == self.actorid and objid ~= self.objid) then
+        WorldHelper:despawnActor(objid)
+      end
+    end
+  end
 end
 
 -- 是否完成初始化
