@@ -13,8 +13,10 @@ MyPlayerHelper = {
     readme1 = {
       [1] = function (player)
         ChatHelper:sendMsg(player.objid, '\t\t这是一个简单的角色扮演类游戏，有')
-        ChatHelper:sendMsg(player.objid, '几个简单的剧情。目前剧情还未做完，正')
-        ChatHelper:sendMsg(player.objid, '常情况下月更。', StringHelper:repeatStrs('\t', 10))
+        ChatHelper:sendMsg(player.objid, '几个简单的剧情。剧情推进依赖于游戏数')
+        ChatHelper:sendMsg(player.objid, '据道具，请勿随意将其移出背包，否则可')
+        ChatHelper:sendMsg(player.objid, '能会导致游戏错误。目前剧情还未做完，')
+        ChatHelper:sendMsg(player.objid, '正常情况下月更。退出地图后记得备份。')
         MyPlayerHelper.chooseMap.readme[1](player)
       end, -- 游戏简介
       [2] = function (player)
