@@ -38,6 +38,12 @@ end
 
 -- 事件
 
+-- 生物被创建
+function MyActorHelper:actorCreate (objid, toobjid)
+  ActorHelper:actorCreate(objid, toobjid)
+  MyStoryHelper:actorCreate(objid, toobjid)
+end
+
 -- actor进入区域
 function MyActorHelper:actorEnterArea (objid, areaid)
   ActorHelper:actorEnterArea(objid, areaid)
@@ -157,4 +163,10 @@ function MyActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
       MonsterHelper:cancelImprisonMonster(objid)
     end
   end
+end
+
+-- 生物属性变化
+function MyActorHelper:actorChangeAttr (objid, actorattr)
+  ActorHelper:actorChangeAttr(objid, actorattr)
+  MyStoryHelper:actorChangeAttr(objid, actorattr)
 end

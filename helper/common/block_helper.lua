@@ -152,6 +152,12 @@ function BlockHelper:checkCandle (objid, blockid, pos)
   end
 end
 
+-- 是否是固体方块
+function BlockHelper:isSolidBlockOffset (pos, dx, dy, dz)
+  dx, dy, dz = dx or 0, dy or 0, dz or 0
+  return BlockHelper:isSolidBlock(pos.x + dx, pos.y + dy, pos.z + dz)
+end
+
 -- 是否是空气方块
 function BlockHelper:isAirBlockOffset (pos, dx, dy, dz)
   dx, dy, dz = dx or 0, dy or 0, dz or 0
@@ -175,6 +181,24 @@ end
 function BlockHelper:isWater (x, y, z)
   local blockid = BlockHelper:getBlockID(x, y, z)
   return blockid and (blockid == 3 or blockid == 4)
+end
+
+-- 放置方块与空位置
+function BlockHelper:placeBlockWhenEmpty (blockid, x, y, z, face)
+  local bid = BlockHelper:getBlockID(x, y, z)
+  if (bid and bid == BLOCKID.AIR) then
+    -- BlockHelper:placeBlock(blockid, x, y, z, face)
+    return BlockHelper:setBlockAll(x, y, z, blockid, face)
+  end
+end
+
+-- 位置是否是在地上
+function BlockHelper:isArroundFloor (pos)
+  return BlockHelper:isSolidBlockOffset(pos, 0, -1, 0) and BlockHelper:isSolidBlockOffset(pos, -1, -1, -1)
+    and BlockHelper:isSolidBlockOffset(pos, -1, -1, 0) and BlockHelper:isSolidBlockOffset(pos, -1, -1, 1)
+    and BlockHelper:isSolidBlockOffset(pos, 0, -1, -1) and BlockHelper:isSolidBlockOffset(pos, 0, -1, 1)
+    and BlockHelper:isSolidBlockOffset(pos, 1, -1, -1) and BlockHelper:isSolidBlockOffset(pos, 1, -1, 0)
+    and BlockHelper:isSolidBlockOffset(pos, 1, -1, 1)
 end
 
 -- 事件
@@ -247,6 +271,11 @@ function BlockHelper:replaceBlock (blockid, x, y, z, face)
     return Block:replaceBlock(blockid, x, y, z, face)
   end, '替换方块', 'blockid=', blockid, ',x=', x, ',y=', y, ',z=', z,
     ',face=', face)
+end
+
+-- 是否是固体方块
+function BlockHelper:isSolidBlock (x, y, z)
+  return Block:isSolidBlock(x, y, z) == ErrorCode.OK
 end
 
 -- 是否是气体方块

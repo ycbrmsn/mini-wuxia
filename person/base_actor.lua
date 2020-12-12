@@ -16,7 +16,7 @@ BaseActor = {
   sealTimes = 0, -- 封魔叠加次数
   talkIndex = {}, -- 对话进度 { playerid -> index }
   talkInfos = {}, -- 对话信息
-  defaultTalkMsg = '你好。', -- 默认对话
+  defaultTalkMsg = nil, -- 默认对话
   speakDim = { x = 30, y = 30, z = 30 }, -- 默认说话声音传播范围
 }
 
@@ -168,6 +168,11 @@ function BaseActor:setFacePitch (pitch)
   return ActorHelper:setFacePitch(self.objid, pitch)
 end
 
+-- 额外伤害（目前用于怪物）
+function BaseActor:getCollateralDamage ()
+  return 0
+end
+
 -- 看向某人/某处
 function BaseActor:lookAt (objid, afterSeconds)
   if (afterSeconds and afterSeconds > 0) then
@@ -254,16 +259,16 @@ end
 
 -- 生物想向指定位置移动
 function BaseActor:wantMove (think, positions, isNegDir, index, restTime, speed)
-  self.want:wantMove(think, positions, isNegDir, index, restTime, speed)
+  return self.want:wantMove(think, positions, isNegDir, index, restTime, speed)
 end
 
-function BaseActor:wantApproach (think, positions, isNegDir, index, restTime)
-  self.want:wantApproach(think, positions, isNegDir, index, restTime)
+function BaseActor:wantApproach (think, positions, isNegDir, index, restTime, speed)
+  return self.want:wantApproach(think, positions, isNegDir, index, restTime, speed)
 end
 
 -- 生物想原地不动
 function BaseActor:wantDontMove (think)
-  self.want:wantDontMove(think)
+  return self.want:wantDontMove(think)
 end
 
 -- 生物想停留一会儿
@@ -273,47 +278,47 @@ end
 
 -- 生物想巡逻
 function BaseActor:wantPatrol (think, positions, isNegDir, index, restTime)
-  self.want:wantPatrol(think, positions, isNegDir, index, restTime)
+  return self.want:wantPatrol(think, positions, isNegDir, index, restTime)
 end
 
 -- 生物想自由活动
 function BaseActor:wantFreeTime (think)
-  self.want:wantFreeTime(think)
+  return self.want:wantFreeTime(think)
 end
 
 function BaseActor:wantFreeAndAlert (think, speed)
-  self.want:wantFreeAndAlert(think, speed)
+  return self.want:wantFreeAndAlert(think, speed)
 end
 
 -- 生物想在区域内自由活动，think可选
 function BaseActor:wantFreeInArea (think, posPairs)
-  self.want:wantFreeInArea(think, posPairs)
+  return self.want:wantFreeInArea(think, posPairs)
 end
 
 function BaseActor:wantFreeAttack (think, posPairs)
-  self.want:wantFreeAttack(think, posPairs)
+  return self.want:wantFreeAttack(think, posPairs)
 end
 
 -- 生物默认想法，可重写
 function BaseActor:defaultWant ()
-  self:wantFreeTime()
+  return self:wantFreeTime()
 end
 
 -- 生物想不做事
 function BaseActor:wantDoNothing (think)
-  self.want:wantDoNothing(think)
+  return self.want:wantDoNothing(think)
 end
 
 function BaseActor:wantLookAt (think, myPosition, restTime)
-  self.want:wantLookAt(think, myPosition, restTime)
+  return self.want:wantLookAt(think, myPosition, restTime)
 end
 
 function BaseActor:wantGoToSleep (bedData)
-  self.want:wantGoToSleep(bedData)
+  return self.want:wantGoToSleep(bedData)
 end
 
 function BaseActor:wantBattle (think)
-  self.want:wantBattle(think)
+  return self.want:wantBattle(think)
 end
 
 function BaseActor:isWantsExist ()
@@ -321,54 +326,54 @@ function BaseActor:isWantsExist ()
 end
 
 function BaseActor:nextWantMove (think, positions, isNegDir, index, restTime, speed)
-  self.want:nextWantMove(think, positions, isNegDir, index, restTime, speed)
+  return self.want:nextWantMove(think, positions, isNegDir, index, restTime, speed)
 end
 
 function BaseActor:nextWantApproach (think, positions, isNegDir, index, restTime)
-  self.want:nextWantApproach(think, positions, isNegDir, index, restTime)
+  return self.want:nextWantApproach(think, positions, isNegDir, index, restTime)
 end
 
 -- 生物接下来想巡逻
 function BaseActor:nextWantPatrol (think, positions, isNegDir, index, restTime)
-  self.want:nextWantPatrol(think, positions, isNegDir, index, restTime)
+  return self.want:nextWantPatrol(think, positions, isNegDir, index, restTime)
 end
 
 -- 生物接下来想在区域内自由活动
 function BaseActor:nextWantFreeInArea (think, posPairs)
-  self.want:nextWantFreeInArea(think, posPairs)
+  return self.want:nextWantFreeInArea(think, posPairs)
 end
 
 function BaseActor:nextWantFreeAttack (think, positions)
-  self.want:nextWantFreeAttack(think, posPairs)
+  return self.want:nextWantFreeAttack(think, posPairs)
 end
 
 function BaseActor:nextWantDoNothing (think)
-  self.want:nextWantDoNothing(think)
+  return self.want:nextWantDoNothing(think)
 end
 
 function BaseActor:nextWantLookAt (think, pos, restTime)
-  self.want:nextWantLookAt(think, pos, restTime)
+  return self.want:nextWantLookAt(think, pos, restTime)
 end
 
 function BaseActor:nextWantSleep (think, faceYaw)
-  self.want:nextWantSleep(think, faceYaw)
+  return self.want:nextWantSleep(think, faceYaw)
 end
 
 function BaseActor:nextWantWait (think, second)
-  self.want:nextWantWait(think, second)
+  return self.want:nextWantWait(think, second)
 end
 
 function BaseActor:nextWantGoToSleep (bedData)
-  self.want:nextWantGoToSleep(bedData)
+  return self.want:nextWantGoToSleep(bedData)
 end
 
 function BaseActor:nextWantToggleCandle (think, isLitCandle)
-  self.want:nextWantToggleCandle(think, isLitCandle)
+  return self.want:nextWantToggleCandle(think, isLitCandle)
 end
 
 -- 强制不能做什么，用于受技能影响
 function BaseActor:forceDoNothing (think)
-  self.want:forceDoNothing(think)
+  return self.want:forceDoNothing(think)
 end
 
 -- 生物固定时间点想做什么
@@ -433,6 +438,7 @@ function BaseActor:initActor ()
     LogHelper:debug('初始化', self:getName(), '完成')
     return true
   else
+    -- LogHelper:debug('未找到', self.actorid)
     return false
   end
 end
@@ -573,4 +579,12 @@ function BaseActor:setSealed (active)
     self.sealTimes = self.sealTimes - 1
     return self.sealTimes <= 0
   end
+end
+
+-- 立刻行动
+function BaseActor:actionRightNow ()
+  if (self.wants and #self.wants > 0) then
+    self.wants[1].currentRestTime = 1
+  end
+  self.action:execute()
 end

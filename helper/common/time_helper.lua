@@ -127,7 +127,9 @@ end
 
 function TimeHelper:runFnInterval (time)
   local fs = self.fnIntervals[time]
+  -- LogHelper:info('before run: ', time)
   if (fs) then
+    -- LogHelper:info('run: ', time)
     for oid, ts in pairs(fs) do
       for k, v in pairs(ts) do
         LogHelper:call(function ()
@@ -157,6 +159,7 @@ function TimeHelper:getLastFnIntervalTime (objid, t, second)
   return nil
 end
 
+-- 记录或删除记录
 function TimeHelper:setFnInterval (objid, t, f, time, p)
   local o = self.fnIntervals[time]
   if (not(o)) then
@@ -168,8 +171,10 @@ function TimeHelper:setFnInterval (objid, t, f, time, p)
   end
   if (f) then
     o[objid][t] = { f, p }
+    -- LogHelper:info('记录：', time)
   else
     o[objid][t] = nil
+    -- LogHelper:info('删除：', time)
   end
 end
 
@@ -245,14 +250,15 @@ end
 
 function TimeHelper:callIntervalUntilSuccess ()
   return function (param)
-    TimeHelper:setFnInterval(param.objid, param.t, nil, self.time)
+    TimeHelper:setFnInterval(param.objid, param.t, nil, self.time) -- 删除记录
     local result = TimeHelper:callFnInterval(param.objid, param.t, param.f, param.second, param.p)
-    if (type(result) == 'nil') then -- 说明近期执行过，还会再次执行
+    if (type(result) == 'nil') then -- 说明近期执行过，本次未执行，还会再次执行
       -- LogHelper:info(param.objid, ': nil')
-    elseif (result) then -- 说明执行成功
+    elseif (result) then -- 说明本次执行达到目的
       -- LogHelper:info('true')
-    else -- 说明执行失败，则准备再次执行
-      TimeHelper:setFnInterval(param.objid, param.t, TimeHelper:callIntervalUntilSuccess(), TimeHelper.time + param.second, param)
+    else -- 说明本次执行未达到目的，则准备再次执行
+      TimeHelper:setFnInterval(param.objid, param.t, TimeHelper:callIntervalUntilSuccess(),
+        TimeHelper.time + param.second, param)
       -- LogHelper:info(param.objid, ': false')
     end
   end
@@ -263,10 +269,11 @@ function TimeHelper:repeatUtilSuccess (objid, t, f, second, p)
   self:callIntervalUntilSuccess()({ objid = objid, t = t, f = f, second = second, p = p })
 end
 
+-- 每两秒初始化一次（绕开有十分之一的概率会产生的世界时间第一秒时不会回调的问题）
 function TimeHelper:initActor (myActor)
   self:repeatUtilSuccess(myActor.objid, 'initActor', function (myActor)
     return myActor:init()
-  end, 1, myActor)
+  end, 2, myActor)
 end
 
 function TimeHelper:runFnLastRuns (time)
@@ -341,8 +348,9 @@ end
 function TimeHelper:delFnFastRuns (t)
   local isDel = false
   for i = #self.fnFastRuns, 1, -1 do
-    if (self.fnFastRuns[i][3] and self.fnFastRuns[i][3] == t) then
-      table.remove(self.fnFastRuns, i)
+    if (self.fnFastRuns[i] and self.fnFastRuns[i][3] and self.fnFastRuns[i][3] == t) then
+      -- table.remove(self.fnFastRuns, i)
+      self.fnFastRuns[i] = false
       isDel = true
     end
   end
@@ -352,11 +360,15 @@ end
 -- 运行方法，然后删除
 function TimeHelper:runFnFastRuns ()
   for i = #self.fnFastRuns, 1, -1 do
-    self.fnFastRuns[i][1] = self.fnFastRuns[i][1] - 50
-    if (self.fnFastRuns[i][1] <= 0) then
-      LogHelper:call(function ()
-        self.fnFastRuns[i][2]()
-      end)
+    if (self.fnFastRuns[i]) then -- 没有被删除
+      self.fnFastRuns[i][1] = self.fnFastRuns[i][1] - 50
+      if (self.fnFastRuns[i][1] <= 0) then
+        LogHelper:call(function ()
+          self.fnFastRuns[i][2]()
+        end)
+        table.remove(self.fnFastRuns, i)
+      end
+    else
       table.remove(self.fnFastRuns, i)
     end
   end
@@ -370,6 +382,7 @@ function TimeHelper:callFnFastRuns (f, second, t)
   second = second or 1
   t = t or TimeHelper:getGlobalIndex()
   self:addFnFastRuns(f, second, t)
+  return t
 end
 
 -- 添加方法
@@ -415,6 +428,7 @@ function TimeHelper:callFnContinueRuns (f, second, t, p)
   second = second or 1
   t = t or TimeHelper:getGlobalIndex()
   self:addFnContinueRuns(f, second, t, p)
+  return t
 end
 
 function TimeHelper:doPerSecond (second)

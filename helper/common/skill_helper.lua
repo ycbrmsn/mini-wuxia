@@ -9,7 +9,9 @@ SkillHelper = {
   huitianData = {}, -- { objid -> {} }
   airArmourData = {
     bodyEffect = BaseConstant.BODY_EFFECT.LIGHT64
-  }
+  },
+  shunData = {}, -- { objid -> {} }
+  qiuData = {}, -- { objid -> pos }
 }
 
 function SkillHelper:getItem (item, weaponName)
@@ -365,7 +367,7 @@ end
 -- 气甲术 对象、范围大小、持续时间
 function SkillHelper:airArmour (objid, size, time)
   size = size or 3
-  time = time or 8
+  time = time or 5
   local dim = { x = size + 1, y = size + 1, z = size + 1 }
   local teamid = ActorHelper:getTeam(objid)
   local idx = 1
@@ -386,6 +388,7 @@ function SkillHelper:airArmour (objid, size, time)
       for i, v in ipairs(missiles) do
         local itemid = ItemHelper:getItemId(v)
         if (itemid == MyWeaponAttr.controlSword.projectileid) then -- 御仙剑不作处理
+        elseif (itemid == MyWeaponAttr.shunSword.projectileid) then -- 瞬仙剑不作处理
         elseif (itemid == MyWeaponAttr.huixianSword.projectileid 
           and ItemHelper:getMissileTeam(v) == -1) then -- 找不到队伍信息的回仙剑不作处理
         else
@@ -482,7 +485,8 @@ function SkillHelper:huitian (objid, item, num, size, changeAngle, distance)
               if (speedVector3) then
                 ActorHelper:appendSpeed(v.objid, -speedVector3.x, -speedVector3.y, -speedVector3.z)
               end
-              local sv3 = ActorHelper:appendFixedSpeed(v.objid, 0.8, p, ActorHelper:getMyPosition(targetObjid))
+              local sv3 = ActorHelper:appendFixedSpeed(v.objid, 0.8, p,
+                ActorHelper:getEyeHeightPosition(targetObjid))
               ItemHelper:recordMissileSpeed(v.objid, sv3)
             end
           end
@@ -516,7 +520,7 @@ end
 -- 清除环绕飞剑
 function SkillHelper:clearHuitian (objid)
   local projectiles = self.huitianData[objid]
-  if (projectiles) then
+  if (projectiles and #projectiles > 0) then
     for i, v in ipairs(projectiles) do
       if (v.flag == 0) then
         WorldHelper:despawnActor(v.objid)
@@ -623,4 +627,591 @@ function SkillHelper:luanJianJue3 (objid, item, arr, projectiles)
       SkillHelper:luanJianJue3(objid, item, arr, projectiles)
     end, 0.1)
   end
+end
+
+-- 瞬仙剑分身是否存在
+function SkillHelper:shunExists (objid)
+  local data = SkillHelper:getShunData(objid)
+  return data.projectileid and ActorHelper:getMyPosition(data.projectileid)
+end
+
+function SkillHelper:getShunData (objid)
+  local data = self.shunData[objid]
+  if (not(data)) then
+    data = {}
+    self.shunData[objid] = data
+  end
+  return data
+end
+
+-- 瞬移术
+function SkillHelper:shunyi (objid, item, dstPos)
+  item = SkillHelper:getItem(item, 'shunSword')
+  local data = SkillHelper:getShunData(objid)
+  local player = PlayerHelper:getPlayer(objid)
+  if (data.projectileid) then
+    local pos = ActorHelper:getMyPosition(data.projectileid)
+    if (pos) then
+      if (player:setMyPosition(pos)) then
+        WorldHelper:despawnActor(data.projectileid)
+        ItemHelper:recordUseSkill(objid, item.id, item.cd)
+      end
+    end
+  else
+    local pos = ActorHelper:getEyeHeightPosition(objid)
+    if (not(dstPos)) then
+      if (ActorHelper:isPlayer(objid)) then -- 玩家
+        dstPos = player:getAimPos(objid)
+      else
+        dstPos = ActorHelper:getFaceDistancePosition(objid, 20)
+      end
+    end
+    local projectileid = WorldHelper:spawnProjectileByDirPos(objid, 
+      item.projectileid, pos, pos, 0)
+    data.projectileid = projectileid -- 记录剑分身
+    local speedVector3 = ActorHelper:appendFixedSpeed(projectileid, 0.8, pos, dstPos)
+    ItemHelper:recordMissileSpeed(projectileid, speedVector3)
+    local existTime = item.existTime + item.level * item.addExistTimePerLevel
+    PlayerHelper:setSkillCD(objid, item.id, existTime)
+    -- 时间到删除剑分身
+    TimeHelper:callFnFastRuns(function ()
+      local pos = ActorHelper:getMyPosition(data.projectileid)
+      if (pos) then
+        WorldHelper:despawnActor(data.projectileid)
+      end
+      data.projectileid = nil
+    end, existTime)
+  end
+end
+
+-- 使用囚仙剑
+function SkillHelper:useQiuSword (objid, item)
+  item = SkillHelper:getItem(item, 'qiuSword')
+  local objid = SkillHelper:searchQiuEmeny(objid, item)
+  if (objid) then
+    local pos = ActorHelper:getMyPosition(objid)
+    if (pos) then
+      ActorHelper:playAndStopBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT31)
+      TimeHelper:callFnFastRuns(function ()
+        pos = ActorHelper:getMyPosition(objid)
+        if (pos) then
+          local fixPos
+          if (BlockHelper:isArroundFloor(pos)) then -- 在地上则位置上移两格
+            pos.y = pos.y + 2
+            fixPos = MyPosition:new(pos.x, pos.y - 1, pos.z)
+          else
+            fixPos = pos
+          end
+          SkillHelper:convergeCage(pos, item, fixPos, objid)
+        end
+      end, 1)
+      return true
+    end
+  end
+  return false
+end
+
+-- 囚仙剑搜索敌人
+function SkillHelper:searchQiuEmeny (objid, item)
+  local distance = item.distance + item.level * item.addDistancePerLevel
+  local player = PlayerHelper:getPlayer(objid)
+  local pos = player:getMyPosition()
+  local dim = { x = distance, y = distance, z = distance }
+  local objids = ActorHelper:getAllPlayersArroundPos(pos, dim, objid, false)
+  if (objids and #objids > 0) then -- 找到玩家，则验证位置
+    objids = ActorHelper:getFrontAngleActors(objids, objid, 60, true)
+  end
+  if (not(objids) or #objids == 0) then -- 没找到玩家，则找生物
+    objids = ActorHelper:getAllCreaturesArroundPos(pos, dim, objid, false)
+    if (objids and #objids > 0) then -- 找到生物，则验证位置
+      objids = ActorHelper:getFrontAngleActors(objids, objid, 60, true)
+    end
+  end
+  if (objids and #objids > 0) then
+    return objids[1]
+  else
+    return nil
+  end
+end
+
+-- 汇聚囚笼
+function SkillHelper:convergeCage (pos, item, fixPos, objid)
+  local arr = {}
+  local len, step = 4, 2
+  local x, z = math.floor(pos.x), math.floor(pos.z)
+  -- 第一层
+  local y = math.floor(pos.y - 2) + 0.5
+  -- 四角
+  local face = -90
+  local ft = -90
+  for i = 0, 1 do
+    face = face - 90
+    ft = ft * -1
+    for j = 0, 1 do
+      face = face + ft
+      local finalPos = MyPosition:new(x - 2 + i * 4 + 0.5, y, z - 2 + j * 4 + 0.5)
+      local vc3 = MyVector3:new(pos, finalPos)
+      local arr2 = {}
+      for k = 0, len, step do
+        local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+        table.insert(arr2, dstPos)
+      end
+      local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU1, arr2[#arr2], arr2[#arr2], 0)
+      ActorHelper:setFaceYaw(projectileid, face)
+      ActorHelper:setFacePitch(projectileid, -90)
+      table.insert(arr, { id = projectileid, arr = arr2 })
+    end
+  end
+  -- 四边
+  face = -180
+  ft = 90
+  for i = 0, 1 do
+    for j = 0, 1 do
+      face = face + ft
+      for k = 1, 3 do
+        local finalPos
+        if (j == 0) then
+          finalPos = MyPosition:new(x - 2 + k + 0.5, y, z - 2 + i * 4 + 0.5)
+        else
+          finalPos = MyPosition:new(x - 2 + i * 4 + 0.5, y, z - 2 + k + 0.5)
+        end
+        local vc3 = MyVector3:new(pos, finalPos)
+        local arr2 = {}
+        for l = 0, len, step do
+          local dstPos = MyPosition:new(finalPos.x + vc3.x * l, finalPos.y + vc3.y * l, finalPos.z + vc3.z * l)
+          table.insert(arr2, dstPos)
+        end
+        local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU2, arr2[#arr2], arr2[#arr2], 0)
+        ActorHelper:setFaceYaw(projectileid, face)
+        ActorHelper:setFacePitch(projectileid, -90)
+        table.insert(arr, { id = projectileid, arr = arr2 })
+      end
+    end
+  end
+  -- 中一层四角
+  y = math.floor(pos.y - 2) + 0.3
+  face = 90
+  ft = -90
+  for i = 0, 1 do
+    face = face - 90
+    ft = ft * -1
+    for j = 0, 1 do
+      face = face + ft
+      local finalPos = MyPosition:new(x - 1 + i * 2 + 0.5, y, z - 1 + j * 2 + 0.5)
+      local vc3 = MyVector3:new(pos, finalPos)
+      local arr2 = {}
+      for k = 0, len, step do
+        local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+        table.insert(arr2, dstPos)
+      end
+      local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU8, arr2[#arr2], arr2[#arr2], 0)
+      ActorHelper:setFaceYaw(projectileid, face)
+      ActorHelper:setFacePitch(projectileid, -90)
+      table.insert(arr, { id = projectileid, arr = arr2 })
+    end
+  end
+  -- 中一层中
+  face = 0
+  ft = 90
+  for i = 0, 1 do
+    for j = 0, 1 do
+      face = face + ft
+      if (j == 0) then
+        finalPos = MyPosition:new(x + 0.5, y, z - 1 + i * 2 + 0.5)
+      else
+        finalPos = MyPosition:new(x - 1 + i * 2 + 0.5, y, z + 0.5)
+      end
+      vc3 = MyVector3:new(pos, finalPos)
+      arr2 = {}
+      for k = 0, len, step do
+        local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+        table.insert(arr2, dstPos)
+      end
+      local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU7, arr2[#arr2], arr2[#arr2], 0)
+      ActorHelper:setFaceYaw(projectileid, face)
+      ActorHelper:setFacePitch(projectileid, -90)
+      table.insert(arr, { id = projectileid, arr = arr2 })
+    end
+  end
+  -- 中心
+  local finalPos = MyPosition:new(x + 0.5, y, z + 0.5)
+  local vc3 = MyVector3:new(pos, finalPos)
+  local arr2 = {}
+  for k = 0, len, step do
+    local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+    table.insert(arr2, dstPos)
+  end
+  local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU9, arr2[#arr2], arr2[#arr2], 0)
+  ActorHelper:setFaceYaw(projectileid, face)
+  ActorHelper:setFacePitch(projectileid, -90)
+  table.insert(arr, { id = projectileid, arr = arr2 })
+  -- 第二三四层
+  for i = 1, 3 do
+    y = math.floor(pos.y - 2 + i) + 0.5
+    -- 四角
+    face = -90
+    ft = -90
+    for j = 0, 1 do
+      face = face - 90
+      ft = ft * -1
+      for k = 0, 1 do
+        face = face + ft
+        local finalPos = MyPosition:new(x - 2 + j * 4 + 0.65 - 0.3 * j, y,
+          z - 2 + k * 4 + 0.65 - 0.3 * k)
+        local vc3 = MyVector3:new(pos, finalPos)
+        local arr2 = {}
+        for l = 0, len, step do
+          local dstPos = MyPosition:new(finalPos.x + vc3.x * l, finalPos.y + vc3.y * l, finalPos.z + vc3.z * l)
+          table.insert(arr2, dstPos)
+        end
+        local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU3, arr2[#arr2], arr2[#arr2], 0)
+        ActorHelper:setFaceYaw(projectileid, face)
+        ActorHelper:setFacePitch(projectileid, -90)
+        table.insert(arr, { id = projectileid, arr = arr2 })
+      end
+    end
+    -- 四边
+    face = -180
+    ft = 90
+    for j = 0, 1 do
+      for k = 0, 1 do
+        face = face + ft
+        for l = 1, 3 do
+          local finalPos
+          if (k == 0) then
+            finalPos = MyPosition:new(x - 2 + l + 0.5, y, z - 2 + j * 4 + 0.5)
+          else
+            finalPos = MyPosition:new(x - 2 + j * 4 + 0.5, y, z - 2 + l + 0.5)
+          end
+          local vc3 = MyVector3:new(pos, finalPos)
+          local arr2 = {}
+          for m = 0, len, step do
+            local dstPos = MyPosition:new(finalPos.x + vc3.x * m, finalPos.y + vc3.y * m, finalPos.z + vc3.z * m)
+            table.insert(arr2, dstPos)
+          end
+          local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU4, arr2[#arr2], arr2[#arr2], 0)
+          ActorHelper:setFaceYaw(projectileid, face)
+          ActorHelper:setFacePitch(projectileid, -90)
+          table.insert(arr, { id = projectileid, arr = arr2 })
+        end
+      end
+    end
+  end
+  -- 第五层
+  y = math.floor(pos.y + 2) + 0.5
+  -- 四角
+  face = -90
+  ft = -90
+  for i = 0, 1 do
+    face = face - 90
+    ft = ft * -1
+    for j = 0, 1 do
+      face = face + ft
+      local finalPos = MyPosition:new(x - 2 + i * 4 + 0.5, y, z - 2 + j * 4 + 0.5)
+      local vc3 = MyVector3:new(pos, finalPos)
+      local arr2 = {}
+      for k = 0, len, step do
+        local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+        table.insert(arr2, dstPos)
+      end
+      local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU5, arr2[#arr2], arr2[#arr2], 0)
+      ActorHelper:setFaceYaw(projectileid, face)
+      ActorHelper:setFacePitch(projectileid, -90)
+      table.insert(arr, { id = projectileid, arr = arr2 })
+    end
+  end
+  -- 四边
+  face = -180
+  ft = 90
+  for i = 0, 1 do
+    for j = 0, 1 do
+      face = face + ft
+      for k = 1, 3 do
+        local finalPos
+        if (j == 0) then
+          finalPos = MyPosition:new(x - 2 + k + 0.5, y, z - 2 + i * 4 + 0.5)
+        else
+          finalPos = MyPosition:new(x - 2 + i * 4 + 0.5, y, z - 2 + k + 0.5)
+        end
+        local vc3 = MyVector3:new(pos, finalPos)
+        local arr2 = {}
+        for l = 0, len, step do
+          local dstPos = MyPosition:new(finalPos.x + vc3.x * l, finalPos.y + vc3.y * l, finalPos.z + vc3.z * l)
+          table.insert(arr2, dstPos)
+        end
+        local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU6, arr2[#arr2], arr2[#arr2], 0)
+        ActorHelper:setFaceYaw(projectileid, face)
+        ActorHelper:setFacePitch(projectileid, -90)
+        table.insert(arr, { id = projectileid, arr = arr2 })
+      end
+    end
+  end
+  -- 中央
+  y = y + 0.2
+  for i = 0, 2 do
+    for j = 0, 2 do
+      local finalPos = MyPosition:new(x - 1 + i + 0.5, y, z - 1 + j + 0.5)
+      local vc3 = MyVector3:new(pos, finalPos)
+      local arr2 = {}
+      for k = 0, len, step do
+        local dstPos = MyPosition:new(finalPos.x + vc3.x * k, finalPos.y + vc3.y * k, finalPos.z + vc3.z * k)
+        table.insert(arr2, dstPos)
+      end
+      local projectileid = WorldHelper:spawnProjectileByPos(nil, MyMap.ITEM.QIU10, arr2[#arr2], arr2[#arr2], 0)
+      ActorHelper:setFaceYaw(projectileid, face)
+      ActorHelper:setFacePitch(projectileid, -90)
+      table.insert(arr, { id = projectileid, arr = arr2 })
+    end
+  end
+  -- TimeHelper:callFnFastRuns(function ()
+    local tmap = {}
+    local num = 0
+    tmap.t = TimeHelper:callFnContinueRuns(function ()
+      -- if (num < #arr) then
+        for i = #arr, 1, -1 do
+          local v = arr[i]
+          local arr2 = v.arr
+          if (num < #arr2) then
+            ActorHelper:setMyPosition(v.id, arr2[#arr2 - num])
+            -- table.remove(arr2)
+          else
+            TimeHelper:delFnContinueRuns(tmap.t)
+            SkillHelper:constructCage(pos, item, arr)
+            ActorHelper:setMyPosition(objid, fixPos)
+            break
+            -- TimeHelper:callFnFastRuns(function ()
+            --   WorldHelper:despawnActor(v.id)
+            -- end, 1)
+            -- table.remove(arr)
+          end
+        end
+      -- else
+      --   TimeHelper:delFnContinueRuns(tmap.t)
+      --   SkillHelper:constructCage(pos, item, arr)
+      -- end
+      num = num + 1
+    end, -1)
+  -- end, 0.2)
+end
+
+-- 组装囚笼
+function SkillHelper:constructCage (pos, item, arr)
+  local arr2 = {}
+  local tempPos
+  -- 第一层
+  local y = pos.y - 2
+  tempPos = MyPosition:new(pos.x - 2, y, pos.z - 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU1, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_Z)) then -- 西南
+    table.insert(arr2, tempPos)
+  end
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x - 2 + i, y, pos.z - 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU2, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_NEG_Z)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU1, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_X)) then -- 西北
+    table.insert(arr2, tempPos)
+  end
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2 - i)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU2, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_NEG_X)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x + 2, y, pos.z + 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU1, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_Z)) then -- 东北
+    table.insert(arr2, tempPos)
+  end
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x + 2 - i, y, pos.z + 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU2, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_Z)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU1, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_X)) then
+    table.insert(arr2, tempPos)
+  end -- 东南
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2 + i)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU2, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_X)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x - 1, y, pos.z)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU7, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_X)) then
+    table.insert(arr2, tempPos)
+  end -- 中西
+  tempPos = MyPosition:new(pos.x - 1, y, pos.z + 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU8, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_X)) then
+    table.insert(arr2, tempPos)
+  end -- 西北
+  tempPos = MyPosition:new(pos.x, y, pos.z + 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU7, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 中北
+  tempPos = MyPosition:new(pos.x + 1, y, pos.z + 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU8, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 东北
+  tempPos = MyPosition:new(pos.x + 1, y, pos.z)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU7, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_X)) then
+    table.insert(arr2, tempPos)
+  end -- 中东
+  tempPos = MyPosition:new(pos.x + 1, y, pos.z - 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU8, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_X)) then
+    table.insert(arr2, tempPos)
+  end -- 东南
+  tempPos = MyPosition:new(pos.x, y, pos.z - 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU7, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 中南
+  tempPos = MyPosition:new(pos.x - 1, y, pos.z - 1)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU8, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 西南
+  tempPos = MyPosition:new(pos.x, y, pos.z)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU9, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_X)) then
+    table.insert(arr2, tempPos)
+  end -- 中
+  -- 第二三四层
+  for i = 1, 3 do
+    y = pos.y - 2 + i
+    tempPos = MyPosition:new(pos.x - 2, y, pos.z - 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU3, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_Z)) then
+      table.insert(arr2, tempPos)
+    end -- 西南
+    for j = 1, 3 do
+      tempPos = MyPosition:new(pos.x - 2 + j, y, pos.z - 2)
+      if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU4, tempPos.x, tempPos.y, tempPos.z,
+        FACE_DIRECTION.DIR_NEG_Z)) then
+        table.insert(arr2, tempPos)
+      end
+    end
+    tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU3, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_NEG_X)) then
+      table.insert(arr2, tempPos)
+    end -- 西北
+    for j = 1, 3 do
+      tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2 - j)
+      if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU4, tempPos.x, tempPos.y, tempPos.z,
+        FACE_DIRECTION.DIR_NEG_X)) then
+        table.insert(arr2, tempPos)
+      end
+    end
+    tempPos = MyPosition:new(pos.x + 2, y, pos.z + 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU3, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_Z)) then
+      table.insert(arr2, tempPos)
+    end -- 东北
+    for j = 1, 3 do
+      tempPos = MyPosition:new(pos.x + 2 - j, y, pos.z + 2)
+      if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU4, tempPos.x, tempPos.y, tempPos.z,
+        FACE_DIRECTION.DIR_POS_Z)) then
+        table.insert(arr2, tempPos)
+      end
+    end
+    tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU3, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_X)) then
+      table.insert(arr2, tempPos)
+    end -- 东南
+    for j = 1, 3 do
+      tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2 + j)
+      if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU4, tempPos.x, tempPos.y, tempPos.z,
+        FACE_DIRECTION.DIR_POS_X)) then
+        table.insert(arr2, tempPos)
+      end
+    end
+  end
+  -- 第五层
+  y = pos.y + 2
+  tempPos = MyPosition:new(pos.x - 2, y, pos.z - 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU5, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 西南
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x - 2 + i, y, pos.z - 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU6, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_NEG_Z)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU5, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_NEG_X)) then
+    table.insert(arr2, tempPos)
+  end -- 西北
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x - 2, y, pos.z + 2 - i)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU6, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_NEG_X)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x + 2, y, pos.z + 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU5, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_Z)) then
+    table.insert(arr2, tempPos)
+  end -- 东北
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x + 2 - i, y, pos.z + 2)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU6, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_Z)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2)
+  if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU5, tempPos.x, tempPos.y, tempPos.z,
+    FACE_DIRECTION.DIR_POS_X)) then
+    table.insert(arr2, tempPos)
+  end -- 东南
+  for i = 1, 3 do
+    tempPos = MyPosition:new(pos.x + 2, y, pos.z - 2 + i)
+    if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU6, tempPos.x, tempPos.y, tempPos.z,
+      FACE_DIRECTION.DIR_POS_X)) then
+      table.insert(arr2, tempPos)
+    end
+  end
+  for i = 1, 3 do
+    for j = 1, 3 do
+      tempPos = MyPosition:new(pos.x - 2 + i, y, pos.z - 2 + j)
+      if (BlockHelper:placeBlockWhenEmpty(MyMap.BLOCK.QIU10, tempPos.x, tempPos.y, tempPos.z,
+        FACE_DIRECTION.DIR_NEG_X)) then
+      table.insert(arr2, tempPos)
+    end
+    end
+  end
+  TimeHelper:callFnFastRuns(function ()
+    -- 移除投掷物
+    for i, v in ipairs(arr) do
+      WorldHelper:despawnActor(v.id)
+    end
+    -- 移除方块
+    for i, v in ipairs(arr2) do
+      BlockHelper:destroyBlock(v.x, v.y, v.z)
+    end
+  end, item.existTime + item.level * item.addExistTimePerLevel)
 end

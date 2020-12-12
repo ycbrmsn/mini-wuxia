@@ -2,7 +2,6 @@
 TalkHelper = {
   prevTalkInfos = {}, -- { 玩家 -> 上次对话 } { playerid -> talkInfos }
   talkProgress = {}, -- { playerid -> { talkid -> talkProgress } }
-  tasks = {}, -- { 玩家 -> 任务id数组 } { playerid -> { taskid } }
 }
 
 -- 玩家当前会话
@@ -34,33 +33,6 @@ function TalkHelper:setProgress (playerid, talkid, talkProgress)
   end
 end
 
--- 玩家是否有该任务
-function TalkHelper:hasTask (playerid, taskid)
-  local taskids = TalkHelper:getTaskids(playerid)
-  for i, v in ipairs(taskids) do
-    if (v == taskid) then
-      -- LogHelper:debug('hasTask')
-      return true
-    end
-  end
-  -- LogHelper:debug('noTask', playerid)
-  return false
-end
-
--- 获取玩家已领取的所有任务id
-function TalkHelper:getTaskids (playerid)
-  if (not(self.tasks[playerid])) then
-    self.tasks[playerid] = {}
-  end
-  return self.tasks[playerid]
-end
-
--- 玩家新增任务
-function TalkHelper:addTask (playerid, taskid)
-  local taskids = TalkHelper:getTaskids(playerid)
-  table.insert(taskids, taskid)
-end
-
 -- 是否满足条件
 function TalkHelper:isMeet (playerid, talkInfo)
   local ants = talkInfo.ants
@@ -69,11 +41,16 @@ function TalkHelper:isMeet (playerid, talkInfo)
   end
   for i, ant in ipairs(ants) do
     if (ant.t == 1) then -- 前置必需任务
-      if (not(TalkHelper:hasTask(playerid, ant.taskid))) then
+      if (TaskHelper:hasTask(playerid, ant.taskid)) then
+        if (ant.state) then -- 任务进度
+          local state = TaskHelper:getTaskState(playerid, ant.taskid)
+          return state == ant.state
+        end
+      else
         return false
       end
     elseif (ant.t == 2) then -- 前置互斥任务
-      if (TalkHelper:hasTask(playerid, ant.taskid)) then
+      if (TaskHelper:hasTask(playerid, ant.taskid)) then
         return false
       end
     elseif (ant.t == 3) then -- 世界时间
@@ -82,9 +59,9 @@ function TalkHelper:isMeet (playerid, talkInfo)
         return false
       end
     elseif (ant.t == 4) then -- 拥有道具
-      -- LogHelper:debug('道具')
-      if (not(BackpackHelper:hasItem(playerid, ant.itemid, true))) then
-        -- LogHelper:debug('没道具')
+      local itemnum = ant.num or 1
+      local num = BackpackHelper:getItemNumAndGrid(playerid, ant.itemid)
+      if (num < itemnum) then
         return false
       end
     end
@@ -102,7 +79,7 @@ function TalkHelper:getTalkInfo (playerid, actor)
         local talkIndex = TalkHelper:getTalkIndex(playerid, actor)
         if (prevTalkInfo and prevTalkInfo ~= talkInfo and talkIndex ~= 1) then -- 表示突然不满足条件了
           TalkHelper:resetTalkIndex(playerid, actor, index)
-          ChatHelper:showBreakSeparate(playerid)
+          MyTalkHelper:showBreakSeparate(playerid)
         end
         return talkInfo
       end
@@ -118,17 +95,17 @@ function TalkHelper:talkWith (playerid, actor)
     local index = TalkHelper:getTalkIndex(playerid, actor)
     local session = sessions[index]
     if (session) then
-      TalkHelper:handleTalkSession(playerid, actor, session, #sessions)
+      TalkHelper:handleTalkSession(playerid, actor, index, sessions)
     else
       if (actor.defaultTalkMsg) then
         actor:speakTo(playerid, 0, actor.defaultTalkMsg)
-        ChatHelper:showEndSeparate(playerid)
+        MyTalkHelper:showEndSeparate(playerid)
       end
     end
   else
     if (actor.defaultTalkMsg) then
       actor:speakTo(playerid, 0, actor.defaultTalkMsg)
-      ChatHelper:showEndSeparate(playerid)
+      MyTalkHelper:showEndSeparate(playerid)
     end
   end
 end
@@ -166,7 +143,7 @@ function TalkHelper:turnTalkIndex (playerid, actor, max, index)
   if (index > max or index == -1) then
     index = 1
     actor.talkIndex[playerid] = index
-    ChatHelper:showEndSeparate(playerid)
+    MyTalkHelper:showEndSeparate(playerid)
     return false
   else
     actor.talkIndex[playerid] = index
@@ -179,29 +156,26 @@ function TalkHelper:resetTalkIndex (playerid, actor, index)
   actor.talkIndex[playerid] = index or 1
 end
 
-function TalkHelper:handleTalkSession (playerid, actor, session, max)
+function TalkHelper:handleTalkSession (playerid, actor, index, sessions)
   local player = PlayerHelper:getPlayer(playerid)
+  local session = sessions[index]
   if (session.t == 1) then
     actor:speakTo(playerid, 0, session.msg)
     if (session.f) then
-      session.f(player)
+      session.f(player, actor)
     end
-    TalkHelper:turnTalkIndex(playerid, actor, max, session.turnTo)
+    TalkHelper:turnTalkIndex(playerid, actor, #sessions, session.turnTo)
   elseif (session.t == 2) then
     actor:thinkTo(playerid, 0, session.msg)
     if (session.f) then
-      session.f(player)
+      session.f(player, actor)
     end
-    TalkHelper:turnTalkIndex(playerid, actor, max, session.turnTo)
+    TalkHelper:turnTalkIndex(playerid, actor, #sessions, session.turnTo)
   elseif (type(session.msg) == 'table') then -- 选项
     ChatHelper:showChooseItems(playerid, session.msg, 'msg')
-    -- ChatHelper:sendMsg(playerid, '---------')
-    -- for i, v in ipairs(session.msg) do
-    --   ChatHelper:sendMsg(playerid, v.msg)
-    -- end
     player.whichChoose = 'talk'
     if (session.f) then
-      session.f(player)
+      session.f(player, actor)
     end
   else -- 对话
     if (session.t == 3) then
@@ -210,9 +184,9 @@ function TalkHelper:handleTalkSession (playerid, actor, session, max)
       player:thinkSelf(0, session.msg)
     end
     if (session.f) then
-      session.f(player)
+      session.f(player, actor)
     end
-    TalkHelper:turnTalkIndex(playerid, actor, max, session.turnTo)
+    TalkHelper:turnTalkIndex(playerid, actor, #sessions, session.turnTo)
   end
 end
 
@@ -240,7 +214,7 @@ function TalkHelper:chooseTalk (playerid)
   local playerTalk = session.msg[index]
   local max = #sessions
   if (playerTalk.f) then
-    playerTalk.f(player)
+    playerTalk.f(player, actor)
   end
   if (not(playerTalk.t) or playerTalk.t == 1) then -- 继续
     if (TalkHelper:turnTalkIndex(playerid, actor, max)) then
@@ -264,6 +238,53 @@ function TalkHelper:resetProgressContent (actor, talkid, progressid, sessions)
     for i, talkInfo in ipairs(talkInfos) do
       if (talkInfo.id == talkid) then
         talkInfo.progress[progressid] = sessions
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- 清空进度对话，从index开始清空
+function TalkHelper:clearProgressContent (actor, talkid, progressid, index)
+  index = index or 1
+  local talkInfos = actor.talkInfos
+  if (talkInfos and #talkInfos > 0) then
+    for i, talkInfo in ipairs(talkInfos) do
+      if (talkInfo.id == talkid) then
+        for i = #talkInfo.progress[progressid], index, -1 do
+          table.remove(talkInfo.progress[progressid])
+        end
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- 新增一条进度对话
+function TalkHelper:addProgressContent (actor, talkid, progressid, session)
+  local talkInfos = actor.talkInfos
+  if (talkInfos and #talkInfos > 0) then
+    for i, talkInfo in ipairs(talkInfos) do
+      if (talkInfo.id == talkid) then
+        table.insert(talkInfo.progress[progressid], session)
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- 新增一些进度对话
+function TalkHelper:addProgressContents (actor, talkid, progressid, sessions)
+  local talkInfos = actor.talkInfos
+  if (talkInfos and #talkInfos > 0) then
+    for i, talkInfo in ipairs(talkInfos) do
+      if (talkInfo.id == talkid) then
+        for j, session in ipairs(sessions) do
+          table.insert(talkInfo.progress[progressid], session)
+        end
         return true
       end
     end
