@@ -1,12 +1,14 @@
 -- 我的方块工具类
 MyBlockHelper = {
   unableBeoperated = {
-    BlockHelper.bedid
+    BlockHelper.bedid,
+    BlockHelper.bedid2,
   },
   unableDestroyed = {
     BlockHelper.switchid,
     BlockHelper.doorid,
     BlockHelper.bedid,
+    BlockHelper.bedid2,
     428, -- 四格釉面砖
     667, -- 白色硬砂块
     820, -- 书柜
@@ -85,6 +87,25 @@ function MyBlockHelper:clickBookcase (objid, blockid, x, y, z)
     MyOptionHelper:showOptions(player, 'look')
     -- ChatHelper:showChooseItems(playerid, { '看看', '不看' })
     -- player.whichChoose = 'readme'
+    return true
+  end
+  return false
+end
+
+-- 点击床睡觉
+function MyBlockHelper:clickBed (objid, blockid, x, y, z)
+  if (MyBed:isBed(blockid)) then
+    PlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
+    return true
+  elseif (blockid == BlockHelper.bedid2) then
+    local player = PlayerHelper:getPlayer(objid)
+    if (player:isHostPlayer()) then
+      player:enableMove(false, true)
+      player:thinkSelf(0, '我要睡多长时间呢？')
+      MyOptionHelper:showOptions(player, 'sleep')
+    else
+      ChatHelper:sendMsg(objid, '仅房主能够使用床睡觉')
+    end
     return true
   end
   return false

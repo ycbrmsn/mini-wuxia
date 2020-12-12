@@ -1,6 +1,33 @@
 -- 我的选项工具类
 MyOptionHelper = {
   optionMap = {
+    sleep = {
+      { '不睡觉', function (player)
+          player:enableMove(true)
+          player:thinks(0, '现在还不想休息。')
+        end
+      },
+      { '睡半个时辰', function (player)
+          player:enableMove(true)
+          TimeHelper:addHour(1)
+          PlayerHelper:everyPlayerNotify('时间过去半个时辰')
+        end
+      },
+      { '睡一个时辰', function (player)
+          player:enableMove(true)
+          TimeHelper:addHour(2)
+          PlayerHelper:everyPlayerNotify('时间过去一个时辰')
+          ActorHelper:doItNow()
+        end
+      },
+      { '睡两个时辰', function (player)
+          player:enableMove(true)
+          TimeHelper:addHour(4)
+          PlayerHelper:everyPlayerNotify('时间过去两个时辰')
+          ActorHelper:doItNow()
+        end
+      },
+    },
     look = {
       { '看看', function (player)
           -- ChatHelper:showChooseItems(playerid, { '游戏简介', '更新内容', '退出' })

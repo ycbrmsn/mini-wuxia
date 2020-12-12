@@ -37,9 +37,7 @@ function MyPlayerHelper:playerClickBlock (objid, blockid, x, y, z)
   PlayerHelper:playerClickBlock(objid, blockid, x, y, z)
   MyStoryHelper:playerClickBlock(objid, blockid, x, y, z)
   -- body
-  if (MyBed:isBed(blockid)) then
-    -- 处理床
-    PlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
+  if (MyBlockHelper:clickBed(objid, blockid, x, y, z)) then
   elseif (MyBlockHelper:checkCityGateSwitch(blockid, MyPosition:new(x, y, z))) then
   elseif (blockid == SaveGame.blockid) then -- 储物箱
     local itemid = PlayerHelper:getCurToolID(objid)
