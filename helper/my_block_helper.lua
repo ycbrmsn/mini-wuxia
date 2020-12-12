@@ -77,13 +77,14 @@ end
 
 -- 点击书柜
 function MyBlockHelper:clickBookcase (objid, blockid, x, y, z)
-  if (blockid == 820 and x == 33.5 and y == 8.5 and z == 7.5) then -- 家里的书柜
+  if (blockid == 820 and x == 33 and y == 8 and z == 7) then -- 家里的书柜
     local player = PlayerHelper:getPlayer(objid)
     player:enableMove(false, true)
     player:thinkSelf(0, '这里有一些游戏说明，我要看看吗？')
     ChatHelper:sendMsg(objid, '选择对应序号的快捷栏进行选择')
-    ChatHelper:showChooseItems(playerid, { '看看', '不看' })
-    player.whichChoose = 'readme'
+    MyOptionHelper:showOptions(player, 'look')
+    -- ChatHelper:showChooseItems(playerid, { '看看', '不看' })
+    -- player.whichChoose = 'readme'
     return true
   end
   return false

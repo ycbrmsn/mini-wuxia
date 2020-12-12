@@ -461,8 +461,9 @@ function MyStoryHelper:blockDigEnd (objid, blockid, x, y, z)
           player:thinkSelf(ws:use(), '我要怎么做呢？')
           TimeHelper:callFnAfterSecond(function ()
             ChatHelper:sendMsg(objid, '请选择对应的快捷栏')
-            ChatHelper:showChooseItems(playerid, { '跟他走', '不跟他走' })
-            player.whichChoose = 'breakCity'
+            -- ChatHelper:showChooseItems(playerid, { '跟他走', '不跟他走' })
+            -- player.whichChoose = 'breakCity'
+            MyOptionHelper:showOptions(player, 'breakCity')
             player.chooseMap = { objid = objids[1] }
           end, ws:get())
         end
