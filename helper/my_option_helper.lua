@@ -9,22 +9,28 @@ MyOptionHelper = {
       },
       { '睡半个时辰', function (player)
           player:enableMove(true)
-          TimeHelper:addHour(1)
+          MyStoryHelper:addHour(1)
           PlayerHelper:everyPlayerNotify('时间过去半个时辰')
         end
       },
       { '睡一个时辰', function (player)
           player:enableMove(true)
-          TimeHelper:addHour(2)
-          PlayerHelper:everyPlayerNotify('时间过去一个时辰')
-          ActorHelper:doItNow()
+          if (MyStoryHelper:addHour(2)) then
+            PlayerHelper:everyPlayerNotify('时间过去一个时辰')
+            ActorHelper:doItNow()
+          else
+            PlayerHelper:notifyGameInfo2Self(player.objid, '快到约定的时间了，不能睡那么久了')
+          end
         end
       },
       { '睡两个时辰', function (player)
           player:enableMove(true)
-          TimeHelper:addHour(4)
-          PlayerHelper:everyPlayerNotify('时间过去两个时辰')
-          ActorHelper:doItNow()
+          if (MyStoryHelper:addHour(4)) then
+            PlayerHelper:everyPlayerNotify('时间过去两个时辰')
+            ActorHelper:doItNow()
+          else
+            PlayerHelper:notifyGameInfo2Self(player.objid, '快到约定的时间了，不能睡那么久了')
+          end
         end
       },
     },
@@ -71,7 +77,17 @@ MyOptionHelper = {
           ChatHelper:sendMsg(player.objid, '6.微调了一些其他东西。', StringHelper:repeatStrs('\t', 7))
           MyOptionHelper:showOptions(player, 'back')
         end
-      }, -- v0.3.4
+      },
+      { 'v0.3.5', function (player)
+          ChatHelper:sendMsg(player.objid, '1.新增床睡觉功能。', StringHelper:repeatStrs('\t', 9))
+          ChatHelper:sendMsg(player.objid, '2.新增挖城墙事件。', StringHelper:repeatStrs('\t', 9))
+          ChatHelper:sendMsg(player.objid, '3.调低了升级后玩家增长的属性。', StringHelper:repeatStrs('\t', 3))
+          ChatHelper:sendMsg(player.objid, '4.调高了部分怪物的伤害。', StringHelper:repeatStrs('\t', 6))
+          ChatHelper:sendMsg(player.objid, '5.修复车票无法送达的问题。', StringHelper:repeatStrs('\t', 5))
+          ChatHelper:sendMsg(player.objid, '6.微调了一些其他东西。', StringHelper:repeatStrs('\t', 7))
+          MyOptionHelper:showOptions(player, 'back')
+        end
+      },
       { '返回', function (player)
           MyOptionHelper:showOptions(player, 'readme')
         end

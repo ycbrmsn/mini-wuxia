@@ -51,6 +51,22 @@ function MyStoryHelper:beatBreakCityPlayer (player)
   end, 1)
 end
 
+-- 过去几小时，用于睡觉
+function MyStoryHelper:addHour (hours)
+  if (StoryHelper:check(1, '明日出发')) then
+    local hour = TimeHelper:getHour()
+    if (hour + hours > 24) then
+      StoryHelper:forward(1, '明日出发')
+    end
+  elseif (StoryHelper:check(1, '今日出发')) then
+    if (hour + hours > 9) then
+      return false
+    end
+  end
+  TimeHelper:addHour(hours)
+  return true
+end
+
 -- 事件
 
 -- 世界时间到[n]点
@@ -139,7 +155,7 @@ function MyStoryHelper:playerEnterArea (objid, areaid)
       end, 2)
     end
   elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
-    story1:fasterTime()
+    -- story1:fasterTime()
   elseif (story3 and areaid == story3.startArea) then -- 剧情三开启区域
     if (StoryHelper:forward(2, '临近风颖城')) then
       AreaHelper:destroyArea(areaid)

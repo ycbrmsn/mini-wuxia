@@ -63,7 +63,7 @@ function Story1:noticeEvent (areaid)
   StoryHelper:forward(1, '闲来无事')
 end
 
--- 时间快速流逝
+-- 时间快速流逝，目前此方法停用
 function Story1:fasterTime ()
   local mainIndex = StoryHelper:getMainStoryIndex()
   local mainProgress = StoryHelper:getMainStoryProgress()
