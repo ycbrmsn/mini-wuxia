@@ -59,7 +59,7 @@ function MyStoryHelper:addHour (hours)
       StoryHelper:forward(1, '明日出发')
     end
   elseif (StoryHelper:check(1, '今日出发')) then
-    if (hour + hours > 9) then
+    if (hour + hours > 7) then
       return false
     end
   end
@@ -75,7 +75,7 @@ function MyStoryHelper:atHour (hour)
   -- body
   if (hour == 0) then
     StoryHelper:forward(1, '明日出发')
-  elseif (hour == 9) then
+  elseif (hour == 7) then
     -- LogHelper:debug(StoryHelper:getMainStoryIndex(), '-', StoryHelper:getMainStoryProgress(), '-', #story1.tips)
     -- if (StoryHelper:getMainStoryIndex() == 1 and StoryHelper:getMainStoryProgress() == #story1.tips) then
     if (StoryHelper:forward(1, '今日出发')) then

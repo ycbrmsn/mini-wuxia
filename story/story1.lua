@@ -12,8 +12,8 @@ function Story1:new ()
       '文羽告诉我风颖城的武术学院又要开始招生了，让我去问问村长。记得村长家在村中央，门对面就是喷泉。',
       '村长说学院的先生在客栈，不知道我能不能入先生的法眼呢。客栈我知道，就在喷泉旁边，有竹栅栏围着的。',
       '我完成了任务，先生给了我一块令牌。',
-      '明日巳时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
-      '今日巳时，就要出发了。想想还真有点迫不及待。'
+      '明日辰时，我就要跟着先生向着学院出发了。今天我还可以四处逛逛，或者回家睡一觉。',
+      '今日辰时，就要出发了。想想还真有点迫不及待。'
     },
     prepose = {
       ['闲来无事'] = 1,
@@ -116,10 +116,10 @@ function Story1:finishNoticeEvent (objid)
   yexiaolong.action:playStand(ws:use(3))
   local hour = WorldHelper:getHours()
   local hourName = StringHelper:getHourName(hour)
-  if (hour < 9) then
-    yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，巳时在村门口集合出发。')
+  if (hour < 7) then
+    yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，#G辰时#n在村门口集合出发。')
   else
-    yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天巳时，在村门口集合出发。')
+    yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天#G辰时#n，在村门口集合出发。')
   end
   player:speak(ws:use(), '好的。')
   yexiaolong.action:playHi(ws:get())
