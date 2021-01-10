@@ -145,6 +145,8 @@ function BaseActorAction:execute ()
         -- end
         self:runTo(want.toPos, want.speed)
       end
+    elseif (want.style == 'follow') then
+      want:execute()
     elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
 
     elseif (want.style == 'freeTime') then -- 自由活动

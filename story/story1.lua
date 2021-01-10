@@ -52,7 +52,9 @@ function Story1:noticeEvent (areaid)
   AreaHelper:destroyArea(areaid)
   local createPos = story1.createPos
   wenyu:setPosition(createPos.x, createPos.y, createPos.z)
-  wenyu:wantMove('notice', { story1.movePos })
+  -- wenyu:wantMove('notice', { story1.movePos })
+  local hostPlayer = PlayerHelper:getHostPlayer()
+  wenyu:wantFollow(nil, hostPlayer.objid)
   local content = StringHelper:join(PlayerHelper:getAllPlayerNames(), '、')
   local subject = '你'
   if (#PlayerHelper:getActivePlayers() > 1) then 

@@ -266,6 +266,21 @@ function BaseActor:wantApproach (think, positions, isNegDir, index, restTime, sp
   return self.want:wantApproach(think, positions, isNegDir, index, restTime, speed)
 end
 
+function BaseActor:wantFollow (think, toobjid, speed)
+  AreaHelper:removeToArea(self)
+  think = think or 'follow'
+  self.think = think
+  local want = FollowAction:new(self, think, toobjid, speed)
+  self.wants = { want }
+  return want
+end
+
+function BaseActor:nextWantFollow (think, toobjid, speed)
+  local want = FollowAction:new(self, think, toobjid, speed)
+  table.insert(self.wants, want)
+  return want
+end
+
 -- 生物想原地不动
 function BaseActor:wantDontMove (think)
   return self.want:wantDontMove(think)

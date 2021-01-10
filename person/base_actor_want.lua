@@ -163,6 +163,15 @@ function BaseActorWant:wantBattle (think)
   return want
 end
 
+function BaseActorWant:wantFollow (think, toobjid, speed)
+  AreaHelper:removeToArea(self.myActor)
+  think = think or 'follow'
+  self.myActor.think = think
+  local want = FollowAction:new(self.myActor, think, toobjid, speed)
+  self.myActor.wants = { want }
+  return want
+end
+
 function BaseActorWant:nextWantMove (think, positions, isNegDir, index, restTime, speed)
   local want
   if (self.myActor:isWantsExist()) then
