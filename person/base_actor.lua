@@ -42,7 +42,7 @@ function BaseActor:newMonster (x, y, z, num, isSingleton)
   end
   if (not(self.action)) then
     self.action = BaseActorAction:new(self)
-    self.want = BaseActorWant:new(self)
+    -- self.want = BaseActorWant:new(self)
   end
   local objids = WorldHelper:spawnCreature(x, y, z, self.actorid, num)
 end
