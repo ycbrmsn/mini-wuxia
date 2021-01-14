@@ -175,7 +175,7 @@ function ActorActionHelper:setFreeInArea (think, actor, posPairs, isAppend)
       AreaHelper:destroyArea(v)
     end
   end
-  local want = FreeInAreaAction:new(think)
+  local want = FreeInAreaAction:new(actor, think)
   if (isAppend) then
     table.insert(actor.wants, want)
   else
@@ -192,7 +192,7 @@ function ActorActionHelper:setFreeAttack (think, actor, posPairs, isAppend)
       AreaHelper:destroyArea(v)
     end
   end
-  local want = FreeAttackAction:new(think)
+  local want = FreeAttackAction:new(actor, think)
   if (isAppend) then
     table.insert(actor.wants, want)
   else
@@ -245,17 +245,17 @@ function ActorActionHelper:callback (want, f)
 end
 
 -- 移动
-function ActorActionHelper:actionMove (action)
-  if (action.currentRestTime > 0) then
-    action.currentRestTime = action.currentRestTime - 1
+function ActorActionHelper:actionMove (want)
+  if (want.currentRestTime > 0) then
+    want.currentRestTime = want.currentRestTime - 1
   else
-    if (action.actor.cantMoveTime > ActorActionHelper.maxCantMoveTime) then
-      action.actor:setPosition(action.toPos)
-      action.actor.cantMoveTime = 0
+    if (want.actor.cantMoveTime > ActorActionHelper.maxCantMoveTime) then
+      want.actor:setPosition(want.toPos)
+      want.actor.cantMoveTime = 0
     else
-      local selfPos = ActorHelper:getMyPosition(action.actor.objid)
+      local selfPos = ActorHelper:getMyPosition(want.actor.objid)
       if (selfPos) then
-        ActorActionHelper:runTo(action.actor, action.toPos, action.speed)
+        ActorActionHelper:runTo(want.actor, want.toPos, want.speed)
       end
     end
   end

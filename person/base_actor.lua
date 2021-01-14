@@ -336,7 +336,7 @@ function BaseActor:wantFreeTime (think)
   self.think = think
   local want = FreeTimeAction:new(self, think)
   self.wants = { want }
-  self.action:freeTime(want)
+  ActorActionHelper:freeTime(want)
   return want
 end
 
@@ -544,13 +544,9 @@ function BaseActor:wantBattle (think)
   return want
 end
 
-function BaseActor:isWantsExist ()
-  return self.wants and #self.wants > 0
-end
-
 -- 总是在approach之后，所以无需判断exists
 function BaseActor:nextWantToggleCandle (think, isLitCandle)
-  local want = ActorActionHelper:getToggleCandleData(think, isLitCandle)
+  local want = ToggleCandleAction:new(self, think, isLitCandle)
   table.insert(self.wants, want)
   return want
 end
@@ -580,6 +576,10 @@ end
 -- 生物固定时间点想做什么
 function BaseActor:wantAtHour (hour)
   -- 各个生物重写此方法内容
+end
+
+function BaseActor:isWantsExist ()
+  return self.wants and #self.wants > 0
 end
 
 function BaseActor:getName ()

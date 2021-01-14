@@ -121,7 +121,10 @@ function BaseActorAction:execute ()
     self.myActor:defaultWant()
   end
   want = self.myActor.wants[1]
-  want.execute()
+  if (not(want.execute)) then
+    print(want)
+  end
+  want:execute()
   -- if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
   --   want.currentRestTime = want.currentRestTime - 1
   --   if (want.style == 'sleep') then
