@@ -73,7 +73,7 @@ EventHelper.addEvent('actorChangeMotion', function (objid, actormotion)
       TimeHelper.callFnCanRun(monsterModel.actorid, 'atk', function ()
         local pos = ActorHelper.getMyPosition(objid)
         if (pos) then
-          local playerids = ActorHelper.getAllPlayersArroundPos(pos, self.speakDim, objid)
+          local playerids = ActorHelper.getAllPlayersArroundPos(pos, MyActorHelper.speakDim, objid)
           if (playerids and #playerids > 0) then
             for i, v in ipairs(playerids) do
               if (monsterModel.attackSpeak) then

@@ -140,14 +140,14 @@ end
 
 -- 显示选项
 function MyOptionHelper.showOptions (player, optionname)
-  local arr = self.optionMap[optionname]
+  local arr = MyOptionHelper.optionMap[optionname]
   ChatHelper.showChooseItems(player.objid, arr, 1)
   player.whichChoose = optionname
 end
 
 -- 设置选项
 function MyOptionHelper.setOption (optionname, chooseItems)
-  self.optionMap[optionname] = chooseItems
+  MyOptionHelper.optionMap[optionname] = chooseItems
 end
 
 -- 设置任务选项

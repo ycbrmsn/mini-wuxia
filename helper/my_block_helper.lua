@@ -35,19 +35,19 @@ function MyBlockHelper.init ()
   MyBlockHelper.initBlocks()
   -- body
   -- 前四个位置，第五个区域
-  for i, v in ipairs(self.cityGatesData) do
+  for i, v in ipairs(MyBlockHelper.cityGatesData) do
     local cityGate = {}
     AreaHelper.initPosByPosData(v, cityGate)
     table.insert(cityGate, AreaHelper.getAreaByPos(cityGate[4]))
-    table.insert(self.cityGates, cityGate)
+    table.insert(MyBlockHelper.cityGates, cityGate)
   end
 end
 
 function MyBlockHelper.initBlocks ()
-  for i,v in ipairs(self.unableBeoperated) do
+  for i,v in ipairs(MyBlockHelper.unableBeoperated) do
     BlockHelper.setBlockSettingAttState(v, BLOCKATTR.ENABLE_BEOPERATED, false) -- 不可操作  
   end
-  for i, v in ipairs(self.unableDestroyed) do
+  for i, v in ipairs(MyBlockHelper.unableDestroyed) do
     BlockHelper.setBlockSettingAttState(v, BLOCKATTR.ENABLE_DESTROYED, false) -- 不可被破坏
   end
 end
@@ -55,20 +55,20 @@ end
 -- 检查城门开关
 function MyBlockHelper.checkCityGateSwitch (blockid, pos)
   if (blockid == 724) then -- 开关
-    for i, v in ipairs(self.cityGates) do
+    for i, v in ipairs(MyBlockHelper.cityGates) do
       if (v[1]:equalBlockPos(pos)) then -- 找到开关
         if (BlockHelper.getBlockSwitchStatus(v[1])) then -- 打开
-          if (BlockHelper.getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
-            AreaHelper.replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
-            BlockHelper.replaceBlock(self.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
+          if (BlockHelper.getBlockID(v[4].x, v[4].y, v[4].z) == MyBlockHelper.cityGateBlockIds[1]) then
+            AreaHelper.replaceAreaBlock(v[5], MyBlockHelper.cityGateBlockIds[1], MyBlockHelper.cityGateBlockIds[2], 5)
+            BlockHelper.replaceBlock(MyBlockHelper.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
             TimeHelper.callFnFastRuns(function ()
-              AreaHelper.replaceAreaBlock(v[5], self.cityGateBlockIds[2], self.cityGateBlockIds[1], 5)
-              BlockHelper.replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
+              AreaHelper.replaceAreaBlock(v[5], MyBlockHelper.cityGateBlockIds[2], MyBlockHelper.cityGateBlockIds[1], 5)
+              BlockHelper.replaceBlock(MyBlockHelper.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
             end, 0.005)
           end
         else
-          BlockHelper.replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
-          BlockHelper.replaceBlock(self.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
+          BlockHelper.replaceBlock(MyBlockHelper.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
+          BlockHelper.replaceBlock(MyBlockHelper.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
         end
         return true
       end

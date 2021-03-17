@@ -89,13 +89,13 @@ EventHelper.addEvent('playerEnterGame', function (objid)
     if (not(GameDataHelper.updateStoryData())) then -- 未找到游戏数据文件
       -- 判断是否刚进入游戏，等待1s后检测
       TimeHelper.callFnAfterSecond(function ()
-        local blockid = BlockHelper.getBlockID(self.initWoodPos.x, self.initWoodPos.y, self.initWoodPos.z)
-        if (blockid and blockid == self.woodid) then -- 刚进入游戏
+        local blockid = BlockHelper.getBlockID(MyStoryHelper.initWoodPos.x, MyStoryHelper.initWoodPos.y, MyStoryHelper.initWoodPos.z)
+        if (blockid and blockid == MyStoryHelper.woodid) then -- 刚进入游戏
           GameDataHelper.updateMainIndex()
           GameDataHelper.updateMainProgress()
           StoryHelper.setLoad(true)
           TimeHelper.setHour(MyMap.CUSTOM.INIT_HOUR)
-          player:setPosition(self.initPosition) -- 初始位置
+          player:setPosition(MyStoryHelper.initPosition) -- 初始位置
           PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
           if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
             LogPaper:newItem(objid, 1, true) -- 江湖日志
@@ -106,7 +106,7 @@ EventHelper.addEvent('playerEnterGame', function (objid)
           end
           -- 3秒后替换掉初始方块
           TimeHelper.callFnAfterSecond(function ()
-            MyStoryHelper.replaceInitBlock(self.initWoodPos)
+            MyStoryHelper.replaceInitBlock(MyStoryHelper.initWoodPos)
           end, 3)
         else -- 再次进入游戏
           TimeHelper.callFnAfterSecond(function ()
@@ -123,7 +123,7 @@ EventHelper.addEvent('playerEnterGame', function (objid)
     if (hostPlayer) then
       player:setPosition(hostPlayer:getPosition())
     else -- 没有房主
-      player:setPosition(self.initPosition) -- 初始位置
+      player:setPosition(MyStoryHelper.initPosition) -- 初始位置
       PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
     end
   end
@@ -172,7 +172,7 @@ EventHelper.addEvent('playerEnterArea', function (objid, areaid)
                   player:lookAt(objids[1])
                   guard:speakTo(objid, 0, '由于你没有通行令牌，现在跟我出城。')
                   TimeHelper.callFnAfterSecond(function ()
-                    player:setPosition(self.outCityPos)
+                    player:setPosition(MyStoryHelper.outCityPos)
                     player:enableMove(true, false)
                     WorldHelper.despawnActor(objids[1])
                   end, 2)
