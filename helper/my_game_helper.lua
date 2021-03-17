@@ -3,26 +3,26 @@ MyGameHelper = {
   index = 1,
 }
 
-function MyGameHelper:setGBattleUI ()
-  local player = PlayerHelper:getHostPlayer()
+function MyGameHelper.setGBattleUI ()
+  local player = PlayerHelper.getHostPlayer()
   if (player) then
-    MusicHelper:stopBGM(player.objid)
-    local title, desc, reason = MyGameHelper:getDesc(player)
-    UIHelper:setLeftDesc(desc)
+    MusicHelper.stopBGM(player.objid)
+    local title, desc, reason = MyGameHelper.getDesc(player)
+    UIHelper.setLeftDesc(desc)
     if (reason) then
-      UIHelper:setLeftLittleDesc('死亡原因：')
-      UIHelper:setRightLittleDesc(reason)
+      UIHelper.setLeftLittleDesc('死亡原因：')
+      UIHelper.setRightLittleDesc(reason)
     else
-      UIHelper:setLeftLittleDesc('成功通关')
-      UIHelper:setRightLittleDesc('等级：', player:getLevel())
+      UIHelper.setLeftLittleDesc('成功通关')
+      UIHelper.setRightLittleDesc('等级：', player:getLevel())
     end
-    UIHelper:setLeftTitle('获得称号：')
-    UIHelper:setRightTitle(title)
+    UIHelper.setLeftTitle('获得称号：')
+    UIHelper.setRightTitle(title)
   end
-  UIHelper:setGBattleUI('result', true)
+  UIHelper.setGBattleUI('result', true)
 end
 
-function MyGameHelper:getDesc (player)
+function MyGameHelper.getDesc (player)
   if (player.isWinGame) then
     return '一代大侠', '闯江湖，走遍天下恶尽除'
   else
@@ -51,59 +51,35 @@ end
 -- 事件
 
 -- 开始游戏
-function MyGameHelper:startGame ()
-  GameHelper:startGame()
-  MyBlockHelper:init()
-  MyMonsterHelper:init()
-  MyAreaHelper:init()
-  MyActorHelper:init()
+EventHelper.addEvent('startGame', function ()
+  MyBlockHelper.init()
+  MyMonsterHelper.init()
+  MyAreaHelper.init()
+  MyActorHelper.init()
   -- -- body
-end
-
--- 游戏运行时
-function MyGameHelper:runGame ()
-  GameHelper:runGame()
-  -- body
-  -- self.index = self.index + 1
-end
+end)
 
 -- 结束游戏
-function MyGameHelper:endGame ()
-  GameHelper:endGame()
-  -- body
-  MyGameHelper:setGBattleUI()
-end
-
--- 世界时间到[n]点
-function MyGameHelper:atHour (hour)
-  GameHelper:atHour(hour)
-  MyStoryHelper:atHour(hour)
-end
+EventHelper.addEvent('endGame', function ()
+  MyGameHelper.setGBattleUI()
+end)
 
 -- 世界时间到[n]秒
-function MyGameHelper:atSecond (second)
-  GameHelper:atSecond(second)
-  -- body
+EventHelper.addEvent('atSecond', function (second)
   if (second == 1) then
-    local mainIndex = StoryHelper:getMainStoryIndex()
-    local mainProgress = StoryHelper:getMainStoryProgress()
+    local mainIndex = StoryHelper.getMainStoryIndex()
+    local mainProgress = StoryHelper.getMainStoryProgress()
     if (mainIndex == 1 and mainProgress == 1) then
-      -- StoryHelper:setMainStoryIndex(1)
-      -- StoryHelper:setMainStoryProgress(#story1.tips)
-      -- StoryHelper:forward(1, #story1.tips)
+      -- StoryHelper.setMainStoryIndex(1)
+      -- StoryHelper.setMainStoryProgress(#story1.tips)
+      -- StoryHelper.forward(1, #story1.tips)
       -- story2:goToCollege()
       
-    -- StoryHelper:setMainStoryIndex(2)
-    -- StoryHelper:setMainStoryProgress(#story2.tips)
-    -- PlayerHelper:getHostPlayer():setPosition(-18.5, 7.5, 595.5)
+    -- StoryHelper.setMainStoryIndex(2)
+    -- StoryHelper.setMainStoryProgress(#story2.tips)
+    -- PlayerHelper.getHostPlayer():setPosition(-18.5, 7.5, 595.5)
     -- yexiaolong:wantDoNothing()
     -- yexiaolong:setPosition(-18.5, 7.5, 595.5)
     end
   end
-end
-
--- 任意计时器发生变化
-function MyGameHelper:minitimerChange (timerid, timername)
-  GameHelper:minitimerChange(timerid, timername)
-  -- body
-end
+end)

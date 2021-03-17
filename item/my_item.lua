@@ -5,13 +5,13 @@ LogPaper = BaseItem:new({ id = MyMap.ITEM.LOG_PAPER_ID })
 
 -- 获取日志
 function LogPaper:getContent ()
-  local title, content = StoryHelper:getMainStoryTitleAndTip()
+  local title, content = StoryHelper.getMainStoryTitleAndTip()
   return title .. '\n\t\t' .. content
 end
 
 -- 显示日志
 function LogPaper:showContent (objid)
-  ChatHelper:sendSystemMsg(self:getContent(), objid)
+  ChatHelper.sendSystemMsg(self:getContent(), objid)
 end
 
 function LogPaper:useItem (objid)
@@ -25,7 +25,7 @@ SaveGame = BaseItem:new({
 })
 
 function SaveGame:createError (objid)
-  ChatHelper:sendMsg(objid, '创建储物箱失败。请找一个空旷的位置进行保存')
+  ChatHelper.sendMsg(objid, '创建储物箱失败。请找一个空旷的位置进行保存')
 end
 
 -- 储物箱查询道具方法会导致退出游戏
@@ -33,7 +33,7 @@ function SaveGame:takeOutItem (objid, pos)
   local isEmpty = true
   local x, y, z = math.floor(pos.x), math.floor(pos.y), math.floor(pos.z)
   for i = 0, 29 do
-    local itemid, num = WorldContainerHelper:getStorageItem(x, y, z, i)
+    local itemid, num = WorldContainerHelper.getStorageItem(x, y, z, i)
     if (itemid and itemid ~= 0) then
       if (itemid >= 4129 and itemid <= 4245 and itemid ~= 4130 and itemid ~= 4133 and itemid ~= 4142) then -- 自定义武器
         isEmpty = false
@@ -44,8 +44,8 @@ function SaveGame:takeOutItem (objid, pos)
       elseif (itemid >= 15000 and itemid < 15500) then -- 热武器
         isEmpty = false
       else -- 无耐久度的物品
-        BackpackHelper:addItem(objid, itemid, num)
-        WorldContainerHelper:removeStorageItemByIndex(x, y, z, i, num)
+        BackpackHelper.addItem(objid, itemid, num)
+        WorldContainerHelper.removeStorageItemByIndex(x, y, z, i, num)
       end
     end
   end
@@ -55,14 +55,14 @@ end
 -- BACKPACK_TYPE.SHORTCUT、BACKPACK_TYPE.INVENTORY
 function SaveGame:putInItem (objid, pos, bartype)
   bartype = bartype or BACKPACK_TYPE.SHORTCUT
-  local min, max = BackpackHelper:getBackpackBarIDRange(bartype)
+  local min, max = BackpackHelper.getBackpackBarIDRange(bartype)
   for i = min, max do
-    local durcur, durmax = BackpackHelper:getGridDurability(objid, i)
+    local durcur, durmax = BackpackHelper.getGridDurability(objid, i)
     if (durcur == -1 or durcur == durmax) then -- 无耐久或满耐久
-      local itemid, num = BackpackHelper:getGridItemID(objid, i)
-      local realNum = WorldContainerHelper:addStorageItem(pos.x, pos.y, pos.z, itemid, num)
+      local itemid, num = BackpackHelper.getGridItemID(objid, i)
+      local realNum = WorldContainerHelper.addStorageItem(pos.x, pos.y, pos.z, itemid, num)
       if (realNum) then
-        BackpackHelper:removeGridItem(objid, i, realNum)
+        BackpackHelper.removeGridItem(objid, i, realNum)
       end
     end
   end
@@ -70,54 +70,54 @@ end
 
 -- 脱下所有装备
 function SaveGame:takeOffEquip (objid)
-  local min, max = BackpackHelper:getBackpackBarIDRange(BACKPACK_TYPE.EQUIP)
+  local min, max = BackpackHelper.getBackpackBarIDRange(BACKPACK_TYPE.EQUIP)
   for i = min, max do
-    local itemid, num = BackpackHelper:getGridItemID(objid, i)
+    local itemid, num = BackpackHelper.getGridItemID(objid, i)
     if (itemid and itemid ~= 0) then
-      local gridid = BackpackHelper:getFirstEmptyGridByBartype(objid, BACKPACK_TYPE.INVENTORY)
+      local gridid = BackpackHelper.getFirstEmptyGridByBartype(objid, BACKPACK_TYPE.INVENTORY)
       if (gridid) then
-        BackpackHelper:moveGridItem(objid, i, gridid)
+        BackpackHelper.moveGridItem(objid, i, gridid)
       end
     end
   end
 end
 
 function SaveGame:showDataNum (objid)
-  if (PlayerHelper:isMainPlayer(objid)) then
-    local mainIndex = StoryHelper:getMainStoryIndex()
-    local mainProgress = StoryHelper:getMainStoryProgress()
-    ChatHelper:sendMsg(objid, '#G游戏数据A#n与#G游戏数据B#n的数量应分别是#G',
-      StringHelper:int2Chinese(mainIndex), '#n、#G', StringHelper:int2Chinese(mainProgress),
+  if (PlayerHelper.isMainPlayer(objid)) then
+    local mainIndex = StoryHelper.getMainStoryIndex()
+    local mainProgress = StoryHelper.getMainStoryProgress()
+    ChatHelper.sendMsg(objid, '#G游戏数据A#n与#G游戏数据B#n的数量应分别是#G',
+      StringHelper.int2Chinese(mainIndex), '#n、#G', StringHelper.int2Chinese(mainProgress),
       '#n，请确保数量正确')
   end
 end
 
 function SaveGame:useItem (objid)
-  -- if (not(PlayerHelper:isMainPlayer(objid))) then -- 不是房主
-  --   ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
+  -- if (not(PlayerHelper.isMainPlayer(objid))) then -- 不是房主
+  --   ChatHelper.sendMsg(objid, '该道具仅房主使用有效')
   --   return
   -- end
 
   -- 判断剧情是否加载
-  if (not(StoryHelper:isLoad())) then
-    ChatHelper:sendMsg(objid, '当前剧情未加载，无法保存')
+  if (not(StoryHelper.isLoad())) then
+    ChatHelper.sendMsg(objid, '当前剧情未加载，无法保存')
     return
   end
 
   -- 检测附近是否有储物箱
-  local pos = ActorHelper:getMyPosition(objid)
+  local pos = ActorHelper.getMyPosition(objid)
   pos.x, pos.y, pos.z = math.floor(pos.x), math.floor(pos.y), math.floor(pos.z)
-  local positions = AreaHelper:getBlockPositionsAround(pos, { x = 5, y = 5, z = 5 }, self.blockid)
+  local positions = AreaHelper.getBlockPositionsAround(pos, { x = 5, y = 5, z = 5 }, self.blockid)
   if (#positions > 0) then
-    PlayerHelper:openBoxByPos(objid, positions[1].x, positions[1].y, positions[1].z)
-    ChatHelper:sendMsg(objid, '附近发现储物箱')
+    PlayerHelper.openBoxByPos(objid, positions[1].x, positions[1].y, positions[1].z)
+    ChatHelper.sendMsg(objid, '附近发现储物箱')
     SaveGame:showDataNum(objid)
     return
   end
 
   -- 创建储物箱
   local offsets = {}
-  local x, y, z = ActorHelper:getFaceDirection(objid)
+  local x, y, z = ActorHelper.getFaceDirection(objid)
   if (math.abs(x) > math.abs(z)) then -- 东西走向
     if (x > 0) then -- 朝东
       table.insert(offsets, { 2, 0 })
@@ -142,25 +142,25 @@ function SaveGame:useItem (objid)
     end
   end
   local dstPos = MyPosition:new(pos.x + offsets[1][1], pos.y, pos.z + offsets[1][2])
-  if (not(AreaHelper:isAirArea(dstPos))) then
+  if (not(AreaHelper.isAirArea(dstPos))) then
     dstPos = MyPosition:new(pos.x + offsets[2][1], pos.y, pos.z + offsets[2][2])
-    if (not(AreaHelper:isAirArea(dstPos))) then
+    if (not(AreaHelper.isAirArea(dstPos))) then
       self:createError()
       return
     end
   end
-  local result1 = WorldContainerHelper:addStorageBox(dstPos.x, dstPos.y, dstPos.z)
+  local result1 = WorldContainerHelper.addStorageBox(dstPos.x, dstPos.y, dstPos.z)
   if (not(result1)) then
     self:createError()
     return
   end
-  local result2 = WorldContainerHelper:addStorageBox(dstPos.x, dstPos.y + 1, dstPos.z)
+  local result2 = WorldContainerHelper.addStorageBox(dstPos.x, dstPos.y + 1, dstPos.z)
   if (not(result2)) then
     self:createError()
     return
   end
   -- 创建成功
-  PlayerHelper:openBoxByPos(objid, math.floor(dstPos.x), math.floor(dstPos.y), math.floor(dstPos.z))
+  PlayerHelper.openBoxByPos(objid, math.floor(dstPos.x), math.floor(dstPos.y), math.floor(dstPos.z))
   SaveGame:putInItem(objid, dstPos)
   SaveGame:putInItem(objid, dstPos, BACKPACK_TYPE.EQUIP)
   SaveGame:putInItem(objid, MyPosition:new(dstPos.x, dstPos.y + 1, dstPos.z), BACKPACK_TYPE.INVENTORY)
@@ -174,41 +174,41 @@ LoadGame = BaseItem:new({
 })
 
 function LoadGame:useError (objid)
-  ChatHelper:sendMsg(objid, '该道具仅房主使用有效')
+  ChatHelper.sendMsg(objid, '该道具仅房主使用有效')
 end
 
 function LoadGame:itemLostError (objid, name)
-  ChatHelper:sendMsg(objid, '加载错误：#G游戏数据', name, '#n遗失，请找到后重新加载')
+  ChatHelper.sendMsg(objid, '加载错误：#G游戏数据', name, '#n遗失，请找到后重新加载')
 end
 
 function LoadGame:loadOver (objid)
-  ChatHelper:sendMsg(objid, '游戏加载完成')
+  ChatHelper.sendMsg(objid, '游戏加载完成')
 end
 
 -- 检测游戏数据
 function LoadGame:checkData (objid, numA, numB)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == numA and mainProgress == numB) then
-    if (GameDataHelper:updateMainIndex() and GameDataHelper:updateMainProgress()) then
-      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据正常')
+    if (GameDataHelper.updateMainIndex() and GameDataHelper.updateMainProgress()) then
+      ChatHelper.sendMsg(objid, '剧情已加载过，游戏数据正常')
     else
-      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整失败')
+      ChatHelper.sendMsg(objid, '剧情已加载过，游戏数据调整失败')
     end
   else
-    if (GameDataHelper:updateMainIndex() and GameDataHelper:updateMainProgress()) then
-      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整正常')
+    if (GameDataHelper.updateMainIndex() and GameDataHelper.updateMainProgress()) then
+      ChatHelper.sendMsg(objid, '剧情已加载过，游戏数据调整正常')
     else
-      ChatHelper:sendMsg(objid, '剧情已加载过，游戏数据调整失败')
+      ChatHelper.sendMsg(objid, '剧情已加载过，游戏数据调整失败')
     end
   end
 end
 
 function LoadGame:useItem (objid)
-  if (PlayerHelper:isMainPlayer(objid)) then -- 房主
-    local numA = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID)
-    local numB = BackpackHelper:getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID)
-    if (StoryHelper:isLoad()) then
+  if (PlayerHelper.isMainPlayer(objid)) then -- 房主
+    local numA = BackpackHelper.getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID)
+    local numB = BackpackHelper.getItemNumAndGrid(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID)
+    if (StoryHelper.isLoad()) then
       self:checkData(objid, numA, numB)
     else
       if (not(numA) or numA == 0) then
@@ -220,9 +220,9 @@ function LoadGame:useItem (objid)
         return
       end
       -- 数据存在，则开始加载
-      local player = PlayerHelper:getPlayer(objid)
-      GameDataHelper:updateStoryData()
-      if (StoryHelper:recover(player)) then -- 恢复剧情
+      local player = PlayerHelper.getPlayer(objid)
+      GameDataHelper.updateStoryData()
+      if (StoryHelper.recover(player)) then -- 恢复剧情
         -- self:loadOver(objid)
       end
     end
@@ -235,44 +235,44 @@ end
 ProtectGem = BaseItem:new({ id = MyMap.ITEM.PROTECT_GEM_ID })
 
 function ProtectGem:useItem (objid)
-  if (ActorHelper:hasBuff(objid, MyMap.BUFF.PROTECT_ID)) then -- 有守护状态
-    ActorHelper:removeBuff(objid, MyMap.BUFF.PROTECT_ID)
+  if (ActorHelper.hasBuff(objid, MyMap.BUFF.PROTECT_ID)) then -- 有守护状态
+    ActorHelper.removeBuff(objid, MyMap.BUFF.PROTECT_ID)
   else -- 没有
-    ActorHelper:addBuff(objid, MyMap.BUFF.PROTECT_ID, 1)
+    ActorHelper.addBuff(objid, MyMap.BUFF.PROTECT_ID, 1)
   end
 end
 
 -- 生物蛋
 Egg = BaseItem:new()
 
-function Egg:new (o)
-  o = o or {}
-  if (o.id) then
-    ItemHelper:register(o)
-  end
-  setmetatable(o, self)
-  self.__index = self
-  return o
-end
+-- function Egg:new (o)
+--   o = o or {}
+--   if (o.id) then
+--     ItemHelper.register(o)
+--   end
+--   self.__index = self
+--   setmetatable(o, self)
+--   return o
+-- end
 
 function Egg:selectItem (objid, index)
   local itemid = self:getItemid(index)
   if (itemid) then
-    ChatHelper:sendMsg(objid, '使用将获得', ItemHelper:getItemName(itemid))
+    ChatHelper.sendMsg(objid, '使用将获得', ItemHelper.getItemName(itemid))
   else
-    ChatHelper:sendMsg(objid, '无对应生物')
+    ChatHelper.sendMsg(objid, '无对应生物')
   end
 end
 
 function Egg:useItem (objid)
-  local index = PlayerHelper:getCurShotcut(objid)
+  local index = PlayerHelper.getCurShotcut(objid)
   local itemid = self:getItemid(index)
   if (itemid) then
-    if (BackpackHelper:addItem(objid, itemid, 1)) then
-      BackpackHelper:removeGridItemByItemID(objid, self.id, 1)
+    if (BackpackHelper.addItem(objid, itemid, 1)) then
+      BackpackHelper.removeGridItemByItemID(objid, self.id, 1)
     end
   else
-    ChatHelper:sendMsg(objid, '无对应生物')
+    ChatHelper.sendMsg(objid, '无对应生物')
   end
 end
 

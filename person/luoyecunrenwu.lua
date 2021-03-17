@@ -23,8 +23,8 @@ function Yangwanli:new ()
     },
     doorPosition = MyPosition:new(-11.5, 8.5, -21.5) -- 门外位置
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -46,7 +46,7 @@ function Yangwanli:wantAtHour (hour)
 end
 
 function Yangwanli:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 7 and hour < 19) then
     self:wantAtHour(7)
   elseif (hour >= 19 and hour < 22) then
@@ -71,7 +71,7 @@ function Yangwanli:goHome ()
 end
 -- free提一提背上酒壶 free2扔酒壶喝酒 poss喝酒
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，你怎么能撞老人家呢？')
     self.action:playFree(2)
@@ -119,7 +119,7 @@ function Yangwanli:candleEvent (myPlayer, candle)
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playAngry(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
@@ -158,8 +158,8 @@ function Wangdali:new ()
     },
     doorPosition = MyPosition:new(-29.5, 9.5, -35.5) -- 门外位置
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -179,7 +179,7 @@ function Wangdali:wantAtHour (hour)
 end
 
 function Wangdali:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 7 and hour < 19) then
     self:wantAtHour(7)
   else
@@ -221,7 +221,7 @@ function Wangdali:goToBed ()
 end
 
 function Wangdali:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，你撞我做什么?')
   elseif (self.think == 'free' or self.think == 'atHome') then
@@ -245,7 +245,7 @@ function Wangdali:candleEvent (myPlayer, candle)
     self.action:stopRun()
     self:speakTo(myPlayer.objid, 0, nickname, '，别熄蜡烛。')
     self:wantLookAt(nil, myPlayer.objid, 4)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
@@ -284,8 +284,8 @@ function Miaolan:new ()
       MyPosition:new(-29.5, 13.5, -18.5) -- 门口
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -305,7 +305,7 @@ function Miaolan:wantAtHour (hour)
 end
 
 function Miaolan:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 7 and hour < 19) then
     self:wantAtHour(7)
   elseif (hour >= 19 and hour < 22) then
@@ -339,7 +339,7 @@ function Miaolan:goSecondFloor ()
 end
 
 function Miaolan:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，要爱护身体，不要撞来撞去。')
   elseif (self.think == 'free') then
@@ -364,7 +364,7 @@ function Miaolan:candleEvent (myPlayer, candle)
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playFree2(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   elseif ((self.think == 'toSell' or self.think == 'sell') and candle.pos:equals(self.candlePositions[1]) and not(candle.isLit)) then
@@ -372,25 +372,25 @@ function Miaolan:candleEvent (myPlayer, candle)
     self:speakTo(myPlayer.objid, 0, nickname, '，熄了蜡烛光线不好呢。')
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playFree2(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
 end
 
 function Miaolan:playerClickEvent (objid)
-  local myPlayer = PlayerHelper:getPlayer(objid)
-  local hp = PlayerHelper:getHp(objid)
-  local maxHp = PlayerHelper:getMaxHp(objid)
+  local myPlayer = PlayerHelper.getPlayer(objid)
+  local hp = PlayerHelper.getHp(objid)
+  local maxHp = PlayerHelper.getMaxHp(objid)
   if (hp < maxHp) then
-    TimeHelper:callFnCanRun (objid, '苗兰疗伤', function ()
+    TimeHelper.callFnCanRun (objid, '苗兰疗伤', function ()
       self:speakTo(objid, 0, myPlayer:getName(), '，你受伤了。来我给你治疗一下。')
       self.action:playAttack()
       self.action:playAttack(1)
       self.action:playAttack(2)
-      TimeHelper:callFnAfterSecond (function (p)
-        ActorHelper:playBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT26, 1)
-        PlayerHelper:setHp(objid, maxHp)
+      TimeHelper.callFnAfterSecond (function (p)
+        ActorHelper.playBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT26, 1)
+        PlayerHelper.setHp(objid, maxHp)
         myPlayer:speakTo(objid, 0, '谢谢苗大夫，我觉得舒服多了。')
         self:speakTo(objid, 1, '不用谢。要爱护身体哦。')
         myPlayer:speakTo(objid, 2, '我知道了。')
@@ -422,8 +422,8 @@ function Huaxiaolou:new ()
     },
     doorPosition = MyPosition:new(16.5, 9.5, -38.5)
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -446,7 +446,7 @@ function Huaxiaolou:wantAtHour (hour)
 end
 
 function Huaxiaolou:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 7) then
     self:wantAtHour(6)
   elseif (hour >= 7 and hour < 19) then
@@ -483,7 +483,7 @@ function Huaxiaolou:lightAndPutOutCandles (lightCandles, putOutCandles)
   local lcs = {}
   if (lightCandles and #lightCandles > 0) then
     for i, v in ipairs(lightCandles) do
-      local candle = BlockHelper:getCandle(v)
+      local candle = BlockHelper.getCandle(v)
       if (not(candle.isLit)) then
         table.insert(lcs, v)
       end
@@ -496,7 +496,7 @@ function Huaxiaolou:lightAndPutOutCandles (lightCandles, putOutCandles)
   local pocs = {}
   if (putOutCandles and #putOutCandles > 0) then
     for i, v in ipairs(putOutCandles) do
-      local candle = BlockHelper:getCandle(v)
+      local candle = BlockHelper.getCandle(v)
       if (candle.isLit) then
         table.insert(pocs, v)
       end
@@ -514,7 +514,7 @@ function Huaxiaolou:lightAndPutOutCandles (lightCandles, putOutCandles)
 end
 
 function Huaxiaolou:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，你撞我我也不给你好吃的。')
   elseif (self.think == 'lightCandle') then
@@ -544,7 +544,7 @@ function Huaxiaolou:candleEvent (myPlayer, candle)
   self:speakTo(myPlayer.objid, 0, nickname, '，不要来捣乱哦。')
   self:wantLookAt('sleep', myPlayer.objid, 4)
   self.action:playFree2(1)
-  TimeHelper:callFnAfterSecond (function (p)
+  TimeHelper.callFnAfterSecond (function (p)
     self:doItNow()
   end, 3)
 end
@@ -577,8 +577,8 @@ function Jiangfeng:new ()
       MyPosition:new(11.5, 8.5, -11.5) -- 屋内小柜子旁，避开桌椅
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -601,7 +601,7 @@ function Jiangfeng:wantAtHour (hour)
 end
 
 function Jiangfeng:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 7) then
     self:wantAtHour(6)
   elseif (hour >= 7 and hour < 19) then
@@ -636,7 +636,7 @@ function Jiangfeng:goHome ()
 end
 
 function Jiangfeng:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，撞人是不对的哦。')
   elseif (self.think == 'free') then
@@ -675,7 +675,7 @@ function Jiangfeng:candleEvent (myPlayer, candle)
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playDown(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   elseif (jiangyu.think == 'sleep' and candle.isLit) then
@@ -687,7 +687,7 @@ function Jiangfeng:candleEvent (myPlayer, candle)
     end
     jiangyu:wantLookAt('sleep', myPlayer.objid, 4)
     jiangyu.action:playAngry(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       jiangyu:doItNow()
     end, 3)
   end
@@ -715,8 +715,8 @@ function Jiangyu:new ()
     doorPositions = jiangfeng.doorPositions,
     homeAreaPositions = jiangfeng.homeAreaPositions
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -742,7 +742,7 @@ function Jiangyu:wantAtHour (hour)
 end
 
 function Jiangyu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 7) then
     self:wantAtHour(6)
   elseif (hour >= 7 and hour < 9) then
@@ -792,7 +792,7 @@ function Jiangyu:goHome ()
 end
 
 function Jiangyu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，你撞我好玩吗？')
   elseif (self.think == 'free') then
@@ -827,7 +827,7 @@ function Jiangyu:candleEvent (myPlayer, candle)
     self:speakTo(myPlayer.objid, 0, nickname, '，离蜡烛远点，影响到我巡逻要你好看。')
     self:wantLookAt('patrol', myPlayer.objid, 4)
     self.action:playAngry(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
@@ -866,8 +866,8 @@ function Wenyu:new ()
     },
     doorPosition = MyPosition:new(23.5, 8.5, -18.5) -- 门外位置
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -889,7 +889,7 @@ function Wenyu:wantAtHour (hour)
 end
 
 function Wenyu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 7 and hour < 19) then
     self:wantAtHour(7)
   elseif (hour >= 19 and hour < 22) then
@@ -922,7 +922,7 @@ end
 function Wenyu:putOutCandleAndGoToBed ()
   local index = 1
   for i, v in ipairs(self.candlePositions) do
-    local candle = BlockHelper:getCandle(v)
+    local candle = BlockHelper.getCandle(v)
     if (not(candle) or candle.isLit) then
       if (index == 1) then
         self:toggleCandle('sleep', v, false, true)
@@ -957,7 +957,7 @@ function Wenyu:goToBed (isNow)
 end
 
 function Wenyu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, nickname, '，不要撞我嘛。')
     self.action:playFree(2)
@@ -1008,7 +1008,7 @@ function Wenyu:candleEvent (myPlayer, candle)
     end
     self:wantLookAt('sleep', myPlayer.objid, 4)
     self.action:playFree2(1)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end

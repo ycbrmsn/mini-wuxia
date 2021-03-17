@@ -35,8 +35,8 @@ function Ludaofeng:new ()
       MyPosition:new(-43.5, 16.5, 540.5) -- 茶几旁
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -63,7 +63,7 @@ function Ludaofeng:wantAtHour (hour)
 end
 
 function Ludaofeng:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 19) then
@@ -85,7 +85,7 @@ function Ludaofeng:init ()
 end
 
 function Ludaofeng:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '你找我可有要事？')
 end
 
@@ -110,8 +110,8 @@ function Qianbingwei:new ()
       MyPosition:new(-54.5, 8.5, 531.5) -- 蜡烛台
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -130,7 +130,7 @@ function Qianbingwei:wantAtHour (hour)
 end
 
 function Qianbingwei:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 21) then
     self:wantAtHour(6)
   else
@@ -148,7 +148,7 @@ function Qianbingwei:init ()
 end
 
 function Qianbingwei:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
     self:speakTo(playerid, 0, '请注意不要随便撞人。')
   elseif (self.think == 'sleep') then
@@ -168,7 +168,7 @@ function Qianbingwei:candleEvent (player, candle)
       self:speakTo(player.objid, 0, '我……')
     end
     self:wantLookAt('sleep', player.objid, 4)
-    TimeHelper:callFnAfterSecond (function (p)
+    TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
   end
@@ -215,8 +215,8 @@ function Yexiaolong:new ()
     },
     classRoomPos = MyPosition:new(5.5, 7.5, 606.5) -- 教室里位置
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -227,8 +227,8 @@ end
 
 -- 在几点想做什么
 function Yexiaolong:wantAtHour (hour)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1) then
     if (hour == 7) then
       self:wantFreeInArea({ self.homeAreaPositions })
@@ -261,10 +261,10 @@ function Yexiaolong:wantAtHour (hour)
 end
 
 function Yexiaolong:doItNow ()
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1) then
-    local hour = TimeHelper:getHour()
+    local hour = TimeHelper.getHour()
     if (hour >= 7 and hour < 19) then
       self:wantAtHour(7)
     elseif (hour >= 19 and hour < 22) then
@@ -273,7 +273,7 @@ function Yexiaolong:doItNow ()
       self:wantAtHour(22)
     end
   elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
-    local hour = TimeHelper:getHour()
+    local hour = TimeHelper.getHour()
     if (hour >= 6 and hour < 8) then
       self:wantAtHour(6)
     elseif (hour >= 8 and hour < 12) then
@@ -307,13 +307,13 @@ end
 
 function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   local nickname
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1) then
     if (mainProgress < 5) then
       nickname = '年轻人'
     else
-      nickname = PlayerHelper:getNickname(playerid)
+      nickname = PlayerHelper.getNickname(playerid)
     end
     if (self.wants and self.wants[1].currentRestTime > 0) then
       self:speakTo(playerid, 0, nickname, '，你撞我是想试试你的实力吗？')
@@ -328,7 +328,7 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
 end
 
 function Yexiaolong:defaultCollidePlayerEvent (playerid, isPlayerInFront)
-  local mainIndex = StoryHelper:getMainStoryIndex()
+  local mainIndex = StoryHelper.getMainStoryIndex()
   if (mainIndex ~= 2) then
     self.action:stopRun()
     self:collidePlayer(playerid, isPlayerInFront)
@@ -337,8 +337,8 @@ function Yexiaolong:defaultCollidePlayerEvent (playerid, isPlayerInFront)
 end
 
 function Yexiaolong:playerClickEvent (objid)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1 and mainProgress == #story1.tips - 1) then
     self:speakTo(objid, 0, '你先去准备准备，我们明日#G辰时#n出发。')
   elseif (mainIndex == 1 and mainProgress == #story1.tips) then
@@ -352,8 +352,8 @@ end
 
 function Yexiaolong:candleEvent (player, candle)
   local nickname
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1) then
     if (mainProgress < 5) then
       nickname = '年轻人'
@@ -369,7 +369,7 @@ function Yexiaolong:candleEvent (player, candle)
       end
       self:wantLookAt('sleep', player.objid, 4)
       self.action:playAngry(1)
-      TimeHelper:callFnAfterSecond (function (p)
+      TimeHelper.callFnAfterSecond (function (p)
         self:doItNow()
       end, 3)
     end
@@ -409,8 +409,8 @@ function Sunkongwu:new ()
       MyPosition:new(10.5, 12.5, 562.5) -- 门旁边
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -431,7 +431,7 @@ function Sunkongwu:wantAtHour (hour)
 end
 
 function Sunkongwu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then
@@ -465,7 +465,7 @@ function Sunkongwu:goSecondFloor ()
 end
 
 function Sunkongwu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '客人想买点什么？')
 end
 
@@ -496,8 +496,8 @@ function Limiaoshou:new ()
       MyPosition:new(17.5, 12.5, 562.5) -- 门旁边
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -518,7 +518,7 @@ function Limiaoshou:wantAtHour (hour)
 end
 
 function Limiaoshou:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then
@@ -551,7 +551,7 @@ function Limiaoshou:goSecondFloor ()
 end
 
 function Limiaoshou:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '客人想买点什么？')
 end
 
@@ -582,8 +582,8 @@ function Qianduo:new ()
       MyPosition:new(15.5, 8.5, 576.5) -- 床旁边
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -604,7 +604,7 @@ function Qianduo:wantAtHour (hour)
 end
 
 function Qianduo:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 20) then
     self:wantAtHour(6)
   elseif (hour >= 20 and hour < 22) then
@@ -637,7 +637,7 @@ function Qianduo:freeInHome ()
 end
 
 function Qianduo:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '客人想买点什么？')
 end
 
@@ -663,8 +663,8 @@ function Daniu:new ()
       MyPosition:new(-48.5, 9.5, 503.5)
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -686,7 +686,7 @@ function Daniu:wantAtHour (hour)
 end
 
 function Daniu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 22) then
     self:wantAtHour(6)
   else
@@ -704,7 +704,7 @@ function Daniu:init ()
 end
 
 function Daniu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '客人想去哪里？')
 end
 
@@ -741,8 +741,8 @@ function Erniu:new ()
       MyPosition:new(-53.5, 8.5, 507.5) -- 尽头
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -765,7 +765,7 @@ function Erniu:wantAtHour (hour)
 end
 
 function Erniu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 22) then
@@ -785,7 +785,7 @@ function Erniu:init ()
 end
 
 function Erniu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '买好票之后拿着它给我就好了。')
 end
 
@@ -794,33 +794,33 @@ function Erniu:candleEvent (player, candle)
 end
 
 function Erniu:playerClickEvent (objid)
-  local itemid = PlayerHelper:getCurToolID(objid)
+  local itemid = PlayerHelper.getCurToolID(objid)
   if (itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID) then -- 落叶村车票
-    ItemHelper:removeCurTool(objid)
+    ItemHelper.removeCurTool(objid)
     self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
-    TimeHelper:callFnFastRuns(function ()
-      local player = PlayerHelper:getPlayer(objid)
+    TimeHelper.callFnFastRuns(function ()
+      local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.luoyecunPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
-    ItemHelper:removeCurTool(objid)
+    ItemHelper.removeCurTool(objid)
     self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
-    TimeHelper:callFnFastRuns(function ()
-      local player = PlayerHelper:getPlayer(objid)
+    TimeHelper.callFnFastRuns(function ()
+      local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID) then -- 叛军营地
-    ItemHelper:removeCurTool(objid)
+    ItemHelper.removeCurTool(objid)
     self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
-    TimeHelper:callFnFastRuns(function ()
-      local player = PlayerHelper:getPlayer(objid)
+    TimeHelper.callFnFastRuns(function ()
+      local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.panjunyingdiPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID) then -- 橘山
-    ItemHelper:removeCurTool(objid)
+    ItemHelper.removeCurTool(objid)
     self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
-    TimeHelper:callFnFastRuns(function ()
-      local player = PlayerHelper:getPlayer(objid)
+    TimeHelper.callFnFastRuns(function ()
+      local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.jushanPos)
     end, 2)
   end
@@ -851,8 +851,8 @@ function Murongxiaotian:new ()
       MyPosition:new(4.5, 8.5, 510.5) -- 书架旁
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -875,7 +875,7 @@ function Murongxiaotian:wantAtHour (hour)
 end
 
 function Murongxiaotian:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 19) then
@@ -897,7 +897,7 @@ function Murongxiaotian:init ()
 end
 
 function Murongxiaotian:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '来者是客，不如坐下聊一聊。')
 end
 
@@ -933,8 +933,8 @@ function Gaoxiaohu:new ()
     },
     classRoomPos = MyPosition:new(5.5, 7.5, 595.5) -- 教室里位置
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -945,8 +945,8 @@ end
 
 -- 在几点想做什么
 function Gaoxiaohu:wantAtHour (hour)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
     self:wantDoNothing()
   else
@@ -968,7 +968,7 @@ function Gaoxiaohu:wantAtHour (hour)
 end
 
 function Gaoxiaohu:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 12) then
@@ -994,7 +994,7 @@ function Gaoxiaohu:init ()
 end
 
 function Gaoxiaohu:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '做做任务，也会有所收获。')
 end
 
@@ -1011,8 +1011,8 @@ function Gaoxiaohu:stayInClass ()
 end
 
 function Gaoxiaohu:playerClickEvent (objid)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainProgress == 3 and mainProgress == 4) then
     self:speakTo(objid, 0, '真宝阁就在学院斜对面。')
   end
@@ -1044,8 +1044,8 @@ function Yuewushuang:new ()
       MyPosition:new(21.5, 8.5, 597.5) -- 宿舍角落
     },
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -1056,8 +1056,8 @@ end
 
 -- 在几点想做什么
 function Yuewushuang:wantAtHour (hour)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
     self:wantDoNothing()
   else
@@ -1079,7 +1079,7 @@ function Yuewushuang:wantAtHour (hour)
 end
 
 function Yuewushuang:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 12) then
@@ -1105,7 +1105,7 @@ function Yuewushuang:init ()
 end
 
 function Yuewushuang:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '我也刚来学院，希望能够变得很厉害。')
 end
 
@@ -1141,8 +1141,8 @@ function Jianghuo:new ()
       MyPosition:new(21.5, 8.5, 604.5) -- 宿舍角落
     },
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -1170,7 +1170,7 @@ function Jianghuo:wantAtHour (hour)
 end
 
 function Jianghuo:doItNow ()
-  local hour = TimeHelper:getHour()
+  local hour = TimeHelper.getHour()
   if (hour >= 6 and hour < 8) then
     self:wantAtHour(6)
   elseif (hour >= 8 and hour < 12) then
@@ -1196,7 +1196,7 @@ function Jianghuo:init ()
 end
 
 function Jianghuo:collidePlayer (playerid, isPlayerInFront)
-  local nickname = PlayerHelper:getNickname(playerid)
+  local nickname = PlayerHelper.getNickname(playerid)
   self:speakTo(playerid, 0, '我来学院没多久，就觉得自己厉害了许多。')
 end
 

@@ -37,12 +37,12 @@ function Story3:new ()
   }
   self:checkData(data)
 
-  if (StoryHelper:getMainStoryIndex() <= 3) then -- 剧情没有超过3时
-    data.startArea = AreaHelper:createAreaRectByRange(data.posBeg, data.posEnd)
+  if (StoryHelper.getMainStoryIndex() <= 3) then -- 剧情没有超过3时
+    data.startArea = AreaHelper.createAreaRectByRange(data.posBeg, data.posEnd)
   end
 
-  setmetatable(data, self)
   self.__index = self
+  setmetatable(data, self)
   return data
 end
 
@@ -57,18 +57,18 @@ function Story3:comeToCollege ()
     name = '月无双'
   end
   if (name) then
-    TimeHelper:callFnAfterSecond(function ()
+    TimeHelper.callFnAfterSecond(function ()
       self:comeToCollege()
     end, 1)
-    StoryHelper:showInitError('comeToCollege', name)
+    StoryHelper.showInitError('comeToCollege', name)
     return
   end
 
   local px = 0
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player:setPosition(self.startPos.x + px, self.startPos.y, self.startPos.z)
-    PlayerHelper:changeVMode(player.objid, VIEWPORTTYPE.BACKVIEW)
-    PlayerHelper:rotateCamera(player.objid, ActorHelper.FACE_YAW.SOUTH, 0)
+    PlayerHelper.changeVMode(player.objid, VIEWPORTTYPE.BACKVIEW)
+    PlayerHelper.rotateCamera(player.objid, ActorHelper.FACE_YAW.SOUTH, 0)
     if (px == 0) then
       px = 1
     elseif (px > 0) then
@@ -77,29 +77,29 @@ function Story3:comeToCollege ()
       px = 1 - px
     end
   end)
-  local hostPlayer = PlayerHelper:getHostPlayer()
-  PlayerHelper:everyPlayerEnableMove(false)
+  local hostPlayer = PlayerHelper.getHostPlayer()
+  PlayerHelper.everyPlayerEnableMove(false)
   yexiaolong:setPosition(self.yexiaolongInitPos)
   gaoxiaohu:setPosition(self.gaoxiaohuInitPos)
   yuewushuang:setPosition(self.yuewushuangInitPos)
-  self.airWallArea = AreaHelper:createAreaRectByRange(self.airWallPosBeg, self.airWallPosEnd)
-  AreaHelper:fillBlock(self.airWallArea, 1001) -- 区域填充空气墙
+  self.airWallArea = AreaHelper.createAreaRectByRange(self.airWallPosBeg, self.airWallPosEnd)
+  AreaHelper.fillBlock(self.airWallArea, 1001) -- 区域填充空气墙
 
   local ws = WaitSeconds:new()
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(3), '希望我能在这里学得一身本事。')
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(3), '这就是紫荆学院。')
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(3), '希望我能在这里学得一身本事。')
   yexiaolong:lookAt(gaoxiaohu, ws:get())
   gaoxiaohu:lookAt(yexiaolong, ws:get())
   yuewushuang:lookAt(yexiaolong, ws:get())
   yexiaolong:speak(ws:use(), '小高小高，我终于找到你了。')
-  PlayerHelper:everyPlayerEnableMove(true, ws:get())
-  PlayerHelper:everyPlayerRunTo({ self.playerPos }, function (player)
+  PlayerHelper.everyPlayerEnableMove(true, ws:get())
+  PlayerHelper.everyPlayerRunTo({ self.playerPos }, function (player)
     player:lookAt(yexiaolong)
     player:enableMove(false, true)
   end, ws:get())
-  PlayerHelper:everyPlayerThinkToSelf(ws:use(), '咦，是先生的声音。进去看看。')
-  TimeHelper:callFnAfterSecond(function ()
-    StoryHelper:forward(3, '来到学院')
+  PlayerHelper.everyPlayerThinkToSelf(ws:use(), '咦，是先生的声音。进去看看。')
+  TimeHelper.callFnAfterSecond(function ()
+    StoryHelper.forward(3, '来到学院')
   end, ws:get())
   gaoxiaohu:speak(ws:use(), '说了多少遍了，叫我小虎，别把我叫矮了。你也回来了。')
   yexiaolong:speak(ws:use(), '回来一阵子了，一直没找到你。小高，看看你的新学生。')
@@ -113,10 +113,10 @@ function Story3:comeToCollege ()
   yexiaolong:speak(ws:use(), '不错……')
   gaoxiaohu:lookAt(yexiaolong, ws:get())
   gaoxiaohu:speak(ws:use(), '那是，为此，我可是走遍了十里八乡。你的学生呢？')
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playHappy()
   end, ws:get())
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生先生。')
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(), '先生先生。')
   yexiaolong:lookAt(hostPlayer, ws:get())
   gaoxiaohu:lookAt(hostPlayer, ws:get())
   yuewushuang:lookAt(hostPlayer, ws:get())
@@ -127,35 +127,35 @@ function Story3:comeToCollege ()
   yuewushuang:lookAt(yexiaolong, ws:get())
   gaoxiaohu:speak(ws:use(), '强盗？他们还敢打劫你？')
   yexiaolong:speak(ws:use(), '回来的路上我发现了强盗的埋伏，就交给学生处理了。')
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playDown()
   end, ws:get())
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '！！！')
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(), '！！！')
   gaoxiaohu:speak(ws:use(), '没想到现在强盗这么猖獗了。这事我们得好好说说。')
   yexiaolong:speak(ws:use(), '是得好好说说。一会儿再说吧，找你老半天，累死我了，我先去歇歇脚。')
   gaoxiaohu:speak(ws:use(), '好好好。')
   yexiaolong:lookAt(hostPlayer, ws:get())
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playStand()
   end, ws:get())
   yexiaolong:speak(ws:use(), '这位是学院的高先生。学院任务主要就是他在负责，学院的事找他就对了。')
-  PlayerHelper:everyPlayerLookAt(gaoxiaohu, ws:get())
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerLookAt(gaoxiaohu, ws:get())
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playThank()
   end, ws:get())
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '高先生好。')
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(), '高先生好。')
   gaoxiaohu:lookAt(hostPlayer, ws:get())
   gaoxiaohu:speak(ws:use(), '嗯……')
   yexiaolong:speak(ws:use(), '好了，我先走了。')
-  PlayerHelper:everyPlayerLookAt(yexiaolong, ws:get())
-  PlayerHelper:everyPlayerDoSomeThing(function (player)
+  PlayerHelper.everyPlayerLookAt(yexiaolong, ws:get())
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playHi()
   end, ws:get())
-  PlayerHelper:everyPlayerSpeakToSelf(ws:use(), '先生走好。')
-  TimeHelper:callFnAfterSecond(function ()
-    AreaHelper:clearAllBlock(self.airWallArea, 1001) -- 清除空气墙
-    StoryHelper:forward(3, '先生的声音')
-    PlayerHelper:everyPlayerEnableMove(true)
+  PlayerHelper.everyPlayerSpeakToSelf(ws:use(), '先生走好。')
+  TimeHelper.callFnAfterSecond(function ()
+    AreaHelper.clearAllBlock(self.airWallArea, 1001) -- 清除空气墙
+    StoryHelper.forward(3, '先生的声音')
+    PlayerHelper.everyPlayerEnableMove(true)
     gaoxiaohu:doItNow()
     yuewushuang:doItNow()
     yexiaolong:doItNow()
@@ -163,9 +163,9 @@ function Story3:comeToCollege ()
 end
 
 function Story3:recover (player)
-  local mainProgress = StoryHelper:getMainStoryProgress()
-  local hostPlayer = PlayerHelper:getHostPlayer()
-  PlayerHelper:setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
+  local mainProgress = StoryHelper.getMainStoryProgress()
+  local hostPlayer = PlayerHelper.getHostPlayer()
+  PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
   if (mainProgress == 1 or mainProgress == 2) then
     player:enableMove(true)
     if (player == hostPlayer) then

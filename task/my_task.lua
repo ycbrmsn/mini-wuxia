@@ -26,8 +26,8 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end
 
@@ -57,8 +57,8 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end
 
@@ -88,8 +88,8 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end
 
@@ -119,8 +119,8 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end
 
@@ -150,8 +150,8 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end
 
@@ -181,7 +181,7 @@
 --     actorid = actorid,
 --     desc = desc,
 --   }
---   setmetatable(o, self)
 --   self.__index = self
+--   setmetatable(o, self)
 --   return o
 -- end

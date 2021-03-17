@@ -58,22 +58,22 @@ MyAreaHelper = {
 }
 
 -- 初始化
-function MyAreaHelper:init ()
+function MyAreaHelper.init ()
   self:initDoorAreas()
   self:initShowToastAreas()
   -- body
-  self.playerInHomeAreaId = AreaHelper:getAreaByPos(self.playerInHomePos)
-  MyAreaHelper:initPrisons()
+  self.playerInHomeAreaId = AreaHelper.getAreaByPos(self.playerInHomePos)
+  MyAreaHelper.initPrisons()
 end
 
 -- 初始化显示飘窗区域
-function MyAreaHelper:initShowToastAreas ()
+function MyAreaHelper.initShowToastAreas ()
   local arr = { dog, wolf, qiangdaoLouluo, ox, jianshibing }
   for i, v in ipairs(arr) do
     if (v.generate) then -- 如果需要生成怪物
-      AreaHelper:addToastArea(v.areaids[2], { v.areaids[1], v.areaName, v.generate })
+      AreaHelper.addToastArea(v.areaids[2], { v.areaids[1], v.areaName, v.generate })
     else
-      AreaHelper:addToastArea(v.areaids[2], { v.areaids[1], v.areaName })
+      AreaHelper.addToastArea(v.areaids[2], { v.areaids[1], v.areaName })
     end
   end
   for i, v in ipairs(guard.initAreas) do
@@ -85,33 +85,33 @@ function MyAreaHelper:initShowToastAreas ()
 end
 
 -- 初始化所有actor可打开的门的位置
-function MyAreaHelper:initDoorAreas ()
+function MyAreaHelper.initDoorAreas ()
   for i, v in ipairs(self.doorPositionData) do
     local pos = MyPosition:new(v[1], v[2], v[3])
-    local areaid = AreaHelper:getAreaByPos(pos)
+    local areaid = AreaHelper.getAreaByPos(pos)
     table.insert(AreaHelper.allDoorAreas, areaid, pos)
   end
 end
 
 -- 获取所有的门位置
-function MyAreaHelper:getDoorPositions ()
+function MyAreaHelper.getDoorPositions ()
   return self.doorPositions
 end
 
 -- 初始化监狱区域
-function MyAreaHelper:initPrisons ()
+function MyAreaHelper.initPrisons ()
   for i = 541, 570, 5 do
-    local areaid = AreaHelper:createAreaRectByRange(MyPosition:new(-18, 7, i), MyPosition:new(-16, 9, i + 3))
+    local areaid = AreaHelper.createAreaRectByRange(MyPosition:new(-18, 7, i), MyPosition:new(-16, 9, i + 3))
     table.insert(self.prisonAreas, areaid)
     table.insert(self.prisonPoses, MyPosition:new(-17, 8, i + 1))
   end
 end
 
 -- 获得一间空监狱位置
-function MyAreaHelper:getEmptyPrisonPos ()
+function MyAreaHelper.getEmptyPrisonPos ()
   local pos = self.prisonPoses[1]
   for i, v in ipairs(self.prisonAreas) do
-    local objids = AreaHelper:getAllPlayersInAreaId(v)
+    local objids = AreaHelper.getAllPlayersInAreaId(v)
     if (objids and #objids == 0) then
       pos = self.prisonPoses[i]
       break

@@ -24,19 +24,19 @@ function Dog:new ()
     areaids = {}, -- 提示区域
     areaName = '村外山泉'
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Dog:init ()
   -- 怪物定时生成区域
   for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+    table.insert(self.monsterAreas, AreaHelper.getAreaByPos(v))
   end
   -- 提示区域
   table.insert(self.areaids, -1)
-  table.insert(self.areaids, AreaHelper:getAreaByPos(self.tipPositions[1]))
+  table.insert(self.areaids, AreaHelper.getAreaByPos(self.tipPositions[1]))
   self.generate = function ()
     self:generateMonsters()
   end
@@ -54,10 +54,10 @@ end
 function Dog:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = AreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -67,14 +67,14 @@ end
 -- 定时生成怪物
 function Dog:timerGenerate (num)
   num = num or 10
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 function Dog:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '汪汪。')
+  ChatHelper.speak(self:getName(), toobjid, '汪汪。')
 end
 
 -- 恶狼
@@ -103,19 +103,19 @@ function Wolf:new ()
     areaids = {}, -- 提示区域
     areaName = '恶狼谷'
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Wolf:init ()
   -- 怪物定时生成区域
   for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+    table.insert(self.monsterAreas, AreaHelper.getAreaByPos(v))
   end
   -- 恶狼谷提示区域
   for i, v in ipairs(self.ravinePositions) do
-    table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+    table.insert(self.areaids, AreaHelper.getAreaByPos(v))
   end
   self.generate = function ()
     self:generateMonsters()
@@ -134,10 +134,10 @@ end
 function Wolf:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = AreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -147,14 +147,14 @@ end
 -- 定时生成怪物
 function Wolf:timerGenerate (num)
   num = num or 10
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 function Wolf:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '嗷呜……')
+  ChatHelper.speak(self:getName(), toobjid, '嗷呜……')
 end
 
 -- 狂牛
@@ -181,19 +181,19 @@ function Ox:new ()
     areaids = {},
     areaName = '狂牛草原'
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Ox:init ()
   -- 怪物定时生成区域
   for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+    table.insert(self.monsterAreas, AreaHelper.getAreaByPos(v))
   end
   -- 狂牛草原提示区域
   table.insert(self.areaids, -1)
-  table.insert(self.areaids, AreaHelper:getAreaByPos(self.tipPositions[1]))
+  table.insert(self.areaids, AreaHelper.getAreaByPos(self.tipPositions[1]))
   self.generate = function ()
     self:generateMonsters()
   end
@@ -211,10 +211,10 @@ end
 function Ox:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = AreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -224,14 +224,14 @@ end
 -- 定时生成怪物
 function Ox:timerGenerate (num)
   num = num or 10
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 function Ox:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '哞……')
+  ChatHelper.speak(self:getName(), toobjid, '哞……')
 end
 
 -- 强盗喽罗
@@ -265,19 +265,19 @@ function QiangdaoLouluo:new ()
     areaids = {},
     areaName = '强盗营地'
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function QiangdaoLouluo:init ()
   -- 强盗定时生成区域
   for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+    table.insert(self.monsterAreas, AreaHelper.getAreaByPos(v))
   end
   -- 强盗营地提示区域
   for i, v in ipairs(self.encampmentPositions) do
-    table.insert(self.areaids, AreaHelper:getAreaByPos(v))
+    table.insert(self.areaids, AreaHelper.getAreaByPos(v))
   end
   self.action = BaseActorAction:new(self)
   self.generate = function ()
@@ -289,15 +289,15 @@ function QiangdaoLouluo:init ()
 end
 
 function QiangdaoLouluo:initStoryMonsters ()
-  local areaid = AreaHelper:getAreaByPos(self.initPosition)
-  local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
+  local areaid = AreaHelper.getAreaByPos(self.initPosition)
+  local objids = AreaHelper.getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
     -- self:setPositions({self.toPosition})
     -- 清除木围栏
-    -- AreaHelper:clearAllWoodenFence(areaid)
+    -- AreaHelper.clearAllWoodenFence(areaid)
   end
 end
 
@@ -306,13 +306,13 @@ function QiangdaoLouluo:setPositions (positions)
     if (#positions == 1) then
       local pos = positions[1]
       for i, v in ipairs(self.monsters) do
-        ActorHelper:setPosition(v, pos.x, pos.y, pos.z)
+        ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
       end
     else
       for i, v in ipairs(self.monsters) do
         local pos = positions[i]
         if (pos) then
-          ActorHelper:setPosition(v, pos.x, pos.y, pos.z)
+          ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
         else
           break
         end
@@ -329,22 +329,22 @@ function QiangdaoLouluo:enableMove (enable)
     speed = 0
   end
   for i, v in ipairs(self.monsters) do
-    -- ActorHelper:setEnableMoveState(v, enable)
-    CreatureHelper:setWalkSpeed(v, speed)
+    -- ActorHelper.setEnableMoveState(v, enable)
+    CreatureHelper.setWalkSpeed(v, speed)
   end
 end
 
 function QiangdaoLouluo:setAIActive (isActive, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    CreatureHelper:setAIActive(v, isActive)
+    CreatureHelper.setAIActive(v, isActive)
   end
 end
 
 function QiangdaoLouluo:lookAt (objid, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    ActorHelper:lookAt(v, objid)
+    ActorHelper.lookAt(v, objid)
   end
 end
 
@@ -359,10 +359,10 @@ end
 function QiangdaoLouluo:generateMonsters ()
   num = num or 5
   for i, v in ipairs(self.monsterAreas) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
     if (curNum < num) then
       for i = 1, num - curNum do
-        local pos = AreaHelper:getRandomAirPositionInArea(v)
+        local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
       end
     end
@@ -372,19 +372,19 @@ end
 -- 定时生成怪物
 function QiangdaoLouluo:timerGenerate (num)
   num = num or 5
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 function QiangdaoLouluo:attackSpeak (toobjid)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 2 and mainProgress < #story2.tips) then
-    ChatHelper:speak(self:getName(), toobjid, '小子，把令牌交出来！')
+    ChatHelper.speak(self:getName(), toobjid, '小子，把令牌交出来！')
   else
-    ChatHelper:speak(self:getName(), toobjid, '小子，把财物都交出来！')
+    ChatHelper.speak(self:getName(), toobjid, '小子，把财物都交出来！')
   end
 end
 
@@ -413,15 +413,15 @@ function QiangdaoXiaotoumu:new ()
     },
     monsterAreas = {}
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function QiangdaoXiaotoumu:init ()
   -- 强盗小头目定时生成区域
   for i, v in ipairs(self.monsterPositions) do
-    table.insert(self.monsterAreas, AreaHelper:getAreaByPos(v))
+    table.insert(self.monsterAreas, AreaHelper.getAreaByPos(v))
   end
   self.action = BaseActorAction:new(self)
   self.generate = function ()
@@ -431,15 +431,15 @@ function QiangdaoXiaotoumu:init ()
 end
 
 function QiangdaoXiaotoumu:initStoryMonsters ()
-  local areaid = AreaHelper:getAreaByPos(self.initPosition)
-  local objids = AreaHelper:getAllCreaturesInAreaId(areaid)
+  local areaid = AreaHelper.getAreaByPos(self.initPosition)
+  local objids = AreaHelper.getAllCreaturesInAreaId(areaid)
   if (objids and #objids > 0) then
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
     -- self:setPositions({self.toPosition})
     -- 清除木围栏
-    -- AreaHelper:clearAllWoodenFence(areaid)
+    -- AreaHelper.clearAllWoodenFence(areaid)
   end
 end
 
@@ -448,13 +448,13 @@ function QiangdaoXiaotoumu:setPositions (positions)
     if (#positions == 1) then
       local pos = positions[1]
       for i, v in ipairs(self.monsters) do
-        ActorHelper:setPosition(v, pos.x, pos.y, pos.z)
+        ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
       end
     else
       for i, v in ipairs(self.monsters) do
         local pos = positions[i]
         if (pos) then
-          ActorHelper:setPosition(v, pos.x, pos.y, pos.z)
+          ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
         else
           break
         end
@@ -471,22 +471,22 @@ function QiangdaoXiaotoumu:enableMove (enable)
     speed = 0
   end
   for i, v in ipairs(self.monsters) do
-    -- ActorHelper:setEnableMoveState(v, enable)
-    CreatureHelper:setWalkSpeed(v, speed)
+    -- ActorHelper.setEnableMoveState(v, enable)
+    CreatureHelper.setWalkSpeed(v, speed)
   end
 end
 
 function QiangdaoXiaotoumu:setAIActive (isActive, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    CreatureHelper:setAIActive(v, isActive)
+    CreatureHelper.setAIActive(v, isActive)
   end
 end
 
 function QiangdaoXiaotoumu:lookAt (objid, monsters)
   monsters = monsters or self.monsters
   for i, v in ipairs(monsters) do
-    ActorHelper:lookAt(v, objid)
+    ActorHelper.lookAt(v, objid)
   end
 end
 
@@ -501,7 +501,7 @@ end
 function QiangdaoXiaotoumu:generateMonsters (num)
   num = num or 1
   for i, v in ipairs(self.monsterAreas) do
-    local curNum = MonsterHelper:getMonsterNum(v, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
     if (curNum < num) then
       self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - curNum)
     end
@@ -511,19 +511,19 @@ end
 -- 定时生成怪物
 function QiangdaoXiaotoumu:timerGenerate (num)
   num = num or 1
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 60)
 end
 
 function QiangdaoXiaotoumu:attackSpeak (toobjid)
-  local mainIndex = StoryHelper:getMainStoryIndex()
-  local mainProgress = StoryHelper:getMainStoryProgress()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 2 and mainProgress < #story2.tips) then
-    ChatHelper:speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
+    ChatHelper.speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
   else
-    ChatHelper:speak(self:getName(), toobjid, '小子，纳命来！')
+    ChatHelper.speak(self:getName(), toobjid, '小子，纳命来！')
   end
 end
 
@@ -547,8 +547,8 @@ function QiangdaoDatoumu:new ()
       MyPosition:new(271, 18, 12)
     }
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
@@ -569,7 +569,7 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function QiangdaoDatoumu:generateMonsters (num)
   num = num or 1
-  local curNum = MonsterHelper:getMonsterNumByPos(self.begPos, self.endPos, self.actorid)
+  local curNum = MonsterHelper.getMonsterNumByPos(self.begPos, self.endPos, self.actorid)
   for i, v in ipairs(self.monsterPositions) do
     if (curNum < num) then
       self:newMonster(v.x, v.y, v.z, num - curNum)
@@ -580,14 +580,14 @@ end
 -- 定时生成怪物
 function QiangdaoDatoumu:timerGenerate (num)
   num = num or 1
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters(num)
     return false
   end, 120)
 end
 
 function QiangdaoDatoumu:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子，我看你是活腻了！')
+  ChatHelper.speak(self:getName(), toobjid, '小子，我看你是活腻了！')
 end
 
 -- 卫兵（剑）
@@ -641,26 +641,26 @@ function Guard:new ()
     },
     patrolGuards = {}
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Guard:init ()
   for i, v in ipairs(self.initPositions) do
     if (i % 2 == 1) then
-      table.insert(self.initAreas, { areaid = AreaHelper:getAreaByPos(v), isOk = false })
+      table.insert(self.initAreas, { areaid = AreaHelper.getAreaByPos(v), isOk = false })
     end
   end
   for i, v in ipairs(self.initPositions2) do
-    table.insert(self.initAreas2, AreaHelper:getAreaByPos(v))
+    table.insert(self.initAreas2, AreaHelper.getAreaByPos(v))
   end
   self.action = BaseActorAction:new(self)
-  TimeHelper:repeatUtilSuccess(self.actorid, 'initGuard', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'initGuard', function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
       if (not(v.isOk)) then
-        local objids = AreaHelper:getAllCreaturesInAreaId(v.areaid)
+        local objids = AreaHelper.getAllCreaturesInAreaId(v.areaid)
         if (objids and #objids > 0) then
           self:initCityGuard(i, v, objids)
         else
@@ -685,15 +685,15 @@ function Guard:initCityGuard (index, o, objids)
     dir = 'W'
   else
     for i, v in ipairs(objids) do
-      CreatureHelper:closeAI(v)
+      CreatureHelper.closeAI(v)
       if (i == 1) then
-        ActorHelper:setMyPosition(v, self.lordHousePositions[i])
-        ActorHelper:lookToward(v, 'E')
+        ActorHelper.setMyPosition(v, self.lordHousePositions[i])
+        ActorHelper.lookToward(v, 'E')
       elseif (i == 2) then
-        ActorHelper:setMyPosition(v, self.lordHousePositions[i])
-        ActorHelper:lookToward(v, 'W')
+        ActorHelper.setMyPosition(v, self.lordHousePositions[i])
+        ActorHelper.lookToward(v, 'W')
       else
-        ActorHelper:setMyPosition(v, self.lordHousePatrolPositions[i - 2])
+        ActorHelper.setMyPosition(v, self.lordHousePatrolPositions[i - 2])
         local g = BaseActor:new(MyMap.ACTOR.GUARD_ACTOR_ID, v)
         g:wantPatrol('patrol', self.lordHousePatrolPositions, false, i - 2)
         table.insert(self.patrolGuards, g)
@@ -702,12 +702,12 @@ function Guard:initCityGuard (index, o, objids)
   end
   if (index < 5) then
     for i, v in ipairs(objids) do
-      CreatureHelper:closeAI(v)
-      ActorHelper:setMyPosition(v, self.initPositions[(index - 1) * 2 + i])
-      ActorHelper:lookToward(v, dir)
+      CreatureHelper.closeAI(v)
+      ActorHelper.setMyPosition(v, self.initPositions[(index - 1) * 2 + i])
+      ActorHelper.lookToward(v, dir)
     end
   end
-  AreaHelper:clearAllWoodenFence(o.areaid)
+  AreaHelper.clearAllWoodenFence(o.areaid)
   o.isOk = true
 end
 
@@ -725,11 +725,11 @@ end
 function Guard:checkTokenArea (objid, areaid)
   for i, v in ipairs(self.initAreas) do
     if (i < 5 and v.areaid == areaid) then
-      local playerids = AreaHelper:getAllPlayersInAreaId(areaid)
+      local playerids = AreaHelper.getAllPlayersInAreaId(areaid)
       local players = {}
       local hasToken = false
       for ii, vv in ipairs(playerids) do
-        local player = PlayerHelper:getPlayer(vv)
+        local player = PlayerHelper.getPlayer(vv)
         table.insert(players, player)
         if (player:takeOutItem(MyMap.ITEM.TOKEN_ID)) then
           hasToken = true
@@ -738,8 +738,8 @@ function Guard:checkTokenArea (objid, areaid)
       if (not(hasToken)) then
         for ii, vv in ipairs(players) do
           self:speakTo(vv.objid, 0, '出示令牌。强闯者，捕。')
-          TimeHelper:callFnCanRun(vv.objid, 'checkToken', function ()
-            MonsterHelper:wantLookAt(v.objids, vv.objid, 5)
+          TimeHelper.callFnCanRun(vv.objid, 'checkToken', function ()
+            MonsterHelper.wantLookAt(v.objids, vv.objid, 5)
           end, 5)
           vv.action:runTo({ self.safePositions[i] }, function ()
             vv:thinkTo(vv.objid, 0, '还是不要乱跑比较好。')
@@ -787,20 +787,20 @@ function Pantaojianshibing:new ()
     areaids = {},
     areaName = '叛军营地'
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Pantaojianshibing:init ()
   -- 定时生成区域
   for i, v in ipairs(self.monsterPosCouples) do
-    local areaid = AreaHelper:createAreaRectByRange(v[1], v[2])
+    local areaid = AreaHelper.createAreaRectByRange(v[1], v[2])
     table.insert(self.monsterAreaInfos, { areaid = areaid, num = v[3] })
   end
   -- 提示区域
   for i, v in ipairs(self.tipPosCouples) do
-    table.insert(self.areaids, AreaHelper:createAreaRectByRange(v[1], v[2]))
+    table.insert(self.areaids, AreaHelper.createAreaRectByRange(v[1], v[2]))
   end
   self.generate = function ()
     self:generateMonsters()
@@ -819,9 +819,9 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function Pantaojianshibing:generateMonsters ()
   for i, v in ipairs(self.monsterAreaInfos) do
-    local curNum = MonsterHelper:getMonsterNum(v.areaid, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v.areaid, self.actorid)
     for i = 1, v.num - curNum do
-      local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
+      local pos = AreaHelper.getRandomAirPositionInArea(v.areaid)
       self:newMonster(pos.x, pos.y, pos.z, 1)
     end
   end
@@ -829,14 +829,14 @@ end
 
 -- 定时生成怪物
 function Pantaojianshibing:timerGenerate ()
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters()
     return false
   end, 60)
 end
 
 function Pantaojianshibing:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子，你来错地方了！')
+  ChatHelper.speak(self:getName(), toobjid, '小子，你来错地方了！')
 end
 
 
@@ -863,15 +863,15 @@ function Pantaogongshibing:new ()
     },
     monsterAreaInfos = {},
   }
-  setmetatable(o, self)
   self.__index = self
+  setmetatable(o, self)
   return o
 end
 
 function Pantaogongshibing:init ()
   -- 定时生成区域
   for i, v in ipairs(self.monsterPosCouples) do
-    local areaid = AreaHelper:createAreaRectByRange(v[1], v[2])
+    local areaid = AreaHelper.createAreaRectByRange(v[1], v[2])
     table.insert(self.monsterAreaInfos, { areaid = areaid, num = v[3] })
   end
   return true
@@ -887,9 +887,9 @@ end
 -- 检查各个区域内的怪物数量，少于num只则补充到num只
 function Pantaogongshibing:generateMonsters ()
   for i, v in ipairs(self.monsterAreaInfos) do
-    local curNum = MonsterHelper:getMonsterNum(v.areaid, self.actorid)
+    local curNum = MonsterHelper.getMonsterNum(v.areaid, self.actorid)
     for i = 1, v.num - curNum do
-      local pos = AreaHelper:getRandomAirPositionInArea(v.areaid)
+      local pos = AreaHelper.getRandomAirPositionInArea(v.areaid)
       self:newMonster(pos.x, pos.y, pos.z, 1)
     end
   end
@@ -897,12 +897,12 @@ end
 
 -- 定时生成怪物
 function Pantaogongshibing:timerGenerate ()
-  TimeHelper:repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
     self:generateMonsters()
     return false
   end, 60)
 end
 
 function Pantaogongshibing:attackSpeak (toobjid)
-  ChatHelper:speak(self:getName(), toobjid, '小子看箭！')
+  ChatHelper.speak(self:getName(), toobjid, '小子看箭！')
 end

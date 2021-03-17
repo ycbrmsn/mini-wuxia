@@ -4,7 +4,7 @@ MyActorHelper = {
 }
 
 -- 初始化actors
-function MyActorHelper:init ()
+function MyActorHelper.init ()
   wenyu = Wenyu:new()
   jiangfeng = Jiangfeng:new()
   jiangyu = Jiangyu:new()
@@ -30,71 +30,50 @@ function MyActorHelper:init ()
       erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, juyidao,
       yuewushuang, jianghuo, }
   for i, v in ipairs(myActors) do
-    TimeHelper:initActor(v)
-    -- LogHelper:debug('创建', v:getName(), '完成')
+    TimeHelper.initActor(v)
+    -- LogHelper.debug('创建', v:getName(), '完成')
   end
-  LogHelper:debug('创建人物完成')
+  LogHelper.debug('创建人物完成')
+end
+
+function MyActorHelper.updateHp (objid)
+  local offset
+  local monsterModel = MonsterHelper.getMonsterModel(objid)
+  if (monsterModel) then
+    offset = monsterModel.offset
+  else
+    offset = 110
+  end
+  ActorHelper.updateHp(objid, offset)
 end
 
 -- 事件
 
 -- 生物被创建
-function MyActorHelper:actorCreate (objid, toobjid)
-  ActorHelper:actorCreate(objid, toobjid)
-  MyStoryHelper:actorCreate(objid, toobjid)
-end
-
--- actor进入区域
-function MyActorHelper:actorEnterArea (objid, areaid)
-  ActorHelper:actorEnterArea(objid, areaid)
-  MyStoryHelper:actorEnterArea(objid, areaid)
-end
-
--- actor离开区域
-function MyActorHelper:actorLeaveArea (objid, areaid)
-  ActorHelper:actorLeaveArea(objid, areaid)
-  MyStoryHelper:actorLeaveArea(objid, areaid)
-end
-
--- 生物碰撞
-function MyActorHelper:actorCollide (objid, toobjid)
-  ActorHelper:actorCollide(objid, toobjid)
-  MyStoryHelper:actorCollide(objid, toobjid)
-  -- body
-end
-
--- 生物攻击命中
-function MyActorHelper:actorAttackHit (objid, toobjid)
-  ActorHelper:actorAttackHit(objid, toobjid)
-  MyStoryHelper:actorAttackHit(objid, toobjid)
-end
+EventHelper.addEvent('actorCreate', function (objid, toobjid)
+  MyActorHelper.updateHp(objid)
+end)
 
 -- 生物击败目标
-function MyActorHelper:actorBeat (objid, toobjid)
-  ActorHelper:actorBeat(objid, toobjid)
-  MyStoryHelper:actorBeat(objid, toobjid)
-  -- body
-  if (ActorHelper:isPlayer(toobjid)) then -- 目标是玩家
-    local player = PlayerHelper:getPlayer(toobjid)
-    player.beatBy = CreatureHelper:getActorID(objid)
-    TimeHelper:callFnFastRuns(function ()
+EventHelper.addEvent('actorBeat', function (objid, toobjid)
+  if (ActorHelper.isPlayer(toobjid)) then -- 目标是玩家
+    local player = PlayerHelper.getPlayer(toobjid)
+    player.beatBy = CreatureHelper.getActorID(objid)
+    TimeHelper.callFnFastRuns(function ()
       player.beatBy = nil
     end, 4)
   end
-end
+end)
 
 -- 生物行为改变
-function MyActorHelper:actorChangeMotion (objid, actormotion)
-  ActorHelper:actorChangeMotion(objid, actormotion)
-  MyStoryHelper:actorChangeMotion(objid, actormotion)
-  -- body
+EventHelper.addEvent('actorChangeMotion', function (objid, actormotion)
   if (actormotion == CREATUREMOTION.ATK_MELEE) then -- 近战攻击
-    local monsterModel = MyMonsterHelper:getMonsterModel(objid)
+    local monsterModel = MyMonsterHelper.getMonsterModel(objid)
     if (monsterModel and monsterModel.attackSpeak) then
-      TimeHelper:callFnCanRun(monsterModel.actorid, 'atk', function ()
-        local pos = ActorHelper:getMyPosition(objid)
+      TimeHelper.callFnCanRun(monsterModel.actorid, 'atk', function ()
+        local pos = ActorHelper.getMyPosition(objid)
         if (pos) then
-          local playerids = ActorHelper:getAllPlayersArroundPos(pos, self.speakDim, objid)
+          local playerids = ActorHelper.getAllPlayersArroundPos(pos, self.speakDim, objid)
           if (playerids and #playerids > 0) then
             for i, v in ipairs(playerids) do
               if (monsterModel.attackSpeak) then
@@ -106,67 +85,49 @@ function MyActorHelper:actorChangeMotion (objid, actormotion)
       end, 10)
     end
   end
-end
-
--- 生物受到伤害
-function MyActorHelper:actorBeHurt (objid, toobjid, hurtlv)
-  ActorHelper:actorBeHurt(objid, toobjid, hurtlv)
-  MyStoryHelper:actorBeHurt(objid, toobjid, hurtlv)
-  -- body
-end
-
--- 生物死亡
-function MyActorHelper:actorDie (objid, toobjid)
-  ActorHelper:actorDie(objid, toobjid)
-  MyStoryHelper:actorDie(objid, toobjid)
-end
+end)
 
 -- 生物获得状态效果
-function MyActorHelper:actorAddBuff (objid, buffid, bufflvl)
-  ActorHelper:actorAddBuff(objid, buffid, bufflvl)
-  MyStoryHelper:actorAddBuff(objid, buffid, bufflvl)
-  -- body
+EventHelper.addEvent('actorAddBuff', function (objid, buffid, bufflvl)
   if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
-    local actor = ActorHelper:getActor(objid)
+    local actor = ActorHelper.getActor(objid)
     if (actor) then
       -- actor:setSealed(true)
     else
-      MonsterHelper:sealMonster(objid)
+      MonsterHelper.sealMonster(objid)
     end
   elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
-    local actor = ActorHelper:getActor(objid)
+    local actor = ActorHelper.getActor(objid)
     if (actor) then
       -- actor:setImprisoned(true)
     else
-      MonsterHelper:imprisonMonster(objid)
+      MonsterHelper.imprisonMonster(objid)
     end
   end
-end
+end)
 
 -- 生物失去状态效果
-function MyActorHelper:actorRemoveBuff (objid, buffid, bufflvl)
-  ActorHelper:actorRemoveBuff(objid, buffid, bufflvl)
-  MyStoryHelper:actorRemoveBuff(objid, buffid, bufflvl)
-  -- body
+EventHelper.addEvent('actorRemoveBuff', function (objid, buffid, bufflvl)
   if (buffid == MyMap.BUFF.SEAL_ID) then -- 封魔
-    local actor = ActorHelper:getActor(objid)
+    local actor = ActorHelper.getActor(objid)
     if (actor) then
       -- actor:setSealed(false)
     else
-      MonsterHelper:cancelSealMonster(objid)
+      MonsterHelper.cancelSealMonster(objid)
     end
   elseif (buffid == MyMap.BUFF.IMPRISON_ID) then -- 慑魂
-    local actor = ActorHelper:getActor(objid)
+    local actor = ActorHelper.getActor(objid)
     if (actor) then
       -- actor:setImprisoned(false)
     else
-      MonsterHelper:cancelImprisonMonster(objid)
+      MonsterHelper.cancelImprisonMonster(objid)
     end
   end
-end
+end)
 
 -- 生物属性变化
-function MyActorHelper:actorChangeAttr (objid, actorattr)
-  ActorHelper:actorChangeAttr(objid, actorattr)
-  MyStoryHelper:actorChangeAttr(objid, actorattr)
-end
+EventHelper.addEvent('actorChangeAttr', function (objid, actorattr)
+  if (actorattr == CREATUREATTR.CUR_HP) then
+    MyActorHelper.updateHp(objid)
+  end
+end)

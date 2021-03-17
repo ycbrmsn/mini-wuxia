@@ -31,44 +31,44 @@ MyBlockHelper = {
 }
 
 -- 初始化
-function MyBlockHelper:init ()
-  MyBlockHelper:initBlocks()
+function MyBlockHelper.init ()
+  MyBlockHelper.initBlocks()
   -- body
   -- 前四个位置，第五个区域
   for i, v in ipairs(self.cityGatesData) do
     local cityGate = {}
-    AreaHelper:initPosByPosData(v, cityGate)
-    table.insert(cityGate, AreaHelper:getAreaByPos(cityGate[4]))
+    AreaHelper.initPosByPosData(v, cityGate)
+    table.insert(cityGate, AreaHelper.getAreaByPos(cityGate[4]))
     table.insert(self.cityGates, cityGate)
   end
 end
 
-function MyBlockHelper:initBlocks ()
+function MyBlockHelper.initBlocks ()
   for i,v in ipairs(self.unableBeoperated) do
-    BlockHelper:setBlockSettingAttState(v, BLOCKATTR.ENABLE_BEOPERATED, false) -- 不可操作  
+    BlockHelper.setBlockSettingAttState(v, BLOCKATTR.ENABLE_BEOPERATED, false) -- 不可操作  
   end
   for i, v in ipairs(self.unableDestroyed) do
-    BlockHelper:setBlockSettingAttState(v, BLOCKATTR.ENABLE_DESTROYED, false) -- 不可被破坏
+    BlockHelper.setBlockSettingAttState(v, BLOCKATTR.ENABLE_DESTROYED, false) -- 不可被破坏
   end
 end
 
 -- 检查城门开关
-function MyBlockHelper:checkCityGateSwitch (blockid, pos)
+function MyBlockHelper.checkCityGateSwitch (blockid, pos)
   if (blockid == 724) then -- 开关
     for i, v in ipairs(self.cityGates) do
       if (v[1]:equalBlockPos(pos)) then -- 找到开关
-        if (BlockHelper:getBlockSwitchStatus(v[1])) then -- 打开
-          if (BlockHelper:getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
-            AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
-            BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
-            TimeHelper:callFnFastRuns(function ()
-              AreaHelper:replaceAreaBlock(v[5], self.cityGateBlockIds[2], self.cityGateBlockIds[1], 5)
-              BlockHelper:replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
+        if (BlockHelper.getBlockSwitchStatus(v[1])) then -- 打开
+          if (BlockHelper.getBlockID(v[4].x, v[4].y, v[4].z) == self.cityGateBlockIds[1]) then
+            AreaHelper.replaceAreaBlock(v[5], self.cityGateBlockIds[1], self.cityGateBlockIds[2], 5)
+            BlockHelper.replaceBlock(self.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
+            TimeHelper.callFnFastRuns(function ()
+              AreaHelper.replaceAreaBlock(v[5], self.cityGateBlockIds[2], self.cityGateBlockIds[1], 5)
+              BlockHelper.replaceBlock(self.cityGateBlockIds[3], v[3].x, v[3].y, v[3].z)
             end, 0.005)
           end
         else
-          BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
-          BlockHelper:replaceBlock(self.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
+          BlockHelper.replaceBlock(self.cityGateBlockIds[2], v[2].x, v[2].y, v[2].z)
+          BlockHelper.replaceBlock(self.cityGateBlockIds[2], v[3].x, v[3].y, v[3].z)
         end
         return true
       end
@@ -78,14 +78,14 @@ function MyBlockHelper:checkCityGateSwitch (blockid, pos)
 end
 
 -- 点击书柜
-function MyBlockHelper:clickBookcase (objid, blockid, x, y, z)
+function MyBlockHelper.clickBookcase (objid, blockid, x, y, z)
   if (blockid == 820 and x == 33 and y == 8 and z == 7) then -- 家里的书柜
-    local player = PlayerHelper:getPlayer(objid)
+    local player = PlayerHelper.getPlayer(objid)
     player:enableMove(false, true)
     player:thinkSelf(0, '这里有一些游戏说明，我要看看吗？')
-    ChatHelper:sendMsg(objid, '选择对应序号的快捷栏进行选择')
-    MyOptionHelper:showOptions(player, 'look')
-    -- ChatHelper:showChooseItems(playerid, { '看看', '不看' })
+    ChatHelper.sendMsg(objid, '选择对应序号的快捷栏进行选择')
+    MyOptionHelper.showOptions(player, 'look')
+    -- ChatHelper.showChooseItems(playerid, { '看看', '不看' })
     -- player.whichChoose = 'readme'
     return true
   end
@@ -93,18 +93,18 @@ function MyBlockHelper:clickBookcase (objid, blockid, x, y, z)
 end
 
 -- 点击床睡觉
-function MyBlockHelper:clickBed (objid, blockid, x, y, z)
+function MyBlockHelper.clickBed (objid, blockid, x, y, z)
   if (MyBed:isBed(blockid)) then
-    PlayerHelper:showToast(objid, '你无法在别人的床上睡觉')
+    PlayerHelper.showToast(objid, '你无法在别人的床上睡觉')
     return true
   elseif (blockid == BlockHelper.bedid2) then
-    local player = PlayerHelper:getPlayer(objid)
+    local player = PlayerHelper.getPlayer(objid)
     if (player:isHostPlayer()) then
       player:enableMove(false, true)
       player:thinkSelf(0, '我要睡多长时间呢？')
-      MyOptionHelper:showOptions(player, 'sleep')
+      MyOptionHelper.showOptions(player, 'sleep')
     else
-      ChatHelper:sendMsg(objid, '仅房主能够使用床睡觉')
+      ChatHelper.sendMsg(objid, '仅房主能够使用床睡觉')
     end
     return true
   end
@@ -113,64 +113,37 @@ end
 
 -- 事件
 
--- 方块被破坏
-function MyBlockHelper:blockDestroyBy (objid, blockid, x, y, z)
-  BlockHelper:blockDestroyBy(objid, blockid, x, y, z)
-  MyStoryHelper:blockDestroyBy(objid, blockid, x, y, z)
-  -- body
-end
-
 -- 完成方块挖掘
-function MyBlockHelper:blockDigEnd (objid, blockid, x, y, z)
-  BlockHelper:blockDigEnd(objid, blockid, x, y, z)
-  MyStoryHelper:blockDigEnd(objid, blockid, x, y, z)
-  -- body
+EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
   local disableMsg = '不可被破坏'
   if (blockid == BlockHelper.switchid) then
-    PlayerHelper:showToast(objid, '开关', disableMsg)
+    PlayerHelper.showToast(objid, '开关', disableMsg)
   elseif (blockid == BlockHelper.doorid or blockid == 860) then
-    PlayerHelper:showToast(objid, '门', disableMsg)
+    PlayerHelper.showToast(objid, '门', disableMsg)
   elseif (blockid == BlockHelper.bedid) then -- 木床
-    PlayerHelper:showToast(objid, '床', disableMsg)
+    PlayerHelper.showToast(objid, '床', disableMsg)
   elseif (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
-    BackpackHelper:addItem(objid, blockid, 1)
-    PlayerHelper:showToast(objid, '获得一个铜矿石')
+    BackpackHelper.addItem(objid, blockid, 1)
+    PlayerHelper.showToast(objid, '获得一个铜矿石')
   elseif (blockid == 428) then -- 四格釉面砖
-    PlayerHelper:showToast(objid, '此地面', disableMsg)
+    PlayerHelper.showToast(objid, '此地面', disableMsg)
   elseif (blockid == 667) then -- 白色硬砂块
-    PlayerHelper:showToast(objid, '围墙', disableMsg)
+    PlayerHelper.showToast(objid, '围墙', disableMsg)
   elseif (blockid == 820) then -- 书柜
-    PlayerHelper:showToast(objid, '书柜', disableMsg)
+    PlayerHelper.showToast(objid, '书柜', disableMsg)
   elseif (blockid >= 2004 and blockid <= 2008) then
-    PlayerHelper:showToast(objid, '围栏', disableMsg)
+    PlayerHelper.showToast(objid, '围栏', disableMsg)
   end
-end
+end)
 
 -- 方块被放置
-function MyBlockHelper:blockPlaceBy (objid, blockid, x, y, z)
-  BlockHelper:blockPlaceBy(objid, blockid, x, y, z)
-  MyStoryHelper:blockPlaceBy(objid, blockid, x, y, z)
-  -- body
+EventHelper.addEvent('blockPlaceBy', function (objid, blockid, x, y, z)
   if (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
     -- 一秒后破坏
-    TimeHelper:callFnFastRuns(function ()
-      BlockHelper:replaceBlock(BLOCKID.AIR, x, y, z)
-      WorldHelper:playPlaceBlockSoundOnPos(MyPosition:new(x, y, z))
-      WorldHelper:spawnItem(x, y, z, blockid, 1)
+    TimeHelper.callFnFastRuns(function ()
+      BlockHelper.replaceBlock(BLOCKID.AIR, x, y, z)
+      WorldHelper.playPlaceBlockSoundOnPos(MyPosition:new(x, y, z))
+      WorldHelper.spawnItem(x, y, z, blockid, 1)
     end, 1)
   end
-end
-
--- 方块被移除
-function MyBlockHelper:blockRemove (blockid, x, y, z)
-  BlockHelper:blockRemove(blockid, x, y, z)
-  MyStoryHelper:blockRemove(blockid, x, y, z)
-  -- body
-end
-
--- 方块被触发
-function MyBlockHelper:blockTrigger (objid, blockid, x, y, z)
-  BlockHelper:blockTrigger(objid, blockid, x, y, z)
-  MyStoryHelper:blockTrigger(objid, blockid, x, y, z)
-  -- body
-end
+end)

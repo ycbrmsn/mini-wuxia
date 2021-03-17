@@ -2,7 +2,7 @@
 MyMonsterHelper = {}
 
 -- 初始化
-function MyMonsterHelper:init ()
+function MyMonsterHelper.init ()
   qiangdaoDatoumu = QiangdaoDatoumu:new()
   qiangdaoXiaotoumu = QiangdaoXiaotoumu:new()
   qiangdaoLouluo = QiangdaoLouluo:new()
@@ -15,13 +15,13 @@ function MyMonsterHelper:init ()
   gongshibing = Pantaogongshibing:new()
   local monsterModels = { qiangdaoDatoumu, qiangdaoXiaotoumu, qiangdaoLouluo, dog, wolf, ox,
     jianshibing, gongshibing }
-  MonsterHelper:init(monsterModels)
+  MonsterHelper.init(monsterModels)
 end
 
-function MyMonsterHelper:getMonsterModel (objid)
-  local actorid = CreatureHelper:getActorID(objid)
+function MyMonsterHelper.getMonsterModel (objid)
+  local actorid = CreatureHelper.getActorID(objid)
   if (actorid) then
-    for i, v in ipairs(MonsterHelper:getMonsterModels()) do
+    for i, v in ipairs(MonsterHelper.getMonsterModels()) do
       if (v.actorid == actorid) then
         return v
       end
