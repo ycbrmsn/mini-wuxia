@@ -265,9 +265,16 @@ function BaseActor:toggleCandle (think, myPosition, isLitCandle, isNow)
   self.action:toggleCandle(think, myPosition, isLitCandle, isNow)
 end
 
+function BaseActor:handleBeforeChangeWant ()
+  AreaHelper.removeToArea(self)
+  if (self.think and self.think == 'sleep') then
+    ActorHelper.stopSleep(self.objid)
+  end
+end
+
 -- 生物想向指定位置移动
 function BaseActor:wantMove (think, positions, isNegDir, index, restTime, speed)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   self:closeAI()
   self.think = think
   local want = MoveAction:new(self, think, positions, isNegDir, index, restTime, speed)
@@ -290,7 +297,7 @@ function BaseActor:nextWantMove (think, positions, isNegDir, index, restTime, sp
 end
 
 function BaseActor:wantApproach (think, positions, isNegDir, index, restTime, speed)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   self:closeAI()
   self.think = think
   local want = ApproachAction:new(self, think, positions, isNegDir, index, restTime, speed)
@@ -313,7 +320,7 @@ end
 
 -- 生物想巡逻
 function BaseActor:wantPatrol (think, positions, isNegDir, index, restTime)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   -- LogHelper.debug(self:getName() .. '想巡逻')
   self:closeAI()
   self.think = think
@@ -338,7 +345,7 @@ end
 
 -- 生物想自由活动
 function BaseActor:wantFreeTime (think)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'free'
   self:openAI()
   self.think = think
@@ -349,7 +356,7 @@ function BaseActor:wantFreeTime (think)
 end
 
 function BaseActor:wantFreeAndAlert (think, speed)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'alert'
   self:closeAI()
   self.think = think
@@ -361,7 +368,7 @@ end
 
 -- 生物想在区域内自由活动，think可选
 function BaseActor:wantFreeInArea (think, posPairs)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   if (not(posPairs)) then
     posPairs = think
     think = 'free'
@@ -391,7 +398,7 @@ function BaseActor:nextWantFreeInArea (think, posPairs)
 end
 
 function BaseActor:wantFreeAttack (think, posPairs)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   if (not(posPairs)) then
     posPairs = think
     think = 'freeAttack'
@@ -420,7 +427,7 @@ function BaseActor:nextWantFreeAttack (think, posPairs)
 end
 
 function BaseActor:wantFollow (think, toobjid, speed)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'follow'
   self.think = think
   local want = FollowAction:new(self, think, toobjid, speed)
@@ -436,7 +443,7 @@ end
 
 -- 生物想原地不动
 function BaseActor:wantDontMove (think)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'dontMove'
   self.think = think
   local want = DontMoveAction:new(self, think)
@@ -463,7 +470,7 @@ end
 
 -- 生物想不做事
 function BaseActor:wantDoNothing (think)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'doNothing'
   self:closeAI()
   self.think = think
@@ -517,7 +524,7 @@ function BaseActor:nextWantLookAt (think, pos, restTime)
 end
 
 function BaseActor:wantGoToSleep (bedData)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   self:wantMove('sleep', { bedData[1] })
   return self:nextWantSleep('sleep', bedData[2])
 end
@@ -544,7 +551,7 @@ function BaseActor:defaultWant ()
 end
 
 function BaseActor:wantBattle (think)
-  AreaHelper.removeToArea(self)
+  self:handleBeforeChangeWant()
   think = think or 'battle'
   self.think = think
   local want = BattleAction:new(self, think)
@@ -588,6 +595,13 @@ end
 
 function BaseActor:isWantsExist ()
   return self.wants and #self.wants > 0
+end
+
+-- 获取生物当前想法，没有则返回nil
+function BaseActor:getFirstWant ()
+  if (self:isWantsExist()) then
+    return self.wants[1]
+  end
 end
 
 function BaseActor:getName ()
@@ -701,6 +715,8 @@ function BaseActor:defaultPlayerClickEvent (playerid)
   if (actorTeam ~= 0 and actorTeam == playerTeam) then -- 有队伍并且同队
     if (self.wants and self.wants[1].style == 'sleeping') then
       self.wants[1].style = 'wake'
+      ActorHelper.stopSleep(self.objid)
+      self.action:playStretch()
     end
     local pos = self:getMyPosition()
     if (ActorHelper.isInWater(self.objid)) then -- 生物在水中，则移动到玩家位置
@@ -716,6 +732,11 @@ function BaseActor:defaultPlayerClickEvent (playerid)
   end
 end
 
+-- 有必要可重写此方法，用于控制玩家点击生物是否有反应
+function BaseActor:isPlayerClickEffective ()
+  return true
+end
+
 function BaseActor:collidePlayer (playerid, isPlayerInFront)
   -- body
 end
@@ -726,11 +747,18 @@ function BaseActor:defaultCollidePlayerEvent (playerid, isPlayerInFront)
   if (actorTeam ~= 0 and actorTeam == playerTeam) then -- 有队伍并且同队
     if (self.wants and self.wants[1].style == 'sleeping') then
       self.wants[1].style = 'wake'
+      ActorHelper.stopSleep(self.objid)
+      self.action:playStretch()
     end
     self.action:stopRun()
     self:wantLookAt(nil, playerid)
     self:collidePlayer(playerid, isPlayerInFront)
   end
+end
+
+-- 有必要可重写此方法，用于控制生物与玩家碰撞是否有反应
+function BaseActor:isCollidePlayerEffective ()
+  return true
 end
 
 -- 攻击命中

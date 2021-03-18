@@ -317,6 +317,7 @@ function SleepAction:execute ()
     if (self.style == 'sleep') then
       self.style = 'sleeping'
       ActorActionHelper.playSleep(self.actor)
+      ActorHelper.playSleep(self.actor.objid)
     elseif (self.style == 'wake') then
       self.actor:doItNow()
     end
