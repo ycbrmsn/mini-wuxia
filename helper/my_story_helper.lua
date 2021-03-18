@@ -203,6 +203,7 @@ EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
   if (mainIndex == 1) then -- 剧情一
     if (itemid == MyMap.ITEM.WENYU_PACKAGE_ID) then -- 文羽包裹
       StoryHelper.forward(1, '文羽通知')
+      wenyu:doItNow() -- 不再跟随
     elseif (itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
       StoryHelper.forward(1, '文羽的礼物')
     elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌

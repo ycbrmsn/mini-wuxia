@@ -137,10 +137,17 @@ function FollowAction:execute ()
         local toPos = CacheHelper.getMyPosition(self.toobjid)
         if (toPos) then
           local distance = MathHelper.getDistance(selfPos, toPos)
+          local t = self.actor.objid .. 'lookatHostPlayer'
           if (distance < 4) then -- 就在附近
-            ActorHelper.lookAt(self.actor.objid, self.toobjid)
+            self.actor:stopRun()
+            if (not(TimeHelper.isFnContinueRuns(t))) then
+              TimeHelper.callFnContinueRuns(function ()
+                ActorHelper.lookAt(self.actor.objid, self.toobjid)
+              end, 5, t)
+            end
           else
             ActorActionHelper.runTo(self.actor, toPos, self.speed)
+            TimeHelper.delFnContinueRuns(t)
           end
         end
       end
