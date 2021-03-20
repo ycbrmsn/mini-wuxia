@@ -338,3 +338,17 @@ function Egg3:getItemid (index)
     return nil
   end
 end
+
+-- 任务道具
+
+-- 砍树（采集落叶松木）任务书
+MissionKanshu = BaseItem:new({ id = MyMap.ITEM.MISSION_KANSHU })
+
+function MissionKanshu:useItem (objid)
+  local player = PlayerHelper.getPlayer(objid)
+  local task = TaskHelper.getTask(objid, KanshuTask:getRealid())
+  if (not(task)) then -- 如果任务不存在
+    task = TaskHelper.addTask(objid, KanshuTask:realTask('杨万里'))
+  end
+  task:show(objid)
+end

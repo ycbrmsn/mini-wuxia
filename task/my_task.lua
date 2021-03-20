@@ -1,35 +1,25 @@
 -- 我的任务类
 
--- 御仙剑任务
--- YuTask = BaseTask:new({
---   name = '御仙剑',
---   desc = '从屋外树上采集一个方南瓜，交给',
---   category = 2, -- 交付道具
---   -- actorid = MyMap.ACTOR.YEXIAOLONG_ACTOR_ID, -- 交付NPC
---   itemInfos = {
---     { itemid = 230, num = 1 }, -- 方南瓜一个
---   },
---   rewards = {
---     TaskReward:new({
---       desc = '获得御仙剑一柄',
---       category = 1,
---       itemid = MyWeaponAttr.controlSword.levelIds[1],
---       num = 1,
---     }),
---   },
--- })
-
--- function YuTask:new (taskid, actorid, actorname)
---   local desc = self.desc .. actorname .. '。'
---   local o = {
---     id = taskid,
---     actorid = actorid,
---     desc = desc,
---   }
---   self.__index = self
---   setmetatable(o, self)
---   return o
--- end
+-- 砍树任务
+KanshuTask = BaseTask:new({
+  id = 1,
+  name = '采集落叶松木',
+  desc = '收集5个落叶松木，交给',
+  appendDesc = { 'desc', 'actorname', '。' },
+  category = 2, -- 交付道具
+  -- actorid = MyMap.ACTOR.YANGWANLI_ACTOR_ID, -- 交付NPC
+  itemInfos = {
+    { itemid = 201, num = 5 }, -- 落叶松木5个
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '获得铜板5枚',
+      category = 1,
+      itemid = MyMap.ITEM.COIN_ID,
+      num = 5,
+    }),
+  },
+})
 
 -- -- 万仙剑任务
 -- WanTask = BaseTask:new({

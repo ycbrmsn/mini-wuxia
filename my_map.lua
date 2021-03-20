@@ -60,6 +60,8 @@ MyMap = {
     QIANDUO_EGG_ID = 4274, -- 钱多生物蛋ID
     DANIU_EGG_ID = 4258, -- 大牛生物蛋ID
     ERNIU_EGG_ID = 4284, -- 二牛生物蛋ID
+
+    MISSION_KANSHU = 4323, -- 砍树（采集落叶松木）任务
   },
   ACTOR = {
     -- 落叶村人物

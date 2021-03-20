@@ -21,7 +21,8 @@ function Yangwanli:new ()
       MyPosition:new(-17.5, 9.5, -18.5), -- 屋门口边上
       MyPosition:new(-6.5, 9.5, -10.5) -- 床
     },
-    doorPosition = MyPosition:new(-11.5, 8.5, -21.5) -- 门外位置
+    doorPosition = MyPosition:new(-11.5, 8.5, -21.5), -- 门外位置
+    talkInfos = yangwanliTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)

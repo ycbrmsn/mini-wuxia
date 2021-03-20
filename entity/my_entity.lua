@@ -527,8 +527,43 @@ function BaseTask:new (o)
   return o
 end
 
+-- 定义规则
+--[==[
+  如果有一任务id为n，则
+  玩家接受此任务，获得新任务，其id为n * 10000
+  玩家查询此任务，获得新任务，其id为n * 10000 + 1
+  玩家交付此任务，获得新任务，其id为n * 10000 + 2
+]==]--
+function BaseTask:getRealid ()
+  if (not(self.realid)) then
+    self.realid = self.id * 10000
+  end
+  return self.realid
+end
+
+-- 生成实际任务
+function BaseTask:realTask (actorname)
+  local o = {
+    id = self:getRealid(),
+    actorname = actorname,
+  }
+  self.__index = self
+  setmetatable(o, self)
+  if (self.appendDesc) then
+    local desc = ''
+    for i, k in ipairs(self.appendDesc) do
+      local v = o[k] and o[k] or k -- 如果k是属性，则拼接值；否则直接拼接k
+      desc = desc .. v
+    end
+    o.desc = desc
+  end
+  return o
+end
+
+
 -- 显示任务信息
 function BaseTask:show (objid)
+  ChatHelper.showSeparate(objid)
   ChatHelper.sendMsg(objid, '任务名称：', self.name, '任务')
   ChatHelper.sendMsg(objid, '任务描述：', self.desc)
   -- 任务奖励

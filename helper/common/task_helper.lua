@@ -1,6 +1,6 @@
 -- 任务工具类
 TaskHelper = {
-  tasks = {}, -- { 玩家 -> 任务id数组 } { playerid -> { taskid } }
+  tasks = {}, -- { 玩家 -> 任务id数组 } { playerid -> { taskid -> task/true } }
   needRemoveTasks = {}, -- map, 终止对话后需要删除的任务，即临时任务
 }
 
@@ -61,6 +61,7 @@ function TaskHelper.addTask (playerid, taskid, task)
   else
     tasks[taskid] = true
   end
+  return task
 end
 
 -- 新增临时任务，仅用于控制对话
@@ -230,7 +231,7 @@ function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
     else
       table.insert(sessions, TalkSession:choose({
         PlayerTalk:stop('接受'):call(function (player, actor)
-          local task = cTask:new(taskid * 10000, actor.actorid, actor:getName())
+          local task = cTask:realTask(actor:getName())
           TaskHelper.addTask(player.objid, task)
           player:speakSelf(0, v[1])
         end),
