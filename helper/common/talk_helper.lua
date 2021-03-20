@@ -64,12 +64,14 @@ function TalkHelper.talkWith (playerid, actor)
     if (session) then -- 存在一条对话
       TalkHelper.handleTalkSession(playerid, actor, index, sessions)
     else -- 不存在，则默认对话
+      LogHelper.debug('no session: ', index)
       if (actor.defaultTalkMsg) then
         actor:speakTo(playerid, 0, actor.defaultTalkMsg)
         TalkHelper.showEndSeparate(playerid)
       end
     end
   else -- 不存在，则默认对话
+    LogHelper.debug('no sessions')
     if (actor.defaultTalkMsg) then
       actor:speakTo(playerid, 0, actor.defaultTalkMsg)
       TalkHelper.showEndSeparate(playerid)

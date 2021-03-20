@@ -10,18 +10,19 @@ yangwanliTalkInfos = {
     { '没问题。', '村长我正忙着呢。' },
   }, KanshuTask),
   TaskHelper.generateQueryTalk(KanshuTask.id, {
+    { 3, '村长，我没有找到落叶松木。' },
     { 1, '村子外面就有一片落叶松林。' },
-    { 3, '我知道了。' },
+    { 3, '哦，我知道了。' },
   }),
   TaskHelper.generatePayTalk(KanshuTask.id, {
-    { 3, '村长我回来了。' },
+    { 3, '村长我采回来了。' },
     { 1, '真是个好孩子。' },
   }),
   TalkInfo:new({
     id = 1,
-    ants = {
-      TalkAnt:includeTask(KanshuTask:getRealid()),
-    },
+    -- ants = {
+    --   TalkAnt:includeTask(KanshuTask:getRealid()),
+    -- },
     progress = {
       [0] = {
         TalkSession:reply('村子会越来越好的。'):call(function (player, actor)

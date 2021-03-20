@@ -2,7 +2,7 @@
 
 -- 砍树任务
 KanshuTask = BaseTask:new({
-  id = 1,
+  id = 10000,
   name = '采集落叶松木',
   desc = '收集5个落叶松木，交给',
   appendDesc = { 'desc', 'actorname', '。' },

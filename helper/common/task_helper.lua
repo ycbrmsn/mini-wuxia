@@ -195,7 +195,7 @@ end
 -- 插入选项
 function TaskHelper.appendPlayerTalk (playerTalks, player, taskid, taskname)
   if (type(taskid) == 'table') then
-    local taskid, taskname = taskid.id, taskid.name
+    taskid, taskname = taskid.id, taskid.name
   end
   if (TaskHelper.hasTask(player.objid, taskid * 10000)) then -- 已有任务
     local state = TaskHelper.getTaskState(player.objid, taskid * 10000)
