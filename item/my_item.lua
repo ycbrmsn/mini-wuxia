@@ -350,5 +350,9 @@ function MissionKanshu:useItem (objid)
   if (not(task)) then -- 如果任务不存在
     task = TaskHelper.addTask(objid, KanshuTask:realTask('杨万里'))
   end
-  task:show(objid)
+  if (player.showTaskPos) then
+    task:close(objid)
+  else
+    task:show(objid, true)
+  end
 end

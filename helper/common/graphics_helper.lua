@@ -1,11 +1,11 @@
 -- 文字板工具类
 GraphicsHelper = {
-  defaultFont = 16,
-  defaultAlpha = 0,
-  defaultColor = 0xFFFFFF,
-  defaultItype = 1,
+  defaultFont = 16, -- 字体大小
+  defaultAlpha = 100, -- 文字板背景透明度
+  defaultColor = 0xFFFFFF, -- 进度条颜色
+  defaultItype = 1, -- 编号
   defaultDir = { x = 0, y = 1, z = 0 },
-  defaultOffset = 100,
+  defaultOffset = 100, -- 在y方向上的偏移
   hpMap = {}, -- objid -> graphid
 }
 

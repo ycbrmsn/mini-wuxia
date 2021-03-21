@@ -561,11 +561,11 @@ function BaseTask:realTask (actorname)
 end
 
 
--- 显示任务信息
-function BaseTask:show (objid)
-  ChatHelper.showSeparate(objid)
-  ChatHelper.sendMsg(objid, '任务名称：', self.name, '任务')
-  ChatHelper.sendMsg(objid, '任务描述：', self.desc)
+-- 显示任务信息，是否使用图文显示（默认使用聊天框显示）
+function BaseTask:show (objid, useGraphics)
+  local lines = {}
+  table.insert(lines, '任务名称：' .. self.name .. '任务')
+  table.insert(lines, '任务描述：' .. self.desc)
   -- 任务奖励
   for i, reward in ipairs(self.rewards) do
     local rewardMsg = reward.desc
@@ -575,38 +575,66 @@ function BaseTask:show (objid)
       rewardMsg = rewardMsg .. '，'
     end
     if (i == 1) then
-      ChatHelper.sendMsg(objid, '任务奖励：', rewardMsg)
+      table.insert(lines, '任务奖励：' .. rewardMsg)
     else
-      ChatHelper.sendMsg(objid, '\t\t\t\t\t', rewardMsg)
+      table.insert(lines, '\t\t\t\t\t' .. rewardMsg)
     end
   end
   -- 任务进度
-  local progressMsg = ''
   if (self.category == 1) then -- 击败生物
     for i, beatInfo in ipairs(self.beatInfos) do
+      local prefix
       if (i == 1) then
-        ChatHelper.sendMsg(objid, '任务进度：', beatInfo.actorname, '（',
-          beatInfo.curnum, '/', beatInfo.num, '）')
+        prefix = '任务进度：'
       else
-        ChatHelper.sendMsg(objid, '\t\t\t\t\t', beatInfo.actorname, '（',
-          beatInfo.curnum, '/', beatInfo.num, '）')
+        prefix = '\t\t\t\t\t'
       end
+      table.insert(lines, StringHelper.concat(prefix, beatInfo.actorname, '（',
+        beatInfo.curnum, '/', beatInfo.num, '）'))
     end
   elseif (self.category == 2) then -- 交付道具
     for i, itemInfo in ipairs(self.itemInfos) do
       local itemname = ItemHelper.getItemName(itemInfo.itemid)
       local num = BackpackHelper.getItemNumAndGrid(objid, itemInfo.itemid)
+      local prefix
       if (i == 1) then
-        ChatHelper.sendMsg(objid, '任务进度：', itemname, '（',
-          num, '/', itemInfo.num, '）')
+        prefix = '任务进度：'
       else
-        ChatHelper.sendMsg(objid, '\t\t\t\t\t', itemname, '（',
-          num, '/', itemInfo.num, '）')
+        prefix = '\t\t\t\t\t'
       end
+      table.insert(lines, StringHelper.concat(prefix, itemname, '（',
+        num, '/', itemInfo.num, '）'))
     end
   else
-    progressMsg = '不详。'
+    table.insert(lines, '任务进度：不详。')
   end
+  if (useGraphics) then
+    local title = StringHelper.join(lines, '\n')
+    local pos = ActorHelper.getDistancePosition(objid, 2)
+    pos.y = pos.y + 1
+    local offset, fontSize, alpha, itype = 100, 8, 100, 4
+    GraphicsHelper.createTextByPos(pos.x, pos.y, pos.z, title, fontSize, alpha, itype)
+    -- GraphicsHelper.createTxtByActor(objid, title, pos, offset, fontSize, alpha, itype)
+    local player = PlayerHelper.getPlayer(objid)
+    player.showTaskPos = pos
+    local t = 'closeTaskShow' .. objid
+    TimeHelper.callFnFastRuns(function ()
+      self:close(objid)
+    end, 10, t)
+  else
+    ChatHelper.showSeparate(objid)
+    ChatHelper.sendLinesMsg(objid, lines)
+  end
+end
+
+function BaseTask:close (objid)
+  local t = 'closeTaskShow' .. objid
+  TimeHelper.delFnFastRuns(t)
+  local player = PlayerHelper.getPlayer(objid)
+  local pos = player.showTaskPos
+  player.showTaskPos = nil
+  local itype = 4
+  GraphicsHelper.removeGraphicsByPos(pos.x, pos.y, pos.z, itype, GRAPHICS.GRAPHICS_HORNBOOK)
 end
 
 -- 是否完成任务

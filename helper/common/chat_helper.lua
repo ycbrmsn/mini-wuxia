@@ -21,6 +21,13 @@ function ChatHelper.sendSpacedMsg (objid, t, seconds, ...)
   end, seconds, objid .. t)
 end
 
+-- 发送多行消息
+function ChatHelper.sendLinesMsg (objid, lines)
+  for i, line in ipairs(lines) do
+    ChatHelper.sendMsg(objid, line)
+  end
+end
+
 -- 说
 function ChatHelper.speak (name, toobjid, ...)
   return ChatHelper.sendMsg(toobjid, name, '：', StringHelper.speakColor, ...)
