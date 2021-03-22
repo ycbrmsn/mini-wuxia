@@ -9,7 +9,10 @@ end
 
 -- 发送消息
 function ChatHelper.sendMsg (objid, ...)
-  return ChatHelper.sendSystemMsg(StringHelper.concat(...), objid)
+  local str = StringHelper.concat(...)
+  local player = PlayerHelper.getPlayer(objid)
+  str = StringHelper.replaceInterpolation(str, player)
+  return ChatHelper.sendSystemMsg(str, objid)
 end
 
 -- 发送间隔的消息

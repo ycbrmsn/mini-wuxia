@@ -20,12 +20,9 @@ yangwanliTalkInfos = {
   }),
   TalkInfo:new({
     id = 1,
-    -- ants = {
-    --   TalkAnt:includeTask(KanshuTask:getRealid()),
-    -- },
     progress = {
       [0] = {
-        TalkSession:reply('村子会越来越好的。'):call(function (player, actor)
+        TalkSession:reply('{{:getName}}，你来啦。'):call(function (player, actor)
           local playerTalks = {}
           local talkid, progressid, clearIndex = 1, 0, 2
           TalkHelper.clearProgressContent(actor, talkid, progressid, clearIndex)
@@ -33,9 +30,30 @@ yangwanliTalkInfos = {
           -- 其他
           table.insert(playerTalks, PlayerTalk:continue('闲聊'))
           TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:choose(playerTalks))
-          TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:speak('村长说得对。'))
+          TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:speak('对呢，我来逛逛。'))
         end),
       },
     }
   }),
 }
+
+-- 王大力
+-- wangdaliTalkInfos = {
+--   TalkInfo:new({
+--     id = 1,
+--     progress = {
+--       [0] = {
+--         TalkSession:reply('村子会越来越好的。'):call(function (player, actor)
+--           local playerTalks = {}
+--           local talkid, progressid, clearIndex = 1, 0, 2
+--           TalkHelper.clearProgressContent(actor, talkid, progressid, clearIndex)
+--           TaskHelper.appendPlayerTalk(playerTalks, player, KanshuTask)
+--           -- 其他
+--           table.insert(playerTalks, PlayerTalk:continue('闲聊'))
+--           TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:choose(playerTalks))
+--           TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:speak('村长说得对。'))
+--         end),
+--       },
+--     }
+--   }),
+-- }
