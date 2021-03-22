@@ -3,6 +3,19 @@ MyPlayerHelper = {}
 
 -- 事件
 
+-- 玩家进入游戏
+EventHelper.addEvent('playerEnterGame', function (objid)
+  MusicHelper.startBGM(objid, 1, true)
+  -- 如果有任务书，则自动接受任务
+  for i, task in pairs(TaskHelper.needBookTasks) do
+    if (BackpackHelper.hasItem(objid, task.itemid, true)) then -- 有任务书
+      if (not(TaskHelper.hasTask (objid, task.id))) then -- 没有任务
+        TaskHelper.addTask(objid, task) -- 接受任务
+      end
+    end
+  end
+end)
+
 -- 玩家离开游戏
 EventHelper.addEvent('playerLeaveGame', function (objid)
   MusicHelper.stopBGM(objid)

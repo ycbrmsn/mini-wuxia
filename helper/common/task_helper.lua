@@ -2,6 +2,7 @@
 TaskHelper = {
   tasks = {}, -- { 玩家 -> 任务id数组 } { playerid -> { taskid -> task/true } }
   needRemoveTasks = {}, -- map, 终止对话后需要删除的任务，即临时任务
+  needBookTasks = {}, -- 需要任务书的任务 { task, task, ... }
 }
 
 -- 玩家是否有该任务

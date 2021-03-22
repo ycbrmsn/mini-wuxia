@@ -127,9 +127,6 @@ EventHelper.addEvent('playerEnterGame', function (objid)
       PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
     end
   end
-
-  -- 播放背景音乐
-  MusicHelper.startBGM(objid, 1, true)
 end)
 
 -- 玩家进入区域

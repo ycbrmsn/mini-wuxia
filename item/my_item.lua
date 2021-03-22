@@ -348,7 +348,7 @@ function MissionKanshu:useItem (objid)
   local player = PlayerHelper.getPlayer(objid)
   local task = TaskHelper.getTask(objid, KanshuTask:getRealid())
   if (not(task)) then -- 如果任务不存在
-    task = TaskHelper.addTask(objid, KanshuTask:realTask('杨万里'))
+    task = TaskHelper.addTask(objid, KanshuTask:realTask())
   end
   if (player.showTaskPos) then
     task:close(objid)

@@ -526,6 +526,9 @@ function BaseTask:new (o)
   o = o or {}
   self.__index = self
   setmetatable(o, self)
+  if (o.itemid) then -- 需要任务书
+    table.insert(TaskHelper.needBookTasks, o:realTask())
+  end
   return o
 end
 
