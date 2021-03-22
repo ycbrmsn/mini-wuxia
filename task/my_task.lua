@@ -4,6 +4,7 @@
 KanshuTask = BaseTask:new({
   id = 10000,
   name = '采集落叶松木',
+  itemid = MyMap.ITEM.MISSION_KANSHU,
   desc = '收集5个落叶松木，交给',
   appendDesc = { 'desc', 'actorname', '。' },
   category = 2, -- 交付道具
@@ -13,7 +14,7 @@ KanshuTask = BaseTask:new({
   },
   rewards = {
     TaskReward:new({
-      desc = '获得铜板5枚',
+      desc = '获得铜板数枚',
       category = 1,
       itemid = MyMap.ITEM.COIN_ID,
       num = 5,

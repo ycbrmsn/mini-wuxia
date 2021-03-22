@@ -515,6 +515,8 @@ BaseTask = {
   id
   name(任务名称)
   desc(任务描述)
+  appendDesc(任务描述拼接规则：键值存在拼值，不存在拼键) { 'desc', 'actorname', '。' },
+  itemid(任务书，用于不重置地图时记录玩家任务)
   category(任务类型：1击败生物；2交付道具；3不做什么)
   beatInfos(击败生物信息) { actorid = actorid, actorname = actorname, num = num, curnum = curnum }
   itemInfos(交付道具信息) { itemid = itemid, num = num }
@@ -668,6 +670,20 @@ TaskReward = {}
   num(数值)
 ]]-- 
 function TaskReward:new (o)
+  o = o or {}
+  self.__index = self
+  setmetatable(o, self)
+  return o
+end
+
+-- 基础模板
+BaseTemplate = {
+  GAIN_EXP_MSG = '你获得{{exp}}点经验', -- exp（获得经验）
+  GAIN_DEFEATED_EXP_MSG = '你获得{{exp}}点经验', -- exp（获得经验）
+  UPGRADE_MSG = '你升级了', -- exp（获得经验）、level（玩家等级）
+}
+
+function BaseTemplate:new (o)
   o = o or {}
   self.__index = self
   setmetatable(o, self)

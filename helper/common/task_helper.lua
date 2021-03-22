@@ -234,6 +234,12 @@ function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
           local task = cTask:realTask(actor:getName())
           TaskHelper.addTask(player.objid, task)
           player:speakSelf(0, v[1])
+          if (task.itemid) then -- 需要任务书
+            if (not(BackpackHelper.hasItem(player.objid, task.itemid, true))) then
+              BackpackHelper.gainItem(player.objid, task.itemid, 1)
+            end
+          end
+          PlayerHelper.showToast(player.objid, '接受#G', task.name, '任务')
         end),
         PlayerTalk:stop('拒绝'):call(function (player, actor)
           player:speakSelf(0, v[2])
@@ -285,6 +291,7 @@ function TaskHelper.generatePayTalk (taskid, talks)
     else
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }):call(function (player)
         TaskHelper.finishTask(player.objid, taskid * 10000)
+        PlayerHelper.showToast(player.objid, '完成#G', task.name, '任务')
       end))
     end
   end
