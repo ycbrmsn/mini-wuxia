@@ -339,6 +339,8 @@ function BasePlayer:runTo (positions, callback, param)
   self.action:runTo(positions, callback, param)
 end
 
+-- 对话相关
+
 -- 继续对话或选择选项
 function BasePlayer:choose ()
   local actor = self:getClickActor()
@@ -386,4 +388,13 @@ function BasePlayer:resetTalkIndex (index)
   if (actor) then
     TalkHelper.resetTalkIndex(self.objid, actor, index)
   end
+end
+
+-- 新增对话任务，用于改变对话内容
+function BasePlayer:addTalkTask (taskid)
+  if (type(taskid) == 'table') then
+    taskid = taskid.id
+  end
+  TaskHelper.addTempTask(self.objid, taskid)
+  self:resetTalkIndex(0)
 end

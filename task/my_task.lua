@@ -1,11 +1,18 @@
--- 我的任务类
+-- 我的任务
+
+-- 对话任务
+
+-- 咨询武器
+zixunwuqiTask = BaseTask:new({ id = 1 })
+
+-- 具体任务
 
 -- 砍树任务
 KanshuTask = BaseTask:new({
   id = 10000,
   name = '采集落叶松木',
   itemid = MyMap.ITEM.MISSION_KANSHU,
-  desc = '收集5个落叶松木，交给村长。',
+  desc = '收集一些落叶松木，交给村长。',
   -- appendDesc = { 'desc', 'actorname', '。' },
   category = 2, -- 交付道具
   -- actorid = MyMap.ACTOR.YANGWANLI_ACTOR_ID, -- 交付NPC
@@ -22,36 +29,25 @@ KanshuTask = BaseTask:new({
   },
 })
 
--- -- 万仙剑任务
--- WanTask = BaseTask:new({
---   name = '万仙剑',
---   desc = '从屋顶上采集一节竹子，交给',
---   category = 2, -- 交付道具
---   -- actorid = MyMap.ACTOR.YEXIAOLONG_ACTOR_ID, -- 交付NPC
---   itemInfos = {
---     { itemid = 251, num = 1 }, -- 竹子一节
---   },
---   rewards = {
---     TaskReward:new({
---       desc = '获得万仙剑一柄',
---       category = 1,
---       itemid = MyWeaponAttr.tenThousandsSword.levelIds[1],
---       num = 1,
---     }),
---   },
--- })
-
--- function WanTask:new (taskid, actorid, actorname)
---   local desc = self.desc .. actorname .. '。'
---   local o = {
---     id = taskid,
---     actorid = actorid,
---     desc = desc,
---   }
---   self.__index = self
---   setmetatable(o, self)
---   return o
--- end
+-- 消灭野狗
+XiaomieyegouTask = BaseTask:new({
+  id = 10001,
+  name = '消灭野狗',
+  itemid = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
+  desc = '消灭一些野狗，然后回复文羽。',
+  category = 1, -- 击败生物
+  beatInfos = {
+    { actorid = MyMap.ACTOR.DOG_ACTOR_ID, actorname = '野狗', num = 5, curnum = 0 }, -- 野狗5只
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '获得一顶头盔',
+      category = 1,
+      itemid = 12201, -- 皮头盔
+      num = 1,
+    }),
+  },
+})
 
 -- -- 回仙剑任务
 -- HuiTask = BaseTask:new({

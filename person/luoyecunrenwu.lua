@@ -70,6 +70,7 @@ end
 function Yangwanli:goHome ()
   self:wantMove('goHome', { self.doorPosition }) -- 门外
 end
+
 -- free提一提背上酒壶 free2扔酒壶喝酒 poss喝酒
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
@@ -865,7 +866,8 @@ function Wenyu:new ()
       MyPosition:new(28.5, 9.5, -11.5), -- 未转角凳子旁
       MyPosition:new(21.5, 9.5, -8.5) -- 床旁边
     },
-    doorPosition = MyPosition:new(23.5, 8.5, -18.5) -- 门外位置
+    doorPosition = MyPosition:new(23.5, 8.5, -18.5), -- 门外位置
+    talkInfos = wenyuTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)

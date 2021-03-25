@@ -1091,7 +1091,7 @@ function ActorHelper.actorCollide (objid, toobjid)
   if (actor1) then -- 生物是特定生物
     if (ActorHelper.isPlayer(toobjid)) then -- 是跟玩家发生碰撞
       local want = actor1:getFirstWant()
-      if (want.think == 'forceDoNothing') then -- 此时碰撞生物无反应
+      if (want and string.find(want.think, 'noCollide')) then -- 此时碰撞生物无反应
       elseif (actor1:isCollidePlayerEffective()) then
         actor1:defaultCollidePlayerEvent(toobjid, ActorHelper.isTwoInFrontOfOne(objid, toobjid))
       end

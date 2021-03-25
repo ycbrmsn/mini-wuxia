@@ -62,6 +62,7 @@ MyMap = {
     ERNIU_EGG_ID = 4284, -- 二牛生物蛋ID
 
     MISSION_KANSHU = 4323, -- 砍树（采集落叶松木）任务
+    MISSION_XIAOMIEYEGOU = 4324, -- 消灭野狗任务
   },
   ACTOR = {
     -- 落叶村人物

@@ -341,14 +341,14 @@ end
 
 -- 任务道具
 
--- 砍树（采集落叶松木）任务书
-MissionKanshu = BaseItem:new({ id = MyMap.ITEM.MISSION_KANSHU })
+-- 任务书
+MissionBook = BaseItem:new()
 
-function MissionKanshu:useItem (objid)
+function MissionBook:useItem (objid)
   local player = PlayerHelper.getPlayer(objid)
-  local task = TaskHelper.getTask(objid, KanshuTask:getRealid())
+  local task = TaskHelper.getTask(objid, self.cTask:getRealid())
   if (not(task)) then -- 如果任务不存在
-    task = TaskHelper.addTask(objid, KanshuTask:realTask())
+    task = TaskHelper.addTask(objid, self.cTask:realTask())
   end
   if (player.showTaskPos) then
     task:close(objid)
@@ -356,3 +356,15 @@ function MissionKanshu:useItem (objid)
     task:show(objid, true)
   end
 end
+
+-- 砍树（采集落叶松木）任务书
+MissionKanshu = MissionBook:new({
+  id = MyMap.ITEM.MISSION_KANSHU,
+  cTask = KanshuTask,
+})
+
+-- 杀狗（消灭野狗）任务书
+MissionXiaomieyegou = MissionBook:new({
+  id = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
+  cTask = XiaomieyegouTask,
+})

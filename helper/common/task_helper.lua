@@ -99,7 +99,7 @@ function TaskHelper.clearTask (playerid)
 end
 
 -- 结束任务
-function TaskHelper.finishTask (playerid, taskid)
+function TaskHelper.tryFinishTask (playerid, taskid)
   local state = TaskHelper.getTaskState(playerid, taskid)
   if (state == 1) then
     return false
@@ -220,6 +220,25 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, taskid, taskname)
   end
 end
 
+-- 接受具体任务
+function TaskHelper.acceptTask (objid, cTask)
+  local task = cTask:realTask()
+  TaskHelper.addTask(objid, task)
+  if (task.itemid) then -- 需要任务书
+    if (not(BackpackHelper.hasItem(objid, task.itemid, true))) then
+      BackpackHelper.gainItem(objid, task.itemid, 1)
+    end
+  end
+  PlayerHelper.showToast(objid, '接受#G', task.name, '任务')
+end
+
+-- 完成具体任务
+function TaskHelper.finishTask (objid, cTask)
+  if (TaskHelper.tryFinishTask(objid, cTask:getRealid())) then
+    PlayerHelper.showToast(objid, '完成#G', cTask.name, '任务')
+  end
+end
+
 -- 生成接任务对话选项
 function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
   if (type(taskid) == 'table') then
@@ -232,15 +251,16 @@ function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
     else
       table.insert(sessions, TalkSession:choose({
         PlayerTalk:stop('接受'):call(function (player, actor)
-          local task = cTask:realTask(actor:getName())
-          TaskHelper.addTask(player.objid, task)
           player:speakSelf(0, v[1])
-          if (task.itemid) then -- 需要任务书
-            if (not(BackpackHelper.hasItem(player.objid, task.itemid, true))) then
-              BackpackHelper.gainItem(player.objid, task.itemid, 1)
-            end
-          end
-          PlayerHelper.showToast(player.objid, '接受#G', task.name, '任务')
+          TaskHelper.acceptTask(player.objid, cTask)
+          -- local task = cTask:realTask(actor:getName())
+          -- TaskHelper.addTask(player.objid, task)
+          -- if (task.itemid) then -- 需要任务书
+          --   if (not(BackpackHelper.hasItem(player.objid, task.itemid, true))) then
+          --     BackpackHelper.gainItem(player.objid, task.itemid, 1)
+          --   end
+          -- end
+          -- PlayerHelper.showToast(player.objid, '接受#G', task.name, '任务')
         end),
         PlayerTalk:stop('拒绝'):call(function (player, actor)
           player:speakSelf(0, v[2])
@@ -291,8 +311,7 @@ function TaskHelper.generatePayTalk (taskid, talks)
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
     else
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }):call(function (player)
-        TaskHelper.finishTask(player.objid, taskid * 10000)
-        PlayerHelper.showToast(player.objid, '完成#G', task.name, '任务')
+        TaskHelper.finishTask(player.objid, taskid)
       end))
     end
   end
