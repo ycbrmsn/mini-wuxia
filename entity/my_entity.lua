@@ -364,13 +364,64 @@ function TalkAnt:betweenHour (beginHour, endHour)
   return TalkAnt:new({ t = 3, beginHour = beginHour, endHour = endHour })
 end
 
--- 拥有道具
+-- 拥有num个道具
 function TalkAnt:includeItem (itemid, num)
   if (type(itemid) == 'table') then
     itemid = itemid.id
   end
   return TalkAnt:new({ t = 4, itemid = itemid, num = num or 1 })
- end
+end
+
+-- 没有num个道具
+function TalkAnt:excludeItem (itemid, num)
+  if (type(itemid) == 'table') then
+    itemid = itemid.id
+  end
+  return TalkAnt:new({ t = 5, itemid = itemid, num = num or 1 })
+end
+
+-- 正好几个道具
+function TalkAnt:justItem (itemid, num)
+  if (type(itemid) == 'table') then
+    itemid = itemid.id
+  end
+  return TalkAnt:new({ t = 6, itemid = itemid, num = num or 1 })
+end
+
+-- 是否是房主
+function TalkAnt:isHostPlayer (isHost)
+  return TalkAnt:new({ t = 11, isHost = isHost })
+end
+
+-- 几个条件并且
+function TalkAnt:andAnts ( ... )
+  local num = select("#", ...)
+  if (num == 1) then
+    return select(1, ...)
+  else
+    local ants = {}
+    for i = 1, num do
+      local ant = select(i, ...)
+      table.insert(ants, ant)
+    end
+    return TalkAnt:new({ t = 98, ants = ants })
+  end
+end
+
+-- 几个条件或者
+function TalkAnt:orAnts ( ... )
+  local num = select("#", ...)
+  if (num == 1) then
+    return select(1, ...)
+  else
+    local ants = {}
+    for i = 1, num do
+      local ant = select(i, ...)
+      table.insert(ants, ant)
+    end
+    return TalkAnt:new({ t = 99, ants = ants })
+  end
+end
 
 -- 是否满足条件
 function TalkAnt:isMeet (playerid)
@@ -394,12 +445,39 @@ function TalkAnt:isMeet (playerid)
     if (not(hour >= self.beginHour and hour < self.endHour)) then
       return false
     end
-  elseif (self.t == 4) then -- 拥有道具
+  elseif (self.t == 4) then -- 拥有num个道具
     local itemnum = self.num or 1
     local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
     if (num < itemnum) then
       return false
     end
+  elseif (self.t == 5) then -- 没有num个道具
+    local itemnum = self.num or 1
+    local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
+    if (num >= itemnum) then
+      return false
+    end
+  elseif (self.t == 6) then -- 正好num个道具
+    local itemnum = self.num or 1
+    local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
+    if (num ~= itemnum) then
+      return false
+    end
+  elseif (self.t == 11) then -- 是否是房主
+    return PlayerHelper.isMainPlayer(playerid) == self.isHost
+  elseif (self.t == 98) then -- and
+    for i, ant in ipairs(self.ants) do
+      if (not(ant:isMeet(playerid))) then
+        return false
+      end
+    end
+  elseif (self.t == 99) then -- or
+    for i, ant in ipairs(self.ants) do
+      if (ant:isMeet(playerid)) then
+        return true
+      end
+    end
+    return false
   end
   return true
 end

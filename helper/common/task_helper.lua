@@ -229,13 +229,13 @@ function TaskHelper.acceptTask (objid, cTask)
       BackpackHelper.gainItem(objid, task.itemid, 1)
     end
   end
-  PlayerHelper.showToast(objid, '接受#G', task.name, '任务')
+  PlayerHelper.notifyGameInfo2Self(objid, '接受#G' .. task.name .. '任务')
 end
 
 -- 完成具体任务
 function TaskHelper.finishTask (objid, cTask)
   if (TaskHelper.tryFinishTask(objid, cTask:getRealid())) then
-    PlayerHelper.showToast(objid, '完成#G', cTask.name, '任务')
+    PlayerHelper.notifyGameInfo2Self(objid, '完成#G' .. cTask.name .. '任务')
   end
 end
 
