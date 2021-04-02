@@ -18,6 +18,7 @@ BaseActor = {
   talkInfos = {}, -- 对话信息
   defaultTalkMsg = nil, -- 默认对话
   speakDim = { x = 30, y = 30, z = 30 }, -- 默认说话声音传播范围
+  offset = 120, -- 会话文字板高度
 }
 
 function BaseActor:new (actorid, objid)
@@ -243,6 +244,10 @@ function BaseActor:thinkTo (playerids, afterSeconds, ...)
       self:thinkTo(v, afterSeconds, ...)
     end
   end
+end
+
+function BaseActor:toastSpeak ( ... )
+  GraphicsHelper.speak(self.objid, self.offset, ...)
 end
 
 function BaseActor:goToBed (isNow)
