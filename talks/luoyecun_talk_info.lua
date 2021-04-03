@@ -40,18 +40,18 @@ yangwanliTalkInfos = {
     },
   }),
   -- 采集落叶松木
-  TaskHelper.generateAcceptTalk(KanshuTask.id, {
+  TaskHelper.generateAcceptTalk(KanshuTask, {
     { 3, '有什么我能帮忙的吗？' },
     { 1, '村里的房子又需要修葺一下了。' },
     { 1, '我需要一些落叶松木，你可以帮我砍一些回来吗？' },
     { '没问题。', '村长我正忙着呢。' },
-  }, KanshuTask),
-  TaskHelper.generateQueryTalk(KanshuTask.id, {
+  }),
+  TaskHelper.generateQueryTalk(KanshuTask, {
     { 3, '村长，我没有找到落叶松木。' },
     { 1, '村子外面就有一片落叶松林。' },
     { 3, '哦，我知道了。' },
   }),
-  TaskHelper.generatePayTalk(KanshuTask.id, {
+  TaskHelper.generatePayTalk(KanshuTask, {
     { 3, '村长我采回来了。' },
     { 1, '真是个好孩子。' },
   }),

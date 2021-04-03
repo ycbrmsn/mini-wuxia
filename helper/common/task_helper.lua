@@ -120,6 +120,11 @@ function TaskHelper.tryFinishTask (playerid, taskid)
         player:gainExp(reward.num)
       end
     end
+    if (task.itemid) then -- 需要任务书，则销毁任务书
+      if (BackpackHelper.hasItem(playerid, task.itemid, true)) then
+        BackpackHelper.removeGridItemByItemID(playerid, task.itemid, 1)
+      end
+    end
     task.finish = true
     return true
   end
@@ -240,10 +245,7 @@ function TaskHelper.finishTask (objid, cTask)
 end
 
 -- 生成接任务对话选项
-function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
-  if (type(taskid) == 'table') then
-    taskid = taskid.id
-  end
+function TaskHelper.generateAcceptTalk (cTask, talks)
   local sessions = {}
   for i, v in ipairs(talks) do
     if (i ~= #talks) then
@@ -268,11 +270,13 @@ function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
       }))
     end
   end
+  local taskid = cTask.id
+  local realid = cTask:getRealid()
   return TalkInfo:new({
     id = taskid,
     ants = {
       TalkAnt:includeTask(taskid),
-      TalkAnt:excludeTask(taskid * 10000),
+      TalkAnt:excludeTask(realid),
     },
     progress = {
       [0] = sessions
@@ -281,18 +285,16 @@ function TaskHelper.generateAcceptTalk (taskid, talks, cTask)
 end
 
 -- 生成查询任务对话
-function TaskHelper.generateQueryTalk (taskid, talks)
-  if (type(taskid) == 'table') then
-    taskid = taskid.id
-  end
+function TaskHelper.generateQueryTalk (cTask, talks)
   local sessions = {}
   for i, v in ipairs(talks) do
     table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
   end
+  local realid = cTask:getRealid()
   return TalkInfo:new({
-    id = taskid * 10000 + 1,
+    id = realid + 1,
     ants = {
-      TalkAnt:includeTask(taskid * 10000 + 1),
+      TalkAnt:includeTask(realid + 1),
     },
     progress = {
       [0] = sessions
@@ -301,25 +303,23 @@ function TaskHelper.generateQueryTalk (taskid, talks)
 end
 
 -- 生成交付任务对话
-function TaskHelper.generatePayTalk (taskid, talks)
-  if (type(taskid) == 'table') then
-    taskid = taskid.id
-  end
+function TaskHelper.generatePayTalk (cTask, talks)
   local sessions = {}
   for i, v in ipairs(talks) do
     if (i ~= #talks) then
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
     else
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }):call(function (player)
-        TaskHelper.finishTask(player.objid, taskid)
+        TaskHelper.finishTask(player.objid, cTask)
       end))
     end
   end
+  local realid = cTask:getRealid()
   return TalkInfo:new({
-    id = taskid * 10000 + 2,
+    id = realid + 2,
     ants = {
-      TalkAnt:includeTask(taskid * 10000 + 2),
-      TalkAnt:includeTask(taskid * 10000, 2),
+      TalkAnt:includeTask(realid + 2),
+      TalkAnt:includeTask(realid, 2),
     },
     progress = {
       [0] = sessions
