@@ -922,6 +922,7 @@ function Wenyu:new ()
     },
     doorPosition = MyPosition:new(23.5, 8.5, -18.5), -- 门外位置
     talkInfos = wenyuTalkInfos,
+    defaultTalkMsg = '家里有两张床，我一天睡一张。',
   }
   self.__index = self
   setmetatable(o, self)

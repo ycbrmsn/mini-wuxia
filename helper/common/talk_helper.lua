@@ -66,15 +66,17 @@ function TalkHelper.talkWith (playerid, actor)
     else -- 不存在，则默认对话
       LogHelper.debug('no session: ', index)
       if (actor.defaultTalkMsg) then
-        actor:speakTo(playerid, 0, actor.defaultTalkMsg)
-        TalkHelper.showEndSeparate(playerid)
+        actor:toastSpeak(actor.defaultTalkMsg)
+        -- actor:speakTo(playerid, 0, actor.defaultTalkMsg)
+        -- TalkHelper.showEndSeparate(playerid)
       end
     end
   else -- 不存在，则默认对话
     LogHelper.debug('no sessions')
     if (actor.defaultTalkMsg) then
-      actor:speakTo(playerid, 0, actor.defaultTalkMsg)
-      TalkHelper.showEndSeparate(playerid)
+      actor:toastSpeak(actor.defaultTalkMsg)
+      -- actor:speakTo(playerid, 0, actor.defaultTalkMsg)
+      -- TalkHelper.showEndSeparate(playerid)
     end
   end
 end
