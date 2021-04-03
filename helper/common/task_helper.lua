@@ -198,7 +198,7 @@ end
   玩家交付此任务，获得新任务，其id为n * 10000 + 2
 ]==]--
 
--- 插入选项
+-- 插入选项，未插入时返回false
 function TaskHelper.appendPlayerTalk (playerTalks, player, taskid, taskname)
   if (type(taskid) == 'table') then
     taskid, taskname = taskid.id, taskid.name
@@ -210,18 +210,22 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, taskid, taskname)
         TaskHelper.addTempTask(player.objid, taskid * 10000 + 1)
         player:resetTalkIndex(0)
       end))
+      return true
     elseif (state == 2) then -- 已完成
       table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(可交付)'):call(function (player)
         TaskHelper.addTempTask(player.objid, taskid * 10000 + 2)
         player:resetTalkIndex(0)
       end))
+      return true
     else -- 已结束
+      return false
     end
   else -- 未接任务
     table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务'):call(function (player)
       TaskHelper.addTempTask(player.objid, taskid)
       player:resetTalkIndex(0)
     end))
+    return true
   end
 end
 

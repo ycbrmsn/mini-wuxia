@@ -63,10 +63,11 @@ yangwanliTalkInfos = {
           local playerTalks = {}
           local talkid, progressid, clearIndex = 1, 0, 2
           TalkHelper.clearProgressContent(actor, talkid, progressid, clearIndex)
-          TaskHelper.appendPlayerTalk(playerTalks, player, KanshuTask)
-          -- 其他
-          table.insert(playerTalks, PlayerTalk:continue('闲聊'))
-          TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:choose(playerTalks))
+          if (TaskHelper.appendPlayerTalk(playerTalks, player, KanshuTask)) then
+            -- 其他
+            table.insert(playerTalks, PlayerTalk:continue('闲聊'))
+            TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:choose(playerTalks))
+          end
           TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:speak('对呢，我来逛逛。'))
         end),
       },
