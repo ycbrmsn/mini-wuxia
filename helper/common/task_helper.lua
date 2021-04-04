@@ -168,24 +168,51 @@ function TaskHelper.killActor (playerid, actorid, isShow)
   end
 end
 
--- 获得道具 isShow是否提示获得任务道具
-function TaskHelper.addItem (playerid, itemid, isShow)
+-- 获得道具 showType:none、chat、toast
+function TaskHelper.addItem (playerid, itemid, showType)
+  showType = showType or 'none'
   local tasks = TaskHelper.getActiveTasks(playerid)
   for taskid, task in pairs(tasks) do -- 所有任务
     if (type(task) == 'table' and task.category == 2) then -- 交付任务
       for i, itemInfos in ipairs(task.itemInfos) do
         if (itemid == itemInfos.itemid) then -- 获得该道具
           local curnum = BackpackHelper.getItemNumAndGrid(playerid, itemid)
-          if (isShow and curnum <= itemInfos.num) then -- 未超过任务数量
-            ChatHelper.sendMsg(playerid, '获得', ItemHelper.getItemName(itemid),
-              '（', curnum, '/', itemInfos.num, '）')
-            local state = TaskHelper.getTaskState(playerid, taskid)
-            if (state == 2) then
-              ChatHelper.sendMsg(playerid, task.name, '任务#G可交付')
+          -- LogHelper.debug('当前有', curnum)
+          if (not(itemInfos.curnum) or itemInfos.curnum ~= curnum) then -- 当前数量发生变化时提示
+            itemInfos.curnum = curnum
+            if (curnum >= itemInfos.num) then -- 达到目标
+              if (not(task.enough)) then
+                task.enough = true
+                TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfos.num, task)
+              end
+            else -- 未达到目标
+              task.enough = false
+              TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfos.num, task)
             end
           end
         end
       end
+    end
+  end
+end
+
+-- 显示获得任务道具后的提示
+function TaskHelper.showTips (showType, objid, itemid, curnum, neednum, task)
+  if (showType == 'none') then
+    return
+  end
+  local msg = StringHelper.concat('获得', ItemHelper.getItemName(itemid),
+    '#n（', curnum, '/', neednum, '）')
+  local state = TaskHelper.getTaskState(objid, task.id)
+  if (showType == 'chat') then -- 聊天框信息提示
+    ChatHelper.sendMsg(objid, msg)
+    if (state == 2) then
+      ChatHelper.sendMsg(objid, task.name, '任务#G可交付')
+    end
+  elseif (showType == 'toast') then -- 飘窗提示
+    PlayerHelper.notifyGameInfo2Self(objid, msg)
+    if (state == 2) then
+      PlayerHelper.notifyGameInfo2Self(objid, task.name .. '任务#G可交付')
     end
   end
 end
