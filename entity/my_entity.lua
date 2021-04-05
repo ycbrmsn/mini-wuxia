@@ -487,6 +487,7 @@ end
   t(类型：1npc说, 2npc想, 3player说, 4player想)
   msg(string or arr)
   turnTo(跳到第几句对话，默认nil下一句)
+  ant(会说这句话的条件)
   f(函数)
 ]]-- 
 TalkSession = {}
@@ -531,12 +532,23 @@ function TalkSession:to (turnTo)
   return self
 end
 
+function TalkSession:ant ( ... )
+  self.ants = { ... }
+  return self
+end
+
 function TalkSession:call (f)
   self.f = f
   return self
 end
 
--- msg(玩家的话) t(选择: 1继续(默认)；2跳转；3终止；4接受任务) other(对应选项：数字表示跳转项；任务) f(函数)
+--[[
+  msg(玩家的话)
+  t(选择: 1继续(默认)；2跳转；3终止；4接受任务)
+  other(对应选项：数字表示跳转项；任务)
+  ant(会有这条选项的条件)
+  f(函数)
+]]--
 PlayerTalk = {}
 
 function PlayerTalk:new (msg, t, other, f)
@@ -574,6 +586,11 @@ end
 
 function PlayerTalk:acceptTask (msg, task)
   return self:dialogue(4, msg, { other = task })
+end
+
+function PlayerTalk:ant ( ... )
+  self.ants = { ... }
+  return self
 end
 
 function PlayerTalk:call (f)

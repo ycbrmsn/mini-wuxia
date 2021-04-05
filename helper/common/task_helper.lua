@@ -226,34 +226,50 @@ end
 ]==]--
 
 -- 插入选项，未插入时返回false
-function TaskHelper.appendPlayerTalk (playerTalks, player, taskid, taskname)
+function TaskHelper.appendPlayerTalk (playerTalks, player, cTask)
   if (type(taskid) == 'table') then
     taskid, taskname = taskid.id, taskid.name
   end
-  if (TaskHelper.hasTask(player.objid, taskid * 10000)) then -- 已有任务
-    local state = TaskHelper.getTaskState(player.objid, taskid * 10000)
-    if (state == 1) then -- 未完成
-      table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(已接受)'):call(function (player)
-        TaskHelper.addTempTask(player.objid, taskid * 10000 + 1)
-        player:resetTalkIndex(0)
-      end))
-      return true
-    elseif (state == 2) then -- 已完成
-      table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(可交付)'):call(function (player)
-        TaskHelper.addTempTask(player.objid, taskid * 10000 + 2)
-        player:resetTalkIndex(0)
-      end))
-      return true
-    else -- 已结束
-      return false
-    end
-  else -- 未接任务
-    table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务'):call(function (player)
-      TaskHelper.addTempTask(player.objid, taskid)
-      player:resetTalkIndex(0)
-    end))
-    return true
-  end
+  local realid = cTask:getRealid()
+  table.insert(playerTalks, PlayerTalk:continue(cTask.name .. '任务#G(已接受)')
+    :ant(TalkAnt:includeTask(realid, 1)):call(function (player)
+    TaskHelper.addTempTask(player.objid, realid + 1)
+    player:resetTalkIndex(0)
+  end))
+  table.insert(playerTalks, PlayerTalk:continue(cTask.name .. '任务#G(可交付)')
+    :ant(TalkAnt:includeTask(realid, 2)):call(function (player)
+    TaskHelper.addTempTask(player.objid, realid + 2)
+    player:resetTalkIndex(0)
+  end))
+  table.insert(playerTalks, PlayerTalk:continue(cTask.name .. '任务')
+    :ant(TalkAnt:excludeTask(realid)):call(function (player)
+    TaskHelper.addTempTask(player.objid, cTask.id)
+    player:resetTalkIndex(0)
+  end))
+  -- if (TaskHelper.hasTask(player.objid, taskid * 10000)) then -- 已有任务
+  --   local state = TaskHelper.getTaskState(player.objid, taskid * 10000)
+  --   if (state == 1) then -- 未完成
+  --     table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(已接受)'):call(function (player)
+  --       TaskHelper.addTempTask(player.objid, taskid * 10000 + 1)
+  --       player:resetTalkIndex(0)
+  --     end))
+  --     return true
+  --   elseif (state == 2) then -- 已完成
+  --     table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(可交付)'):call(function (player)
+  --       TaskHelper.addTempTask(player.objid, taskid * 10000 + 2)
+  --       player:resetTalkIndex(0)
+  --     end))
+  --     return true
+  --   else -- 已结束
+  --     return false
+  --   end
+  -- else -- 未接任务
+  --   table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务'):call(function (player)
+  --     TaskHelper.addTempTask(player.objid, taskid)
+  --     player:resetTalkIndex(0)
+  --   end))
+  --   return true
+  -- end
 end
 
 -- 接受具体任务
