@@ -80,13 +80,15 @@ end
 -- 点击书柜
 function MyBlockHelper.clickBookcase (objid, blockid, x, y, z)
   if (blockid == 820 and x == 33 and y == 8 and z == 7) then -- 家里的书柜
-    local player = PlayerHelper.getPlayer(objid)
-    player:enableMove(false, true)
-    player:thinkSelf(0, '这里有一些游戏说明，我要看看吗？')
-    ChatHelper.sendMsg(objid, '选择对应序号的快捷栏进行选择')
-    MyOptionHelper.showOptions(player, 'look')
-    -- ChatHelper.showChooseItems(playerid, { '看看', '不看' })
-    -- player.whichChoose = 'readme'
+    TimeHelper.callFnCanRun(function ()
+      local player = PlayerHelper.getPlayer(objid)
+      player:enableMove(false, true)
+      player:thinkSelf(0, '这里有一些游戏说明，我要看看吗？')
+      ChatHelper.sendMsg(objid, '选择对应序号的快捷栏进行选择')
+      MyOptionHelper.showOptions(player, 'look')
+      -- ChatHelper.showChooseItems(playerid, { '看看', '不看' })
+      -- player.whichChoose = 'readme'
+    end, 10, objid .. 'clickBookcase')
     return true
   end
   return false
@@ -100,9 +102,11 @@ function MyBlockHelper.clickBed (objid, blockid, x, y, z)
   elseif (blockid == BlockHelper.bedid2) then
     local player = PlayerHelper.getPlayer(objid)
     if (player:isHostPlayer()) then
-      player:enableMove(false, true)
-      player:thinkSelf(0, '我要睡多长时间呢？')
-      MyOptionHelper.showOptions(player, 'sleep')
+      TimeHelper.callFnCanRun(function ()
+        player:enableMove(false, true)
+        player:thinkSelf(0, '我要睡多长时间呢？')
+        MyOptionHelper.showOptions(player, 'sleep')
+      end, 10, objid .. 'clickBed')
     else
       ChatHelper.sendMsg(objid, '仅房主能够使用床睡觉')
     end

@@ -214,6 +214,15 @@ function TimeHelper.addLastFnCanRunTime (t)
   end
 end
 
+-- 删除间隔记录
+function TimeHelper.delFnCanRun (seconds, t)
+  local lastTime = TimeHelper.getLastFnCanRunTime(seconds, t)
+  if (lastTime) then
+    TimeHelper.fnCanRuns[lastTime][t] = nil
+    return true
+  end
+end
+
 -- 如果方法能执行（间隔上次执行多少秒之后）则标记，然后执行；否则（间隔时间不够）不执行
 function TimeHelper.callFnCanRun (f, seconds, t)
   if (type(f) ~= 'function') then

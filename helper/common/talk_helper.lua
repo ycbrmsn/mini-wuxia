@@ -170,11 +170,16 @@ function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
       TalkHelper.realChooseTalk(playerid, actor, 1, sessions)
       return true
     end
-    -- 有多个选项，则出现选项列表
-    ChatHelper.showChooseItems(playerid, chooseArr, 'msg')
-    if (session.f) then
-      session.f(player, actor)
-    end
+    -- 避免一直重复选项
+    local fnCanRunT = playerid .. chooseArr[1].msg
+    TimeHelper.callFnCanRun(function ()
+      player.fnCanRunT = fnCanRunT
+      -- 有多个选项，则出现选项列表
+      ChatHelper.showChooseItems(playerid, chooseArr, 'msg')
+      if (session.f) then
+        session.f(player, actor)
+      end
+    end, 10, fnCanRunT)
   else -- 玩家对话
     if (session.t == 3) then -- 玩家说
       player:speakSelf(0, session.msg)
@@ -334,4 +339,6 @@ function TalkHelper.handleTalkOver (objid)
     player.whichChoose = nil
   end
   player:setClickActor(nil)
+  -- 去掉选项延时
+  TimeHelper.delFnCanRun(10, player.fnCanRunT)
 end
