@@ -368,3 +368,9 @@ MissionXiaomieyegou = MissionBook:new({
   id = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
   cTask = XiaomieyegouTask,
 })
+
+-- 收集兽骨任务书
+MissionShoujishougu = MissionBook:new({
+  id = MyMap.ITEM.MISSION_SHOUJISHOUGU,
+  cTask = ShoujishouguTask,
+})

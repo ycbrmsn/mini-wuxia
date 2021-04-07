@@ -11,6 +11,7 @@ MyMap = {
     WENYU_PACKAGE_ID = 4116, -- 文羽包裹
     YANGWANLI_PACKAGE_ID = 4117, -- 村长包裹
     APPLE_ID = 4125, -- 苹果
+    ZHIXUEDAN_ID = 4140, -- 止血丹
     CREATE_BLOOD_PILL_ID = 4142, -- 生血丹
     WINE_ID = 4256, -- 最香酒
     CARRIAGE_LUOYECUN_ID = 4285, -- 落叶村车票
@@ -63,6 +64,7 @@ MyMap = {
 
     MISSION_KANSHU = 4323, -- 砍树（采集落叶松木）任务
     MISSION_XIAOMIEYEGOU = 4324, -- 消灭野狗任务
+    MISSION_SHOUJISHOUGU = 4325, -- 收集兽骨任务
   },
   ACTOR = {
     -- 落叶村人物
