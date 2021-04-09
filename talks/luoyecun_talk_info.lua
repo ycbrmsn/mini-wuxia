@@ -59,15 +59,14 @@ yangwanliTalkInfos = {
     id = 1,
     progress = {
       [0] = {
-        TalkSession:reply('{{:getName}}，你来啦。'):call(function (player, actor)
-          local playerTalks = {}
-          local talkid, progressid, clearIndex = 1, 0, 2
-          TalkHelper.clearProgressContent(actor, talkid, progressid, clearIndex)
-          TaskHelper.appendPlayerTalk(playerTalks, player, KanshuTask)
-          -- 其他
-          table.insert(playerTalks, PlayerTalk:continue('闲聊'))
-          TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:choose(playerTalks))
-          TalkHelper.addProgressContent(actor, talkid, progressid, TalkSession:speak('对呢，我来逛逛。'))
+        TalkSession:reply('{{:getName}}，你来啦。'),
+        TalkSession:init(function ()
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, KanshuTask))
+          playerTalks:add(PlayerTalk:continue('闲聊'))
+          local sessions = MyArr:new()
+          sessions:add(TalkSession:choose(playerTalks:get()))
+          sessions:add(TalkSession:speak('对呢，我来逛逛。'))
+          return sessions:get()
         end),
       },
     }
@@ -75,22 +74,31 @@ yangwanliTalkInfos = {
 }
 
 -- 王大力
--- wangdaliTalkInfos = {
---   TalkInfo:new({
---     id = 1,
---     progress = {
---       [0] = {
---         TalkSession:reply('你要买点武器吗？'),
---         TalkSession:choose({
---           PlayerTalk:stop('买武器'):call(function (player)
---             player:addTalkTask(zixunwuqiTask)
---           end),
---           PlayerTalk:continue('咨询武器'),
---         }),
---       },
---     }
---   }),
--- }
+wangdaliTalkInfos = {
+  TalkInfo:new({
+    id = 1,
+    progress = {
+      [0] = {
+        TalkSession:reply('你要买点武器吗？'),
+        TalkSession:choose({
+          PlayerTalk:continue('买武器'):call(function (player)
+            -- player:addTalkTask(zixunwuqiTask)
+          end),
+          PlayerTalk:continue('买防具'):call(function (player)
+            -- body
+          end),
+          PlayerTalk:continue('买强化石'):call(function (player)
+            -- body
+          end),
+          PlayerTalk:continue('买软石块'):call(function (player)
+            -- body
+          end),
+          PlayerTalk:continue('咨询武器'),
+        }),
+      },
+    }
+  }),
+}
 
 -- 文羽
 wenyuTalkInfos = {
@@ -134,6 +142,7 @@ wenyuTalkInfos = {
     ants = {
       TalkAnt:excludeItem(XiaomieyegouTask.rewards[1].itemid), -- 没有皮头盔
       TalkAnt:excludeTask(XiaomieyegouTask:getRealid()), -- 未接受杀狗任务
+      TalkAnt:atLeastLevel(3), -- 至少3级
     },
     progress = {
       [0] = {

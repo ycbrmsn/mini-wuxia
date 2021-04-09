@@ -183,6 +183,50 @@ function MyPosition:toSimpleString ()
   return StringHelper.concat(self.x, ',', self.y, ',', self.z)
 end
 
+-- 我的数组
+MyArr = {}
+
+function MyArr:new (arr)
+  arr = arr or {}
+  local o = { arr = arr }
+  self.__index = self
+  setmetatable(o, self)
+  return o
+end
+
+function MyArr:add (index, o)
+  if (o) then
+    table.insert(self.arr, index, o)
+  else
+    table.insert(self.arr, index)
+  end
+end
+
+function MyArr:addArr (index, arr)
+  if (arr) then
+    for i, v in ipairs(arr) do
+      self:add(index, v)
+      index = index + 1
+    end
+  else
+    for i, v in ipairs(arr) do
+      self:add(v)
+    end
+  end
+end
+
+function MyArr:remove (index)
+  table.remove(arr, index)
+end
+
+function MyArr:get ()
+  return self.arr
+end
+
+function MyArr:length ()
+  return #self.arr
+end
+
 -- 三维向量
 MyVector3 = {}
 
@@ -388,6 +432,16 @@ function TalkAnt:justItem (itemid, num)
   return TalkAnt:new({ t = 6, itemid = itemid, num = num or 1 })
 end
 
+-- 至少几级
+function TalkAnt:atLeastLevel (level)
+  return TalkAnt:new({ t = 7, level = level })
+end
+
+-- 至多几级
+function TalkAnt:atMostLevel (level)
+  return TalkAnt:new({ t = 8, level = level })
+end
+
 -- 是否是房主
 function TalkAnt:isHostPlayer (isHost)
   return TalkAnt:new({ t = 11, isHost = isHost })
@@ -463,6 +517,12 @@ function TalkAnt:isMeet (playerid)
     if (num ~= itemnum) then
       return false
     end
+  elseif (self.t == 7) then -- 至少几级
+    local level = PlayerHelper.getLevel(playerid)
+    return level >= self.level
+  elseif (self.t == 8) then -- 至多几级
+    local level = PlayerHelper.getLevel(playerid)
+    return level <= self.level
   elseif (self.t == 11) then -- 是否是房主
     return PlayerHelper.isMainPlayer(playerid) == self.isHost
   elseif (self.t == 98) then -- and
@@ -542,6 +602,11 @@ function TalkSession:call (f)
   return self
 end
 
+-- 用于初始化一些对话，f函数需要返回一个对话数组
+function TalkSession:init (f)
+  return table.unpack(f())
+end
+
 --[[
   msg(玩家的话)
   t(选择: 1继续(默认)；2跳转；3终止；4接受任务)
@@ -596,6 +661,11 @@ end
 function PlayerTalk:call (f)
   self.f = f
   return self
+end
+
+-- 用于初始化一些对话，f函数需要返回一个对话数组
+function PlayerTalk:init (f)
+  return table.unpack(f())
 end
 
 -- 任务类
