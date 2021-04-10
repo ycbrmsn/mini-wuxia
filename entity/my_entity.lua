@@ -670,6 +670,7 @@ end
 
 -- 任务类
 BaseTask = {
+  aid = 9999, -- 用来自增的id
   name = '空',
   desc = '无描述',
   category = 3,
@@ -827,6 +828,11 @@ function BaseTask:isComplete (objid)
   else -- 其他
     return true
   end
+end
+
+function BaseTask:autoid ()
+  self.aid = self.aid + 1
+  return self.aid
 end
 
 TaskReward = {}

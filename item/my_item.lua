@@ -374,3 +374,9 @@ MissionShoujishougu = MissionBook:new({
   id = MyMap.ITEM.MISSION_SHOUJISHOUGU,
   cTask = ShoujishouguTask,
 })
+
+-- 采集铜矿石任务书
+MissionCaijitongkuangshi = MissionBook:new({
+  id = MyMap.ITEM.MISSION_CAIJITONGKUANGSHI,
+  cTask = CaijitongkuangshiTask,
+})

@@ -62,9 +62,10 @@ MyMap = {
     DANIU_EGG_ID = 4258, -- 大牛生物蛋ID
     ERNIU_EGG_ID = 4284, -- 二牛生物蛋ID
 
-    MISSION_KANSHU = 4323, -- 砍树（采集落叶松木）任务
-    MISSION_XIAOMIEYEGOU = 4324, -- 消灭野狗任务
-    MISSION_SHOUJISHOUGU = 4325, -- 收集兽骨任务
+    MISSION_KANSHU = 4323, -- 砍树（采集落叶松木）任务书
+    MISSION_XIAOMIEYEGOU = 4324, -- 消灭野狗任务书
+    MISSION_SHOUJISHOUGU = 4325, -- 收集兽骨任务书
+    MISSION_CAIJITONGKUANGSHI = 4326, -- 采集铜矿石任务书
   },
   ACTOR = {
     -- 落叶村人物

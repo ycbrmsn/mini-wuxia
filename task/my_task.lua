@@ -9,7 +9,7 @@ zixunwuqiTask = BaseTask:new({ id = 1 })
 
 -- 砍树任务
 KanshuTask = BaseTask:new({
-  id = 10000,
+  id = BaseTask:autoid(),
   name = '采集落叶松木',
   itemid = MyMap.ITEM.MISSION_KANSHU,
   desc = '收集几根落叶松木，交给村长。',
@@ -31,7 +31,7 @@ KanshuTask = BaseTask:new({
 
 -- 消灭野狗
 XiaomieyegouTask = BaseTask:new({
-  id = 10001,
+  id = BaseTask:autoid(),
   name = '消灭野狗',
   itemid = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
   desc = '消灭几条野狗，然后回复文羽。',
@@ -49,10 +49,9 @@ XiaomieyegouTask = BaseTask:new({
   },
 })
 
-
 -- 收集兽骨任务
 ShoujishouguTask = BaseTask:new({
-  id = 10002,
+  id = BaseTask:autoid(),
   name = '收集兽骨',
   itemid = MyMap.ITEM.MISSION_SHOUJISHOUGU,
   desc = '收集几根兽骨，交给苗兰。',
@@ -72,6 +71,26 @@ ShoujishouguTask = BaseTask:new({
       category = 1,
       itemid = MyMap.ITEM.ZHIXUEDAN_ID,
       num = 1,
+    }),
+  },
+})
+
+-- 采集铜矿石任务
+CaijitongkuangshiTask = BaseTask:new({
+  id = BaseTask:autoid(),
+  name = '采集铜矿石',
+  itemid = MyMap.ITEM.MISSION_CAIJITONGKUANGSHI,
+  desc = '收集少量铜矿石，交给王大力。',
+  category = 2, -- 交付道具
+  itemInfos = {
+    { itemid = MyMap.BLOCK.COPPER_ORE_ID, num = 10 }, -- 铜矿石10个
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '获得武器一件',
+      category = 1,
+      itemid = MyMap.ITEM.COIN_ID,
+      num = 0,
     }),
   },
 })
