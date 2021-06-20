@@ -34,6 +34,7 @@ yangwanliTalkInfos = {
           local itemid = MyMap.ITEM.YANGWANLI_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得村长的包裹
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
+            StoryHelper.forward(1, '文羽的礼物')
           end
         end),
       },
@@ -189,6 +190,9 @@ wenyuTalkInfos = {
           local itemid = MyMap.ITEM.WENYU_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得文羽的包裹
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
+            if (StoryHelper.forward(1, '文羽通知')) then
+              wenyu:doItNow() -- 不再跟随
+            end
           end
         end),
       },
