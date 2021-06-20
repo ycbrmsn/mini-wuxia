@@ -75,11 +75,67 @@ yangwanliTalkInfos = {
 
 -- 王大力
 wangdaliTalkInfos = {
+  -- 采集铜矿石
+  TaskHelper.generateAcceptTalk(CaijitongkuangshiTask, {
+    { 3, '有什么我能帮忙的吗？' },
+    { 1, '我最近在研究青铜武器，可惜没有材料。' },
+    { 1, '在恶狼谷附近有一处矿脉，盛产铜矿。可是最近却被一群强盗霸占了。' },
+    { 3, '强盗？好像很危险。' },
+    { 1, '确实如此。你需要去矿洞里采集十块铜矿石给我。如果你能完成，我送你一把青铜武器。' },
+    { '没问题。', '我先看看情况再说。' },
+  }, {
+    TalkAnt:atLeastLevel(10), -- 至少10级
+  }),
+  TaskHelper.generateQueryTalk(CaijitongkuangshiTask, {
+    { 3, '我转了一圈，没有找到矿石。' },
+    { 1, '矿洞就在水池旁，很容易看到。注意安全。' },
+    { 3, '哦，我知道了。' },
+  }),
+  TaskHelper.generatePayTalk(CaijitongkuangshiTask, {
+    { 3, '我采集到足够的矿石了。' },
+    { 1, '不错，你采集到了足够的矿石。你想要件什么武器？' },
+    { 5,
+      {
+        PlayerTalk:stop('我想我需要一把剑。'):call(function (player, actor)
+          actor:speakTo(player.objid, 0, '拿稳了。')
+          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSword.levelIds[1])
+          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+        end),
+        PlayerTalk:stop('我想要一把刀。'):call(function (player, actor)
+          actor:speakTo(player.objid, 0, '拿稳了。')
+          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeKnife.levelIds[1])
+          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+        end),
+        PlayerTalk:stop('我想舞枪。'):call(function (player, actor)
+          actor:speakTo(player.objid, 0, '拿稳了。')
+          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSpear.levelIds[1])
+          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+        end),
+        PlayerTalk:stop('我想来一张弓。'):call(function (player, actor)
+          actor:speakTo(player.objid, 0, '拿稳了。')
+          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeBow.levelIds[1])
+          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+        end),
+      }
+    }
+  }),
   TalkInfo:new({
-    id = 1,
+    id = 100,
     progress = {
       [0] = {
         TalkSession:reply('你要买点武器吗？'),
+        TalkSession:init(function ()
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, CaijitongkuangshiTask))
+          playerTalks:add(PlayerTalk:continue('买武器'))
+          playerTalks:add(PlayerTalk:continue('买防具'))
+          playerTalks:add(PlayerTalk:continue('买强化石'))
+          playerTalks:add(PlayerTalk:continue('买软石块'))
+          playerTalks:add(PlayerTalk:continue('咨询武器'))
+          local sessions = MyArr:new()
+          sessions:add(TalkSession:choose(playerTalks:get()))
+          sessions:add(TalkSession:speak('对呢，我来逛逛。'))
+          return sessions:get()
+        end),
         TalkSession:choose({
           PlayerTalk:continue('买武器'):call(function (player)
             -- player:addTalkTask(zixunwuqiTask)
@@ -93,7 +149,9 @@ wangdaliTalkInfos = {
           PlayerTalk:continue('买软石块'):call(function (player)
             -- body
           end),
-          PlayerTalk:continue('咨询武器'),
+          PlayerTalk:continue('咨询武器'):call(function (player)
+            -- body
+          end),
         }),
       },
     }

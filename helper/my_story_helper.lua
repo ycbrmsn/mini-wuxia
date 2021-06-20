@@ -203,10 +203,10 @@ EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
       wenyu:doItNow() -- 不再跟随
     elseif (itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
       StoryHelper.forward(1, '文羽的礼物')
-    elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌
-      PlayerHelper.setItemDisableThrow(objid, itemid)
-      StoryHelper.forward(1, '村长的礼物')
-      story1:finishNoticeEvent(objid)
+    -- elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌
+    --   PlayerHelper.setItemDisableThrow(objid, itemid)
+    --   StoryHelper.forward(1, '村长的礼物')
+    --   story1:finishNoticeEvent(objid)
     end
   elseif (mainIndex == 3) then -- 剧情三
     if (itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID) then

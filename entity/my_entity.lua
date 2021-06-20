@@ -850,6 +850,12 @@ function TaskReward:new (o)
   return o
 end
 
+-- 任务完成后调用，比如推动剧情等
+function TaskReward:call (f)
+  self.f = f
+  return self
+end
+
 -- 基础模板
 BaseTemplate = {
   GAIN_EXP_MSG = '你获得{{exp}}点经验', -- exp（获得经验）

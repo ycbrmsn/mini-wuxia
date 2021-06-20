@@ -94,3 +94,93 @@ CaijitongkuangshiTask = BaseTask:new({
     }),
   },
 })
+
+-- 消灭恶狼
+XiaomieelangTask = BaseTask:new({
+  id = BaseTask:autoid(),
+  name = '消灭恶狼',
+  itemid = MyMap.ITEM.MISSION_XIAOMIEELANG,
+  desc = '去恶狼谷消灭一些恶狼，回来向叶小龙报告。',
+  category = 1, -- 击败生物
+  beatInfos = {
+    { actorid = MyMap.ACTOR.WOLF_ACTOR_ID, actorname = '恶狼', num = 10, curnum = 0 }, -- 恶狼10匹
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '奖励不详',
+      category = 1,
+      itemid = MyMap.ITEM.TOKEN_ID, -- 令牌
+      num = 1,
+    }):call(function (objid)
+      PlayerHelper.setItemDisableThrow(objid, MyMap.ITEM.TOKEN_ID)
+      StoryHelper.forward(1, '村长的礼物')
+      story1:finishNoticeEvent(objid)
+    end),
+  },
+})
+
+-- 消灭强盗
+XiaomieqiangdaoTask = BaseTask:new({
+  id = BaseTask:autoid(),
+  name = '消灭强盗大头目',
+  itemid = MyMap.ITEM.MISSION_XIAOMIEQIANGDAO,
+  desc = '消灭强盗营地的强盗大头目，回来向高小虎报告。',
+  category = 1, -- 击败生物
+  beatInfos = {
+    { actorid = MyMap.ACTOR.QIANGDAO_DATOUMU_ACTOR_ID, actorname = '强盗大头目', num = 1, curnum = 0 },
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '奖励不详',
+      category = 1,
+      itemid = MyMap.ITEM.CHEST_GAO_ID, -- 宝箱
+      num = 1,
+    }):call(function (objid)
+      StoryHelper.forward(3, '准备消灭大头目')
+    end),
+  },
+})
+
+-- 击败叛军
+JibaipanjunTask = BaseTask:new({
+  id = BaseTask:autoid(),
+  name = '击败叛军',
+  itemid = MyMap.ITEM.MISSION_JIBAIPANJUN,
+  desc = '击败风颖城附近的叛军，回来向千兵卫报告。',
+  category = 1, -- 击败生物
+  beatInfos = {
+    { actorid = MyMap.ACTOR.PANTAOJIANSHIBING_ACTOR_ID, actorname = '叛逃士兵（剑）', num = 10, curnum = 0 },
+    { actorid = MyMap.ACTOR.PANTAOGONGSHIBING_ACTOR_ID, actorname = '叛逃士兵（弓）', num = 10, curnum = 0 },
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '奖励不详',
+      category = 1,
+      itemid = MyMap.ITEM.CHEST_GAO_ID, -- 宝箱
+      num = 1,
+    }):call(function (objid)
+      -- todo
+      -- StoryHelper.forward(1, '村长的礼物')
+      -- story1:finishNoticeEvent(objid)
+    end),
+  },
+})
+
+-- 送信
+SongxinTask = BaseTask:new({
+  id = BaseTask:autoid(),
+  name = '送信',
+  itemid = MyMap.ITEM.MISSION_SONGXIN,
+  desc = '帮江火送信给江枫。',
+  category = 2, -- 交付道具
+  itemInfos = {
+    -- { itemid = MyMap.BLOCK.COPPER_ORE_ID, num = 10 }, -- 江枫的回信
+  },
+  rewards = {
+    TaskReward:new({
+      desc = '奖励不详',
+      category = 2, -- 经验
+      num = 100,
+    }),
+  },
+})

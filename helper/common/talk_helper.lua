@@ -52,7 +52,18 @@ function TalkHelper.getTalkInfo (playerid, actor)
   return nil
 end
 
--- NPC与玩家对话
+-- 玩家跟附近最近的NPC对话，范围限制3格内
+function TalkHelper.talkAround (playerid)
+  local pos = ActorHelper.getMyPosition(playerid)
+  local areaid = AreaHelper.createAreaRect(pos, { x = 3, y = 3, z = 3 }) -- 3格内区域
+  local objids = AreaHelper.getAllCreaturesInAreaId(areaid, playerid, true) -- 同队生物
+  if (objids and #objids > 0) then
+    local toobjid = ActorHelper.getNearestActor(objids, pos) -- 距离最近的生物
+    return PlayerHelper.playerClickActor(playerid, toobjid)
+  end
+end
+
+-- 玩家与NPC对话，有对话则返回true
 function TalkHelper.talkWith (playerid, actor)
   if (not(actor)) then -- 没有选择过特定生物
     return
@@ -67,6 +78,8 @@ function TalkHelper.talkWith (playerid, actor)
         if (TalkHelper.turnTalkIndex(playerid, actor, #sessions)) then -- 还有下一条
           TalkHelper.talkWith(playerid, actor)
         end
+      else -- 满足条件
+        return true
       end
     else -- 不存在，则默认对话
       LogHelper.debug('no session: ', index)

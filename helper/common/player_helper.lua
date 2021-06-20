@@ -418,7 +418,7 @@ function PlayerHelper.playerClickActor (objid, toobjid)
     local want = actor:getFirstWant()
     if (want and string.find(want.think, 'noClick')) then -- 此时点击生物无反应
     elseif (actor:isPlayerClickEffective()) then
-      actor:defaultPlayerClickEvent(objid)
+      return actor:defaultPlayerClickEvent(objid)
     end
   end
 end
@@ -507,7 +507,9 @@ function PlayerHelper.playerMotionStateChange (objid, playermotion)
   if (playermotion == PLAYERMOTION.WALK) then -- 行走
     ActorHelper.resumeClickActor(objid)
   elseif (playermotion == PLAYERMOTION.SNEAK) then -- 潜行
-    ItemHelper.useItem2(objid)
+    if (not(TalkHelper.talkAround(objid))) then -- 附近没有可对话NPC
+      ItemHelper.useItem2(objid) -- 使用武器技能
+    end
   end
 end
 

@@ -66,6 +66,10 @@ MyMap = {
     MISSION_XIAOMIEYEGOU = 4324, -- 消灭野狗任务书
     MISSION_SHOUJISHOUGU = 4325, -- 收集兽骨任务书
     MISSION_CAIJITONGKUANGSHI = 4326, -- 采集铜矿石任务书
+    MISSION_XIAOMIEELANG = 4327, -- 消灭恶狼任务书
+    MISSION_XIAOMIEQIANGDAO = 4328, -- 消灭强盗任务书
+    MISSION_JIBAIPANJUN = 4329, -- 击败叛军任务书
+    MISSION_SONGXIN = 4330, -- 送信任务书
   },
   ACTOR = {
     -- 落叶村人物

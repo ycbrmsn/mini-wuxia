@@ -735,7 +735,7 @@ function BaseActor:defaultPlayerClickEvent (playerid)
     -- self:lookAt(playerid)
     self:wantLookAt(nil, playerid, 60)
     -- self:playerClickEvent(playerid)
-    TalkHelper.talkWith(playerid, self)
+    return TalkHelper.talkWith(playerid, self)
   end
 end
 

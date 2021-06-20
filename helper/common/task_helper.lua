@@ -119,6 +119,9 @@ function TaskHelper.tryFinishTask (playerid, taskid)
         local player = PlayerHelper.getPlayer(playerid)
         player:gainExp(reward.num)
       end
+      if (reward.f) then -- 回调
+        reward.f(playerid)
+      end
     end
     if (task.itemid) then -- 需要任务书，则销毁任务书
       if (BackpackHelper.hasItem(playerid, task.itemid, true)) then
@@ -314,7 +317,7 @@ function TaskHelper.finishTask (objid, cTask)
 end
 
 -- 生成接任务对话选项
-function TaskHelper.generateAcceptTalk (cTask, talks)
+function TaskHelper.generateAcceptTalk (cTask, talks, ants)
   local sessions = {}
   for i, v in ipairs(talks) do
     if (i ~= #talks) then
@@ -341,12 +344,12 @@ function TaskHelper.generateAcceptTalk (cTask, talks)
   end
   local taskid = cTask.id
   local realid = cTask:getRealid()
+  local talkAnts = ants or {}
+  table.insert(talkAnts, TalkAnt:includeTask(taskid)) -- 选择任务
+  table.insert(talkAnts, TalkAnt:excludeTask(realid)) -- 未接受任务
   return TalkInfo:new({
     id = taskid,
-    ants = {
-      TalkAnt:includeTask(taskid),
-      TalkAnt:excludeTask(realid),
-    },
+    ants = talkAnts,
     progress = {
       [0] = sessions
     }
@@ -372,15 +375,21 @@ function TaskHelper.generateQueryTalk (cTask, talks)
 end
 
 -- 生成交付任务对话
-function TaskHelper.generatePayTalk (cTask, talks)
+function TaskHelper.generatePayTalk (cTask, talks, callback)
   local sessions = {}
   for i, v in ipairs(talks) do
     if (i ~= #talks) then
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
     else
-      table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }):call(function (player)
-        TaskHelper.finishTask(player.objid, cTask)
-      end))
+      local session = TalkSession:new({ t = v[1], msg = v[2] })
+      if (callback) then
+        callback()
+      else -- 正常结束
+        session:call(function (player)
+          TaskHelper.finishTask(player.objid, cTask)
+        end)
+      end
+      table.insert(sessions, session)
     end
   end
   local realid = cTask:getRealid()
