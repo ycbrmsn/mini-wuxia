@@ -714,7 +714,7 @@ function BaseActor:playerClickEvent (objid)
   self.action:playFree2(2)
 end
 
-function BaseActor:defaultPlayerClickEvent (playerid)
+function BaseActor:defaultPlayerClickEvent (playerid, simulatedClick)
   local actorTeam = CreatureHelper.getTeam(self.objid)
   local playerTeam = PlayerHelper.getTeam(playerid)
   if (actorTeam ~= 0 and actorTeam == playerTeam) then -- 有队伍并且同队
@@ -735,7 +735,9 @@ function BaseActor:defaultPlayerClickEvent (playerid)
     -- self:lookAt(playerid)
     self:wantLookAt(nil, playerid, 60)
     -- self:playerClickEvent(playerid)
-    return TalkHelper.talkWith(playerid, self)
+    if ((not(self.clickNoUse) or simulatedClick)) then -- 人物非点击无效 or 模拟点击
+      return TalkHelper.talkWith(playerid, self)
+    end
   end
 end
 

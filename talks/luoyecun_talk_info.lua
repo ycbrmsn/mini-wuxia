@@ -124,36 +124,57 @@ wangdaliTalkInfos = {
     id = 100,
     progress = {
       [0] = {
-        TalkSession:reply('你要买点武器吗？'),
-        TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, CaijitongkuangshiTask))
-          playerTalks:add(PlayerTalk:continue('买武器'))
-          playerTalks:add(PlayerTalk:continue('买防具'))
-          playerTalks:add(PlayerTalk:continue('买强化石'))
-          playerTalks:add(PlayerTalk:continue('买软石块'))
-          playerTalks:add(PlayerTalk:continue('咨询武器'))
-          local sessions = MyArr:new()
-          sessions:add(TalkSession:choose(playerTalks:get()))
-          sessions:add(TalkSession:speak('对呢，我来逛逛。'))
-          return sessions:get()
-        end),
-        TalkSession:choose({
-          PlayerTalk:continue('买武器'):call(function (player)
-            -- player:addTalkTask(zixunwuqiTask)
-          end),
-          PlayerTalk:continue('买防具'):call(function (player)
-            -- body
-          end),
-          PlayerTalk:continue('买强化石'):call(function (player)
-            -- body
-          end),
-          PlayerTalk:continue('买软石块'):call(function (player)
-            -- body
-          end),
-          PlayerTalk:continue('咨询武器'):call(function (player)
-            -- body
-          end),
-        }),
+        TalkSession:reply('你有什么问题吗？'),
+        TalkSession:speak('我想买把武器，但是对武器不太了解，你能给我说说吗？'),
+        TalkSession:reply('你可是问对人了。听好了哟。'),
+        TalkSession:reply('虽说世上武器各种各样，但主流武器一共分为4类。分别为剑、刀、枪、弓。'),
+        TalkSession:speak('它们有什么区别呢？'),
+        TalkSession:reply('剑的伤害最低，但可以增加少许防御。刀的伤害较剑高，略微增加防御。'),
+        TalkSession:reply('枪的伤害最高，但使用更耗体力，会更容易饥饿。弓与枪的伤害差别不大，但攻速慢。'),
+        TalkSession:speak('那一定很少有人用剑了。'),
+        TalkSession:reply('当然不是。武器还有品质高低之分，高品质的剑也是很多人喜爱的。'),
+        TalkSession:speak('那武器分几种品质呢？'),
+        TalkSession:reply('武器品质可以分为白、绿、蓝、紫。听说紫品之上还有橙、红，但那只是传说。'),
+        TalkSession:speak('不同品质有什么差别呢？'),
+        TalkSession:reply('品质决定武器可使用的技能。绿品武器带有被动技能，蓝、紫品武器则带有主动技能。'),
+        TalkSession:reply('所以，一件蓝品武器的属性，不一定比一件白品武器的属性好。'),
+        TalkSession:reply('武器除了有品质的差异，还有强化等级的不同。'),
+        TalkSession:speak('强化等级？'),
+        TalkSession:reply('是的，可以对武器进行强化，强化后会增强武器的属性和技能。每件武器最多强化3级。'),
+        TalkSession:speak('那强化需要什么呢？'),
+        TalkSession:reply('强化很简单，只要有强化武器所需要的材料就行。你可以使用工具箱自己进行强化。'),
+        TalkSession:reply('差不多就这些了。行走江湖，这些常识还是需要知道的。'),
+        TalkSession:speak('嗯嗯，我记下了。'),
+
+        -- TalkSession:init(function ()
+        --   local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, CaijitongkuangshiTask))
+        --   -- playerTalks:add(PlayerTalk:continue('买武器'))
+        --   -- playerTalks:add(PlayerTalk:continue('买防具'))
+        --   -- playerTalks:add(PlayerTalk:continue('买强化石'))
+        --   -- playerTalks:add(PlayerTalk:continue('买软石块'))
+        --   playerTalks:add(PlayerTalk:continue('咨询武器'))
+        --   local sessions = MyArr:new()
+        --   sessions:add(TalkSession:choose(playerTalks:get()))
+        --   sessions:add(TalkSession:speak('对呢，我来逛逛。'))
+        --   return sessions:get()
+        -- end),
+        -- TalkSession:choose({
+        --   PlayerTalk:continue('买武器'):call(function (player)
+        --     -- player:addTalkTask(zixunwuqiTask)
+        --   end),
+        --   PlayerTalk:continue('买防具'):call(function (player)
+        --     -- body
+        --   end),
+        --   PlayerTalk:continue('买强化石'):call(function (player)
+        --     -- body
+        --   end),
+        --   PlayerTalk:continue('买软石块'):call(function (player)
+        --     -- body
+        --   end),
+        --   PlayerTalk:continue('咨询武器'):call(function (player)
+        --     -- body
+        --   end),
+        -- }),
       },
     }
   }),

@@ -143,6 +143,7 @@ function Wangdali:new ()
     objid = 4339145592,
     isSingleton = true,
     unableBeKilled = true,
+    clickNoUse = true, -- 点击无效，主要是点击人物买东西，不通过点击进行对话
     initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
       MyPosition:new(-25.5, 10.5, -46.5), -- 床尾位置
@@ -166,7 +167,8 @@ function Wangdali:new ()
       MyPosition:new(-32.5, 9.5, -38.5), -- 进门口右角落
       MyPosition:new(-26.5, 9.5, -46.5) -- 对角床上
     },
-    doorPosition = MyPosition:new(-29.5, 9.5, -35.5) -- 门外位置
+    doorPosition = MyPosition:new(-29.5, 9.5, -35.5), -- 门外位置
+    talkInfos = wangdaliTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)

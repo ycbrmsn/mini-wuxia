@@ -410,15 +410,15 @@ function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
   player:breakTalk()
 end
 
--- 玩家点击生物
-function PlayerHelper.playerClickActor (objid, toobjid)
+-- 玩家点击生物 simulatedClick(true表示模拟点击，不是真实点击生物)
+function PlayerHelper.playerClickActor (objid, toobjid, simulatedClick)
   local actor = ActorHelper.getActor(toobjid)
   if (actor) then
     ActorHelper.recordClickActor(objid, actor)
     local want = actor:getFirstWant()
     if (want and string.find(want.think, 'noClick')) then -- 此时点击生物无反应
     elseif (actor:isPlayerClickEffective()) then
-      return actor:defaultPlayerClickEvent(objid)
+      return actor:defaultPlayerClickEvent(objid, simulatedClick)
     end
   end
 end

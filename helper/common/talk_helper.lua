@@ -59,7 +59,7 @@ function TalkHelper.talkAround (playerid)
   local objids = AreaHelper.getAllCreaturesInAreaId(areaid, playerid, true) -- 同队生物
   if (objids and #objids > 0) then
     local toobjid = ActorHelper.getNearestActor(objids, pos) -- 距离最近的生物
-    return PlayerHelper.playerClickActor(playerid, toobjid)
+    return PlayerHelper.playerClickActor(playerid, toobjid, true)
   end
 end
 
