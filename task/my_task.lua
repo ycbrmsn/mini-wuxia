@@ -4,6 +4,9 @@
 
 -- 咨询武器
 zixunwuqiTask = BaseTask:new({ id = 1 })
+st102 = 102 -- 文羽
+st103 = 103 -- 村长
+st104 = 104 -- 叶小龙
 
 -- 具体任务
 
@@ -113,7 +116,7 @@ XiaomieelangTask = BaseTask:new({
       num = 1,
     }):call(function (objid)
       PlayerHelper.setItemDisableThrow(objid, MyMap.ITEM.TOKEN_ID)
-      StoryHelper.forward(1, '村长的礼物')
+      StoryHelper.forward(1, '考核任务')
       story1:finishNoticeEvent(objid)
     end),
   },

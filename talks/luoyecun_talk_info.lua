@@ -14,8 +14,9 @@ yangwanliTalkInfos = {
         ), -- 房主
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
-          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 3) -- 进度三
+          TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
+          TalkAnt:includeTask(st102),
+          TalkAnt:excludeTask(st103)
         ) -- 非房主
       ),
     },
@@ -33,6 +34,7 @@ yangwanliTalkInfos = {
         TalkSession:speak('太好了，村长，我会努力的。先走了。'):call(function (player, actor)
           local itemid = MyMap.ITEM.YANGWANLI_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得村长的包裹
+            TaskHelper.addTask(player.objid, st103)
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             StoryHelper.forward(1, '文羽的礼物')
           end
@@ -194,7 +196,8 @@ wenyuTalkInfos = {
         ), -- 房主
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
-          TalkAnt:excludeItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID) -- 无剧情
+          TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
+          TalkAnt:excludeTask(st102)
         ) -- 非房主
       ),
     },
@@ -210,6 +213,7 @@ wenyuTalkInfos = {
         TalkSession:speak('谢谢你，文羽。'):call(function (player, actor)
           local itemid = MyMap.ITEM.WENYU_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得文羽的包裹
+            TaskHelper.addTask(player.objid, st102)
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             if (StoryHelper.forward(1, '文羽通知')) then
               wenyu:doItNow() -- 不再跟随

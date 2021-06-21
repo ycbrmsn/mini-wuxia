@@ -432,14 +432,22 @@ function TalkAnt:justItem (itemid, num)
   return TalkAnt:new({ t = 6, itemid = itemid, num = num or 1 })
 end
 
+-- 房主正好几个道具（主要用于剧情判断）
+function TalkAnt:hosterJustItem (itemid, num)
+  if (type(itemid) == 'table') then
+    itemid = itemid.id
+  end
+  return TalkAnt:new({ t = 7, itemid = itemid, num = num or 1 })
+end
+
 -- 至少几级
 function TalkAnt:atLeastLevel (level)
-  return TalkAnt:new({ t = 7, level = level })
+  return TalkAnt:new({ t = 9, level = level })
 end
 
 -- 至多几级
 function TalkAnt:atMostLevel (level)
-  return TalkAnt:new({ t = 8, level = level })
+  return TalkAnt:new({ t = 10, level = level })
 end
 
 -- 是否是房主
@@ -517,10 +525,16 @@ function TalkAnt:isMeet (playerid)
     if (num ~= itemnum) then
       return false
     end
-  elseif (self.t == 7) then -- 至少几级
+  elseif (self.t == 7) then -- 房主正好几个道具（主要用于剧情判断）
+    local hostPlayer = PlayerHelper.getHostPlayer()
+    local num = BackpackHelper.getItemNumAndGrid(hostPlayer.objid, self.num)
+    if (num ~= self.num) then
+      return false
+    end
+  elseif (self.t == 9) then -- 至少几级
     local level = PlayerHelper.getLevel(playerid)
     return level >= self.level
-  elseif (self.t == 8) then -- 至多几级
+  elseif (self.t == 10) then -- 至多几级
     local level = PlayerHelper.getLevel(playerid)
     return level <= self.level
   elseif (self.t == 11) then -- 是否是房主
@@ -683,9 +697,10 @@ BaseTask = {
   desc(任务描述)
   appendDesc(任务描述拼接规则：键值存在拼值，不存在拼键) { 'desc', 'actorname', '。' },
   itemid(任务书，用于不重置地图时记录玩家任务)
-  category(任务类型：1击败生物；2交付道具；3不做什么)
+  category(任务类型：1击败生物；2交付道具；3达到等级)
   beatInfos(击败生物信息) { actorid = actorid, actorname = actorname, num = num, curnum = curnum }
   itemInfos(交付道具信息) { itemid = itemid, num = num }
+  level(达到等级信息)
   rewards(任务奖励)
 ]]-- 
 function BaseTask:new (o)
@@ -776,6 +791,9 @@ function BaseTask:show (objid, useGraphics)
       table.insert(lines, StringHelper.concat(prefix, itemname, '（',
         num, '/', itemInfo.num, '）'))
     end
+  elseif (self.category == 3) then -- 达到等级
+    local level = PlayerHelper.getLevel(objid)
+    table.insert(lines, '任务进度：等级（' .. level .. '/' .. self.level .. '）')
   else
     table.insert(lines, '任务进度：不详。')
   end
@@ -825,6 +843,9 @@ function BaseTask:isComplete (objid)
       end
     end
     return true
+  elseif (self.category == 3) then -- 达到等级
+    local level = PlayerHelper.getLevel(objid)
+    return level >= self.level
   else -- 其他
     return true
   end

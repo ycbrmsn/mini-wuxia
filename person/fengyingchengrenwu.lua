@@ -213,7 +213,8 @@ function Yexiaolong:new ()
       MyPosition:new(6.5, 8.5, 604.5), -- 门口蜡烛旁
       MyPosition:new(11.5, 8.5, 609.5) -- 墙内蜡烛旁
     },
-    classRoomPos = MyPosition:new(5.5, 7.5, 606.5) -- 教室里位置
+    classRoomPos = MyPosition:new(5.5, 7.5, 606.5), -- 教室里位置
+    talkInfos = yexiaolongTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)
