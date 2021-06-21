@@ -28,7 +28,7 @@ yexiaolongTalkInfos = {
         TalkSession:speak('真的吗？那我可以进入学院了吗？'),
         TalkSession:reply('必要的考验还是需要的。听说这里附近有一个恶狼谷。你去杀十匹恶狼证明你的实力。'),
         TalkSession:speak('好，我这就去。'):call(function (player, actor)
-          TaskHelper.acceptTask(player.objid, XiaomieelangTask)
+          TaskHelper.acceptTask(player.objid, xiaomieelangTask)
           TaskHelper.addTask(player.objid, st104)
           StoryHelper.forward(1, '村长的礼物')
         end),
@@ -38,7 +38,7 @@ yexiaolongTalkInfos = {
   TalkInfo:new({
     id = 2,
     ants = {
-      TalkAnt:includeTask(XiaomieelangTask:getRealid(), 1), -- 消灭恶狼任务未完成
+      TalkAnt:includeTask(xiaomieelangTask:getRealid(), 1), -- 消灭恶狼任务未完成
     },
     progress = {
       [0] = {
@@ -50,12 +50,12 @@ yexiaolongTalkInfos = {
   TalkInfo:new({
     id = 3,
     ants = {
-      TalkAnt:includeTask(XiaomieelangTask:getRealid(), 2), -- 消灭恶狼任务已完成
+      TalkAnt:includeTask(xiaomieelangTask:getRealid(), 2), -- 消灭恶狼任务已完成
     },
     progress = {
       [0] = {
         TalkSession:speak('先生，我已经消灭了足够的恶狼了。'):call(function(player, actor)
-          TaskHelper.finishTask(player.objid, XiaomieelangTask)
+          TaskHelper.finishTask(player.objid, xiaomieelangTask)
         end),
       },
     }

@@ -360,23 +360,47 @@ end
 -- 砍树（采集落叶松木）任务书
 MissionKanshu = MissionBook:new({
   id = MyMap.ITEM.MISSION_KANSHU,
-  cTask = KanshuTask,
+  cTask = kanshuTask,
 })
 
 -- 杀狗（消灭野狗）任务书
 MissionXiaomieyegou = MissionBook:new({
   id = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
-  cTask = XiaomieyegouTask,
+  cTask = xiaomieyegouTask,
 })
 
 -- 收集兽骨任务书
 MissionShoujishougu = MissionBook:new({
   id = MyMap.ITEM.MISSION_SHOUJISHOUGU,
-  cTask = ShoujishouguTask,
+  cTask = shoujishouguTask,
 })
 
 -- 采集铜矿石任务书
 MissionCaijitongkuangshi = MissionBook:new({
   id = MyMap.ITEM.MISSION_CAIJITONGKUANGSHI,
-  cTask = CaijitongkuangshiTask,
+  cTask = caijitongkuangshiTask,
+})
+
+-- 消灭恶狼任务书
+MissionXiaomieelang = MissionBook:new({
+  id = MyMap.ITEM.MISSION_XIAOMIEELANG,
+  cTask = xiaomieelangTask,
+})
+
+-- 消灭强盗任务书
+MissionXiaomieqiangdao = MissionBook:new({
+  id = MyMap.ITEM.MISSION_XIAOMIEQIANGDAO,
+  cTask = xiaomieqiangdaoTask,
+})
+
+-- 击败叛军任务书
+MissionJibaipanjun = MissionBook:new({
+  id = MyMap.ITEM.MISSION_JIBAIPANJUN,
+  cTask = jibaipanjunTask,
+})
+
+-- 送信任务书
+MissionSongxin = MissionBook:new({
+  id = MyMap.ITEM.MISSION_SONGXIN,
+  cTask = songxinTask,
 })

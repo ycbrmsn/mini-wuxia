@@ -43,18 +43,18 @@ yangwanliTalkInfos = {
     },
   }),
   -- 采集落叶松木
-  TaskHelper.generateAcceptTalk(KanshuTask, {
+  TaskHelper.generateAcceptTalk(kanshuTask, {
     { 3, '有什么我能帮忙的吗？' },
     { 1, '村里的房子又需要修葺一下了。' },
     { 1, '我需要一些落叶松木，你可以帮我砍一些回来吗？' },
     { '没问题。', '村长我正忙着呢。' },
   }),
-  TaskHelper.generateQueryTalk(KanshuTask, {
+  TaskHelper.generateQueryTalk(kanshuTask, {
     { 3, '村长，我没有找到落叶松木。' },
     { 1, '村子外面就有一片落叶松林。' },
     { 3, '哦，我知道了。' },
   }),
-  TaskHelper.generatePayTalk(KanshuTask, {
+  TaskHelper.generatePayTalk(kanshuTask, {
     { 3, '村长我采回来了。' },
     { 1, '真是个好孩子。' },
   }),
@@ -64,7 +64,7 @@ yangwanliTalkInfos = {
       [0] = {
         TalkSession:reply('{{:getName}}，你来啦。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, KanshuTask))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, kanshuTask))
           playerTalks:add(PlayerTalk:continue('闲聊'))
           local sessions = MyArr:new()
           sessions:add(TalkSession:choose(playerTalks:get()))
@@ -79,7 +79,7 @@ yangwanliTalkInfos = {
 -- 王大力
 wangdaliTalkInfos = {
   -- 采集铜矿石
-  TaskHelper.generateAcceptTalk(CaijitongkuangshiTask, {
+  TaskHelper.generateAcceptTalk(caijitongkuangshiTask, {
     { 3, '有什么我能帮忙的吗？' },
     { 1, '我最近在研究青铜武器，可惜没有材料。' },
     { 1, '在恶狼谷附近有一处矿脉，盛产铜矿。可是最近却被一群强盗霸占了。' },
@@ -89,12 +89,12 @@ wangdaliTalkInfos = {
   }, {
     TalkAnt:atLeastLevel(10), -- 至少10级
   }),
-  TaskHelper.generateQueryTalk(CaijitongkuangshiTask, {
+  TaskHelper.generateQueryTalk(caijitongkuangshiTask, {
     { 3, '我转了一圈，没有找到矿石。' },
     { 1, '矿洞就在水池旁，很容易看到。注意安全。' },
     { 3, '哦，我知道了。' },
   }),
-  TaskHelper.generatePayTalk(CaijitongkuangshiTask, {
+  TaskHelper.generatePayTalk(caijitongkuangshiTask, {
     { 3, '我采集到足够的矿石了。' },
     { 1, '不错，你采集到了足够的矿石。你想要件什么武器？' },
     { 5,
@@ -102,22 +102,22 @@ wangdaliTalkInfos = {
         PlayerTalk:stop('我想我需要一把剑。'):call(function (player, actor)
           actor:speakTo(player.objid, 0, '拿稳了。')
           BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSword.levelIds[1])
-          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
         end),
         PlayerTalk:stop('我想要一把刀。'):call(function (player, actor)
           actor:speakTo(player.objid, 0, '拿稳了。')
           BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeKnife.levelIds[1])
-          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
         end),
         PlayerTalk:stop('我想舞枪。'):call(function (player, actor)
           actor:speakTo(player.objid, 0, '拿稳了。')
           BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSpear.levelIds[1])
-          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
         end),
         PlayerTalk:stop('我想来一张弓。'):call(function (player, actor)
           actor:speakTo(player.objid, 0, '拿稳了。')
           BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeBow.levelIds[1])
-          TaskHelper.finishTask(player.objid, CaijitongkuangshiTask)
+          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
         end),
       }
     }
@@ -149,7 +149,7 @@ wangdaliTalkInfos = {
         TalkSession:speak('嗯嗯，我记下了。'),
 
         -- TalkSession:init(function ()
-        --   local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, CaijitongkuangshiTask))
+        --   local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask))
         --   -- playerTalks:add(PlayerTalk:continue('买武器'))
         --   -- playerTalks:add(PlayerTalk:continue('买防具'))
         --   -- playerTalks:add(PlayerTalk:continue('买强化石'))
@@ -227,8 +227,8 @@ wenyuTalkInfos = {
   TalkInfo:new({
     id = 1,
     ants = {
-      TalkAnt:excludeItem(XiaomieyegouTask.rewards[1].itemid), -- 没有皮头盔
-      TalkAnt:excludeTask(XiaomieyegouTask:getRealid()), -- 未接受杀狗任务
+      TalkAnt:excludeItem(xiaomieyegouTask.rewards[1].itemid), -- 没有皮头盔
+      TalkAnt:excludeTask(xiaomieyegouTask:getRealid()), -- 未接受杀狗任务
       TalkAnt:atLeastLevel(3), -- 至少3级
     },
     progress = {
@@ -242,7 +242,7 @@ wenyuTalkInfos = {
         TalkSession:reply('这些野狗太可恶了。你可以帮我消灭一些吗？'),
         TalkSession:choose({
           PlayerTalk:stop('没问题'):call(function (player, actor)
-            TaskHelper.acceptTask(player.objid, XiaomieyegouTask)
+            TaskHelper.acceptTask(player.objid, xiaomieyegouTask)
           end),
           PlayerTalk:continue('我先看看情况再说。'),
         }),
@@ -253,7 +253,7 @@ wenyuTalkInfos = {
   TalkInfo:new({
     id = 2,
     ants = {
-      TalkAnt:includeTask(XiaomieyegouTask:getRealid(), 1), -- 杀狗任务未完成
+      TalkAnt:includeTask(xiaomieyegouTask:getRealid(), 1), -- 杀狗任务未完成
     },
     progress = {
       [0] = {
@@ -266,13 +266,13 @@ wenyuTalkInfos = {
   TalkInfo:new({
     id = 3,
     ants = {
-      TalkAnt:includeTask(XiaomieyegouTask:getRealid(), 2), -- 杀狗任务已完成
+      TalkAnt:includeTask(xiaomieyegouTask:getRealid(), 2), -- 杀狗任务已完成
     },
     progress = {
       [0] = {
         TalkSession:speak('我消灭了一些野狗了。'),
         TalkSession:reply('真是太好了。这是我的小帽子，送给你了。'):call(function(player, actor)
-          TaskHelper.finishTask(player.objid, XiaomieyegouTask)
+          TaskHelper.finishTask(player.objid, xiaomieyegouTask)
         end),
       },
     }

@@ -11,7 +11,7 @@ st104 = 104 -- 叶小龙
 -- 具体任务
 
 -- 砍树任务
-KanshuTask = BaseTask:new({
+kanshuTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '采集落叶松木',
   itemid = MyMap.ITEM.MISSION_KANSHU,
@@ -33,7 +33,7 @@ KanshuTask = BaseTask:new({
 })
 
 -- 消灭野狗
-XiaomieyegouTask = BaseTask:new({
+xiaomieyegouTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '消灭野狗',
   itemid = MyMap.ITEM.MISSION_XIAOMIEYEGOU,
@@ -53,7 +53,7 @@ XiaomieyegouTask = BaseTask:new({
 })
 
 -- 收集兽骨任务
-ShoujishouguTask = BaseTask:new({
+shoujishouguTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '收集兽骨',
   itemid = MyMap.ITEM.MISSION_SHOUJISHOUGU,
@@ -79,7 +79,7 @@ ShoujishouguTask = BaseTask:new({
 })
 
 -- 采集铜矿石任务
-CaijitongkuangshiTask = BaseTask:new({
+caijitongkuangshiTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '采集铜矿石',
   itemid = MyMap.ITEM.MISSION_CAIJITONGKUANGSHI,
@@ -99,7 +99,7 @@ CaijitongkuangshiTask = BaseTask:new({
 })
 
 -- 消灭恶狼
-XiaomieelangTask = BaseTask:new({
+xiaomieelangTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '消灭恶狼',
   itemid = MyMap.ITEM.MISSION_XIAOMIEELANG,
@@ -123,7 +123,7 @@ XiaomieelangTask = BaseTask:new({
 })
 
 -- 消灭强盗
-XiaomieqiangdaoTask = BaseTask:new({
+xiaomieqiangdaoTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '消灭强盗大头目',
   itemid = MyMap.ITEM.MISSION_XIAOMIEQIANGDAO,
@@ -145,7 +145,7 @@ XiaomieqiangdaoTask = BaseTask:new({
 })
 
 -- 击败叛军
-JibaipanjunTask = BaseTask:new({
+jibaipanjunTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '击败叛军',
   itemid = MyMap.ITEM.MISSION_JIBAIPANJUN,
@@ -170,7 +170,7 @@ JibaipanjunTask = BaseTask:new({
 })
 
 -- 送信
-SongxinTask = BaseTask:new({
+songxinTask = BaseTask:new({
   id = BaseTask:autoid(),
   name = '送信',
   itemid = MyMap.ITEM.MISSION_SONGXIN,
