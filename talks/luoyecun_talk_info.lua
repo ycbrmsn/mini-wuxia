@@ -210,6 +210,7 @@ miaolanTalkInfos = {
       [0] = {
         TalkSession:speak('我受伤了，需要治疗一下。'),
         TalkSession:noDialogue():call(function (player, actor)
+          actor:setPlayerClickEffective(player.objid, false)
           actor:speakTo(player.objid, 0, '我来看看。')
           player:enableMove(false, true)
           TimeHelper.callFnAfterSecond (function (p)
@@ -226,15 +227,27 @@ miaolanTalkInfos = {
                 player:speakTo(player.objid, 0, '谢谢苗大夫，我觉得舒服多了。')
                 actor:speakTo(player.objid, 2, '不用谢。要爱护身体哦。')
                 player:speakTo(player.objid, 4, '我知道了。')
-                TalkHelper.turnTalkIndex(player.objid, actor, 0, 1)
-                player:enableMove(true, true)
+                TimeHelper.callFnAfterSecond (function (p)
+                  local talkIndex = TalkHelper.getTalkIndex(player.objid, actor)
+                  if (talkIndex ~= 1) then
+                    TalkHelper.turnTalkIndex(player.objid, actor)
+                  end
+                  player:enableMove(true, true)
+                  actor:setPlayerClickEffective(player.objid, true)
+                end, 4)
               end, 3)
             else -- 没受伤
-              actor:speakTo(objid, 0, '身体棒棒的，可不能说谎哟。')
+              actor:speakTo(player.objid, 0, '身体棒棒的，可不能说谎哟。')
               player:speakTo(player.objid, 2, '我可能产生幻觉了。')
               actor:speakTo(objid, 4, '呵呵呵呵……')
-              TalkHelper.turnTalkIndex(player.objid, actor, 0, 1)
-              player:enableMove(true, true)
+              TimeHelper.callFnAfterSecond (function (p)
+                local talkIndex = TalkHelper.getTalkIndex(player.objid, actor)
+                if (talkIndex ~= 1) then
+                  TalkHelper.turnTalkIndex(player.objid, actor)
+                end
+                player:enableMove(true, true)
+                actor:setPlayerClickEffective(player.objid, true)
+              end, 4)
             end
           end, 2)
         end),

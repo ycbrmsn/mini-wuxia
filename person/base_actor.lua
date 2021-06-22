@@ -19,6 +19,7 @@ BaseActor = {
   defaultTalkMsg = nil, -- 默认对话
   speakDim = { x = 30, y = 30, z = 30 }, -- 默认说话声音传播范围
   offset = 120, -- 会话文字板高度
+  clickNoUsePlayerids = {}, -- 点击无效的玩家id，主要用于某时刻某玩家无法点击对话，如对话需要等待一段时间后才可点击
 }
 
 function BaseActor:new (actorid, objid)
@@ -741,9 +742,18 @@ function BaseActor:defaultPlayerClickEvent (playerid, simulatedClick)
   end
 end
 
--- 有必要可重写此方法，用于控制玩家点击生物是否有反应
-function BaseActor:isPlayerClickEffective ()
-  return true
+-- 用于某时刻某玩家无法点击对话，如对话需要等待一段时间后才可点击
+function BaseActor:isPlayerClickEffective (playerid)
+  return not(self.clickNoUsePlayerids[playerid])
+end
+
+-- 设置玩家点击生物是否有效
+function BaseActor:setPlayerClickEffective (playerid, effective)
+  if (effective) then
+    self.clickNoUsePlayerids[playerid] = nil
+  else
+    self.clickNoUsePlayerids[playerid] = true
+  end
 end
 
 function BaseActor:collidePlayer (playerid, isPlayerInFront)

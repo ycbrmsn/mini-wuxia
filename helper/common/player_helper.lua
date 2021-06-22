@@ -417,7 +417,7 @@ function PlayerHelper.playerClickActor (objid, toobjid, simulatedClick)
     ActorHelper.recordClickActor(objid, actor)
     local want = actor:getFirstWant()
     if (want and string.find(want.think, 'noClick')) then -- 此时点击生物无反应
-    elseif (actor:isPlayerClickEffective()) then
+    elseif (actor:isPlayerClickEffective(objid)) then -- 当前玩家点击有效
       return actor:defaultPlayerClickEvent(objid, simulatedClick)
     end
   end

@@ -128,6 +128,9 @@ end
 
 -- 对话序数跳转 默认跳一个
 function TalkHelper.turnTalkIndex (playerid, actor, max, index)
+  if (not(max)) then
+    max = 0
+  end
   if (not(index)) then
     index = TalkHelper.getTalkIndex(playerid, actor) + 1
   end
