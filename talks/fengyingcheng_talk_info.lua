@@ -54,7 +54,8 @@ yexiaolongTalkInfos = {
     },
     progress = {
       [0] = {
-        TalkSession:speak('先生，我已经消灭了足够的恶狼了。'):call(function(player, actor)
+        TalkSession:noDialogue():call(function(player, actor)
+          player:speak(0, '先生，我已经消灭了足够的恶狼了。')
           TaskHelper.finishTask(player.objid, xiaomieelangTask)
         end),
       },

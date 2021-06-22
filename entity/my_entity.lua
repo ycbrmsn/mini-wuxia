@@ -558,7 +558,7 @@ end
 
 -- 会话
 --[[
-  t(类型：1npc说, 2npc想, 3player说, 4player想)
+  t(类型：1npc说, 2npc想, 3player说, 4player想, 5player选择, 9无会话)
   msg(string or arr)
   turnTo(跳到第几句对话，默认nil下一句)
   ant(会说这句话的条件)
@@ -599,6 +599,10 @@ end
 
 function TalkSession:choose (msg)
   return self:dialogue(5, msg)
+end
+
+function TalkSession:noDialogue ()
+  return self:dialogue(9, nil)
 end
 
 function TalkSession:to (turnTo)

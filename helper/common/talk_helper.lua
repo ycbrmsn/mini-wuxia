@@ -155,7 +155,11 @@ function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
   if (not(TalkHelper.isMeet(session, playerid))) then
     return false
   end
-  if (session.t == 1) then -- 生物说
+  if (session.t == 9) then -- 无会话，但有其他动作，没有会话结束标志
+    if (session.f) then
+      session.f(player, actor)
+    end
+  elseif (session.t == 1) then -- 生物说
     actor:speakTo(playerid, 0, session.msg)
     if (session.f) then
       session.f(player, actor)
