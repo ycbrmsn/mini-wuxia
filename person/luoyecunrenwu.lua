@@ -278,6 +278,7 @@ function Miaolan:new ()
     objid = 4314184974,
     isSingleton = true,
     unableBeKilled = true,
+    clickNoUse = true,
     initPosition = MyPosition:new(-33.5, 8.5, -13.5), -- 药店柜台后
     bedData = {
       MyPosition:new(-29.5, 14.5, -14.5), -- 床尾位置
@@ -301,7 +302,8 @@ function Miaolan:new ()
     secondFloorPositions2 = {
       MyPosition:new(-28.5, 13.5, -15.5), -- 靠近床旁边
       MyPosition:new(-29.5, 13.5, -18.5) -- 门口
-    }
+    },
+    talkInfos = miaolanTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)

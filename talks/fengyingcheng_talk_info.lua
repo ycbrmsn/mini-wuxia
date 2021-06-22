@@ -15,8 +15,8 @@ yexiaolongTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:includeTask(st103),
-          TalkAnt:excludeTask(st104)
+          TalkAnt:includeTask(MyTask.ST103),
+          TalkAnt:excludeTask(MyTask.ST104)
         ) -- 非房主
       ),
     },
@@ -29,7 +29,7 @@ yexiaolongTalkInfos = {
         TalkSession:reply('必要的考验还是需要的。听说这里附近有一个恶狼谷。你去杀十匹恶狼证明你的实力。'),
         TalkSession:speak('好，我这就去。'):call(function (player, actor)
           TaskHelper.acceptTask(player.objid, xiaomieelangTask)
-          TaskHelper.addTask(player.objid, st104)
+          TaskHelper.addTask(player.objid, MyTask.ST104)
           StoryHelper.forward(1, '村长的礼物')
         end),
       },

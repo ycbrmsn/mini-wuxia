@@ -15,8 +15,8 @@ yangwanliTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:includeTask(st102),
-          TalkAnt:excludeTask(st103)
+          TalkAnt:includeTask(MyTask.ST102),
+          TalkAnt:excludeTask(MyTask.ST103)
         ) -- 非房主
       ),
     },
@@ -34,7 +34,7 @@ yangwanliTalkInfos = {
         TalkSession:speak('太好了，村长，我会努力的。先走了。'):call(function (player, actor)
           local itemid = MyMap.ITEM.YANGWANLI_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得村长的包裹
-            TaskHelper.addTask(player.objid, st103)
+            TaskHelper.addTask(player.objid, MyTask.ST103)
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             StoryHelper.forward(1, '文羽的礼物')
           end
@@ -182,6 +182,87 @@ wangdaliTalkInfos = {
   }),
 }
 
+-- 苗兰
+miaolanTalkInfos = {
+  -- 收集兽骨
+  TaskHelper.generateAcceptTalk(shoujishouguTask, {
+    { 3, '有什么我能帮忙的吗？' },
+    { 1, '最近做药丸的材料不够用了。' },
+    { 1, '我需要一些兽骨，你可以帮我收集一些吗？' },
+    { '没问题。', '我先看看情况再说。' },
+  }),
+  TaskHelper.generateQueryTalk(shoujishouguTask, {
+    { 3, '苗大夫，哪里有兽骨呢？' },
+    { 1, '击败野狗、恶狼、狂牛都有几率获得兽骨，注意安全。' },
+    { 3, '嗯嗯，我知道了。' },
+  }),
+  TaskHelper.generatePayTalk(shoujishouguTask, {
+    { 3, '苗大夫，看这些兽骨够了吗？' },
+    { 1, '够用了。这些给你。' },
+  }),
+  -- 疗伤
+  TalkInfo:new({
+    id = MyTask.ST10,
+    ants = {
+      TalkAnt:includeTask(MyTask.ST10),
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('我受伤了，需要治疗一下。'),
+        TalkSession:noDialogue():call(function (player, actor)
+          actor:speakTo(player.objid, 0, '我来看看。')
+          player:enableMove(false, true)
+          TimeHelper.callFnAfterSecond (function (p)
+            local hp = PlayerHelper.getHp(player.objid)
+            local maxHp = PlayerHelper.getMaxHp(player.objid)
+            if (hp < maxHp) then -- 受伤了
+              actor:speakTo(objid, 0, '确实是呢。不要动哦。')
+              actor.action:playAttack()
+              actor.action:playAttack(1)
+              actor.action:playAttack(2)
+              TimeHelper.callFnAfterSecond (function (p)
+                ActorHelper.playBodyEffectById(player.objid, BaseConstant.BODY_EFFECT.LIGHT26, 1)
+                PlayerHelper.setHp(player.objid, maxHp)
+                player:speakTo(player.objid, 0, '谢谢苗大夫，我觉得舒服多了。')
+                actor:speakTo(player.objid, 2, '不用谢。要爱护身体哦。')
+                player:speakTo(player.objid, 4, '我知道了。')
+                TalkHelper.turnTalkIndex(player.objid, actor, 0, 1)
+                player:enableMove(true, true)
+              end, 3)
+            else -- 没受伤
+              actor:speakTo(objid, 0, '身体棒棒的，可不能说谎哟。')
+              player:speakTo(player.objid, 2, '我可能产生幻觉了。')
+              actor:speakTo(objid, 4, '呵呵呵呵……')
+              TalkHelper.turnTalkIndex(player.objid, actor, 0, 1)
+              player:enableMove(true, true)
+            end
+          end, 2)
+        end),
+      },
+    },
+  }),
+  TalkInfo:new({
+    id = 1,
+    progress = {
+      [0] = {
+        TalkSession:reply('{{:getName}}，又见到你了。'),
+        TalkSession:init(function ()
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask))
+          playerTalks:add(PlayerTalk:continue('闲聊'))
+          playerTalks:add(PlayerTalk:continue('疗伤'):call(function (player)
+            TaskHelper.addTempTask(player.objid, MyTask.ST10)
+            player:resetTalkIndex(0)
+          end))
+          local sessions = MyArr:new()
+          sessions:add(TalkSession:choose(playerTalks:get()))
+          sessions:add(TalkSession:speak('嗯，我来看看。'))
+          return sessions:get()
+        end),
+      },
+    }
+  }),
+}
+
 -- 文羽
 wenyuTalkInfos = {
   -- 主线
@@ -197,7 +278,7 @@ wenyuTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:excludeTask(st102)
+          TalkAnt:excludeTask(MyTask.ST102)
         ) -- 非房主
       ),
     },
@@ -213,7 +294,7 @@ wenyuTalkInfos = {
         TalkSession:speak('谢谢你，文羽。'):call(function (player, actor)
           local itemid = MyMap.ITEM.WENYU_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得文羽的包裹
-            TaskHelper.addTask(player.objid, st102)
+            TaskHelper.addTask(player.objid, MyTask.ST102)
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             if (StoryHelper.forward(1, '文羽通知')) then
               wenyu:doItNow() -- 不再跟随
