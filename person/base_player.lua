@@ -364,7 +364,8 @@ function BasePlayer:choose ()
     end
   else -- 当前不是选项
     if (actor) then -- 选择过特定生物
-      TalkHelper.talkWith(self.objid, actor)
+      PlayerHelper.playerClickActor(self.objid, actor.objid, true)
+      -- TalkHelper.talkWith(self.objid, actor)
     end
   end
 end
