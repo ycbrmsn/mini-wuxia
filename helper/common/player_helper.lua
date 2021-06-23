@@ -399,10 +399,28 @@ function PlayerHelper.playerLeaveArea (objid, areaid)
   -- body
 end
 
+-- aaa = 0
 -- 玩家点击方块
 function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
   local pos = MyPosition:new(x, y, z)
   local blockid = BlockHelper.getBlockID(pos.x, pos.y, pos.z)
+  
+  -- local data = BlockHelper.getBlockData(x, y + 1, z - 1)
+  -- local blockid = BlockHelper.getBlockID(x, y + 1, z - 1)
+  -- local data1 = BlockHelper.getBlockData(x, y + 1, z - 1)
+  -- local data2 = BlockHelper.getBlockData(x, y + 2, z - 1)
+  -- LogHelper.debug(data1, '-', data2)
+
+  -- if (data1 < 4) then
+  --   BlockHelper.setBlockAll(x, y + 2, z - 1, blockid, data1 + 8) -- 上
+  --   TimeHelper.callFnFastRuns(function ()
+  --     BlockHelper.setBlockAll(x, y + 1, z - 1, blockid, data1 + 8) -- 下
+  --   end, 1)
+  -- else
+  --   BlockHelper.setBlockAll(x, y + 1, z - 1, blockid, data1 + 8) -- 下
+  -- end
+  -- BlockHelper.setBlockAll(x, y + 1, z - 1, blockid, aaa) -- 下
+
   if (BlockHelper.checkCandle(objid, blockid, pos)) then
   end
   ItemHelper.clickBlock(objid, blockid, x, y, z)
@@ -550,6 +568,13 @@ end
 
 -- 按键松开
 function PlayerHelper.playerInputKeyUp (objid, vkey)
+  -- if (vkey == 'SPACE') then
+  --   aaa = aaa + 1
+  --   if (aaa >= 16) then
+  --     aaa = 0
+  --   end
+  --   LogHelper.debug('aaa: ', aaa)
+  -- end
   -- body
 end
 
