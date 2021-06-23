@@ -156,11 +156,11 @@ EventHelper.addEvent('playerRevive', function (objid, toobjid)
 end)
 
 -- 属性变化
-EventHelper.addEvent('playerChangeAttr', function (objid, playerattr)
-  if (playerattr == PLAYERATTR.CUR_HP) then
-    ActorHelper.updateHp(objid, 130) -- 显示生命
-  end
-end)
+-- EventHelper.addEvent('playerChangeAttr', function (objid, playerattr)
+--   if (playerattr == PLAYERATTR.CUR_HP) then
+--     ActorHelper.updateHp(objid, 130) -- 显示生命
+--   end
+-- end)
 
 -- 玩家获得状态效果
 EventHelper.addEvent('playerAddBuff', function (objid, buffid, bufflvl)

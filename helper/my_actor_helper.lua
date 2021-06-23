@@ -50,9 +50,9 @@ end
 -- 事件
 
 -- 生物被创建
-EventHelper.addEvent('actorCreate', function (objid, toobjid)
-  MyActorHelper.updateHp(objid)
-end)
+-- EventHelper.addEvent('actorCreate', function (objid, toobjid)
+--   MyActorHelper.updateHp(objid)
+-- end)
 
 -- 生物击败目标
 EventHelper.addEvent('actorBeat', function (objid, toobjid)
@@ -126,8 +126,8 @@ EventHelper.addEvent('actorRemoveBuff', function (objid, buffid, bufflvl)
 end)
 
 -- 生物属性变化
-EventHelper.addEvent('actorChangeAttr', function (objid, actorattr)
-  if (actorattr == CREATUREATTR.CUR_HP) then
-    MyActorHelper.updateHp(objid)
-  end
-end)
+-- EventHelper.addEvent('actorChangeAttr', function (objid, actorattr)
+--   if (actorattr == CREATUREATTR.CUR_HP) then
+--     MyActorHelper.updateHp(objid)
+--   end
+-- end)
