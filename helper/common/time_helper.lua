@@ -133,7 +133,7 @@ function TimeHelper.runFnInterval (time)
   local fs = TimeHelper.fnIntervals[time]
   -- LogHelper.info('before run: ', time)
   if (fs) then
-    -- LogHelper.info('run: ', time)
+    -- LogHelper.info('runFnInterval: ', time)
     for t, f in pairs(fs) do
       LogHelper.call(function ()
         f()
@@ -244,10 +244,12 @@ function TimeHelper.repeatUtilSuccess (f, seconds, t)
   if (type(result) == 'nil') then -- 说明近期执行过，本次未执行，还会再次执行
     -- LogHelper.info(t, ': nil')
   elseif (result) then -- 说明本次执行达到目的
-    -- LogHelper.info('true')
+    -- LogHelper.info(t, ': true')
   else -- 说明本次执行未达到目的，则准备再次执行
-    TimeHelper.setFnInterval(f, TimeHelper.time + seconds, t)
-    -- LogHelper.info(t, ': false')
+    TimeHelper.setFnInterval(function ()
+      TimeHelper.repeatUtilSuccess(f, seconds, t)
+    end, TimeHelper.time + seconds, t)
+    -- LogHelper.info(t, ': false', TimeHelper.time + seconds)
   end
 end
 
@@ -406,4 +408,5 @@ function TimeHelper.doPerSecond (seconds)
   TimeHelper.runFnAfterSecond(seconds)
   TimeHelper.runFnInterval(seconds)
   TimeHelper.runFnLastRuns(seconds)
+  -- LogHelper.debug('seconds: ', seconds)
 end

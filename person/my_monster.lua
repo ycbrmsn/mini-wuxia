@@ -67,10 +67,10 @@ end
 -- 定时生成怪物
 function Dog:timerGenerate (num)
   num = num or 10
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function Dog:attackSpeak (toobjid)
@@ -147,10 +147,10 @@ end
 -- 定时生成怪物
 function Wolf:timerGenerate (num)
   num = num or 10
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function Wolf:attackSpeak (toobjid)
@@ -224,10 +224,10 @@ end
 -- 定时生成怪物
 function Ox:timerGenerate (num)
   num = num or 10
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function Ox:attackSpeak (toobjid)
@@ -372,10 +372,10 @@ end
 -- 定时生成怪物
 function QiangdaoLouluo:timerGenerate (num)
   num = num or 5
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function QiangdaoLouluo:attackSpeak (toobjid)
@@ -511,10 +511,10 @@ end
 -- 定时生成怪物
 function QiangdaoXiaotoumu:timerGenerate (num)
   num = num or 1
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function QiangdaoXiaotoumu:attackSpeak (toobjid)
@@ -580,10 +580,10 @@ end
 -- 定时生成怪物
 function QiangdaoDatoumu:timerGenerate (num)
   num = num or 1
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters(num)
     return false
-  end, 120)
+  end, 120, self.actorid .. 'generate')
 end
 
 function QiangdaoDatoumu:attackSpeak (toobjid)
@@ -656,7 +656,7 @@ function Guard:init ()
     table.insert(self.initAreas2, AreaHelper.getAreaByPos(v))
   end
   self.action = BaseActorAction:new(self)
-  TimeHelper.repeatUtilSuccess(self.actorid, 'initGuard', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
       if (not(v.isOk)) then
@@ -669,7 +669,7 @@ function Guard:init ()
       end
     end
     return isAllOk
-  end, 1)
+  end, 1, self.actorid .. 'initGuard')
 end
 
 function Guard:initCityGuard (index, o, objids)
@@ -829,10 +829,10 @@ end
 
 -- 定时生成怪物
 function Pantaojianshibing:timerGenerate ()
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters()
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function Pantaojianshibing:attackSpeak (toobjid)
@@ -897,10 +897,10 @@ end
 
 -- 定时生成怪物
 function Pantaogongshibing:timerGenerate ()
-  TimeHelper.repeatUtilSuccess(self.actorid, 'generate', function ()
+  TimeHelper.repeatUtilSuccess(function ()
     self:generateMonsters()
     return false
-  end, 60)
+  end, 60, self.actorid .. 'generate')
 end
 
 function Pantaogongshibing:attackSpeak (toobjid)
