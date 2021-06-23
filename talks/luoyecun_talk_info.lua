@@ -254,6 +254,26 @@ miaolanTalkInfos = {
       },
     },
   }),
+  -- 药品介绍
+  TalkInfo:new({
+    id = MyTask.ST11,
+    ants = {
+      TalkAnt:includeTask(MyTask.ST11),
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('苗大夫，我对药品不太了解，你能给我说说吗？'),
+        TalkSession:reply('那你可要仔细听哟。'),
+        TalkSession:reply('药品主要用来恢复或改变状态。改变状态包括加上增益状态与去掉减益状态。'),
+        TalkSession:reply('很多药品都是用来恢复生命的。当你生命为1时，将进入重伤状态。'),
+        TalkSession:reply('此时，你无法再控制行动。你可能需要回来修养疗伤。'),
+        TalkSession:reply('总之，需要等生命恢复上去后方可恢复行动。'),
+        TalkSession:reply('所以，出门在外，身上带一些药品是聪明的行为。'),
+        TalkSession:reply('差不多就这些了。另外，如果你受伤了，我可以给你免费治疗哦。'),
+        TalkSession:speak('嗯嗯，我知道了。'),
+      },
+    },
+  }),
   TalkInfo:new({
     id = 1,
     progress = {
@@ -261,11 +281,15 @@ miaolanTalkInfos = {
         TalkSession:reply('{{:getName}}，又见到你了。'),
         TalkSession:init(function ()
           local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask))
-          playerTalks:add(PlayerTalk:continue('闲聊'))
           playerTalks:add(PlayerTalk:continue('疗伤'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.ST10)
             player:resetTalkIndex(0)
           end))
+          playerTalks:add(PlayerTalk:continue('药品介绍'):call(function (player)
+            TaskHelper.addTempTask(player.objid, MyTask.ST11)
+            player:resetTalkIndex(0)
+          end))
+          playerTalks:add(PlayerTalk:continue('闲聊'))
           local sessions = MyArr:new()
           sessions:add(TalkSession:choose(playerTalks:get()))
           sessions:add(TalkSession:speak('嗯，我来看看。'))
