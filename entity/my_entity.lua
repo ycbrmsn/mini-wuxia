@@ -487,11 +487,12 @@ end
 
 -- 是否满足条件
 function TalkAnt:isMeet (playerid)
+  local taskid = type(self.taskid) == 'function' and self.taskid() or self.taskid
   if (self.t == 1) then -- 前置必需任务
     -- LogHelper.debug(self)
-    if (TaskHelper.hasTask(playerid, self.taskid)) then
+    if (TaskHelper.hasTask(playerid, taskid)) then
       if (self.state) then -- 任务进度
-        local state = TaskHelper.getTaskState(playerid, self.taskid)
+        local state = TaskHelper.getTaskState(playerid, taskid)
         return state == self.state
       end
     else
@@ -499,7 +500,7 @@ function TalkAnt:isMeet (playerid)
     end
   elseif (self.t == 2) then -- 前置互斥任务
     -- LogHelper.debug(self)
-    if (TaskHelper.hasTask(playerid, self.taskid)) then
+    if (TaskHelper.hasTask(playerid, taskid)) then
       return false
     end
   elseif (self.t == 3) then -- 世界时间

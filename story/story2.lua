@@ -28,6 +28,7 @@ function Story2:new ()
       ['先生要离开'] = 8,
       ['临近风颖城'] = 9,
     },
+    index = 2,
     yexiaolongInitPosition = {
       { x = 0, y = 7, z = 23 },
       { x = 0, y = 7, z = 20 }
@@ -724,6 +725,7 @@ end
 
 function Story2:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
+  TaskHelper.addTask(player.objid, self:getTaskId(2, mainProgress))
   if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
     if (player:isHostPlayer()) then
       story2:goToCollege()

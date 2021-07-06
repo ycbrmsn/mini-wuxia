@@ -26,6 +26,7 @@ function Story1:new ()
       ['明日出发'] = 7,
       ['今日出发'] = 8
     },
+    index = 1,
     posBeg = { x = 29, y = 8, z = 1 },
     posEnd = { x = 31, y = 9, z = 1 },
     createPos = { x = 28, y = 7, z = -28 },
@@ -142,6 +143,7 @@ end
 
 function Story1:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
+  TaskHelper.addTask(player.objid, self:getTaskId(1, mainProgress))
   if (mainProgress == 5) then
     if (PlayerHelper.isMainPlayer(player.objid)) then -- 房主
       story1:finishNoticeEvent(player.objid)

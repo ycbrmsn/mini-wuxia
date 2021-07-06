@@ -43,3 +43,12 @@ end
 function MyStory:getProgressPrepose (name)
   return self.prepose[name]
 end
+
+function MyStory:getTaskId (index, progress)
+  return index * 100 + progress
+end
+
+-- 根据prepose值获取剧情id
+function MyStory:getTaskIdByName (name)
+  return self:getTaskId(self.index, self:getProgressPrepose(name))
+end

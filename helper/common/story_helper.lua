@@ -84,9 +84,10 @@ function StoryHelper.getIndexAndProgress ()
 end
 
 -- 获得剧情标题和内容
-function StoryHelper.getMainStoryTitleAndTip ()
-  local story = StoryHelper.getStory()
-  return story.title, story.tips[StoryHelper.getMainStoryProgress()]
+function StoryHelper.getMainStoryTitleAndTip (index, progress)
+  progress = progress or StoryHelper.getMainStoryProgress()
+  local story = StoryHelper.getStory(index)
+  return story.title, story.tips[progress]
 end
 
 -- 获取剧情

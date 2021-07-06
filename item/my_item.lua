@@ -4,14 +4,22 @@
 LogPaper = BaseItem:new({ id = MyMap.ITEM.LOG_PAPER_ID })
 
 -- 获取日志
-function LogPaper:getContent ()
-  local title, content = StoryHelper.getMainStoryTitleAndTip()
+function LogPaper:getContent (objid)
+  local index, progress
+  if (PlayerHelper.isMainPlayer(objid)) then -- 房主
+    -- do nothing
+  else -- 房客
+    local taskid = TaskHelper.getMaxStoryTaskid(objid)
+    index = math.floor(taskid / 100)
+    progress = taskid % 100
+  end
+  local title, content = StoryHelper.getMainStoryTitleAndTip(index, progress)
   return title .. '\n\t\t' .. content
 end
 
 -- 显示日志
 function LogPaper:showContent (objid)
-  ChatHelper.sendSystemMsg(self:getContent(), objid)
+  ChatHelper.sendSystemMsg(self:getContent(objid), objid)
 end
 
 function LogPaper:useItem (objid)

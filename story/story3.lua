@@ -25,6 +25,7 @@ function Story3:new ()
       ['准备消灭大头目'] = 6,
       ['学院考试'] = 7,
     },
+    index = 3,
     posBeg = MyPosition:new(-31, 7, 590),
     posEnd = MyPosition:new(-7, 8, 576),
     startPos = MyPosition:new(-19, 7, 584), -- 剧情开始位置
@@ -168,6 +169,7 @@ function Story3:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
   local hostPlayer = PlayerHelper.getHostPlayer()
   PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
+  TaskHelper.addTask(player.objid, self:getTaskId(3, mainProgress))
   if (mainProgress == 1 or mainProgress == 2) then
     player:enableMove(true)
     if (player == hostPlayer) then

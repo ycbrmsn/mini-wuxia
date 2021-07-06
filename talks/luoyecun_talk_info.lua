@@ -15,8 +15,12 @@ yangwanliTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:includeTask(MyTask.ST102),
-          TalkAnt:excludeTask(MyTask.ST103)
+          TalkAnt:includeTask(function ()
+            return story1:getTaskIdByName('文羽的礼物')
+          end),
+          TalkAnt:excludeTask(function ()
+            return story1:getTaskIdByName('村长的礼物')
+          end)
         ) -- 非房主
       ),
     },
@@ -34,8 +38,8 @@ yangwanliTalkInfos = {
         TalkSession:speak('太好了，村长，我会努力的。先走了。'):call(function (player, actor)
           local itemid = MyMap.ITEM.YANGWANLI_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得村长的包裹
-            TaskHelper.addTask(player.objid, MyTask.ST103)
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
+            TaskHelper.addTask(player.objid, story1:getTaskIdByName('村长的礼物'))
             StoryHelper.forward(1, '文羽的礼物')
           end
         end),
@@ -315,7 +319,9 @@ wenyuTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
-          TalkAnt:excludeTask(MyTask.ST102)
+          TalkAnt:excludeTask(function ()
+            return story1:getTaskIdByName('文羽的礼物')
+          end)
         ) -- 非房主
       ),
     },
@@ -331,7 +337,7 @@ wenyuTalkInfos = {
         TalkSession:speak('谢谢你，文羽。'):call(function (player, actor)
           local itemid = MyMap.ITEM.WENYU_PACKAGE_ID
           if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得文羽的包裹
-            TaskHelper.addTask(player.objid, MyTask.ST102)
+            TaskHelper.addTask(player.objid, story1:getTaskIdByName('文羽的礼物'))
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             if (StoryHelper.forward(1, '文羽通知')) then
               wenyu:doItNow() -- 不再跟随

@@ -32,6 +32,18 @@ function TaskHelper.getTasks (playerid)
   return TaskHelper.tasks[playerid]
 end
 
+-- 获取最大的任务id（主要用于剧情id）
+function TaskHelper.getMaxStoryTaskid (playerid)
+  local tasks = TaskHelper.getTasks(playerid)
+  local maxId = -1
+  for k, v in pairs(tasks) do
+    if (k < 10000 and k > maxId) then -- 10000以上为任务各种状态
+      maxId = k
+    end
+  end
+  return maxId
+end
+
 -- 获取未结束的有效任务 state(任务状态1未完成2已完成3已结束)
 function TaskHelper.getActiveTasks (playerid, state)
   local tasks = {}
