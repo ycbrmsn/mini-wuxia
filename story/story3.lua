@@ -169,7 +169,7 @@ function Story3:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
   local hostPlayer = PlayerHelper.getHostPlayer()
   PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
-  TaskHelper.addTask(player.objid, self:getTaskId(3, mainProgress))
+  TaskHelper.addStoryTask(player.objid)
   if (mainProgress == 1 or mainProgress == 2) then
     player:enableMove(true)
     if (player == hostPlayer) then

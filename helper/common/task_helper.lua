@@ -83,6 +83,14 @@ function TaskHelper.addTempTask (playerid, taskid)
   TaskHelper.needRemoveTasks[taskid] = true
 end
 
+-- 新增剧情任务
+function TaskHelper.addStoryTask (playerid, index, progress)
+  index = index or StoryHelper.getMainStoryIndex()
+  progress = progress or StoryHelper.getMainStoryProgress()
+  LogHelper.debug(index, 'add-', progress)
+  TaskHelper.addTask(playerid, StoryHelper.getStoryTaskid(index, progress))
+end
+
 -- 删除玩家任务
 function TaskHelper.removeTask (playerid, taskid)
   local tasks = TaskHelper.getTasks(playerid)

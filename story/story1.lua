@@ -66,6 +66,9 @@ function Story1:noticeEvent (areaid)
   content = StringHelper.concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu:speak(0, content)
   StoryHelper.forward(1, '闲来无事')
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
+    TaskHelper.addStoryTask(player.objid)
+  end)
 end
 
 -- 时间快速流逝，目前此方法停用
@@ -143,7 +146,7 @@ end
 
 function Story1:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
-  TaskHelper.addTask(player.objid, self:getTaskId(1, mainProgress))
+  TaskHelper.addStoryTask(player.objid)
   if (mainProgress == 5) then
     if (PlayerHelper.isMainPlayer(player.objid)) then -- 房主
       story1:finishNoticeEvent(player.objid)

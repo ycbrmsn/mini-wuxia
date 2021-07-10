@@ -122,9 +122,11 @@ EventHelper.addEvent('playerEnterGame', function (objid)
     local hostPlayer = PlayerHelper.getHostPlayer()
     if (hostPlayer) then
       player:setPosition(hostPlayer:getPosition())
+      StoryHelper.recover(player) -- 恢复剧情
     else -- 没有房主
       player:setPosition(MyStoryHelper.initPosition) -- 初始位置
       PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
+      -- todo 云服效果以后再说
     end
   end
 end)

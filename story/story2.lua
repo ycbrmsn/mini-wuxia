@@ -725,7 +725,7 @@ end
 
 function Story2:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
-  TaskHelper.addTask(player.objid, self:getTaskId(2, mainProgress))
+  TaskHelper.addStoryTask(player.objid)
   if (mainProgress == 1 or mainProgress == 2) then -- 村口集合
     if (player:isHostPlayer()) then
       story2:goToCollege()
