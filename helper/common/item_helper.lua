@@ -19,7 +19,7 @@ end
 function ItemHelper.changeHold (objid, itemid1, itemid2)
   local item1 = ItemHelper.getItem(itemid1)
   local item2 = ItemHelper.getItem(itemid2)
-  local item = false
+  local foundItem = false
   if (item1) then -- 之前手持物是自定义特殊道具
     item1:putDown(objid)
     foundItem = true
