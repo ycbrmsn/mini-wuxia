@@ -197,7 +197,7 @@ end
 
 -- 上升
 function SkillHelper.flyUp (objid)
-  if (SkillHelper.isFlying(objid)) then
+  if (SkillHelper.isFlying(objid)) then -- 如果在飞行，则持续上升
     TimeHelper.callFnContinueRuns(function ()
       ActorHelper.appendSpeed(objid, 0, SkillHelper.FLY_UP_SPEED, 0)
     end, -1, objid .. 'flyUp')
@@ -206,7 +206,7 @@ end
 
 -- 停止上升
 function SkillHelper.stopFlyUp (objid)
-  TimeHelper.delFnContinueRuns(objid .. 'flyUp')
+  TimeHelper.delFnContinueRuns(objid .. 'flyUp') -- 停止上升
 end
 
 -- 停止御剑
