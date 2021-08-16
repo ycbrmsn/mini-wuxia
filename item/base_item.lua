@@ -4,7 +4,7 @@ BaseItem = {}
 function BaseItem:new (o)
   o = o or {}
   if (o.id) then
-    ItemHelper.register(o)
+    ItemHelper.register(o) -- 注册道具
   end
   self.__index = self
   setmetatable(o, self)
@@ -96,33 +96,33 @@ function MyWeapon:newLevel (id, level)
     level = level
   }
   -- 攻击
-  local addAttack
+  local addAttack -- 用于保存不同等级的武器具有的额外攻击力(在0级的基础上)
   if (self.addAttPerLevel) then
     addAttack = math.floor(self.addAttPerLevel * level)
   else
     addAttack = 0
   end
   if (self.meleeAttack) then
-    o.meleeAttack = self.meleeAttack + addAttack
+    o.meleeAttack = self.meleeAttack + addAttack -- 近战攻击
   end
   if (self.remoteAttack) then
-    o.remoteAttack = self.remoteAttack + addAttack
+    o.remoteAttack = self.remoteAttack + addAttack -- 远程攻击
   end
   -- 防御
-  local addDefense
+  local addDefense -- 用于保存不同等级的武器具有的额外防御力(在0级的基础上)
   if (self.addDefPerLevel) then
     addDefense = math.floor(self.addDefPerLevel * level)
   else
     addDefense = 0
   end
   if (self.meleeDefense) then
-    o.meleeDefense = self.meleeDefense + addDefense
+    o.meleeDefense = self.meleeDefense + addDefense -- 近战防御
   end
   if (self.remoteDefense) then
-    o.remoteDefense = self.remoteDefense + addDefense
+    o.remoteDefense = self.remoteDefense + addDefense -- 远程防御
   end
   if (o.id) then
-    ItemHelper.register(o)
+    ItemHelper.register(o) -- 注册道具
   end
   self.__index = self
   setmetatable(o, self)
@@ -135,11 +135,13 @@ function MyWeapon:newLevels ()
   end
 end
 
+-- 武器被拿起
 function MyWeapon:pickUp (objid)
   local player = PlayerHelper.getPlayer(objid)
   player:changeAttr(self.meleeAttack, self.remoteAttack, self.meleeDefense, self.remoteDefense)
 end
 
+-- 武器被放下
 function MyWeapon:putDown (objid)
   local player = PlayerHelper.getPlayer(objid)
   player:changeAttr(self.meleeAttack, self.remoteAttack, self.meleeDefense, self.remoteDefense, true)
