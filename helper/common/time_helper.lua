@@ -383,7 +383,7 @@ function TimeHelper.runFnContinueRuns ()
     LogHelper.call(function ()
       v[2](v[3])
     end)
-    if (v[1] ~= -1000) then -- 永久执行
+    if (v[1] ~= -1000) then -- 非永久执行
       v[1] = v[1] - 50
       if (v[1] <= 0) then
         TimeHelper.delFnContinueRuns(k)
@@ -392,7 +392,7 @@ function TimeHelper.runFnContinueRuns ()
   end
 end
 
--- 参数为：函数、秒、函数的参数table。持续执行方法，精确到0.05秒
+-- 参数为：函数、秒、绑定类型、额外参数（已废弃），精确到0.05秒
 function TimeHelper.callFnContinueRuns (f, seconds, t, p)
   if (type(f) ~= 'function') then
     return
