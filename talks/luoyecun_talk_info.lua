@@ -83,6 +83,17 @@ yangwanliTalkInfos = {
 -- 王大力
 wangdaliTalkInfos = {
   -- 采集铜矿石
+  -- 不满足接受条件
+  TaskHelper.generateUnableAcceptTalk(caijitongkuangshiTask, {
+    { 3, '有什么我能帮忙的吗？' },
+    { 1, '嗯……' },
+    { 2, '还没有到10级，也帮不上什么忙。' },
+    { 1, '没什么大问题啦。' },
+    { 3, '哦，那好的。' },
+  }, {
+    TalkAnt:atMostLevel(9) -- 最多9级，即小于10级
+  }),
+  -- 满足接受条件
   TaskHelper.generateAcceptTalk(caijitongkuangshiTask, {
     { 3, '有什么我能帮忙的吗？' },
     { 1, '我最近在研究青铜武器，可惜没有材料。' },
@@ -90,8 +101,6 @@ wangdaliTalkInfos = {
     { 3, '强盗？好像很危险。' },
     { 1, '确实如此。你需要去矿洞里采集十块铜矿石给我。如果你能完成，我送你一把青铜武器。' },
     { '没问题。', '我先看看情况再说。' },
-  }, {
-    TalkAnt:atLeastLevel(10), -- 至少10级
   }),
   TaskHelper.generateQueryTalk(caijitongkuangshiTask, {
     { 3, '我转了一圈，没有找到矿石。' },
@@ -127,11 +136,13 @@ wangdaliTalkInfos = {
     }
   }),
   TalkInfo:new({
-    id = 100,
+    id = MyTask.ST12,
+    ants = {
+      TalkAnt:includeTask(MyTask.ST12),
+    },
     progress = {
       [0] = {
-        TalkSession:reply('你有什么问题吗？'),
-        TalkSession:speak('我想买把武器，但是对武器不太了解，你能给我说说吗？'),
+        TalkSession:speak('嗯，我想买把武器，但是对武器不太了解，你能给我说说吗？'),
         TalkSession:reply('你可是问对人了。听好了哟。'),
         TalkSession:reply('虽说世上武器各种各样，但主流武器一共分为4类。分别为剑、刀、枪、弓。'),
         TalkSession:speak('它们有什么区别呢？'),
@@ -151,36 +162,26 @@ wangdaliTalkInfos = {
         TalkSession:reply('强化很简单，只要有强化武器所需要的材料就行。你可以使用工具箱自己进行强化。'),
         TalkSession:reply('差不多就这些了。行走江湖，这些常识还是需要知道的。'),
         TalkSession:speak('嗯嗯，我记下了。'),
-
-        -- TalkSession:init(function ()
-        --   local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask))
-        --   -- playerTalks:add(PlayerTalk:continue('买武器'))
-        --   -- playerTalks:add(PlayerTalk:continue('买防具'))
-        --   -- playerTalks:add(PlayerTalk:continue('买强化石'))
-        --   -- playerTalks:add(PlayerTalk:continue('买软石块'))
-        --   playerTalks:add(PlayerTalk:continue('咨询武器'))
-        --   local sessions = MyArr:new()
-        --   sessions:add(TalkSession:choose(playerTalks:get()))
-        --   sessions:add(TalkSession:speak('对呢，我来逛逛。'))
-        --   return sessions:get()
-        -- end),
-        -- TalkSession:choose({
-        --   PlayerTalk:continue('买武器'):call(function (player)
-        --     -- player:addTalkTask(zixunwuqiTask)
-        --   end),
-        --   PlayerTalk:continue('买防具'):call(function (player)
-        --     -- body
-        --   end),
-        --   PlayerTalk:continue('买强化石'):call(function (player)
-        --     -- body
-        --   end),
-        --   PlayerTalk:continue('买软石块'):call(function (player)
-        --     -- body
-        --   end),
-        --   PlayerTalk:continue('咨询武器'):call(function (player)
-        --     -- body
-        --   end),
-        -- }),
+      },
+    }
+  }),
+  TalkInfo:new({
+    id = 1,
+    progress = {
+      [0] = {
+        TalkSession:reply('这不是{{:getName}}嘛。'),
+        TalkSession:init(function ()
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask))
+          playerTalks:add(PlayerTalk:continue('武器介绍'):call(function (player)
+            TaskHelper.addTempTask(player.objid, MyTask.ST12)
+            player:resetTalkIndex(0)
+          end))
+          playerTalks:add(PlayerTalk:continue('闲聊'))
+          local sessions = MyArr:new()
+          sessions:add(TalkSession:choose(playerTalks:get()))
+          sessions:add(TalkSession:speak('嗯，我来看看。'))
+          return sessions:get()
+        end),
       },
     }
   }),

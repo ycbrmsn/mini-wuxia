@@ -336,6 +336,26 @@ function TaskHelper.finishTask (objid, cTask)
   end
 end
 
+-- 生成无法接任务对话选项
+function TaskHelper.generateUnableAcceptTalk (cTask, talks, ants)
+  local sessions = {}
+  for i, v in ipairs(talks) do
+    table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
+  end
+  local taskid = cTask.id
+  local realid = cTask:getRealid()
+  local talkAnts = ants or {}
+  table.insert(talkAnts, TalkAnt:includeTask(taskid)) -- 选择任务
+  table.insert(talkAnts, TalkAnt:excludeTask(realid)) -- 未接受任务
+  return TalkInfo:new({
+    id = realid + 3,
+    ants = talkAnts,
+    progress = {
+      [0] = sessions
+    },
+  })
+end
+
 -- 生成接任务对话选项
 function TaskHelper.generateAcceptTalk (cTask, talks, ants)
   local sessions = {}
