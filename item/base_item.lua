@@ -148,20 +148,21 @@ function MyWeapon:putDown (objid)
 end
 
 function MyWeapon:useItem (objid)
-  if (self.skillname) then
-    local player = PlayerHelper.getPlayer(objid)
-    if (not(player:ableUseSkill(self.skillname))) then
+  if (self.skillname) then -- 武器技能有名字，表示是特殊技能
+    local player = PlayerHelper.getPlayer(objid) -- 获取玩家实例
+    if (not(player:ableUseSkill(self.skillname))) then -- 如果玩家当前不能使用该技能（禁魔、封魔等状态），则不执行下面的行为
       return
     end
   end
-  if (self.cd) then
-    local ableUseSkill = ItemHelper.ableUseSkill(objid, self.id, self.cd)
-    if (not(ableUseSkill)) then
+  if (self.cd) then -- 技能如果有冷却时间
+    local ableUseSkill = ItemHelper.ableUseSkill(objid, self.id, self.cd) -- 是否冷却结束
+    if (not(ableUseSkill)) then -- 冷却未结束
       self.cdReason = self.cdReason or '技能冷却中'
-      ChatHelper.sendSystemMsg(self.cdReason, objid)
+      ChatHelper.sendSystemMsg(self.cdReason, objid) -- 聊天框提示玩家
       return
     end
   end
+  -- 后面是武器的具体效果
   if (self.useItem1) then
     self:useItem1(objid)
   end
