@@ -401,6 +401,7 @@ end
 
 -- 玩家点击方块
 function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
+  local pos = MyPosition:new(x, y, z)
   if (BlockHelper.checkCandle(objid, blockid, pos)) then
   end
   ItemHelper.clickBlock(objid, blockid, x, y, z)
