@@ -399,36 +399,8 @@ function PlayerHelper.playerLeaveArea (objid, areaid)
   -- body
 end
 
--- aaa = 0
 -- 玩家点击方块
 function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
-  local pos = MyPosition:new(x, y, z)
-  local blockid = BlockHelper.getBlockID(pos.x, pos.y, pos.z)
-  
-  -- local data = BlockHelper.getBlockData(x, y + 1, z - 1)
-  -- local blockid = BlockHelper.getBlockID(x, y + 1, z - 1)
-  -- local data1 = BlockHelper.getBlockData(x, y + 1, z - 1)
-  -- local data2 = BlockHelper.getBlockData(x, y + 2, z - 1)
-  -- local blockid3 = BlockHelper.getBlockID(x, y + 3, z - 1)
-  -- local data3 = BlockHelper.getBlockData(x, y + 3, z - 1)
-  -- LogHelper.debug(data1, '-', data2)
-
-  -- if (data1 < 4) then
-  --   -- BlockHelper.setBlockAll(x, y + 1, z - 1, blockid, data1 + 8) -- 下
-  --   Block:placeBlock(860, x, y + 1, z - 1, data1 + 8)
-  --   -- TimeHelper.callFnFastRuns(function ()
-  --   --   BlockHelper.setBlockAll(x, y + 2, z - 1, blockid, 5) -- 上
-  --   --   -- BlockHelper.destroyBlock(x, y + 2, z - 1)
-  --   -- end, 1)
-  --   -- TimeHelper.callFnFastRuns(function ()
-  --   --   BlockHelper.setBlockAll(x, y + 3, z - 1, blockid3, data3) -- 上上
-  --   -- end, 2)
-  -- else
-  --   -- BlockHelper.setBlockAll(x, y + 1, z - 1, blockid, data1 + 8) -- 下
-  --   Block:placeBlock(860, x, y + 1, z - 1, data1 + 8)
-  -- end
-  -- -- BlockHelper.setBlockAll(x, y + 1, z - 1, 860, aaa) -- 下
-
   if (BlockHelper.checkCandle(objid, blockid, pos)) then
   end
   ItemHelper.clickBlock(objid, blockid, x, y, z)
