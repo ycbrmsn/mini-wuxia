@@ -161,7 +161,7 @@ end
 -- 记录或删除记录
 function TimeHelper.setFnInterval (f, time, t)
   local o = TimeHelper.fnIntervals[time]
-  if (not(o)) then
+  if (not(o)) then -- 指定时间的信息不存在，则创建一个
     o = {}
     TimeHelper.fnIntervals[time] = o
   end
@@ -174,22 +174,22 @@ function TimeHelper.setFnInterval (f, time, t)
   end
 end
 
--- 至少间隔多少秒执行一次，如果当前符合条件，则立即执行；不符合，则记录下来，时间到了（间隔上次执行多少秒后）执行
+-- 至少多少秒后执行一次，如果当前符合条件，则立即执行；不符合，则记录下来，时间到了（间隔上次执行多少秒后）执行
 function TimeHelper.callFnInterval (f, seconds, t)
-  if (type(f) ~= 'function') then
+  if (type(f) ~= 'function') then -- 不是方法，不执行
     return
   end
   t = t or 'default'
   seconds = seconds or 1
   local time, result
-  local lastTime = TimeHelper.getLastFnIntervalTime(seconds, t)
-  if (lastTime) then
+  local lastTime = TimeHelper.getLastFnIntervalTime(seconds, t) -- 间隔内最后一次执行的时间
+  if (lastTime) then -- 存在表示还不能执行，则计算出下次能执行的时间
     time = lastTime + seconds
-  else
+  else -- 不存在表示间隔内没执行过，能够执行
     time = TimeHelper.time
-    result = f()
+    result = f() -- 立即执行
   end
-  TimeHelper.setFnInterval(f, time, t)
+  TimeHelper.setFnInterval(f, time, t) -- 记录下指定时间要执行什么
   return result
 end
 
