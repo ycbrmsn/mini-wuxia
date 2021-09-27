@@ -28,7 +28,7 @@ function MyActorHelper.init ()
   juyidao = Juyidao:new()
   local myActors = { jiangfeng, jiangyu, wangdali, miaolan, wenyu, yangwanli, huaxiaolou, yexiaolong, daniu, 
       erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, juyidao,
-      yuewushuang, jianghuo, }
+      yuewushuang, jianghuo }
   for i, v in ipairs(myActors) do
     TimeHelper.initActor(v)
     -- LogHelper.debug('创建', v:getName(), '完成')
@@ -70,19 +70,22 @@ EventHelper.addEvent('actorChangeMotion', function (objid, actormotion)
   if (actormotion == CREATUREMOTION.ATK_MELEE) then -- 近战攻击
     local monsterModel = MyMonsterHelper.getMonsterModel(objid)
     if (monsterModel and monsterModel.attackSpeak) then
-      TimeHelper.callFnCanRun(monsterModel.actorid, 'atk', function ()
+      TimeHelper.callFnCanRun(function ()
         local pos = ActorHelper.getMyPosition(objid)
         if (pos) then
-          local playerids = ActorHelper.getAllPlayersArroundPos(pos, MyActorHelper.speakDim, objid)
-          if (playerids and #playerids > 0) then
-            for i, v in ipairs(playerids) do
-              if (monsterModel.attackSpeak) then
-                monsterModel:attackSpeak(v)
-              end
-            end
-          end
+          -- -- 对附近的所有玩家说
+          -- local playerids = ActorHelper.getAllPlayersArroundPos(pos, MyActorHelper.speakDim, objid)
+          -- if (playerids and #playerids > 0) then
+          --   for i, v in ipairs(playerids) do
+          --     if (monsterModel.attackSpeak) then
+          --       monsterModel:attackSpeak(v)
+          --     end
+          --   end
+          -- end
+          -- 头顶显示话
+          monsterModel:attackSpeak(objid)
         end
-      end, 10)
+      end, 10, monsterModel.actorid .. 'atk')
     end
   end
 end)

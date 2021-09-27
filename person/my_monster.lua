@@ -37,7 +37,7 @@ function Dog:init ()
   -- 提示区域
   table.insert(self.areaids, -1)
   table.insert(self.areaids, AreaHelper.getAreaByPos(self.tipPositions[1]))
-  self.generate = function ()
+  self.generate = function () -- 进入附近区域需要生成怪物
     self:generateMonsters()
   end
   return true
@@ -73,8 +73,10 @@ function Dog:timerGenerate (num)
   end, 60, self.actorid .. 'generate')
 end
 
-function Dog:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '汪汪。')
+function Dog:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '汪汪。')
+  -- self:toastSpeak('汪汪。')
+  GraphicsHelper.speak(objid, self.offset, '汪汪。')
 end
 
 -- 恶狼
@@ -153,8 +155,10 @@ function Wolf:timerGenerate (num)
   end, 60, self.actorid .. 'generate')
 end
 
-function Wolf:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '嗷呜……')
+function Wolf:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '嗷呜……')
+  -- self:toastSpeak('嗷呜……')
+  GraphicsHelper.speak(objid, self.offset, '嗷呜……')
 end
 
 -- 狂牛
@@ -230,8 +234,10 @@ function Ox:timerGenerate (num)
   end, 60, self.actorid .. 'generate')
 end
 
-function Ox:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '哞……')
+function Ox:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '哞……')
+  -- self:toastSpeak('哞……')
+  GraphicsHelper.speak(objid, self.offset, '哞……')
 end
 
 -- 强盗喽罗
@@ -378,13 +384,17 @@ function QiangdaoLouluo:timerGenerate (num)
   end, 60, self.actorid .. 'generate')
 end
 
-function QiangdaoLouluo:attackSpeak (toobjid)
+function QiangdaoLouluo:attackSpeak (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 2 and mainProgress < #story2.tips) then
-    ChatHelper.speak(self:getName(), toobjid, '小子，把令牌交出来！')
+    -- ChatHelper.speak(self:getName(), toobjid, '小子，把令牌交出来！')
+    -- self:toastSpeak('小子，把令牌交出来！')
+    GraphicsHelper.speak(objid, self.offset, '小子，把令牌交出来！')
   else
-    ChatHelper.speak(self:getName(), toobjid, '小子，把财物都交出来！')
+    -- ChatHelper.speak(self:getName(), toobjid, '小子，把财物都交出来！')
+    -- self:toastSpeak('小子，把财物都交出来！')
+    GraphicsHelper.speak(objid, self.offset, '小子，把财物都交出来！')
   end
 end
 
@@ -517,13 +527,17 @@ function QiangdaoXiaotoumu:timerGenerate (num)
   end, 60, self.actorid .. 'generate')
 end
 
-function QiangdaoXiaotoumu:attackSpeak (toobjid)
+function QiangdaoXiaotoumu:attackSpeak (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 2 and mainProgress < #story2.tips) then
-    ChatHelper.speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
+    -- ChatHelper.speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
+    -- self:toastSpeak('小子，交出令牌给你个痛快！')
+    GraphicsHelper.speak(objid, self.offset, '小子，交出令牌给你个痛快！')
   else
-    ChatHelper.speak(self:getName(), toobjid, '小子，纳命来！')
+    -- ChatHelper.speak(self:getName(), toobjid, '小子，纳命来！')
+    -- self:toastSpeak('小子，纳命来！')
+    GraphicsHelper.speak(objid, self.offset, '小子，纳命来！')
   end
 end
 
@@ -586,8 +600,10 @@ function QiangdaoDatoumu:timerGenerate (num)
   end, 120, self.actorid .. 'generate')
 end
 
-function QiangdaoDatoumu:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '小子，我看你是活腻了！')
+function QiangdaoDatoumu:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '小子，我看你是活腻了！')
+    -- self:toastSpeak('小子，我看你是活腻了！')
+    GraphicsHelper.speak(objid, self.offset, '小子，我看你是活腻了！')
 end
 
 -- 卫兵（剑）
@@ -737,10 +753,11 @@ function Guard:checkTokenArea (objid, areaid)
       end
       if (not(hasToken)) then
         for ii, vv in ipairs(players) do
-          self:speakTo(vv.objid, 0, '出示令牌。强闯者，捕。')
-          TimeHelper.callFnCanRun(vv.objid, 'checkToken', function ()
+          -- self:speakTo(vv.objid, 0, '出示令牌。强闯者，捕。')
+          self:toastSpeak('出示令牌。强闯者，捕。')
+          TimeHelper.callFnCanRun(function ()
             MonsterHelper.wantLookAt(v.objids, vv.objid, 5)
-          end, 5)
+          end, 5, vv.objid .. 'checkToken')
           vv.action:runTo({ self.safePositions[i] }, function ()
             vv:thinkTo(vv.objid, 0, '还是不要乱跑比较好。')
           end)
@@ -835,8 +852,10 @@ function Pantaojianshibing:timerGenerate ()
   end, 60, self.actorid .. 'generate')
 end
 
-function Pantaojianshibing:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '小子，你来错地方了！')
+function Pantaojianshibing:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '小子，你来错地方了！')
+  -- self:toastSpeak('小子，你来错地方了！')
+    GraphicsHelper.speak(objid, self.offset, '小子，你来错地方了！')
 end
 
 
@@ -903,6 +922,8 @@ function Pantaogongshibing:timerGenerate ()
   end, 60, self.actorid .. 'generate')
 end
 
-function Pantaogongshibing:attackSpeak (toobjid)
-  ChatHelper.speak(self:getName(), toobjid, '小子看箭！')
+function Pantaogongshibing:attackSpeak (objid)
+  -- ChatHelper.speak(self:getName(), toobjid, '小子看箭！')
+  -- self:toastSpeak('小子看箭！')
+  GraphicsHelper.speak(objid, self.offset, '小子看箭！')
 end
