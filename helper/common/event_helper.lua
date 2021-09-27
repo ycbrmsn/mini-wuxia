@@ -349,11 +349,11 @@ end
 function EventHelper.startGame ()
   LogHelper.debug('开始游戏')
   GameHelper.startGame()
-  MyBlockHelper.init()
-  MyActorHelper.init()
-  MyMonsterHelper.init()
-  MyAreaHelper.init()
-  MyStoryHelper.init()
+  -- MyBlockHelper.init()
+  -- MyActorHelper.init()
+  -- MyMonsterHelper.init()
+  -- MyAreaHelper.init()
+  -- MyStoryHelper.init()
   EventHelper.customEvent('startGame')
 end
 
