@@ -1,6 +1,6 @@
 -- 我的游戏工具类
 MyGameHelper = {
-  index = 1,
+  index = 1
 }
 
 function MyGameHelper.setGBattleUI ()
@@ -56,6 +56,8 @@ EventHelper.addEvent('startGame', function ()
   MyMonsterHelper.init()
   MyAreaHelper.init()
   MyActorHelper.init()
+  MyStoryHelper.init()
+  LogHelper.debug('初始化结束')
   -- -- body
 end)
 
