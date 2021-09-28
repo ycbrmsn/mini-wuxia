@@ -78,7 +78,7 @@ function Story1:fasterTime ()
   if (mainIndex == 1 and mainProgress == (#self.tips - 1) and not(self.isFasterTime)) then -- 主角回家休息
     -- 时间快速流逝
     self.isFasterTime = true
-    TimeHelper.repeatUtilSuccess(666, 'fasterTime', function ()
+    TimeHelper.repeatUtilSuccess(function ()
       local hour = TimeHelper.getHour()
       if (StoryHelper.getMainStoryProgress() < #self.tips) then
         hour = 0
@@ -94,7 +94,7 @@ function Story1:fasterTime ()
           return true
         end
       end
-    end, 1)
+    end, 1, 'fasterTime')
   end
 end
 

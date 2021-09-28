@@ -53,10 +53,10 @@ end
 function Juyidao:init ()
   local initSuc = self:initActor(self.initPosition)
   if (initSuc) then
-    TimeHelper.repeatUtilSuccess(self.actorid, 'alert', function ()
+    TimeHelper.repeatUtilSuccess(function ()
       self:checkAreaPlayer()
       return false
-    end, 1)
+    end, 1, self.actorid .. 'alert')
   end
   return initSuc
 end
