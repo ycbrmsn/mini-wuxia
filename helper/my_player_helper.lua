@@ -14,6 +14,7 @@ EventHelper.addEvent('playerEnterGame', function (objid)
       end
     end
   end
+  MyCustomUIHelper.init(objid) -- 初始化UI界面
 end)
 
 -- 玩家离开游戏

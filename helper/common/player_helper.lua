@@ -805,14 +805,14 @@ function PlayerHelper.reviveToPos (objid, x, y, z)
   end, '复活玩家到指定点', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
 end
 
-function PlayerHelper.openUIView (objid, uiname)
+function PlayerHelper.openUIView (objid, uiid)
   return CommonHelper.callIsSuccessMethod(function ()
-    return Player:openUIView(objid, uiname)
-  end, '打开一个UI界面', 'objid=', objid, ',iuname=', uiname)
+    return Player:openUIView(objid, uiid)
+  end, '打开一个UI界面', 'objid=', objid, ',uiid=', uiid)
 end
 
-function PlayerHelper.hideUIView (objid, uiname)
+function PlayerHelper.hideUIView (objid, uiid)
   return CommonHelper.callIsSuccessMethod(function ()
-    return Player:hideUIView(objid, uiname)
-  end, '隐藏一个UI界面', 'objid=', objid, ',iuname=', uiname)
+    return Player:hideUIView(objid, uiid)
+  end, '隐藏一个UI界面', 'objid=', objid, ',uiid=', uiid)
 end
