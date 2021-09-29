@@ -442,6 +442,27 @@ local minitimerChange = function (event)
   end)
 end
 
+-- eventobjid, CoustomUI, btnelenemt
+local clickButton = function (event)
+  LogHelper.call(function ()
+    EventHelper.clickButton(event.eventobjid, event.CoustomUI, event.btnelenemt)
+  end)
+end
+
+-- eventobjid, CoustomUI
+local hideUI = function (event)
+  LogHelper.call(function ()
+    EventHelper.hideUI(event.eventobjid, event.CoustomUI)
+  end)
+end
+
+-- eventobjid, CoustomUI
+local showUI = function (event)
+  LogHelper.call(function ()
+    EventHelper.showUI(event.eventobjid, event.CoustomUI)
+  end)
+end
+
 ScriptSupportEvent:registerEvent([=[Game.AnyPlayer.EnterGame]=], playerEnterGame) -- 玩家进入游戏
 ScriptSupportEvent:registerEvent([=[Game.AnyPlayer.LeaveGame]=], playerLeaveGame) -- 玩家离开游戏
 ScriptSupportEvent:registerEvent([=[Player.AreaIn]=], playerEnterArea) -- 玩家进入区域
@@ -503,3 +524,7 @@ ScriptSupportEvent:registerEvent([=[Game.Hour]=], atHour) -- 世界时间到[n]�
 ScriptSupportEvent:registerEvent([=[Game.Run]=], runGame) -- 游戏运行时
 ScriptSupportEvent:registerEvent([=[Game.RunTime]=], atSecond) -- 世界时间到[n]秒
 ScriptSupportEvent:registerEvent([=[minitimer.change]=], minitimerChange) -- 任意计时器发生变化
+
+ScriptSupportEvent:registerEvent([=[UI.Button.Click]=], clickButton) -- 当前界面按钮被点击
+ScriptSupportEvent:registerEvent([=[UI.Hide]=], hideUI) -- 界面隐藏
+ScriptSupportEvent:registerEvent([=[UI.Show]=], showUI) -- 界面显示

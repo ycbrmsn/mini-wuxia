@@ -386,3 +386,21 @@ function EventHelper.minitimerChange (timerid, timername)
   GameHelper.minitimerChange(timerid, timername)
   EventHelper.customEvent('minitimerChange', timerid, timername)
 end
+
+-- 当前界面按钮被点击
+function EventHelper.clickButton (objid, uiid, elementid)
+  CustomuiHelper.clickButton(objid, uiid, elementid)
+  EventHelper.customEvent('clickButton', objid, uiid, elementid)
+end
+
+-- 界面隐藏
+function EventHelper.hideUI (objid, uiid)
+  CustomuiHelper.hideUI(objid, uiid)
+  EventHelper.customEvent('hideUI', objid, uiid)
+end
+
+-- 界面显示
+function EventHelper.showUI (objid, uiid)
+  CustomuiHelper.showUI(objid, uiid)
+  EventHelper.customEvent('showUI', objid, uiid)
+end

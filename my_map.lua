@@ -117,6 +117,9 @@ MyMap = {
   CUSTOM = {
     INIT_HOUR = 7, -- 初始时间
     PROJECTILE_HURT = 6, -- 通用投掷物固定伤害
+  },
+  UI = {
+    SCREEN = 6987379653541324323 -- 界面
   }
 }
 

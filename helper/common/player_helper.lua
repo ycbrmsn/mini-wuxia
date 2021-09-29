@@ -88,7 +88,7 @@ end
 -- 显示飘窗信息
 function PlayerHelper.showToast (objid, ...)
   local info = StringHelper.concat(...)
-  TimeHelper.callFnInterval(function (p)
+  TimeHelper.callFnInterval(function ()
     PlayerHelper.notifyGameInfo2Self(objid, info)
   end, 2, objid .. 'toast')
 end
@@ -219,7 +219,7 @@ end
 function PlayerHelper.changeVMode (objid, viewmode, islock)
   viewmode = viewmode or VIEWPORTTYPE.BACKVIEW
   if (not(objid)) then
-    PlayerHelper.everyPlayerDoSomeThing(function (p)
+    PlayerHelper.everyPlayerDoSomeThing(function ()
       PlayerHelper.changeViewMode(p.objid, viewmode, islock)
     end)
   elseif (type(objid) == 'number') then
@@ -600,21 +600,21 @@ end
 
 -- 获取玩家昵称
 function PlayerHelper.getNickname (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getNickname(objid)
   end, '获取玩家昵称', 'objid=', objid)
 end
 
 -- 对玩家显示飘窗文字
 function PlayerHelper.notifyGameInfo2Self (objid, info)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:notifyGameInfo2Self(objid, info)
   end, '对玩家显示飘窗文字', 'objid=', objid, ',info=', info)
 end
 
 -- 设置玩家道具设置属性
 function PlayerHelper.setItemAttAction (objid, itemid, attrtype, switch)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setItemAttAction(objid, itemid, attrtype, switch)
   end, '设置玩家道具设置属性', 'objid=', objid, ',itemid=', itemid, ',attrtype=',
     attrtype, ',switch=', switch)
@@ -622,7 +622,7 @@ end
 
 -- 设置玩家位置
 function PlayerHelper.setPosition (objid, x, y, z)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setPosition(objid, x, y, z)
   end, '设置玩家位置', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
 end
@@ -634,7 +634,7 @@ end
 
 -- 设置玩家行为属性状态
 function PlayerHelper.setActionAttrState (objid, actionattr, switch)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setActionAttrState(objid, actionattr, switch)
   end, '设置玩家行为属性状态', 'objid=', objid, ',actionattr=', actionattr,
     ',switch=', switch)
@@ -642,112 +642,112 @@ end
 
 -- 旋转玩家镜头
 function PlayerHelper.rotateCamera (objid, yaw, pitch)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:rotateCamera(objid, yaw, pitch)
   end, '旋转玩家镜头', 'objid=', objid, ',yaw=', yaw, ',pitch=', pitch)
 end
 
 -- 玩家属性获取
 function PlayerHelper.getAttr (objid, attrtype)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getAttr(objid, attrtype)
   end, '玩家属性获取', 'objid=', objid, ',attrtype=', attrtype)
 end
 
 -- 玩家属性设置
 function PlayerHelper.setAttr (objid, attrtype, val)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setAttr(objid, attrtype, val)
   end, '玩家属性设置', 'objid=', objid, ',attrtype=', attrtype, ',val=', val)
 end
 
 -- 获取玩家队伍
 function PlayerHelper.getTeam (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getTeam(objid)
   end, '获取玩家队伍', 'objid=', objid)
 end
 
 -- 设置玩家队伍（数据变了，但是好像没起作用）
 function PlayerHelper.setTeam (objid, teamid)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setTeam(objid, teamid)
   end, '设置玩家队伍', 'objid=', objid, ',teamid=', teamid)
 end
 
 -- 玩家播放动画
 function PlayerHelper.playAct (objid, actid)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:playAct(objid, actid)
   end, '玩家播放动画', 'objid=', objid, ',actid=', actid)
 end
 
 -- 改变玩家视角模式
 function PlayerHelper.changeViewMode (objid, viewmode, islock)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:changeViewMode(objid, viewmode, islock)
   end, '改变玩家视角模式', 'objid=', objid, ',viewmode=', viewmode, ',islock=', islock)
 end
 
 -- 获取当前所用快捷栏键 0~7
 function PlayerHelper.getCurShotcut (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getCurShotcut(objid)
   end, '获取当前所用快捷栏键', 'objid=', objid)
 end
 
 -- 获取当前饱食度
 function PlayerHelper.getFoodLevel (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getFoodLevel(objid)
   end, '获取当前饱食度', 'objid=', objid)
 end
 
 -- 设置玩家饱食度
 function PlayerHelper.setFoodLevel (objid, foodLevel)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setFoodLevel(objid, foodLevel)
   end, '设置玩家饱食度', 'objid=', objid, ',foodLevel=', foodLevel)
 end
 
 -- 获取玩家当前手持的物品id，空手是0
 function PlayerHelper.getCurToolID (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getCurToolID(objid)
   end, '获取玩家当前手持的物品id', 'objid=', objid)
 end
 
 -- 设置技能CD，该技能CD为工具原生技能的CD，添加的技能CD与此无关，因此，此方法没什么用
 function PlayerHelper.setSkillCD (objid, itemid, cd)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setSkillCD(objid, itemid, cd)
   end, '设置技能CD', 'objid=', objid, ',itemid=', itemid, ',cd=', cd)
 end
 
 -- 获取player准星位置
 function PlayerHelper.getAimPos (objid)
-  return CommonHelper.callThreeResultMethod(function (p)
+  return CommonHelper.callThreeResultMethod(function ()
     return Player:getAimPos(objid)
   end, '获取player准星位置', 'objid=', objid)
 end
 
 -- 传送玩家到出生点
 function PlayerHelper.teleportHome (objid)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:teleportHome(objid)
   end, '传送玩家到出生点', 'objid=', objid)
 end
 
 -- 使玩家获得游戏胜利
 function PlayerHelper.setGameWin (objid)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setGameWin(objid)
   end, '使玩家获得游戏胜利', 'objid=', objid)
 end
 
 -- 对玩家播放背景音乐
 function PlayerHelper.playMusic (objid, musicid, volume, pitch, isLoop)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:playMusic(objid, musicid, volume, pitch, isLoop)
   end, '对玩家播放背景音乐', 'objid=', objid, ',musicid=', musicid, ',volume=',
     volume, ',pitch=', pitch, ',isLoop=', isLoop)
@@ -755,14 +755,14 @@ end
 
 -- 停止播放玩家背景音乐
 function PlayerHelper.stopMusic (objid)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:stopMusic(objid)
   end, '停止播放玩家背景音乐', 'objid=', objid)
 end
 
 -- 改变玩家复活点位置
 function PlayerHelper.setRevivePoint (objid, x, y, z)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setRevivePoint(objid, x, y, z)
   end, '改变玩家复活点位置', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
 end
@@ -774,33 +774,45 @@ end
 
 -- 获取本地玩家的uin
 function PlayerHelper.getMainPlayerUin ()
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getMainPlayerUin()
   end, '获取本地玩家的uin')
 end
 
 -- 获取玩家比赛结果 0游戏中 1游戏胜利 2游戏结束
 function PlayerHelper.getGameResults (objid)
-  return CommonHelper.callOneResultMethod(function (p)
+  return CommonHelper.callOneResultMethod(function ()
     return Player:getGameResults(objid)
   end, '获取玩家比赛结果', 'objid=', objid)
 end
 
 -- 设置玩家比赛结果 0游戏中 1游戏胜利 2游戏结束
 function PlayerHelper.setGameResults (objid, result)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:setGameResults(objid, result)
   end, '设置玩家比赛结果', 'objid=', objid, ',result=', result)
 end
 
 function PlayerHelper.openBoxByPos (objid, x, y, z)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:openBoxByPos(objid, x, y, z)
   end, '打开可以操作的箱子', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
 end
 
 function PlayerHelper.reviveToPos (objid, x, y, z)
-  return CommonHelper.callIsSuccessMethod(function (p)
+  return CommonHelper.callIsSuccessMethod(function ()
     return Player:reviveToPos(objid, x, y, z)
   end, '复活玩家到指定点', 'objid=', objid, ',x=', x, ',y=', y, ',z=', z)
+end
+
+function PlayerHelper.openUIView (objid, uiname)
+  return CommonHelper.callIsSuccessMethod(function ()
+    return Player:openUIView(objid, uiname)
+  end, '打开一个UI界面', 'objid=', objid, ',iuname=', uiname)
+end
+
+function PlayerHelper.hideUIView (objid, uiname)
+  return CommonHelper.callIsSuccessMethod(function ()
+    return Player:hideUIView(objid, uiname)
+  end, '隐藏一个UI界面', 'objid=', objid, ',iuname=', uiname)
 end
