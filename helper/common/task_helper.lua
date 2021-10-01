@@ -1,6 +1,6 @@
 -- 任务工具类
 TaskHelper = {
-  tasks = {}, -- { 玩家 -> 任务id数组 } { playerid -> { taskid -> task/true } }
+  tasks = {}, -- { 玩家 -> 任务id集合 } { playerid -> { taskid -> task/true } }
   needRemoveTasks = {}, -- map, 终止对话后需要删除的任务，即临时任务
   needBookTasks = {}, -- 需要任务书的任务 { task, task, ... }
 }
@@ -170,7 +170,7 @@ function TaskHelper.getTaskState (playerid, taskid)
 end
 
 -- 击杀角色 isShow是否提示击杀任务角色
-function TaskHelper.killActor (playerid, actorid, isShow)
+function TaskHelper.playerDefeatActor (playerid, actorid, isShow)
   local tasks = TaskHelper.getActiveTasks(playerid)
   for taskid, task in pairs(tasks) do -- 所有任务
     if (type(task) == 'table' and task.category == 1) then -- 击败任务
@@ -184,7 +184,9 @@ function TaskHelper.killActor (playerid, actorid, isShow)
             if (state == 2) then
               ChatHelper.sendMsg(playerid, task.name, '任务#G可交付')
             end
+            EventHelper.customEvent('playerDefeatTaskActor', playerid, actorid) -- 自定义击杀任务怪物
           end
+          return
         end
       end
     end
@@ -192,27 +194,51 @@ function TaskHelper.killActor (playerid, actorid, isShow)
 end
 
 -- 获得道具 showType:none、chat、toast
-function TaskHelper.addItem (playerid, itemid, showType)
+function TaskHelper.playerAddItem (playerid, itemid, showType)
   showType = showType or 'none'
   local tasks = TaskHelper.getActiveTasks(playerid)
   for taskid, task in pairs(tasks) do -- 所有任务
     if (type(task) == 'table' and task.category == 2) then -- 交付任务
-      for i, itemInfos in ipairs(task.itemInfos) do
-        if (itemid == itemInfos.itemid) then -- 获得该道具
+      for i, itemInfo in ipairs(task.itemInfos) do
+        if (itemid == itemInfo.itemid) then -- 获得该道具
           local curnum = BackpackHelper.getItemNumAndGrid(playerid, itemid)
           -- LogHelper.debug('当前有', curnum)
-          if (not(itemInfos.curnum) or itemInfos.curnum ~= curnum) then -- 当前数量发生变化时提示
-            itemInfos.curnum = curnum
-            if (curnum >= itemInfos.num) then -- 达到目标
+          if (not(itemInfo.curnum) or itemInfo.curnum ~= curnum) then -- 当前数量发生变化时提示
+            itemInfo.curnum = curnum
+            if (curnum >= itemInfo.num) then -- 达到目标
               if (not(task.enough)) then
                 task.enough = true
-                TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfos.num, task)
+                TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
               end
             else -- 未达到目标
               task.enough = false
-              TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfos.num, task)
+              TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
             end
+            EventHelper.customEvent('playerAddTaskItem', playerid, itemid) -- 自定义获得任务道具
           end
+          return
+        end
+      end
+    end
+  end
+end
+
+--[[
+  玩家失去道具
+  @param    {number} playerid 玩家id
+  @param    {number} itemid 道具id
+  @author   莫小仙
+  @datetime 2021-10-02 00:19:39
+]]
+function TaskHelper.playerLoseItem (playerid, itemid)
+  local tasks = TaskHelper.getActiveTasks(playerid)
+  for taskid, task in pairs(tasks) do -- 所有任务
+    if (type(task) == 'table' and task.category == 2) then -- 交付任务
+      for i, itemInfo in ipairs(task.itemInfos) do
+        if (itemid == itemInfo.itemid) then -- 失去该道具
+          itemInfo.curnum = curnum
+          EventHelper.customEvent('playerLoseTaskItem', playerid, itemid) -- 自定义获得任务道具
+          return
         end
       end
     end

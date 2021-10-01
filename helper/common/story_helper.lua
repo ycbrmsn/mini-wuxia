@@ -86,9 +86,28 @@ end
 -- 获得剧情标题和内容
 function StoryHelper.getMainStoryTitleAndTip (index, progress)
   progress = progress or StoryHelper.getMainStoryProgress()
-  LogHelper.debug(index, '-', progress)
+  -- LogHelper.debug(index, '-', progress)
   local story = StoryHelper.getStory(index)
   return story.title, story.tips[progress]
+end
+
+--[[
+  获取主剧情信息（标题与内容）
+  @param    {number} objid 玩家id
+  @return   {string string} 标题、提示
+  @author   莫小仙
+  @datetime 2021-10-01 18:31:43
+]]
+function StoryHelper.getMainStoryInfo (objid)
+  local index, progress
+  if (PlayerHelper.isMainPlayer(objid)) then -- 房主
+    -- do nothing
+  else -- 房客
+    local taskid = TaskHelper.getMaxStoryTaskid(objid)
+    index = math.floor(taskid / 100)
+    progress = taskid % 100
+  end
+  return StoryHelper.getMainStoryTitleAndTip(index, progress)
 end
 
 -- 获取剧情

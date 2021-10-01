@@ -58,6 +58,20 @@ local playerConsumeItem = function (event)
   end)
 end
 
+-- eventobjid, toobjid, itemid, itemnum
+local playerDiscardItem = function (event)
+  LogHelper.call(function ()
+    EventHelper.playerDiscardItem(event.eventobjid, event.toobjid, event.itemid, event.itemnum)
+  end)
+end
+
+-- eventobjid, toobjid, itemid, itemnum
+local playerPickUpItem = function (event)
+  LogHelper.call(function ()
+    EventHelper.playerPickUpItem(event.eventobjid, event.toobjid, event.itemid, event.itemnum)
+  end)
+end
+
 -- eventobjid, toobjid
 local playerClickActor = function (event)
   local objid = event['eventobjid']
@@ -77,6 +91,13 @@ local playerAddItem = function (event)
   -- LogHelper.info(objid, ',', toobjid, ',', itemid, ',', itemnum)
   LogHelper.call(function ()
     EventHelper.playerAddItem(objid, itemid, itemnum)
+  end)
+end
+
+-- eventobjid, toobjid, itemid, itemnum
+local playerBackPackChange = function (event)
+  LogHelper.call(function ()
+    EventHelper.playerBackPackChange(event.eventobjid, event.toobjid, event.itemid, event.itemnum)
   end)
 end
 
@@ -470,8 +491,11 @@ ScriptSupportEvent:registerEvent([=[Player.AreaOut]=], playerLeaveArea) -- 玩�
 ScriptSupportEvent:registerEvent([=[Player.ClickBlock]=], playerClickBlock) -- 点击方块
 ScriptSupportEvent:registerEvent([=[Player.UseItem]=], playerUseItem) -- 玩家使用物品
 ScriptSupportEvent:registerEvent([=[Player.ConsumeItem]=], playerConsumeItem) -- 玩家消耗道具
+ScriptSupportEvent:registerEvent([=[Player.DiscardItem]=], playerDiscardItem) -- 玩家丢弃道具
+ScriptSupportEvent:registerEvent([=[Player.PickUpItem]=], playerPickUpItem) -- 玩家拾取道具
 ScriptSupportEvent:registerEvent([=[Player.ClickActor]=], playerClickActor) -- 玩家点击生物
 ScriptSupportEvent:registerEvent([=[Player.AddItem]=], playerAddItem) -- 玩家新增道具
+ScriptSupportEvent:registerEvent([=[Player.BackPackChange]=], playerBackPackChange) -- 玩家背包栏变化
 ScriptSupportEvent:registerEvent([=[Player.AttackHit]=], playerAttackHit) -- 玩家攻击命中
 ScriptSupportEvent:registerEvent([=[Player.DamageActor]=], playerDamageActor) -- 玩家给对方造成伤害
 ScriptSupportEvent:registerEvent([=[Player.DefeatActor]=], playerDefeatActor) -- 打败目标

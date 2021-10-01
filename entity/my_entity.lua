@@ -751,9 +751,14 @@ function BaseTask:realTask (actorname)
   return o
 end
 
-
--- 显示任务信息，是否使用图文显示（默认使用聊天框显示）
-function BaseTask:show (objid, useGraphics)
+--[[
+  获取任务描述内容
+  @param    {number} objid 玩家id
+  @return   {table} 描述内容数组
+  @author   莫小仙
+  @datetime ctrl+alt+shift+d
+]]
+function BaseTask:getMessage (objid)
   local lines = {}
   table.insert(lines, '任务名称：' .. self.name .. '任务')
   table.insert(lines, '任务描述：' .. self.desc)
@@ -802,6 +807,13 @@ function BaseTask:show (objid, useGraphics)
   else
     table.insert(lines, '任务进度：不详。')
   end
+  return lines
+end
+
+
+-- 显示任务信息，是否使用图文显示（默认使用聊天框显示）
+function BaseTask:show (objid, useGraphics)
+  local lines = BaseTask:getMessage(objid)
   if (useGraphics) then
     local title = StringHelper.join(lines, '\n')
     local pos = ActorHelper.getDistancePosition(objid, 2)

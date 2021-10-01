@@ -427,6 +427,11 @@ function PlayerHelper.playerAddItem (objid, itemid, itemnum)
   -- body
 end
 
+-- 玩家背包栏变化
+function PlayerHelper.playerBackPackChange (objid, toobjid, itemid, itemnum)
+  -- body
+end
+
 -- 玩家使用道具
 function PlayerHelper.playerUseItem (objid, toobjid, itemid, itemnum)
   ItemHelper.useItem(objid, itemid)
@@ -434,6 +439,16 @@ end
 
 -- 玩家消耗道具
 function PlayerHelper.playerConsumeItem (objid, toobjid, itemid, itemnum)
+  -- body
+end
+
+-- 玩家丢弃道具
+function PlayerHelper.playerDiscardItem (objid, toobjid, itemid, itemnum)
+  -- body
+end
+
+-- 玩家拾取道具
+function PlayerHelper.playerPickUpItem (objid, toobjid, itemid, itemnum)
   -- body
 end
 

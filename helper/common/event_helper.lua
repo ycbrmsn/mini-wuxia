@@ -64,9 +64,15 @@ end
 -- 玩家获得道具
 function EventHelper.playerAddItem (objid, itemid, itemnum)
   PlayerHelper.playerAddItem(objid, itemid, itemnum)
+  TaskHelper.playerAddItem(objid, itemid, 'toast') -- 涉及玩家获得任务道具
   EventHelper.customEvent('playerAddItem', objid, itemid, itemnum)
-  TaskHelper.addItem(objid, itemid, 'toast')
-  -- LogHelper.debug(ItemHelper.getItemName(itemid), ': ', itemnum)
+  -- LogHelper.debug('获得', ItemHelper.getItemName(itemid), ': ', itemnum)
+end
+
+-- 玩家背包栏变化
+function EventHelper.playerBackPackChange (objid, toobjid, itemid, itemnum)
+  PlayerHelper.playerBackPackChange(objid, toobjid, itemid, itemnum)
+  EventHelper.customEvent('playerBackPackChange', objid, toobjid, itemid, itemnum)
 end
 
 -- 玩家使用道具
@@ -78,7 +84,24 @@ end
 -- 玩家消耗道具
 function EventHelper.playerConsumeItem (objid, toobjid, itemid, itemnum)
   PlayerHelper.playerConsumeItem(objid, toobjid, itemid, itemnum)
+  TaskHelper.playerLoseItem(objid, itemid) -- 涉及玩家失去任务道具
   EventHelper.customEvent('playerConsumeItem', objid, toobjid, itemid, itemnum)
+  -- LogHelper.debug('消耗', ItemHelper.getItemName(itemid), ': ', itemnum)
+end
+
+-- 玩家丢弃道具
+function EventHelper.playerDiscardItem (objid, toobjid, itemid, itemnum)
+  PlayerHelper.playerDiscardItem(objid, toobjid, itemid, itemnum)
+  TaskHelper.playerLoseItem(objid, itemid) -- 涉及玩家失去任务道具
+  EventHelper.customEvent('playerDiscardItem', objid, toobjid, itemid, itemnum)
+  -- LogHelper.debug('丢弃', ItemHelper.getItemName(itemid), ': ', itemnum)
+end
+
+-- 玩家拾取道具
+function EventHelper.playerPickUpItem (objid, toobjid, itemid, itemnum)
+  PlayerHelper.playerPickUpItem(objid, toobjid, itemid, itemnum)
+  EventHelper.customEvent('playerPickUpItem', objid, toobjid, itemid, itemnum)
+  -- LogHelper.debug('拾取', ItemHelper.getItemName(itemid), ': ', itemnum)
 end
 
 -- 玩家攻击命中
@@ -100,9 +123,9 @@ function EventHelper.playerDefeatActor (objid, toobjid, item)
     return
   end
   if (ActorHelper.isPlayer(toobjid)) then -- 击败玩家
-    TaskHelper.killActor(objid, -1, true)
+    TaskHelper.playerDefeatActor(objid, -1, true)
   else
-    TaskHelper.killActor(objid, CreatureHelper.getActorID(toobjid), true)
+    TaskHelper.playerDefeatActor(objid, CreatureHelper.getActorID(toobjid), true)
   end
   EventHelper.customEvent('playerDefeatActor', objid, toobjid, item)
 end

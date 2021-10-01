@@ -5,19 +5,16 @@ CustomuiHelper = {}
 
 -- 当前界面按钮被点击
 function CustomuiHelper.clickButton (objid, uiid, elementid)
-  LogHelper.debug('clickButton', objid, uiid, elementid)
   -- body
 end
 
 -- 界面隐藏
 function CustomuiHelper.hideUI (objid, uiid)
-  LogHelper.debug('hideUI', objid, uiid)
   -- body
 end
 
 -- 界面显示
 function CustomuiHelper.showUI (objid, uiid)
-  LogHelper.debug('showUI', objid, uiid)
   -- body
 end
 
