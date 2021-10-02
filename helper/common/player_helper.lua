@@ -218,13 +218,13 @@ end
 -- 改变玩家视角模式
 function PlayerHelper.changeVMode (objid, viewmode, islock)
   viewmode = viewmode or VIEWPORTTYPE.BACKVIEW
-  if (not(objid)) then
-    PlayerHelper.everyPlayerDoSomeThing(function ()
-      PlayerHelper.changeViewMode(p.objid, viewmode, islock)
+  if (not(objid)) then -- 不存在，表示是对所有玩家执行
+    PlayerHelper.everyPlayerDoSomeThing(function (player)
+      PlayerHelper.changeViewMode(player.objid, viewmode, islock)
     end)
-  elseif (type(objid) == 'number') then
+  elseif (type(objid) == 'number') then -- 是数字，表示对一个玩家执行
     PlayerHelper.changeViewMode(objid, viewmode, islock)
-  else
+  else -- 剩下的应该是数组，表示对这一群玩家执行
     for i, v in ipairs(objid) do
       PlayerHelper.changeViewMode(v, viewmode, islock)
     end
