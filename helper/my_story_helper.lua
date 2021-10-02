@@ -91,20 +91,20 @@ EventHelper.addEvent('playerEnterGame', function (objid)
       TimeHelper.callFnAfterSecond(function ()
         local blockid = BlockHelper.getBlockID(MyStoryHelper.initWoodPos.x, MyStoryHelper.initWoodPos.y, MyStoryHelper.initWoodPos.z)
         if (blockid and blockid == MyStoryHelper.woodid) then -- 刚进入游戏
-          GameDataHelper.updateMainIndex()
-          GameDataHelper.updateMainProgress()
-          StoryHelper.setLoad(true)
-          TimeHelper.setHour(MyMap.CUSTOM.INIT_HOUR)
+          GameDataHelper.updateMainIndex() -- 更新主剧情
+          GameDataHelper.updateMainProgress() -- 更新主剧情进度
+          StoryHelper.setLoad(true) -- 标记剧情已加载
+          TimeHelper.setHour(MyMap.CUSTOM.INIT_HOUR) -- 初始化时间
           player:setPosition(MyStoryHelper.initPosition) -- 初始位置
-          PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0)
-          if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
-            LogPaper:newItem(objid, 1, true) -- 江湖日志
+          PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0) -- 对齐相机，朝向南方
+          -- if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
+            -- LogPaper:newItem(objid, 1, true) -- 江湖日志
             BackpackHelper.addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 3) -- 给房主三颗守护宝石
-            SaveGame:newItem(objid, 1, true) -- 保存游戏
-            LoadGame:newItem(objid, 1, true) -- 加载进度
-            MyStoryHelper.diffPersonDiffPresents(player)
-          end
-          -- 3秒后替换掉初始方块
+            -- SaveGame:newItem(objid, 1, true) -- 保存游戏
+            -- LoadGame:newItem(objid, 1, true) -- 加载进度
+            MyStoryHelper.diffPersonDiffPresents(player) -- 不同玩家给予道具
+          -- end
+          -- 3秒后替换掉初始方块，表示游戏已经开始
           TimeHelper.callFnAfterSecond(function ()
             MyStoryHelper.replaceInitBlock(MyStoryHelper.initWoodPos)
           end, 3)
