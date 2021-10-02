@@ -239,6 +239,8 @@ EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
       MyCustomUIHelper.updateTaskMessage(objid, task, true)
     elseif elementid == MyMap.UI.TASK_BTN5 then -- 翻页按钮
       MyCustomUIHelper.refreshTaskPanel(objid, taskInfo.page + 1)
+    elseif elementid == MyMap.UI.TALK_BTN then -- 对话按钮
+      TalkHelper.talkAround(objid) -- 与最近的生物对话
     end
   end
 end)
