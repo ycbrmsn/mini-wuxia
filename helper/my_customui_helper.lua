@@ -177,6 +177,20 @@ function MyCustomUIHelper.toggleCenterBox (objid, txt)
 end
 
 --[[
+  更新剧情信息（如果目前是显示的剧情信息）
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-02 16:06:58
+]]
+function MyCustomUIHelper.updateStoryMessage (objid)
+  local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
+  if taskInfo.taskid == 0 then -- 表示中心文字显示的是剧情信息
+    local title, content = StoryHelper.getMainStoryInfo(objid)
+    MyCustomUIHelper.showCenterBox(objid, content)
+  end
+end
+
+--[[
   更新任务信息
   @param    {number} objid 玩家id
   @param    {table} task 任务对象
@@ -234,8 +248,9 @@ end)
   @author   莫小仙
   @datetime 2021-10-02 00:30:59
 ]]
-EventHelper.addEvent('playerAddTaskItem', function (objid, itemid)
-  MyCustomUIHelper.refreshTaskPanel(objid)
+EventHelper.addEvent('playerAddTaskItem', function (objid, task, itemid)
+  MyCustomUIHelper.refreshTaskPanel(objid) -- 刷新任务面板
+  MyCustomUIHelper.updateTaskMessage(objid, task) -- 有可能更新中心文字
 end)
 
 --[[
@@ -243,8 +258,9 @@ end)
   @author   莫小仙
   @datetime 2021-10-02 00:31:02
 ]]
-EventHelper.addEvent('playerLoseTaskItem', function (objid, itemid)
-  MyCustomUIHelper.refreshTaskPanel(objid)
+EventHelper.addEvent('playerLoseTaskItem', function (objid, task, itemid)
+  MyCustomUIHelper.refreshTaskPanel(objid) -- 刷新任务面板
+  MyCustomUIHelper.updateTaskMessage(objid, task) -- 有可能更新中心文字
 end)
 
 --[[
@@ -252,6 +268,19 @@ end)
   @author   莫小仙
   @datetime 2021-10-02 00:31:05
 ]]
-EventHelper.addEvent('playerDefeatTaskActor', function (objid, actorid)
-  MyCustomUIHelper.refreshTaskPanel(objid)
+EventHelper.addEvent('playerDefeatTaskActor', function (objid, task, actorid)
+  MyCustomUIHelper.refreshTaskPanel(objid) -- 刷新任务面板
+  MyCustomUIHelper.updateTaskMessage(objid, task) -- 有可能更新中心文字
+end)
+
+--[[
+  监听主线剧情更新事件
+  @author   莫小仙
+  @datetime 2021-10-02 15:56:50
+]]
+EventHelper.addEvent('mainStoryForward', function (index, progress)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
+    MyCustomUIHelper.refreshTaskPanel(player.objid) -- 刷新任务面板
+    MyCustomUIHelper.updateStoryMessage(player.objid) -- 有可能更新中心文字
+  end)
 end)

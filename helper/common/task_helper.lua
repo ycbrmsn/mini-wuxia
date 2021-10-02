@@ -184,7 +184,7 @@ function TaskHelper.playerDefeatActor (playerid, actorid, isShow)
             if (state == 2) then
               ChatHelper.sendMsg(playerid, task.name, '任务#G可交付')
             end
-            EventHelper.customEvent('playerDefeatTaskActor', playerid, actorid) -- 自定义击杀任务怪物
+            EventHelper.customEvent('playerDefeatTaskActor', playerid, task, actorid) -- 自定义击杀任务怪物
           end
           return
         end
@@ -214,7 +214,7 @@ function TaskHelper.playerAddItem (playerid, itemid, showType)
               task.enough = false
               TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
             end
-            EventHelper.customEvent('playerAddTaskItem', playerid, itemid) -- 自定义获得任务道具
+            EventHelper.customEvent('playerAddTaskItem', playerid, task, itemid) -- 自定义获得任务道具
           end
           return
         end
@@ -237,7 +237,7 @@ function TaskHelper.playerLoseItem (playerid, itemid)
       for i, itemInfo in ipairs(task.itemInfos) do
         if (itemid == itemInfo.itemid) then -- 失去该道具
           itemInfo.curnum = curnum
-          EventHelper.customEvent('playerLoseTaskItem', playerid, itemid) -- 自定义获得任务道具
+          EventHelper.customEvent('playerLoseTaskItem', playerid, task, itemid) -- 自定义获得任务道具
           return
         end
       end

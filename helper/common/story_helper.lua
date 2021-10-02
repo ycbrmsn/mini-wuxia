@@ -18,6 +18,8 @@ function StoryHelper.forward (mainIndex, mainProgress, endProgress)
   if (StoryHelper.forward2(mainIndex, mainProgress, endProgress)) then
     local hostPlayer = PlayerHelper.getHostPlayer()
     GameDataHelper.updateGameData(hostPlayer)
+    EventHelper.customEvent('mainStoryForward', StoryHelper.getMainStoryIndex(),
+      StoryHelper.getMainStoryProgress()) -- 主线剧情更新
     return true
   else
     return false
