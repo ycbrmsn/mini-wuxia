@@ -59,7 +59,8 @@ function MyStoryHelper.addHour (hours)
       StoryHelper.forward(1, '明日出发')
     end
   elseif (StoryHelper.check(1, '今日出发')) then
-    if (hour + hours > 7) then
+    local hour = TimeHelper.getHour()
+    if (hour + hours > 7) then -- 再睡就要睡过头了，返回false表示睡觉失败
       return false
     end
   end

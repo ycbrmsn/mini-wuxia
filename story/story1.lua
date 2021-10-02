@@ -125,9 +125,11 @@ function Story1:finishNoticeEvent (objid)
   local hour = WorldHelper.getHours()
   local hourName = StringHelper.getHourName(hour)
   if (hour < 7) then
-    yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，#G辰时#n在村门口集合出发。')
+    yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，#G辰时',
+      StringHelper.speakColor, '在村门口集合出发。')
   else
-    yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天#G辰时#n，在村门口集合出发。')
+    yexiaolong:speak(ws:use(), '现在已经', hourName, '了，就先休整一天。明天#G辰时',
+      StringHelper.speakColor, '，在村门口集合出发。')
   end
   player:speak(ws:use(), '好的。')
   yexiaolong.action:playHi(ws:get())
