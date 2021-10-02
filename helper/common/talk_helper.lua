@@ -54,21 +54,27 @@ end
 
 -- 玩家跟附近最近的NPC对话，范围限制3格内
 function TalkHelper.talkAround (playerid)
-  local pos = ActorHelper.getMyPosition(playerid)
-  local areaid = AreaHelper.createAreaRect(pos, { x = 3, y = 3, z = 3 }) -- 3格内区域
-  local objids = AreaHelper.getAllCreaturesInAreaId(areaid, playerid, true) -- 同队生物
-  if (objids and #objids > 0) then -- 找到同队生物
-    -- 过滤留下可对话生物
-    local arr = {}
-    for i, objid in ipairs(objids) do
-      local actor = ActorHelper.getActor(objid)
-      if actor then -- actor存在，表示是特定生物
-        table.insert(arr, objid)
+  local player = PlayerHelper.getPlayer(playerid)
+  local actor = player:getClickActor()
+  if actor then -- 选择过了对话生物，则继续对话
+    return PlayerHelper.playerClickActor(playerid, actor.objid, true)
+  else -- 没选过，则在附近找
+    local pos = ActorHelper.getMyPosition(playerid)
+    local areaid = AreaHelper.createAreaRect(pos, { x = 3, y = 3, z = 3 }) -- 3格内区域
+    local objids = AreaHelper.getAllCreaturesInAreaId(areaid, playerid, true) -- 同队生物
+    if (objids and #objids > 0) then -- 找到同队生物
+      -- 过滤留下可对话生物
+      local arr = {}
+      for i, objid in ipairs(objids) do
+        local actor = ActorHelper.getActor(objid)
+        if actor then -- actor存在，表示是特定生物
+          table.insert(arr, objid)
+        end
       end
-    end
-    if #arr then -- 表示存在特定生物
-      local toobjid = ActorHelper.getNearestActor(arr, pos) -- 距离最近的生物
-      return PlayerHelper.playerClickActor(playerid, toobjid, true)
+      if #arr then -- 表示存在特定生物
+        local toobjid = ActorHelper.getNearestActor(arr, pos) -- 距离最近的生物
+        return PlayerHelper.playerClickActor(playerid, toobjid, true)
+      end
     end
   end
 end
