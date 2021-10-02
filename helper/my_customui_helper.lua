@@ -184,7 +184,7 @@ end
 ]]
 function MyCustomUIHelper.updateStoryMessage (objid)
   local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
-  if taskInfo.taskid == 0 then -- 表示中心文字显示的是剧情信息
+  if taskInfo.isShow and taskInfo.taskid == 0 then -- 表示显示显示中 且 显示的是剧情信息
     local title, content = StoryHelper.getMainStoryInfo(objid)
     MyCustomUIHelper.showCenterBox(objid, content)
   end
