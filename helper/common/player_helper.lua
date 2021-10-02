@@ -187,7 +187,8 @@ end
 
 function PlayerHelper.everyPlayerEnableMove (enable, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
-    player:enableMove(enable, true)
+    local msg = enable and true or '剧情中'
+    player:enableMove(enable, msg)
   end, afterSeconds)
 end
 

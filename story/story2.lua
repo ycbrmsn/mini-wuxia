@@ -389,7 +389,7 @@ function Story2:playerBadHurt (objid)
   local player = PlayerHelper.getPlayer(objid)
   PlayerHelper.changeVMode()
   player:enableBeAttacked(false)
-  player:enableMove(false, true)
+  player:enableMove(false, '剧情中')
   local ws = WaitSeconds:new()
   yexiaolong:thinks(ws:use(), '果然还是太勉强了吗？')
   TimeHelper.callFnAfterSecond(function ()
@@ -506,7 +506,7 @@ function Story2:yexiaolongWipeOutQiangdao (player)
       p:setPosition(pos)
       p:wantLookAt(yexiaolong, 2)
       if (p ~= player) then
-        p:enableMove(false, true)
+        p:enableMove(false, '剧情中')
       end
       idx = idx + 1
     end, wss:use(1))

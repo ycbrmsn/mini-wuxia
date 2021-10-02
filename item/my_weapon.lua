@@ -360,7 +360,7 @@ function FallStarBow:useItem3 (objid)
   if (self:getObjids(objid, 1)) then
     ItemHelper.recordUseSkill(objid, self.id, self.cd) -- 记录新的技能
     player:enableMove(false)
-    ChatHelper.sendSystemMsg('释放技能中无法移动', objid)
+    -- ChatHelper.sendSystemMsg('释放技能中无法移动', objid)
     ActorHelper.playBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT10, 1)
     self:useSkill(objid, 1)
   end

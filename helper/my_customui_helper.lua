@@ -243,7 +243,7 @@ EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
     elseif elementid == MyMap.UI.TASK_BTN1 then -- 主剧情按钮
       taskInfo.taskid = 0
       local title, content = StoryHelper.getMainStoryInfo(objid)
-      MyCustomUIHelper.toggleC  (objid, content)
+      MyCustomUIHelper.toggleCenterPannel(objid, content)
     elseif elementid == MyMap.UI.TASK_BTN2 then -- 任务按钮1
       local task = taskInfo.tasks[2]
       taskInfo.taskid = task.id

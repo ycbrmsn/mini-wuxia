@@ -38,18 +38,26 @@ end
 -- 设置能否移动
 function BasePlayerAttr:enableMove (enable, showMsg)
   local objid = self.myActor.objid
-  if (enable) then
-    if (showMsg) then
-      PlayerHelper.notifyGameInfo2Self(objid, '恢复移动')
+  if enable then -- 能够移动
+    if showMsg then -- 需要显示内容
+      if type(showMsg) == 'string' then -- 有具体显示内容
+        PlayerHelper.notifyGameInfo2Self(objid, showMsg .. '恢复了移动')
+      else -- 默认显示
+        PlayerHelper.notifyGameInfo2Self(objid, '恢复移动')
+      end
     end
     PlayerHelper.setAttr(objid, PLAYERATTR.WALK_SPEED, -1)
     PlayerHelper.setAttr(objid, PLAYERATTR.RUN_SPEED, -1)
     PlayerHelper.setAttr(objid, PLAYERATTR.SNEAK_SPEED, -1)
     PlayerHelper.setAttr(objid, PLAYERATTR.SWIN_SPEED, -1)
     PlayerHelper.setAttr(objid, PLAYERATTR.JUMP_POWER, -1)
-  else
-    if (showMsg) then
-      PlayerHelper.notifyGameInfo2Self(objid, '当前不可移动')
+  else -- 不能移动
+    if showMsg then -- 需要显示内容
+      if type(showMsg) == 'string' then -- 有具体显示内容
+        PlayerHelper.notifyGameInfo2Self(objid, showMsg .. '，暂时无法移动')
+      else -- 默认显示
+        PlayerHelper.notifyGameInfo2Self(objid, '暂时无法移动')
+      end
     end
     PlayerHelper.setAttr(objid, PLAYERATTR.WALK_SPEED, 0)
     PlayerHelper.setAttr(objid, PLAYERATTR.RUN_SPEED, 0)

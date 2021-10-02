@@ -217,7 +217,7 @@ miaolanTalkInfos = {
         TalkSession:noDialogue():call(function (player, actor)
           actor:setPlayerClickEffective(player.objid, false)
           actor:speakTo(player.objid, 0, '我来看看。')
-          player:enableMove(false, true)
+          player:enableMove(false, '检查中')
           TimeHelper.callFnAfterSecond (function (p)
             local hp = PlayerHelper.getHp(player.objid)
             local maxHp = PlayerHelper.getMaxHp(player.objid)
