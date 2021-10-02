@@ -813,7 +813,7 @@ end
 
 -- 显示任务信息，是否使用图文显示（默认使用聊天框显示）
 function BaseTask:show (objid, useGraphics)
-  local lines = BaseTask:getMessage(objid)
+  local lines = self:getMessage(objid)
   if (useGraphics) then
     local title = StringHelper.join(lines, '\n')
     local pos = ActorHelper.getDistancePosition(objid, 2)
