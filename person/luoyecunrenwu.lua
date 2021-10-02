@@ -940,13 +940,19 @@ end
 
 -- 在几点想做什么
 function Wenyu:wantAtHour (hour)
-  if (hour == 7) then
-    self:exchangeBed()
-    self:wantFreeTime()
-  elseif (hour == 19) then
-    self:goHome()
-  elseif (hour == 22) then
-    self:putOutCandleAndGoToBed()
+  local mainIndex = StoryHelper.getMainStoryIndex()
+  local mainProgress = StoryHelper.getMainStoryProgress()
+  if mainIndex == 1 and mainProgress == 1 then -- 剧情刚开始时，文羽就呆在家里不动
+    self:wantDoNothing()
+  else -- 剧情推进后
+    if (hour == 7) then
+      self:exchangeBed()
+      self:wantFreeTime()
+    elseif (hour == 19) then
+      self:goHome()
+    elseif (hour == 22) then
+      self:putOutCandleAndGoToBed()
+    end
   end
 end
 
