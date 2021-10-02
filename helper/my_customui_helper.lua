@@ -76,7 +76,7 @@ function MyCustomUIHelper.refreshTaskPanel (objid, page)
   local tasks = TaskHelper.getTasks(objid)
   local taskArr = {} -- 支线任务数组
   for k, task in pairs(tasks) do
-    if type(task) == 'table' then
+    if type(task) == 'table' and task.isBranch then -- 是支线任务
       table.insert(taskArr, task)
     end
   end
@@ -84,14 +84,14 @@ function MyCustomUIHelper.refreshTaskPanel (objid, page)
   local hasNextPage = true
   if #taskArr <= pageSize then -- 任务数不足一页
     page = 1
-    taskInfo.page = 1
     hasNextPage = false
   elseif #taskArr <= pageSize * (page - 1) then -- 表示没有当前页
     page = 1
-    taskInfo.page = 1
   end
-  local taskIndex = (page - 1) * pageSize
-  local num = #taskArr - taskIndex < taskInfo.pageSize and #taskArr or taskInfo.pageSize -- 要显示的任务按钮数
+  taskInfo.page = page
+  local taskIndex = (page - 1) * pageSize -- 当前页之前的任务数
+  local startNum = #taskArr - taskIndex -- 从当前页开始，还有多少个任务
+  local num = startNum < pageSize and startNum or pageSize -- 要显示的任务按钮数
   for i = 1, num do -- 循环显示任务按钮
     local task = taskArr[i + taskIndex]
     table.insert(taskInfo.tasks, task)
@@ -217,27 +217,27 @@ end
   @datetime 2021-10-01 18:12:19
 ]]
 EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
-  if uiid == MyMap.UI.SCREEN then -- 点击初始界面
+  if uiid == MyMap.UI.SCREEN then -- 如果是初始界面
     local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
-    if elementid == MyMap.UI.TASK_BTN then -- 点击任务按钮
+    if elementid == MyMap.UI.TASK_BTN then -- 任务按钮
       MyCustomUIHelper.clickTaskBtn(objid)
-    elseif elementid == MyMap.UI.TASK_BTN1 then -- 点击主剧情按钮
+    elseif elementid == MyMap.UI.TASK_BTN1 then -- 主剧情按钮
       taskInfo.taskid = 0
       local title, content = StoryHelper.getMainStoryInfo(objid)
       MyCustomUIHelper.toggleCenterBox(objid, content)
-    elseif elementid == MyMap.UI.TASK_BTN2 then -- 点击任务按钮1
+    elseif elementid == MyMap.UI.TASK_BTN2 then -- 任务按钮1
       local task = taskInfo.tasks[2]
       taskInfo.taskid = task.id
       MyCustomUIHelper.updateTaskMessage(objid, task, true)
-    elseif elementid == MyMap.UI.TASK_BTN3 then -- 点击任务按钮2
+    elseif elementid == MyMap.UI.TASK_BTN3 then -- 任务按钮2
       local task = taskInfo.tasks[3]
       taskInfo.taskid = task.id
       MyCustomUIHelper.updateTaskMessage(objid, task, true)
-    elseif elementid == MyMap.UI.TASK_BTN4 then -- 点击任务按钮3
+    elseif elementid == MyMap.UI.TASK_BTN4 then -- 任务按钮3
       local task = taskInfo.tasks[4]
       taskInfo.taskid = task.id
       MyCustomUIHelper.updateTaskMessage(objid, task, true)
-    elseif elementid == MyMap.UI.TASK_BTN5 then -- 点击翻页按钮
+    elseif elementid == MyMap.UI.TASK_BTN5 then -- 翻页按钮
       MyCustomUIHelper.refreshTaskPanel(objid, taskInfo.page + 1)
     end
   end

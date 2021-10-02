@@ -34,6 +34,7 @@ kanshuTask = BaseTask:new({
       num = 5,
     }),
   },
+  isBranch = true, -- 标记是支线任务
 })
 
 -- 消灭野狗
@@ -54,6 +55,7 @@ xiaomieyegouTask = BaseTask:new({
       num = 1,
     }),
   },
+  isBranch = true, -- 标记是支线任务
 })
 
 -- 收集兽骨任务
@@ -80,6 +82,7 @@ shoujishouguTask = BaseTask:new({
       num = 1,
     }),
   },
+  isBranch = true, -- 标记是支线任务
 })
 
 -- 采集铜矿石任务
@@ -100,6 +103,7 @@ caijitongkuangshiTask = BaseTask:new({
       num = 0,
     }),
   },
+  isBranch = true, -- 标记是支线任务
 })
 
 -- 消灭恶狼
@@ -171,6 +175,7 @@ jibaipanjunTask = BaseTask:new({
       -- story1:finishNoticeEvent(objid)
     end),
   },
+  isBranch = true, -- 标记是支线任务
 })
 
 -- 送信
@@ -190,4 +195,5 @@ songxinTask = BaseTask:new({
       num = 100,
     }),
   },
+  isBranch = true, -- 标记是支线任务
 })
