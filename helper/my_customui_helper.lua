@@ -2,7 +2,8 @@
 MyCustomUIHelper = {
   PAGE_SIZE = 3, -- 每页条数
   taskInfo = {}, -- objid -> { isShow, page, pageSize, tasks, taskid }
-  centerBox = {}, -- objid -> { isShow, txt }
+  centerPannel = {}, -- objid -> { isShow, txt }
+  helpPannel = {}, -- objid -> isShow
 }
 
 --[[
@@ -13,7 +14,8 @@ MyCustomUIHelper = {
 ]]
 function MyCustomUIHelper.init (objid)
   CustomuiHelper.hideElement(objid, MyMap.UI.SCREEN, MyMap.UI.TASK_PANNEL) -- 隐藏任务栏
-  MyCustomUIHelper.hideCenterBox(objid) -- 隐藏中心文字板
+  CustomuiHelper.hideElement(objid, MyMap.UI.SCREEN, MyMap.UI.HELP_PANNEL) -- 隐藏帮助面板
+  MyCustomUIHelper.hideCenterPannel(objid) -- 隐藏中心文字板
   PlayerHelper.openUIView(objid, MyMap.UI.SCREEN) -- 显示UI界面
 end
 
@@ -46,7 +48,7 @@ function MyCustomUIHelper.clickTaskBtn (objid)
     taskInfo.isShow = false
     CustomuiHelper.hideElement(objid, uiid, MyMap.UI.TASK_PANNEL)
     if taskInfo.taskid > -1 then -- 如果中心文字面板是显示的任务，则也隐藏
-      MyCustomUIHelper.hideCenterBox(objid) -- 隐藏中心文字板
+      MyCustomUIHelper.hideCenterPannel(objid) -- 隐藏中心文字板
     end
   else -- 隐藏着，则显示
     MyCustomUIHelper.refreshTaskPanel(objid) -- 刷新任务面板
@@ -120,11 +122,11 @@ end
   @author   莫小仙
   @datetime 2021-10-01 21:04:29
 ]]
-function MyCustomUIHelper.getCenterBoxInfo (objid)
-  local info = MyCustomUIHelper.centerBox[objid]
+function MyCustomUIHelper.getCenterPannelInfo (objid)
+  local info = MyCustomUIHelper.centerPannel[objid]
   if not info then -- 不存在，则初始化一个
     info = { isShow = false, txt = '' }
-    MyCustomUIHelper.centerBox[objid] = info
+    MyCustomUIHelper.centerPannel[objid] = info
   end
   return info
 end
@@ -136,8 +138,8 @@ end
   @author   莫小仙
   @datetime 2021-10-01 20:48:34
 ]]
-function MyCustomUIHelper.showCenterBox (objid, txt)
-  local info = MyCustomUIHelper.getCenterBoxInfo(objid)
+function MyCustomUIHelper.showCenterPannel (objid, txt)
+  local info = MyCustomUIHelper.getCenterPannelInfo(objid)
   info.isShow = true
   info.txt = txt
   CustomuiHelper.setText(objid, MyMap.UI.SCREEN, MyMap.UI.CENTER_TXT, txt) -- 设置中心文字
@@ -150,8 +152,8 @@ end
   @author   莫小仙
   @datetime 2021-10-01 20:49:17
 ]]
-function MyCustomUIHelper.hideCenterBox (objid)
-  local info = MyCustomUIHelper.getCenterBoxInfo(objid)
+function MyCustomUIHelper.hideCenterPannel (objid)
+  local info = MyCustomUIHelper.getCenterPannelInfo(objid)
   info.isShow = false
   CustomuiHelper.hideElement(objid, MyMap.UI.SCREEN, MyMap.UI.CENTER_PANEL) -- 隐藏中心文字板
 end
@@ -163,16 +165,33 @@ end
   @author   莫小仙
   @datetime 2021-10-01 21:10:20
 ]]
-function MyCustomUIHelper.toggleCenterBox (objid, txt)
-  local info = MyCustomUIHelper.getCenterBoxInfo(objid)
+function MyCustomUIHelper.toggleCenterPannel (objid, txt)
+  local info = MyCustomUIHelper.getCenterPannelInfo(objid)
   if not info.isShow then -- 如果没显示
-    MyCustomUIHelper.showCenterBox(objid, txt)
+    MyCustomUIHelper.showCenterPannel(objid, txt)
   else -- 显示了
     if info.txt == txt then -- 显示内容相同，则隐藏
-      MyCustomUIHelper.hideCenterBox(objid)
+      MyCustomUIHelper.hideCenterPannel(objid)
     else -- 不相同，则更新内容
-      MyCustomUIHelper.showCenterBox(objid, txt)
+      MyCustomUIHelper.showCenterPannel(objid, txt)
     end
+  end
+end
+
+--[[
+  显示/隐藏帮助面板
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-02 22:11:59
+]]
+function MyCustomUIHelper.toggleHelpPannel (objid)
+  local uiid, elementid = MyMap.UI.SCREEN, MyMap.UI.HELP_PANNEL
+  if MyCustomUIHelper.helpPannel[objid] then -- 显示了，则隐藏
+    MyCustomUIHelper.helpPannel[objid] = false
+    CustomuiHelper.hideElement(objid, uiid, elementid)
+  else -- 隐藏了，则显示
+    MyCustomUIHelper.helpPannel[objid] = true
+    CustomuiHelper.showElement(objid, uiid, elementid)
   end
 end
 
@@ -186,7 +205,7 @@ function MyCustomUIHelper.updateStoryMessage (objid)
   local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
   if taskInfo.isShow and taskInfo.taskid == 0 then -- 表示显示显示中 且 显示的是剧情信息
     local title, content = StoryHelper.getMainStoryInfo(objid)
-    MyCustomUIHelper.showCenterBox(objid, content)
+    MyCustomUIHelper.showCenterPannel(objid, content)
   end
 end
 
@@ -203,16 +222,16 @@ function MyCustomUIHelper.updateTaskMessage (objid, task, ignoreOther)
   local messages = task:getMessage(objid)
   local txt = StringHelper.join(messages, '\n')
   if ignoreOther then -- 如果不在意当前是什么内容都替换
-    MyCustomUIHelper.toggleCenterBox(objid, txt)
+    MyCustomUIHelper.toggleCenterPannel(objid, txt)
   else -- 仅当显示当前内容时替换
     if taskInfo.taskid == task.id then -- 显示相同任务内容
-      MyCustomUIHelper.showCenterBox(objid, txt)
+      MyCustomUIHelper.showCenterPannel(objid, txt)
     end
   end
 end
 
 --[[
-  监听玩家点击按钮事件
+  监听玩家点击按钮事件  
   @author   莫小仙
   @datetime 2021-10-01 18:12:19
 ]]
@@ -224,7 +243,7 @@ EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
     elseif elementid == MyMap.UI.TASK_BTN1 then -- 主剧情按钮
       taskInfo.taskid = 0
       local title, content = StoryHelper.getMainStoryInfo(objid)
-      MyCustomUIHelper.toggleCenterBox(objid, content)
+      MyCustomUIHelper.toggleC  (objid, content)
     elseif elementid == MyMap.UI.TASK_BTN2 then -- 任务按钮1
       local task = taskInfo.tasks[2]
       taskInfo.taskid = task.id
@@ -241,6 +260,8 @@ EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
       MyCustomUIHelper.refreshTaskPanel(objid, taskInfo.page + 1)
     elseif elementid == MyMap.UI.TALK_BTN then -- 对话按钮
       TalkHelper.talkAround(objid) -- 与最近的生物对话
+    elseif elementid == MyMap.UI.HELP_BTN then -- 帮助按钮
+      MyCustomUIHelper.toggleHelpPannel(objid)
     end
   end
 end)
