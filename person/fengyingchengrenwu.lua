@@ -86,7 +86,8 @@ end
 
 function Ludaofeng:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '你找我可有要事？')
+  -- self:speakTo(playerid, 0, '你找我可有要事？')
+  self:toastSpeak('你找我可有要事？')
 end
 
 function Ludaofeng:candleEvent (player, candle)
@@ -150,11 +151,14 @@ end
 function Qianbingwei:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
   if (self.wants and self.wants[1].currentRestTime > 0) then
-    self:speakTo(playerid, 0, '请注意不要随便撞人。')
+    -- self:speakTo(playerid, 0, '请注意不要随便撞人。')
+    self:toastSpeak('请注意不要随便撞人。')
   elseif (self.think == 'sleep') then
-    self:speakTo(playerid, 0, '你是想被抓起来吗？')
+    -- self:speakTo(playerid, 0, '你是想被抓起来吗？')
+    self:toastSpeak('你是想被抓起来吗？')
   else
-    self:speakTo(playerid, 0, '请不要影响我。')
+    -- self:speakTo(playerid, 0, '请不要影响我。')
+    self:toastSpeak('请不要影响我。')
   end
 end
 
@@ -163,9 +167,11 @@ function Qianbingwei:candleEvent (player, candle)
   if (self.think == 'sleep' and candle.isLit) then
     self.action:stopRun()
     if (self.wants[1].style == 'sleeping') then
-      self:speakTo(player.objid, 0, '我……')
+      -- self:speakTo(player.objid, 0, '我……')
+      self:toastSpeak('我……')
     else
-      self:speakTo(player.objid, 0, '我……')
+      -- self:speakTo(player.objid, 0, '我……')
+      self:toastSpeak('我……')
     end
     self:wantLookAt('sleep', player.objid, 4)
     TimeHelper.callFnAfterSecond (function (p)
@@ -317,14 +323,18 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
       nickname = PlayerHelper.getNickname(playerid)
     end
     if (self.wants and self.wants[1].currentRestTime > 0) then
-      self:speakTo(playerid, 0, nickname, '，你撞我是想试试你的实力吗？')
+      -- self:speakTo(playerid, 0, nickname, '，你撞我是想试试你的实力吗？')
+      self:toastSpeak(nickname, '，你撞我是想试试你的实力吗？')
     elseif (self.think == 'sleep') then
-      self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要惹我哟。')
+      -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要惹我哟。')
+      self:toastSpeak(nickname, '，我要睡觉了，不要惹我哟。')
     else
-      self:speakTo(playerid, 0, nickname, '，找我有事吗？')
+      -- self:speakTo(playerid, 0, nickname, '，找我有事吗？')
+      self:toastSpeak(nickname, '，找我有事吗？')
     end
   elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
-    self:speakTo(playerid, 0, '武术修为，也不是一蹴而就的。')
+    -- self:speakTo(playerid, 0, '武术修为，也不是一蹴而就的。')
+    self:toastSpeak('武术修为，也不是一蹴而就的。')
   end
 end
 
@@ -341,13 +351,17 @@ function Yexiaolong:playerClickEvent (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainIndex == 1 and mainProgress == #story1.tips - 1) then
-    self:speakTo(objid, 0, '你先去准备准备，我们明日#G辰时#n出发。')
+    -- self:speakTo(objid, 0, '你先去准备准备，我们明日#G辰时#n出发。')
+    self:toastSpeak('你先去准备准备，我们明日#G辰时#n出发。')
   elseif (mainIndex == 1 and mainProgress == #story1.tips) then
-    self:speakTo(objid, 0, '准备得怎么样了，我们#G辰时#n就要出发了。')
+    -- self:speakTo(objid, 0, '准备得怎么样了，我们#G辰时#n就要出发了。')
+    self:toastSpeak('准备得怎么样了，我们#G辰时#n就要出发了。')
   elseif (mainIndex == 3 and mainProgress >= 3 and mainProgress <= 5) then
-    self:speakTo(objid, 0, '你先去找小高，我要歇一歇。')
+    -- self:speakTo(objid, 0, '你先去找小高，我要歇一歇。')
+    self:toastSpeak('你先去找小高，我要歇一歇。')
   elseif (mainProgress == 3 and mainProgress == 6) then
-    self:speakTo(objid, 0, '目前没有什么事情。')
+    -- self:speakTo(objid, 0, '目前没有什么事情。')
+    self:toastSpeak('目前没有什么事情。')
   end
 end
 
@@ -364,9 +378,11 @@ function Yexiaolong:candleEvent (player, candle)
     if (self.think == 'sleep' and candle.isLit) then
       self.action:stopRun()
       if (self.wants[1].style == 'sleeping') then
-        self:speakTo(player.objid, 0, nickname, '，你想吃棍子吗？不要碰蜡烛。')
+        -- self:speakTo(player.objid, 0, nickname, '，你想吃棍子吗？不要碰蜡烛。')
+        self:toastSpeak(nickname, '，你想吃棍子吗？不要碰蜡烛。')
       else
-        self:speakTo(player.objid, 0, nickname, '，我要睡觉了，离蜡烛远点。')
+        -- self:speakTo(player.objid, 0, nickname, '，我要睡觉了，离蜡烛远点。')
+        self:toastSpeak(nickname, '，我要睡觉了，离蜡烛远点。')
       end
       self:wantLookAt('sleep', player.objid, 4)
       self.action:playAngry(1)
@@ -376,7 +392,8 @@ function Yexiaolong:candleEvent (player, candle)
     end
   elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
     if (self.think == 'sleep' and candle.isLit) then
-      self:speakTo(player.objid, 0, '……')
+      -- self:speakTo(player.objid, 0, '……')
+      self:toastSpeak('……')
     end
   end
 end
@@ -467,7 +484,8 @@ end
 
 function Sunkongwu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '客人想买点什么？')
+  -- self:speakTo(playerid, 0, '客人想买点什么？')
+  self:toastSpeak('客官想买点什么？')
 end
 
 function Sunkongwu:candleEvent (player, candle)
@@ -553,7 +571,8 @@ end
 
 function Limiaoshou:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '客人想买点什么？')
+  -- self:speakTo(playerid, 0, '客人想买点什么？')
+  self:toastSpeak('客官想买点什么？')
 end
 
 function Limiaoshou:candleEvent (player, candle)
@@ -639,7 +658,8 @@ end
 
 function Qianduo:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '客人想买点什么？')
+  -- self:speakTo(playerid, 0, '客人想买点什么？')
+  self:toastSpeak('客官想买点什么？')
 end
 
 function Qianduo:candleEvent (player, candle)
@@ -706,7 +726,8 @@ end
 
 function Daniu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '客人想去哪里？')
+  -- self:speakTo(playerid, 0, '客人想去哪里？')
+  self:toastSpeak('客官想去哪里？')
 end
 
 function Daniu:candleEvent (player, candle)
@@ -787,7 +808,8 @@ end
 
 function Erniu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '买好票之后拿着它给我就好了。')
+  -- self:speakTo(playerid, 0, '买好票之后拿着它给我就好了。')
+  self:toastSpeak('买好票之后拿着它给我就好了。')
 end
 
 function Erniu:candleEvent (player, candle)
@@ -798,28 +820,32 @@ function Erniu:playerClickEvent (objid)
   local itemid = PlayerHelper.getCurToolID(objid)
   if (itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID) then -- 落叶村车票
     ItemHelper.removeCurTool(objid)
-    self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
+    -- self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
+    self:toastSpeak('这是去往落叶村的车票。我这就送你过去。')
     TimeHelper.callFnFastRuns(function ()
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.luoyecunPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
     ItemHelper.removeCurTool(objid)
-    self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
+    -- self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
+    self:toastSpeak('这是去往平风寨的车票。我这就送你过去。')
     TimeHelper.callFnFastRuns(function ()
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID) then -- 叛军营地
     ItemHelper.removeCurTool(objid)
-    self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
+    -- self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
+    self:toastSpeak('这是去往叛军营地的车票。我这就送你过去。')
     TimeHelper.callFnFastRuns(function ()
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.panjunyingdiPos)
     end, 2)
   elseif (itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID) then -- 橘山
     ItemHelper.removeCurTool(objid)
-    self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
+    -- self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
+    self:toastSpeak('这是去往橘山的车票。我这就送你过去。')
     TimeHelper.callFnFastRuns(function ()
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.jushanPos)
@@ -899,7 +925,8 @@ end
 
 function Murongxiaotian:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '来者是客，不如坐下聊一聊。')
+  -- self:speakTo(playerid, 0, '来者是客，不如坐下聊一聊。')
+  self:toastSpeak('来者是客，不如坐下聊一聊。')
 end
 
 function Murongxiaotian:candleEvent (player, candle)
@@ -996,12 +1023,14 @@ end
 
 function Gaoxiaohu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '做做任务，也会有所收获。')
+  -- self:speakTo(playerid, 0, '做做任务，也会有所收获。')
+  self:toastSpeak('做做任务，也会有所收获。')
 end
 
 function Gaoxiaohu:candleEvent (player, candle)
   if (self.think == 'sleep' and candle.isLit) then
-    self:speakTo(player.objid, 0, '……')
+    -- self:speakTo(player.objid, 0, '……')
+    self:toastSpeak('……')
   end
 end
 
@@ -1015,7 +1044,8 @@ function Gaoxiaohu:playerClickEvent (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if (mainProgress == 3 and mainProgress == 4) then
-    self:speakTo(objid, 0, '真宝阁就在学院斜对面。')
+    -- self:speakTo(objid, 0, '真宝阁就在学院斜对面。')
+    self:toastSpeak('真宝阁就在学院斜对面。')
   end
 end
 
@@ -1107,12 +1137,14 @@ end
 
 function Yuewushuang:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '我也刚来学院，希望能够变得很厉害。')
+  -- self:speakTo(playerid, 0, '我也刚来学院，希望能够变得很厉害。')
+  self:toastSpeak('我也刚来学院，希望能够变得很厉害。')
 end
 
 function Yuewushuang:candleEvent (player, candle)
   if (self.think == 'sleep' and candle.isLit) then
-    self:speakTo(player.objid, 0, '明天还要训练呢，早点休息。')
+    -- self:speakTo(player.objid, 0, '明天还要训练呢，早点休息。')
+    self:toastSpeak('明天还要训练呢，早点休息。')
   end
 end
 
@@ -1198,11 +1230,13 @@ end
 
 function Jianghuo:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  self:speakTo(playerid, 0, '我来学院没多久，就觉得自己厉害了许多。')
+  -- self:speakTo(playerid, 0, '我来学院没多久，就觉得自己厉害了许多。')
+  self:toastSpeak('我来学院没多久，就觉得自己厉害了许多。')
 end
 
 function Jianghuo:candleEvent (player, candle)
   if (self.think == 'sleep' and candle.isLit) then
-    self:speakTo(player.objid, 0, '睡觉睡觉，明天再闹。')
+    -- self:speakTo(player.objid, 0, '睡觉睡觉，明天再闹。')
+    self:toastSpeak('睡觉睡觉，明天再闹。')
   end
 end
