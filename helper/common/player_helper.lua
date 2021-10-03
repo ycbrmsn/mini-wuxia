@@ -550,7 +550,30 @@ end
 
 -- 输入字符串
 function PlayerHelper.playerNewInputContent (objid, content)
-  -- body
+  if content == '关闭日志' then
+    if LogHelper.level ~= 'no' then -- 日志未关闭
+      LogHelper.level = 'no'
+      ChatHelper.sendMsg(nil, '关闭日志成功')
+    else -- 反之
+      ChatHelper.sendMsg(nil, '日志已关闭')
+    end
+  elseif content == '开启日志' then
+    LogHelper.level = 'error'
+    ChatHelper.sendMsg(nil, '日志已开启')
+  elseif content == '切换日志1' then
+    LogHelper.level = 'error'
+    ChatHelper.sendMsg(nil, '日志切换为错误级别')
+  elseif content == '切换日志2' then
+    LogHelper.level = 'info'
+    ChatHelper.sendMsg(nil, '日志切换为信息级别')
+  elseif content == '切换日志3' then
+    LogHelper.level = 'debug'
+    ChatHelper.sendMsg(nil, '日志切换为调试级别')
+  elseif content == '错误信息' then
+    LogHelper.showErrorRecords(objid)
+  elseif content == '停止错误信息' then
+    LogHelper.stopErrorRecords(objid)
+  end
 end
 
 -- 按键被按下
