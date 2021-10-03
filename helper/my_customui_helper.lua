@@ -136,13 +136,17 @@ end
   显示中心文字板内容
   @param    {number} objid 玩家id
   @param    {string} txt 显示字符串
+  @param    {number} msgid 消息id，主剧情为0，任务为taskid
   @author   莫小仙
   @datetime 2021-10-01 20:48:34
 ]]
-function MyCustomUIHelper.showCenterPannel (objid, txt)
+function MyCustomUIHelper.showCenterPannel (objid, txt, msgid)
   local info = MyCustomUIHelper.getCenterInfo(objid)
   info.isShow = true
   info.txt = txt
+  if msgid then -- 存在，则表示需要修改id
+    info.msgid = msgid
+  end
   CustomuiHelper.setText(objid, MyMap.UI.SCREEN, MyMap.UI.CENTER_TXT, txt) -- 设置中心文字
   CustomuiHelper.showElement(objid, MyMap.UI.SCREEN, MyMap.UI.CENTER_PANEL) -- 显示中心文字板
 end
@@ -163,18 +167,19 @@ end
   切换显示：隐藏时则显示；显示时，如果内容相同，则隐藏；如果内容不同，则更新
   @param    {number} objid 玩家id
   @param    {string} txt 字符串
+  @param    {number} msgid 消息id，主剧情为0，任务为taskid
   @author   莫小仙
   @datetime 2021-10-01 21:10:20
 ]]
-function MyCustomUIHelper.toggleCenterPannel (objid, txt)
+function MyCustomUIHelper.toggleCenterPannel (objid, txt, msgid)
   local info = MyCustomUIHelper.getCenterInfo(objid)
   if not info.isShow then -- 如果没显示
-    MyCustomUIHelper.showCenterPannel(objid, txt)
+    MyCustomUIHelper.showCenterPannel(objid, txt, msgid)
   else -- 显示了
     if info.txt == txt then -- 显示内容相同，则隐藏
       MyCustomUIHelper.hideCenterPannel(objid)
     else -- 不相同，则更新内容
-      MyCustomUIHelper.showCenterPannel(objid, txt)
+      MyCustomUIHelper.showCenterPannel(objid, txt, msgid)
     end
   end
 end
@@ -197,6 +202,29 @@ function MyCustomUIHelper.toggleHelpPannel (objid)
 end
 
 --[[
+  显示主线剧情信息
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-03 16:21:17
+]]
+function MyCustomUIHelper.showStoryMessage (objid)
+  local tasks = TaskHelper.getTasks(objid)
+  local task -- 假定主线剧情任务至多只有一个
+  for k, v in pairs(tasks) do
+    if type(v) == 'table' and v.isMain then -- 是主线任务
+      task = v
+      break
+    end
+  end
+  local title, content = StoryHelper.getMainStoryInfo(objid)
+  if task then -- 找到主线剧情任务
+    local messages = task:getMessage(objid)
+    content = content .. '\n涉及任务：\n' .. StringHelper.join(messages, '\n')
+  end
+  MyCustomUIHelper.showCenterPannel(objid, content, 0)
+end
+
+--[[
   更新剧情信息（如果目前是显示的剧情信息）
   @param    {number} objid 玩家id
   @author   莫小仙
@@ -204,31 +232,65 @@ end
 ]]
 function MyCustomUIHelper.updateStoryMessage (objid)
   local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
-  if centerInfo.isShow and centerInfo.msgid == 0 then -- 表示显示显示中 且 显示的是主线剧情信息
-    local title, content = StoryHelper.getMainStoryInfo(objid)
-    MyCustomUIHelper.showCenterPannel(objid, content)
+  if centerInfo.isShow and centerInfo.msgid == 0 then -- 当前显示 且 显示主线剧情信息
+    MyCustomUIHelper.showStoryMessage(objid)
   end
+end
+
+--[[
+  显示/隐藏主线剧情信息
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-03 16:23:28
+]]
+function MyCustomUIHelper.toggleStoryMessage (objid)
+  local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
+  if centerInfo.isShow and centerInfo.msgid == 0 then -- 当前显示 且 显示主线剧情信息，则隐藏
+    MyCustomUIHelper.hideCenterPannel(objid)
+  else -- 反之，则显示
+    MyCustomUIHelper.showStoryMessage(objid)
+  end
+end
+
+--[[
+  显示任务信息
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-03 16:39:23
+]]
+function MyCustomUIHelper.showTaskMessage (objid, task)
+  local messages = task:getMessage(objid)
+  local txt = StringHelper.join(messages, '\n')
+  MyCustomUIHelper.showCenterPannel(objid, txt, task.id)
 end
 
 --[[
   更新任务信息
   @param    {number} objid 玩家id
-  @param    {table} task 任务对象
-  @param    {boolean} ignoreOther 是否忽略显示内容是不是其他的
+  @param    {table} task 任务
   @author   莫小仙
   @datetime 2021-10-01 23:33:14
 ]]
-function MyCustomUIHelper.updateTaskMessage (objid, task, ignoreOther)
-  local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
-  local messages = task:getMessage(objid)
-  local txt = StringHelper.join(messages, '\n')
-  if ignoreOther then -- 如果不在意当前是什么内容都替换
-    MyCustomUIHelper.toggleCenterPannel(objid, txt)
-  else -- 仅当显示当前内容时替换
-    local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
-    if centerInfo.msgid == task.id then -- 显示相同任务内容
-      MyCustomUIHelper.showCenterPannel(objid, txt)
-    end
+function MyCustomUIHelper.updateTaskMessage (objid, task)
+  local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
+  if centerInfo.isShow and centerInfo.msgid == task.id then -- 当前显示 且 显示相同任务信息
+    MyCustomUIHelper.showTaskMessage(objid, task)
+  end
+end
+
+--[[
+  显示/隐藏任务信息
+  @param    {number} objid 玩家id
+  @param    {table} task 任务
+  @author   莫小仙
+  @datetime 2021-10-03 16:42:28
+]]
+function MyCustomUIHelper.toggleTaskMessage (objid, task)
+  local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
+  if centerInfo.isShow and centerInfo.msgid == task.id then -- 当前显示 且 显示相同任务信息，则隐藏
+    MyCustomUIHelper.hideCenterPannel(objid)
+  else -- 反之，则显示
+    MyCustomUIHelper.showTaskMessage(objid, task)
   end
 end
 
@@ -240,25 +302,19 @@ end
 EventHelper.addEvent('clickButton', function (objid, uiid, elementid)
   if uiid == MyMap.UI.SCREEN then -- 如果是初始界面
     local taskInfo = MyCustomUIHelper.getTaskInfo(objid)
-    local centerInfo = MyCustomUIHelper.getCenterInfo(objid)
     if elementid == MyMap.UI.TASK_BTN then -- 任务按钮
       MyCustomUIHelper.clickTaskBtn(objid)
     elseif elementid == MyMap.UI.TASK_BTN1 then -- 主剧情按钮
-      centerInfo.msgid = 0
-      local title, content = StoryHelper.getMainStoryInfo(objid)
-      MyCustomUIHelper.toggleCenterPannel(objid, content)
+      MyCustomUIHelper.toggleStoryMessage(objid)
     elseif elementid == MyMap.UI.TASK_BTN2 then -- 任务按钮1
       local task = taskInfo.tasks[2]
-      centerInfo.msgid = task.id
-      MyCustomUIHelper.updateTaskMessage(objid, task, true)
+      MyCustomUIHelper.toggleTaskMessage(objid, task)
     elseif elementid == MyMap.UI.TASK_BTN3 then -- 任务按钮2
       local task = taskInfo.tasks[3]
-      centerInfo.msgid = task.id
-      MyCustomUIHelper.updateTaskMessage(objid, task, true)
+      MyCustomUIHelper.toggleTaskMessage(objid, task)
     elseif elementid == MyMap.UI.TASK_BTN4 then -- 任务按钮3
       local task = taskInfo.tasks[4]
-      centerInfo.msgid = task.id
-      MyCustomUIHelper.updateTaskMessage(objid, task, true)
+      MyCustomUIHelper.toggleTaskMessage(objid, task)
     elseif elementid == MyMap.UI.TASK_BTN5 then -- 翻页按钮
       MyCustomUIHelper.refreshTaskPanel(objid, taskInfo.page + 1)
     elseif elementid == MyMap.UI.TALK_BTN then -- 对话按钮

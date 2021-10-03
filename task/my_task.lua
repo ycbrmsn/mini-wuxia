@@ -128,6 +128,7 @@ xiaomieelangTask = BaseTask:new({
       story1:finishNoticeEvent(objid)
     end),
   },
+  isMain = true, -- 标记是主线任务
 })
 
 -- 消灭强盗
@@ -150,6 +151,7 @@ xiaomieqiangdaoTask = BaseTask:new({
       StoryHelper.forward(3, '准备消灭大头目')
     end),
   },
+  isMain = true, -- 标记是主线任务
 })
 
 -- 击败叛军
