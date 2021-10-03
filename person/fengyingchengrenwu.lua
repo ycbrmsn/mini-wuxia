@@ -110,6 +110,7 @@ function Qianbingwei:new ()
     candlePositions = {
       MyPosition:new(-54.5, 8.5, 531.5) -- 蜡烛台
     },
+    talkInfos = qianbingweiTalkInfos,
     defaultTalkMsg = '城里还是很安全的，出了城可要注意。',
   }
   self.__index = self

@@ -66,3 +66,57 @@ yexiaolongTalkInfos = {
     }
   }),
 }
+
+-- 千兵卫
+qianbingweiTalkInfos = {
+  -- 击败叛军
+  TalkInfo:new({
+    id = 1,
+    ants = {
+      TalkAnt:excludeTask(jibaipanjunTask:getRealid()), -- 未接受过此任务
+      TalkAnt:atLeastLevel(15), -- 至少15级
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('城外的叛军似乎越来越壮大了。'),
+        TalkSession:speak('发生了什么事？'),
+        TalkSession:reply('有一股叛军盘踞在风颖城外的东方，似乎蠢蠢欲动。'),
+        TalkSession:speak('我能够做些什么吗？'),
+        TalkSession:reply('因为一些原因，我们的人无法前往。你能帮我消灭一些吗？'),
+        TalkSession:choose({
+          PlayerTalk:stop('没问题'):call(function (player, actor)
+            TaskHelper.acceptTask(player.objid, jibaipanjunTask)
+          end),
+          PlayerTalk:continue('等我再厉害些再说。'),
+        }),
+        TalkSession:reply('……'),
+      },
+    }
+  }),
+  TalkInfo:new({
+    id = 2,
+    ants = {
+      TalkAnt:includeTask(jibaipanjunTask:getRealid(), 1), -- 任务未完成
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('叛军就盘踞在城外东方。'),
+        TalkSession:speak('我知道了。'),
+      },
+    }
+  }),
+  TalkInfo:new({
+    id = 3,
+    ants = {
+      TalkAnt:includeTask(jibaipanjunTask:getRealid(), 2), -- 任务已完成
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('我击败了一些叛军。'),
+        TalkSession:reply('干得不错。这是你的奖励。'):call(function(player, actor)
+          TaskHelper.finishTask(player.objid, jibaipanjunTask)
+        end),
+      },
+    }
+  }),
+}
