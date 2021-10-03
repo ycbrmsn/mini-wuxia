@@ -322,7 +322,7 @@ function Story2:wipeOutQiangdao ()
     yexiaolong:speak(ws:get(), '对了，我这里恰好有几把小剑，挺适合你们现在用的。就给你们好了。')
   end
   PlayerHelper.everyPlayerDoSomeThing (function (p)
-    BackpackHelper.addItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
+    BackpackHelper.gainItem(p.objid, MyWeaponAttr.bronzeSword.levelIds[1], 1) -- 青铜剑
     if (p == hostPlayer) then
       StoryHelper.forward(2, '消灭强盗', '先生消灭强盗')
       self:endWords(hostPlayer)
