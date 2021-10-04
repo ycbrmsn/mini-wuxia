@@ -86,6 +86,13 @@ end)
 -- 玩家进入游戏
 EventHelper.addEvent('playerEnterGame', function (objid)
   local player = PlayerHelper.getPlayer(objid)
+
+  -- 调试部分 begin --
+  player:setMyPosition(-4, 7, 570)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 2)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
+  -- 调试部分 end --
+
   if (PlayerHelper.isMainPlayer(objid)) then -- 本地玩家
     if (not(GameDataHelper.updateStoryData())) then -- 未找到游戏数据文件
       -- 判断是否刚进入游戏，等待1s后检测
@@ -202,13 +209,13 @@ EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
   local mainIndex = StoryHelper.getMainStoryIndex()
   if (mainIndex == 1) then -- 剧情一
     if (itemid == MyMap.ITEM.WENYU_PACKAGE_ID) then -- 文羽包裹
-      -- StoryHelper.forward(1, '文羽通知')
+      -- StoryHelper.forward(1, '对话文羽')
       -- wenyu:doItNow() -- 不再跟随
     elseif (itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
-      -- StoryHelper.forward(1, '文羽的礼物')
+      -- StoryHelper.forward(1, '对话村长')
     -- elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌
     --   PlayerHelper.setItemDisableThrow(objid, itemid)
-    --   StoryHelper.forward(1, '村长的礼物')
+    --   StoryHelper.forward(1, '对话叶先生')
     --   story1:finishNoticeEvent(objid)
     end
   elseif (mainIndex == 3) then -- 剧情三

@@ -602,7 +602,8 @@ function Qianduo:new ()
     homeAreaPositions = {
       MyPosition:new(12.5, 8.5, 572.5), -- 门口
       MyPosition:new(15.5, 8.5, 576.5) -- 床旁边
-    }
+    },
+    talkInfos = qianduoTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)
@@ -962,7 +963,8 @@ function Gaoxiaohu:new ()
       MyPosition:new(6.5, 8.5, 597.5), -- 门口蜡烛旁
       MyPosition:new(11.5, 8.5, 592.5) -- 墙内蜡烛旁
     },
-    classRoomPos = MyPosition:new(5.5, 7.5, 595.5) -- 教室里位置
+    classRoomPos = MyPosition:new(5.5, 7.5, 595.5), -- 教室里位置
+    talkInfos = gaoxiaohuTalkInfos,
   }
   self.__index = self
   setmetatable(o, self)

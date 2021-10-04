@@ -5,11 +5,11 @@ MyTask = {
   ST11 = 11, -- 药品介绍
   ST12 = 12, -- 武器介绍
   -- 剧情一
-  ST101 = 101,
-  ST102 = 102,
-  ST103 = 103, -- 文羽的礼物
-  ST104 = 104, -- 村长
-  ST105 = 105 -- 叶小龙
+  -- ST101 = 101, 
+  -- ST102 = 102, -- 对话文羽
+  -- ST103 = 103, -- 对话村长
+  -- ST104 = 104, -- 对话叶先生
+  -- ST105 = 105 -- 考核任务
 }
 
 -- 具体任务
@@ -173,7 +173,7 @@ jibaipanjunTask = BaseTask:new({
       num = 1,
     }):call(function (objid)
       -- todo
-      -- StoryHelper.forward(1, '村长的礼物')
+      -- StoryHelper.forward(1, '对话叶先生')
       -- story1:finishNoticeEvent(objid)
     end),
   },
