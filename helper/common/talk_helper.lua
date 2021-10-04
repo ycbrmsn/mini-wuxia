@@ -104,6 +104,7 @@ function TalkHelper.talkWith (playerid, actor)
         -- actor:speakTo(playerid, 0, actor.defaultTalkMsg)
         -- TalkHelper.showEndSeparate(playerid)
       end
+      TalkHelper.handleTalkOver(playerid) -- 对话结束处理
     end
   else -- 不存在，则默认对话
     LogHelper.debug('no sessions')
@@ -112,6 +113,7 @@ function TalkHelper.talkWith (playerid, actor)
       -- actor:speakTo(playerid, 0, actor.defaultTalkMsg)
       -- TalkHelper.showEndSeparate(playerid)
     end
+    TalkHelper.handleTalkOver(playerid) -- 对话结束处理
   end
 end
 
