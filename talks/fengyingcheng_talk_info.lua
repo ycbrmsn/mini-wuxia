@@ -175,9 +175,7 @@ qianbingweiTalkInfos = {
         TalkSession:speak('我能够做些什么吗？'),
         TalkSession:reply('因为一些原因，我们的人无法前往。你能帮我消灭一些吗？'),
         TalkSession:choose({
-          PlayerTalk:stop('没问题'):call(function (player, actor)
-            TaskHelper.acceptTask(player.objid, jibaipanjunTask)
-          end),
+          PlayerTalk:acceptTask('没问题', jibaipanjunTask),
           PlayerTalk:continue('等我再厉害些再说。'),
         }),
         TalkSession:reply('……'),
@@ -362,5 +360,71 @@ qianduoTalkInfos = {
         end),
       },
     },
+  }),
+}
+
+-- 江火
+jianghuoTalkInfos = {
+  -- 帮江火送信
+  TalkInfo:new({
+    id = 1,
+    ants = {
+      TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+      TalkAnt:excludeTask(songxinTask:getRealid()), -- 未接受送信任务
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('咦，你怎么来学院了？'),
+        TalkSession:speak('叶先生招我来的。'),
+        TalkSession:reply('嗯，不错不错。当初我就觉得你砍树挺厉害的，叶先生一定是看中你的才能了。'),
+        TalkSession:speak('我不是来砍树的！！！'),
+        TalkSession:reply('哈哈，我知道。听说你被强盗打了，怎么样，没事吧。'),
+        TalkSession:speak('看我现在好好的。'),
+        TalkSession:reply('没事就好。转眼来学院这么多年了，不知道我哥哥们可好？'),
+        TalkSession:speak('他们挺好的，天天都在村门口晃来晃去。'),
+        TalkSession:reply('真想回去看看他们。奈何如今学艺未成，不可半途而归。'),
+        TalkSession:speak('你看我就天天到处跑。'),
+        TalkSession:reply('……'),
+        TalkSession:reply('也罢，我这有封书信，一直犹豫要不要寄。你可以帮忙送回去吗？'),
+        TalkSession:choose({
+          PlayerTalk:acceptTask('答应', songxinTask, '没问题。'):call(function (player, actor)
+            BackpackHelper.gainItem(player.objid, MyMap.ITEM.LETTER_JIANGHUO_ID, 1) -- 江火的信
+          end),
+          PlayerTalk:stop('拒绝', '我暂时不回去。'),
+        }),
+      },
+    },
+  }),
+  TalkInfo:new({
+    id = 2,
+    ants = {
+      TalkAnt:includeTask(songxinTask:getRealid(), 1), -- 任务未完成
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('我要将信送给谁呢？'),
+        TalkSession:reply('你把信交给我大哥就行了。'),
+        TalkSession:speak('好的，我知道了。'),
+      },
+    }
+  }),
+  TalkInfo:new({
+    id = 3,
+    ants = {
+      TalkAnt:includeTask(songxinTask:getRealid(), 2), -- 任务已完成
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('你把信送到了吗？'),
+        TalkSession:speak('是的。'),
+        TalkSession:reply('总算了却了一桩心事。来，给你传授一些我这些年的武学经验。'):call(function (player, actor)
+          jianghuo.action:playFree2()
+          ActorHelper.playAndStopBodyEffect(jianghuo.objid, BaseConstant.BODY_EFFECT.LIGHT4)
+        end),
+        TalkSession:think('你不是学艺未成吗？不会有问题吧……'):call(function (player, actor)
+          TaskHelper.finishTask(player.objid, songxinTask)
+        end),
+      },
+    }
   }),
 }

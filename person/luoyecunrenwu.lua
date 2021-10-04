@@ -612,7 +612,9 @@ function Jiangfeng:new ()
     homeAreaPositions = {
       MyPosition:new(7.5, 8.5, -18.5), -- 屋门口边上
       MyPosition:new(11.5, 8.5, -11.5) -- 屋内小柜子旁，避开桌椅
-    }
+    },
+    talkInfos = jiangfengTalkInfos,
+    defaultTalkMsg = '我的目标是成为像村长那样的人。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -763,7 +765,8 @@ function Jiangyu:new ()
     },
     patrolPositions = jiangfeng.patrolPositions,
     doorPositions = jiangfeng.doorPositions,
-    homeAreaPositions = jiangfeng.homeAreaPositions
+    homeAreaPositions = jiangfeng.homeAreaPositions,
+    defaultTalkMsg = '哥哥的目标是村长，而我嘛，只要和三弟一样就好。',
   }
   self.__index = self
   setmetatable(o, self)

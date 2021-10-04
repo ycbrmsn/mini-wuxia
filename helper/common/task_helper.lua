@@ -347,12 +347,27 @@ end
 function TaskHelper.acceptTask (objid, cTask)
   local task = cTask:realTask()
   TaskHelper.addTask(objid, task)
-  if (task.itemid) then -- 需要任务书
-    if (not(BackpackHelper.hasItem(objid, task.itemid, true))) then
+  if task.itemid then -- 需要任务书
+    if not BackpackHelper.hasItem(objid, task.itemid, true) then -- 如果没有任务书，则给玩家一个
       BackpackHelper.gainItem(objid, task.itemid, 1)
     end
   end
   PlayerHelper.notifyGameInfo2Self(objid, '接受#G' .. task.name .. '任务')
+end
+
+--[[
+  完成任务，手动设置为完成状态
+  @param    {number} objid 玩家id
+  @param    {table} cTask 任务
+  @author   莫小仙
+  @datetime 2021-10-04 23:36:55
+]]
+function TaskHelper.completeTask (objid, cTask)
+  local task = TaskHelper.getTask(objid, cTask:getRealid())
+  if task then -- 如果任务存在，则设置任务为完成
+    task:setComplete(true) -- 设置为完成
+    EventHelper.customEvent('playerCompleteTask', objid, task) -- 完成自定义任务
+  end
 end
 
 -- 完成具体任务
@@ -390,21 +405,8 @@ function TaskHelper.generateAcceptTalk (cTask, talks, ants)
       table.insert(sessions, TalkSession:new({ t = v[1], msg = v[2] }))
     else
       table.insert(sessions, TalkSession:choose({
-        PlayerTalk:stop('接受'):call(function (player, actor)
-          player:speakSelf(0, v[1])
-          TaskHelper.acceptTask(player.objid, cTask)
-          -- local task = cTask:realTask(actor:getName())
-          -- TaskHelper.addTask(player.objid, task)
-          -- if (task.itemid) then -- 需要任务书
-          --   if (not(BackpackHelper.hasItem(player.objid, task.itemid, true))) then
-          --     BackpackHelper.gainItem(player.objid, task.itemid, 1)
-          --   end
-          -- end
-          -- PlayerHelper.showToast(player.objid, '接受#G', task.name, '任务')
-        end),
-        PlayerTalk:stop('拒绝'):call(function (player, actor)
-          player:speakSelf(0, v[2])
-        end),
+        PlayerTalk:acceptTask('接受', cTask, v[1]),
+        PlayerTalk:stop('拒绝', v[2]),
       }))
     end
   end

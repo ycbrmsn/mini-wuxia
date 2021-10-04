@@ -168,7 +168,16 @@ function TalkHelper.resetTalkIndex (playerid, actor, index)
   actor.talkIndex[playerid] = index or 1
 end
 
--- 处理当前对话，如果不满足条件(即对话应该不存在)，则返回false
+--[[
+  处理当前对话
+  @param    {number} playerid 玩家id
+  @param    {table} actor 生物
+  @param    {number} index 对话序号
+  @param    {table} sessions 对话数组
+  @return   {boolean} 不满足条件(即对话应该不存在)，则返回false
+  @author   莫小仙
+  @datetime 2021-10-04 17:14:18
+]]
 function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
   local player = PlayerHelper.getPlayer(playerid)
   local session = sessions[index]
@@ -176,7 +185,7 @@ function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
   if (not(TalkHelper.isMeet(session, playerid))) then
     return false
   end
-  if (session.t == 9) then -- 无会话，但有其他动作，没有会话结束标志
+  if (session.t == 9) then -- 无会话，但有其他动作（如动态对话），没有会话结束标志
     if (session.f) then
       session.f(player, actor)
     end
@@ -272,6 +281,15 @@ function TalkHelper.chooseTalk (playerid, actor)
   end
 end
 
+--[[
+  实际选择对话
+  @param    {number} playerid 玩家id
+  @param    {table} actor 生物
+  @param    {number} index 选项序号
+  @param    {table} sessions 对话数组
+  @author   莫小仙
+  @datetime 2021-10-04 17:22:14
+]]
 function TalkHelper.realChooseTalk (playerid, actor, index, sessions)
   local player = PlayerHelper.getPlayer(playerid)
   player.whichChoose = nil -- 去掉选择状态
@@ -290,9 +308,21 @@ function TalkHelper.realChooseTalk (playerid, actor, index, sessions)
       TalkHelper.talkWith(playerid, actor)
     end
   elseif (playerTalk.t == 3) then -- 终止
+    if playerTalk.other then -- 有话要说
+      player:speakSelf(0, playerTalk.other)
+    end
     TalkHelper.turnTalkIndex(playerid, actor, max, max + 1)
   elseif (playerTalk.t == 4) then -- 任务
-
+    TaskHelper.acceptTask(playerid, playerTalk.task)
+    if playerTalk.other then -- 有话要说
+      player:speakSelf(0, playerTalk.other)
+    end
+    TalkHelper.turnTalkIndex(playerid, actor, max, max + 1) -- 终止
+  elseif playerTalk.t == 5 then -- 跳过
+    local curIndex = TalkHelper.getTalkIndex(playerid, actor) -- 当前对话序数
+    if (TalkHelper.turnTalkIndex(playerid, actor, max, curIndex + playerTalk.other)) then
+      TalkHelper.talkWith(playerid, actor)
+    end
   end
 end
 

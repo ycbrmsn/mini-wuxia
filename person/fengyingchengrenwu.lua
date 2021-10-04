@@ -33,7 +33,8 @@ function Ludaofeng:new ()
     studyAreaPositions = {
       MyPosition:new(-38.5, 16.5, 546.5), -- 门旁
       MyPosition:new(-43.5, 16.5, 540.5) -- 茶几旁
-    }
+    },
+    defaultTalkMsg = '公务繁忙，不便见客。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -223,6 +224,7 @@ function Yexiaolong:new ()
     },
     classRoomPos = MyPosition:new(5.5, 7.5, 606.5), -- 教室里位置
     talkInfos = yexiaolongTalkInfos,
+    defaultTalkMsg = '盘龙棍法，一棒打俩。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -427,7 +429,8 @@ function Sunkongwu:new ()
     secondFloorPositions = {
       MyPosition:new(6.5, 12.5, 565.5), -- 楼梯口
       MyPosition:new(10.5, 12.5, 562.5) -- 门旁边
-    }
+    },
+    defaultTalkMsg = '客人可有想买的？',
   }
   self.__index = self
   setmetatable(o, self)
@@ -515,7 +518,8 @@ function Limiaoshou:new ()
     secondFloorPositions = {
       MyPosition:new(19.5, 12.5, 566.5), -- 楼梯口
       MyPosition:new(17.5, 12.5, 562.5) -- 门旁边
-    }
+    },
+    defaultTalkMsg = '出门远行，没药不行。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -604,6 +608,7 @@ function Qianduo:new ()
       MyPosition:new(15.5, 8.5, 576.5) -- 床旁边
     },
     talkInfos = qianduoTalkInfos,
+    defaultTalkMsg = '匣中真宝，莫不言好。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -685,7 +690,8 @@ function Daniu:new ()
     },
     candlePositions = {
       MyPosition:new(-48.5, 9.5, 503.5)
-    }
+    },
+    defaultTalkMsg = '交钱拿票，转瞬即到。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -880,7 +886,8 @@ function Murongxiaotian:new ()
     studyAreaPositions = {
       MyPosition:new(6.5, 8.5, 509.5), -- 凳子旁
       MyPosition:new(4.5, 8.5, 510.5) -- 书架旁
-    }
+    },
+    defaultTalkMsg = '风起于青萍之末，浪成于微澜之间。日行一善，他日亦能名扬天下。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -965,6 +972,7 @@ function Gaoxiaohu:new ()
     },
     classRoomPos = MyPosition:new(5.5, 7.5, 595.5), -- 教室里位置
     talkInfos = gaoxiaohuTalkInfos,
+    defaultTalkMsg = '感觉我的拳法最近没有精进。',
   }
   self.__index = self
   setmetatable(o, self)
@@ -1079,6 +1087,7 @@ function Yuewushuang:new ()
       MyPosition:new(15.5, 8.5, 592.5), -- 宿舍蜡烛旁
       MyPosition:new(21.5, 8.5, 597.5) -- 宿舍角落
     },
+    defaultTalkMsg = '我要努力学习，变得更加厉害。'
   }
   self.__index = self
   setmetatable(o, self)
@@ -1178,6 +1187,8 @@ function Jianghuo:new ()
       MyPosition:new(15.5, 8.5, 609.5), -- 宿舍蜡烛旁
       MyPosition:new(21.5, 8.5, 604.5) -- 宿舍角落
     },
+    talkInfos = jianghuoTalkInfos,
+    defaultTalkMsg = '我感觉我出拳的速度似乎更快了。',
   }
   self.__index = self
   setmetatable(o, self)

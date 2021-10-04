@@ -29,6 +29,7 @@ MyMap = {
     GAME_DATA_TALK_WITH_GAO_ID = 4303, -- 与高小虎交谈的数据
     GAME_DATA_GET_WEAPON_ID = 4304, -- 领取新生武器的数据
     GAME_DATA_JIANGHUO_EXP_ID = 4308, -- 江火的经验的数据
+    LETTER_JIANGHUO_ID = 4307, -- 江火的信
 
     GREEN_WEAPON_BOX_ID = 4275, -- 绿品武器匣
     BLUE_WEAPON_BOX_ID = 4276, -- 蓝品武器匣

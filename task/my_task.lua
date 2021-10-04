@@ -186,15 +186,14 @@ songxinTask = BaseTask:new({
   name = '送信',
   itemid = MyMap.ITEM.MISSION_SONGXIN,
   desc = '帮江火送信给江枫。',
-  category = 2, -- 交付道具
-  itemInfos = {
-    -- { itemid = MyMap.BLOCK.COPPER_ORE_ID, num = 10 }, -- 江枫的回信
-  },
+  -- category = 2, -- 交付道具
+  -- itemInfos = {},
+  complete = false, -- 自定义任务，标记为未完成
   rewards = {
     TaskReward:new({
       desc = '奖励不详',
       category = 2, -- 经验
-      num = 100,
+      num = 200,
     }),
   },
   isBranch = true, -- 标记是支线任务

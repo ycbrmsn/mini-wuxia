@@ -630,8 +630,9 @@ end
 --[[
   msg(玩家的话)
   t(选择: 1继续(默认)；2跳转；3终止；4接受任务)
-  other(对应选项：数字表示跳转项；任务)
-  ant(会有这条选项的条件)
+  other(对应选项：数字表示跳转项)
+  task(任务)
+  ant(会出现这条选项所需要满足的条件)
   f(函数)
 ]]--
 PlayerTalk = {}
@@ -657,22 +658,73 @@ function PlayerTalk:dialogue (t, msg, o)
   return o
 end
 
+--[[
+  继续下一条对话
+  @param    {string} msg 选项内容
+  @return   {table} PlayerTalk 
+  @author   莫小仙
+  @datetime 2021-10-04 16:55:52
+]]
 function PlayerTalk:continue (msg)
   return self:dialogue(1, msg)
 end
 
+--[[
+  跳转到第几条对话
+  @param    {string} msg 选项内容
+  @param    {number} turnTo 跳转到的对话序号
+  @return   {table} PlayerTalk
+  @author   莫小仙
+  @datetime 2021-10-04 16:56:25
+]]
 function PlayerTalk:to (msg, turnTo)
   return self:dialogue(2, msg, { other = turnTo })
 end
 
-function PlayerTalk:stop (msg)
-  return self:dialogue(3, msg)
+--[[
+  终止对话
+  @param    {string} msg 选项内容
+  @param    {string} other 终止对话时要说的话（可选）
+  @return   {table} PlayerTalk
+  @author   莫小仙
+  @datetime 2021-10-04 16:57:09
+]]
+function PlayerTalk:stop (msg, other)
+  return self:dialogue(3, msg, { other = other })
 end
 
-function PlayerTalk:acceptTask (msg, task)
-  return self:dialogue(4, msg, { other = task })
+--[[
+  接受任务
+  @param    {string} msg 选项内容
+  @param    {table} cTask 任务（非realTask）
+  @param    {string} other 终止对话时要说的话（可选）
+  @return   {table} PlayerTalk
+  @author   莫小仙
+  @datetime ctrl+alt+shift+d
+]]
+function PlayerTalk:acceptTask (msg, cTask, other)
+  return self:dialogue(4, msg, { task = cTask, other = other })
 end
 
+--[[
+  跳过对话
+  @param    {string} msg 选项内容
+  @param    {number} num 需要跳过的对话数
+  @return   {table} PlayerTalk
+  @author   莫小仙
+  @datetime ctrl+alt+shift+d
+]]
+function PlayerTalk:skip (msg, num)
+  return self:dialogue(5, msg, { other = num })
+end
+
+--[[
+  需要满足条件才会显示
+  @param    {table} ... TalkAnt
+  @return   {PlayerTalk} 返回自身
+  @author   莫小仙
+  @datetime 2021-10-04 16:52:38
+]]
 function PlayerTalk:ant ( ... )
   self.ants = { ... }
   return self
@@ -778,25 +830,29 @@ function BaseTask:getMessage (objid)
     end
   end
   -- 任务进度
-  if (self.category == 1) then -- 击败生物
+  if self.complete == false then -- 自定义未完成
+    table.insert(lines, '任务进度：未完成。')
+  elseif self.complete == true then -- 自定义已完成
+    table.insert(lines, '任务进度：可交付。')
+  elseif self.category == 1 then -- 击败生物
     for i, beatInfo in ipairs(self.beatInfos) do
       local prefix
-      if (i == 1) then
+      if (i == 1) then -- 第一行
         prefix = '任务进度：'
-      else
+      else --其他行对齐
         prefix = '\t\t\t\t\t'
       end
       table.insert(lines, StringHelper.concat(prefix, beatInfo.actorname, '（',
         beatInfo.curnum, '/', beatInfo.num, '）'))
     end
-  elseif (self.category == 2) then -- 交付道具
+  elseif self.category == 2 then -- 交付道具
     for i, itemInfo in ipairs(self.itemInfos) do
       local itemname = ItemHelper.getItemName(itemInfo.itemid)
       local num = BackpackHelper.getItemNumAndGrid(objid, itemInfo.itemid)
       local prefix
-      if (i == 1) then
+      if i == 1 then -- 第一行
         prefix = '任务进度：'
-      else
+      else -- 其他行对齐
         prefix = '\t\t\t\t\t'
       end
       table.insert(lines, StringHelper.concat(prefix, itemname, '（',
@@ -846,7 +902,9 @@ end
 
 -- 是否完成任务
 function BaseTask:isComplete (objid)
-  if (self.category == 1) then -- 击败生物
+  if type(self.complete) == 'boolean' then -- 该任务是手动设置完成状态，如一些自定义任务（送信后回报）
+    return self.complete
+  elseif (self.category == 1) then -- 击败生物
     for i, beatInfo in ipairs(self.beatInfos) do
       if (beatInfo.curnum < beatInfo.num) then
         return false
@@ -867,6 +925,16 @@ function BaseTask:isComplete (objid)
   else -- 其他
     return true
   end
+end
+
+--[[
+  手动设置任务完成状态
+  @param    {boolean} isComplete 是否完成
+  @author   莫小仙
+  @datetime 2021-10-04 18:08:58
+]]
+function BaseTask:setComplete (isComplete)
+  self.complete = isComplete
 end
 
 function BaseTask:autoid ()

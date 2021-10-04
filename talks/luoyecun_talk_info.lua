@@ -401,3 +401,30 @@ wenyuTalkInfos = {
     }
   }),
 }
+
+-- 江枫
+jiangfengTalkInfos = {
+  -- 江火的送信任务
+  TalkInfo:new({
+    id = 1,
+    ants = {
+      TalkAnt:includeTask(songxinTask:getRealid(), 1), -- 任务未完成
+      TalkAnt:includeItem(MyMap.ITEM.LETTER_JIANGHUO_ID), -- 有江火的信
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('{{:getName}}，好久不见'),
+        TalkSession:speak('看看这是什么？'),
+        TalkSession:reply('这是……真是吾弟的笔迹。'),
+        TalkSession:speak('没错，正是江火托我送来的。他精神头可好了，天天都能在演武场看到他。'),
+        TalkSession:reply('听你这么一说，我就放心了。劳烦你帮我带一句话，就说家里一切安好，专心学习，勿念。'),
+        TalkSession:speak('没问题，我记下了。'),
+        TalkSession:reply('对了，我这里有几粒药丸，可以助你路上更顺风。'),
+        TalkSession:speak('真是太好了。'):call(function(player, actor)
+          TaskHelper.completeTask(player.objid, songxinTask)
+          BackpackHelper.gainItem(player.objid, MyMap.ITEM.FASTER_RUN_PILL2_ID, 2) -- 疾行丸
+        end),
+      },
+    }
+  }),
+}
