@@ -357,6 +357,7 @@ qianduoTalkInfos = {
         TalkSession:speak('嗯，我知道了。'),
         TalkSession:reply('好，这是绿品武器匣，里面放着一把绿品武器。不过是不是你想要的，就看你运气了。'),
         TalkSession:speak('好的，谢谢。'):call(function (player, actor)
+          BackpackHelper.gainItem(player.objid, MyMap.ITEM.GREEN_WEAPON_BOX_ID, 1) -- 绿品武器匣
           StoryHelper.forwardByPlayer(player.objid, 3, '新生武器')
         end),
       },
