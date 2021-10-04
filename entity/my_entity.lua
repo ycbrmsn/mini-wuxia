@@ -527,9 +527,10 @@ function TalkAnt:isMeet (playerid)
       return false
     end
   elseif (self.t == 7) then -- 房主正好几个道具（主要用于剧情判断）
+    local itemnum = self.num or 1
     local hostPlayer = PlayerHelper.getHostPlayer()
-    local num = BackpackHelper.getItemNumAndGrid(hostPlayer.objid, self.num)
-    if (num ~= self.num) then
+    local num = BackpackHelper.getItemNumAndGrid(hostPlayer.objid, self.itemid)
+    if (num ~= itemnum) then
       return false
     end
   elseif (self.t == 9) then -- 至少几级
