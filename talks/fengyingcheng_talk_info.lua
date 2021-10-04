@@ -271,7 +271,7 @@ gaoxiaohuTalkInfos = {
       [0] = {
         TalkSession:reply('怎么样，领取的武器还趁手吗？'),
         TalkSession:speak('嗯，还不错。'),
-        TalkSession:reply('那挺好。我跟小龙商议了一番，强盗不除隐患不小。我们决定派你去消灭强盗。'),
+        TalkSession:reply('那挺好。我跟小龙商议了一番，强盗不除隐患不小。我们决定派你去消灭他们。'),
         TalkSession:speak('我？！'),
         TalkSession:reply('既然小龙选中你，那就证明了你的不凡。并且如今有利器在手，自然不会如上次那般。'),
         TalkSession:speak('可是强盗那么多人。'),
@@ -281,7 +281,7 @@ gaoxiaohuTalkInfos = {
         TalkSession:speak('消灭一个人问题不大。'),
         TalkSession:reply('虽说就一人，但能当上大头目实力自不容小觑。如果你没有准备好，就不要贸然行动。'),
         TalkSession:speak('我知道了。'),
-        TalkSession:reply('大头目应该在营地深处。切记不要陷入其他强盗的包围，否则凶多吉少。'),
+        TalkSession:reply('强盗大头目应该在营地深处。切记不要陷入他们的包围，否则凶多吉少。'),
         TalkSession:speak('嗯，我这就去准备。'):call(function (player, actor)
           TaskHelper.acceptTask(player.objid, xiaomieqiangdaoTask)
           StoryHelper.forwardByPlayer(player.objid, 3, '接受任务')
