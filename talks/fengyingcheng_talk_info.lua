@@ -96,7 +96,7 @@ yexiaolongTalkInfos = {
         TalkSession:reply('嗯，在学院这么久，你应该也学到了不少东西。'),
         TalkSession:think('好像……'),
         TalkSession:reply('学院一向主张读万卷书，行万里路。因此当学生在学习到一定阶段后，便需要外出历练一番。'),
-        TalkSession:reply('不过，在外出历练之前，需要经过学院考试。只有通过考试的学生，才有外出历练的资格。'),
+        TalkSession:reply('不过，在外出历练之前，需要经过学院考试。只有通过的学生，才有外出历练的资格。'),
         TalkSession:reply('如今，你也到了该历练的时候了。'),
         TalkSession:speak('啊，要考试了丫。'),
         TalkSession:reply('哈哈，考试不难的，不用担心。当然，不好好准备一番，可也是很容易不通过的。'),
