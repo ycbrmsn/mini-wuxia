@@ -746,6 +746,7 @@ BaseTask = {
   name = '空',
   desc = '无描述',
   category = 3,
+  finish = false,
   rewards = {},
 }
 
@@ -935,6 +936,25 @@ end
 ]]
 function BaseTask:setComplete (isComplete)
   self.complete = isComplete
+end
+
+--[[
+  任务是否已经结束（关闭）
+  @return   {boolean} 是否结束
+  @author   莫小仙
+  @datetime 2021-10-05 16:49:10
+]]
+function BaseTask:isFinish ()
+  return self.finish
+end
+
+--[[
+  设置任务已结束（关闭）
+  @author   莫小仙
+  @datetime 2021-10-05 16:46:37
+]]
+function BaseTask:setFinish ()
+  self.finish = true
 end
 
 function BaseTask:autoid ()
