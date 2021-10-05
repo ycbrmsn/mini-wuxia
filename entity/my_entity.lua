@@ -487,10 +487,12 @@ end
 
 -- 是否满足条件
 function TalkAnt:isMeet (playerid)
+  -- taskid可能是函数，用于动态获取任务id
   local taskid = type(self.taskid) == 'function' and self.taskid() or self.taskid
   if (self.t == 1) then -- 前置必需任务
-    -- LogHelper.debug(self)
+    -- LogHelper.debug(taskid)
     if (TaskHelper.hasTask(playerid, taskid)) then
+      -- LogHelper.debug('满足：', taskid)
       if (self.state) then -- 任务进度
         local state = TaskHelper.getTaskState(playerid, taskid)
         return state == self.state

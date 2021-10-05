@@ -102,7 +102,7 @@ yexiaolongTalkInfos = {
         TalkSession:reply('哈哈，考试不难的，不用担心。当然，不好好准备一番，可也是很容易不通过的。'),
         TalkSession:reply('如果你准备好了，就来找我。你先去准备吧。'),
         TalkSession:speak('好的，先生。'):call(function (player, actor)
-          StoryHelper.forwardByPlayer(player.objid, 1, '对话叶先生')
+          StoryHelper.forwardByPlayer(player.objid, 3, '对话叶先生')
         end),
       },
     },
@@ -110,10 +110,11 @@ yexiaolongTalkInfos = {
   TalkInfo:new({
     id = 105,
     ants = {
-      TalkAnt:includeTask(104) -- 接受考试任务
+      TalkAnt:includeTask(MyTask.T308) -- 接受考试任务
     },
     progress = {
       [0] = {
+        TalkSession:speak('我准备好了。'),
         TalkSession:reply('很好。考试很简单，你只需要击败小火同学就行了。这就去练武场。'):call(function(player, actor)
           -- todo
         end),
@@ -146,7 +147,7 @@ yexiaolongTalkInfos = {
         TalkSession:reply('怎么样，你做好考试的准备的了吗？'),
         TalkSession:choose({
           PlayerTalk:continue('准备好了'):call(function (player)
-            TaskHelper:addTempTask(player.objid, 104)
+            TaskHelper.addTempTask(player.objid, MyTask.T308)
             player:resetTalkIndex(0)
           end),
           PlayerTalk:continue('还没准备好'),
