@@ -13,8 +13,11 @@ function Story3:new ()
       '原来新生还有兵器可以领，真是太棒了。先生好像说是真宝阁来着，我去看看。',
       '拿着新武器好开心。接下来做什么呢，要不要找先生问问。',
       '先生让我去消灭强盗大头目，我觉得目前对我来说还是挺难的，我得好好准备一番。',
-      '终于消灭了强盗的威胁。不知道先生有什么事要交代我。',
-      '先生说快要考试了，有点小紧张。'
+      '终于消灭了强盗的威胁。不知道龙先生有什么事要交代我。',
+      '先生说快要考试了，有点小紧张。',
+      '要击败小火，我应该……没问题吧。',
+      '丢人了，没想到小火这么厉害。看来想要通过考试，还得再准备准备。',
+      '终于顺利通过了考试，我果然是天赋异禀。',
       -- '目前剧情到此',
     },
     prepose = {
@@ -25,7 +28,10 @@ function Story3:new ()
       ['接受任务'] = 5,
       ['消灭大头目'] = 6,
       ['对话叶先生'] = 7,
-      ['通过考试'] = 8,
+      ['开始考试'] = 8,
+      ['考试没通过'] = 9,
+      ['考试通过'] = 10,
+      ['新的征程'] = 11,
     },
     index = 3,
     posBeg = MyPosition:new(-31, 7, 590),
@@ -38,7 +44,9 @@ function Story3:new ()
     playerPos = MyPosition:new(-20, 7.5, 594.5),
     airWallPosBeg = MyPosition:new(-19, 10, 592), -- 空气墙起点
     airWallPosEnd = MyPosition:new(-19, 7, 596), -- 空气墙终点
-    airWallArea = nil
+    airWallArea = nil,
+    testAreaPosBeg = MyPosition:new(-12, 7, 594), -- 考核区域起点
+    testAreaPosEnd = MyPosition:new(1, 7, 607), -- 考核区域终点
   }
   self:checkData(data)
 
@@ -165,6 +173,113 @@ function Story3:comeToCollege ()
     yuewushuang:doItNow()
     yexiaolong:doItNow()
   end, ws:get())
+end
+
+--[[
+  开始考核
+  @param    {table} player 玩家
+  @author   莫小仙
+  @datetime ctrl+alt+shift+d
+]]
+function Story3:startTest (player)
+  if not jianghuo or not jianghuo:isFinishInit() then -- 校验
+    TimeHelper.callFnAfterSecond(function ()
+      self:startTest(player)
+    end, 1)
+    StoryHelper.showInitError('startTest', '江火')
+    return
+  end
+  StoryHelper.forwardByPlayer(player.objid, 3, '开始考试') -- 剧情前进
+  jianghuo:setPlayerClickEffective(player.objid, false) -- 玩家无法点击对话
+  local ws = WaitSeconds:new()
+  player:setMyPosition(-4, 7, 602) -- 移动玩家去演武场
+  player:enableMove(false, '剧情中')
+  PlayerHelper.rotateCamera(player.objid, ActorHelper.FACE_YAW.EAST, 0) -- 看向西方
+  local pos = MyPosition:new(-10, 7, 602)
+  jianghuo:setPosition(pos)
+  jianghuo:wantMove('forceDoNothing', { pos })
+  jianghuo:lookAt(player, ws:use())
+  jianghuo:speakTo(player.objid, ws:get(), '现在我是考官，考核内容就是击败我。')
+  player:speakSelf(ws:use(), '小火，手下留情啊。')
+  jianghuo:speakTo(player.objid, ws:use(), '当然，我只会拿出三成的实力。不过，我可是不会放水的。')
+  jianghuo:speakTo(player.objid, ws:use(), '好了，考核正式开始。')
+  TimeHelper.callFnFastRuns(function ()
+    CreatureHelper.setTeam(jianghuo.objid, 2) -- 将江火的队伍变为蓝队
+    jianghuo:openAI()
+    player:enableMove(true, true)
+  end, ws:use())
+end
+
+--[[
+  检测是否是玩家在进行学院考试，如果是则处理
+  @param    {table} player 玩家
+  @param    {table} actor 生物
+  @author   莫小仙
+  @datetime 2021-10-06 19:19:07
+]]
+function Story3:checkIfTest (player, actor)
+  local hp = CreatureHelper.getHp(actor.objid)
+  local player = PlayerHelper.getPlayer(player.objid)
+  if story3:isTesting(player) then -- 在学院考试
+    if hp == 1 then -- 重伤
+      story3:passTest(player)
+    else -- 未重伤
+      jianghuo:tryDodge(story3.testAreaPosBeg, story3.testAreaPosEnd)
+    end
+  end
+end
+
+--[[
+  是否是在学院考试
+  @param    {table} player 玩家
+  @return   {boolean} 是否在考试
+  @author   莫小仙
+  @datetime 2021-10-06 19:50:24
+]]
+function Story3:isTesting (player)
+  if PlayerHelper.isMainPlayer(player.objid) then -- 如果是房主
+    local mainIndex = StoryHelper.getMainStoryIndex()
+    local mainProgress = StoryHelper.getMainStoryProgress()
+    if mainIndex == 3 and mainProgress == 9 then -- 在考试
+      return true
+    end
+  else -- 不是房主
+    if TaskHelper.hasTask(player.objid, story3:getTaskIdByName('开始考试')) -- 在考试
+      and not TaskHelper.hasTask(player.objid, story3:getTaskIdByName('通过考试')) then -- 没通过
+      return true
+    end
+  end
+  return false
+end
+
+function Story3:passTest (player)
+  if not jianghuo or not jianghuo:isFinishInit() then -- 校验
+    TimeHelper.callFnAfterSecond(function ()
+      self:passTest(player)
+    end, 1)
+    StoryHelper.showInitError('passTest', '江火')
+    return
+  end
+  StoryHelper.forwardByPlayer(player.objid, 3, '考试没通过') -- 剧情前进
+  StoryHelper.forwardByPlayer(player.objid, 3, '考试通过') -- 剧情前进
+  local ws = WaitSeconds:new()
+  CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
+  jianghuo:closeAI()
+  jianghuo.action:playDie() -- 死亡动作
+  player:enableMove(false, '剧情中')
+  jianghuo:speakTo(player.objid, 0, '你小子下手可真狠。')
+  TimeHelper.callFnFastRuns(function ()
+    jianghuo.action:playStand() -- 站起来
+    player.action:playDown() -- 趴下
+    player:speakSelf(ws:use(), '我不是故意的。')
+  end, ws:use())
+  jianghuo:speakTo(player.objid, ws:use(), '你要是故意的，我早就给你邦邦两拳了。')
+  jianghuo:speakTo(player.objid, ws:use(), '好了，你考试通过了。去找龙先生吧。我得休息一下。')
+  TimeHelper.callFnFastRuns(function ()
+    jianghuo.action:playSit()
+    jianghuo:setPlayerClickEffective(player.objid, true) -- 可以点击对话
+    player:enableMove(true, true)
+  end, ws:use())
 end
 
 function Story3:recover (player)

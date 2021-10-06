@@ -214,6 +214,21 @@ function MathHelper.getRectRange (pos, dim)
     MyPosition:new(pos.x + dim.x, pos.y + dim.y, pos.z + dim.z)
 end
 
+--[[
+  获取起始位置点间的一个随机位置点
+  @param    {table} posBeg 起点
+  @param    {table} posEnd 终点
+  @return   {table} 位置点
+  @author   莫小仙
+  @datetime 2021-10-06 20:12:42
+]]
+function MathHelper.getRandomPos (posBeg, posEnd)
+  math.randomseed(os.time())
+  local dx, dy, dz = posEnd.x - posBeg.x, posEnd.y - posBeg.y, posEnd.z - posBeg.z
+  local x, y, z = posBeg.x + dx * math.random(), posBeg.y + dy * math.random(), posBeg.z + dz * math.random()
+  return MyPosition:new(x, y, z)
+end
+
 -- 一个生物处于玩家的哪个角度，正前方为0，左负右正，正后方为180
 function MathHelper.getRelativePlayerAngle (objid, toobjid)
   local player = PlayerHelper.getPlayer(objid)

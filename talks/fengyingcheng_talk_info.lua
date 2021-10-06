@@ -110,13 +110,39 @@ yexiaolongTalkInfos = {
   TalkInfo:new({
     id = 105,
     ants = {
-      TalkAnt:includeTask(MyTask.T308) -- 接受考试任务
+      TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
+      TalkAnt:betweenHour(0, 5), -- 天没亮
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('先生，我准备好了。'),
+        TalkSession:reply('这天还没亮，等天亮了再说。'),
+      },
+    },
+  }),
+  TalkInfo:new({
+    id = 106,
+    ants = {
+      TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
+      TalkAnt:betweenHour(8, 23), -- 天黑
+    },
+    progress = {
+      [0] = {
+        TalkSession:speak('先生，我准备好了。'),
+        TalkSession:reply('今天不早了，等明天再说。'),
+      },
+    },
+  }),
+  TalkInfo:new({
+    id = 107,
+    ants = {
+      TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
     },
     progress = {
       [0] = {
         TalkSession:speak('我准备好了。'),
         TalkSession:reply('很好。考试很简单，你只需要击败小火同学就行了。这就去练武场。'):call(function(player, actor)
-          -- todo
+          story3:startTest(player)
         end),
       },
     },
@@ -137,7 +163,7 @@ yexiaolongTalkInfos = {
             return story3:getTaskIdByName('对话叶先生')
           end),
           TalkAnt:excludeTask(function ()
-            return story3:getTaskIdByName('通过考试')
+            return story3:getTaskIdByName('开始考试')
           end)
         ) -- 非房主
       ),

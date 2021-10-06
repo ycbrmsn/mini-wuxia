@@ -1168,8 +1168,8 @@ Jianghuo = BaseActor:new(MyMap.ACTOR.JIANGHUO_ACTOR_ID)
 function Jianghuo:new ()
   local o = {
     objid = 4402063235,
-    isSingleton = true,
-    unableBeKilled = true,
+    isSingleton = true, -- 唯一
+    unableBeKilled = true, -- 不可被杀死
     initPosition = MyPosition:new(-5.5, 7.5, 599.5), -- 学院演武场内
     bedData = {
       MyPosition:new(17.5, 8.5, 608.5), -- 床尾位置
@@ -1187,7 +1187,13 @@ function Jianghuo:new ()
       MyPosition:new(15.5, 8.5, 609.5), -- 宿舍蜡烛旁
       MyPosition:new(21.5, 8.5, 604.5) -- 宿舍角落
     },
+    attr = {
+      isTesting = false, -- 正在考试
+      dodgeCD = 3, -- 表示每被攻击几次后会进行躲避
+      dodgeIndex = 0, -- 躲避能量，被攻击加1
+    }, -- 特殊属性
     talkInfos = jianghuoTalkInfos,
+    currentTalkMsg = nil,
     defaultTalkMsg = '我感觉我出拳的速度似乎更快了。',
   }
   self.__index = self
@@ -1202,6 +1208,9 @@ end
 
 -- 在几点想做什么
 function Jianghuo:wantAtHour (hour)
+  if self:isTesting() then -- 正在考试
+    return
+  end
   if (hour == 6) then
     self:wantFreeInArea({ self.dormitoryAreaPositions })
   elseif (hour == 8) then
@@ -1255,4 +1264,65 @@ function Jianghuo:candleEvent (player, candle)
     -- self:speakTo(player.objid, 0, '睡觉睡觉，明天再闹。')
     self:toastSpeak('睡觉睡觉，明天再闹。')
   end
+end
+
+--[[
+  受到伤害
+  @param    {number} toobjid 攻击生物的玩家/生物id
+  @param    {number} hurtlv 伤害
+  @author   莫小仙
+  @datetime 2021-10-06 18:58:37
+]]
+function Jianghuo:beHurt (toobjid, hurtlv)
+  local player = PlayerHelper.getPlayer(toobjid)
+  story3:checkIfTest(player, self)
+end
+
+--[[
+  设置是否在考试标记
+  @param    {boolean} isTesting 是否在考试中
+  @author   莫小仙
+  @datetime 2021-10-06 22:57:43
+]]
+function Jianghuo:setTesting (isTesting)
+  self.attr.isTesting = isTesting
+end
+
+--[[
+  是否在考试
+  @return   {boolean} 是否在考试
+  @author   莫小仙
+  @datetime 2021-10-06 22:59:08
+]]
+function Jianghuo:isTesting ()
+  return self.attr.isTesting
+end
+
+--[[
+  尝试在区域内躲避，当躲避能量满了则进行躲避
+  @param    {table} posBeg 区域起点
+  @param    {table} posEnd 区域终点
+  @author   莫小仙
+  @datetime 2021-10-06 20:57:00
+]]
+function Jianghuo:tryDodge (posBeg, posEnd)
+  local attr = self.attr
+  attr.dodgeIndex = attr.dodgeIndex + 1
+  if attr.dodgeIndex >= attr.dodgeCD then -- 躲避能量满了，则进行躲避
+    attr.dodgeIndex = 0 -- 重置能量
+    local pos = self:getMyPosition()
+    pos.y = pos.y + 1
+    WorldHelper.playAndStopBodyEffectById(pos, BaseConstant.BODY_EFFECT.SMOG1) -- 地面显示烟雾
+    self:setPosition(MathHelper.getRandomPos(posBeg, posEnd)) -- 移动到区域内的一个随机位置
+  end
+end
+
+--[[
+  攻击命中
+  @param    {number} toobjid 玩家/生物id
+  @author   莫小仙
+  @datetime 2021-10-07 01:25:05
+]]
+function Jianghuo:attackHit (toobjid)
+  self:toastSpeak('邦邦一拳。')
 end
