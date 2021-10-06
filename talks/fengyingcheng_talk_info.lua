@@ -124,7 +124,7 @@ yexiaolongTalkInfos = {
     id = 106,
     ants = {
       TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
-      TalkAnt:betweenHour(8, 23), -- 天黑
+      TalkAnt:betweenHour(20, 23), -- 天黑
     },
     progress = {
       [0] = {

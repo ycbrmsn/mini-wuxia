@@ -271,7 +271,7 @@ function Story3:passTest (player)
   TimeHelper.callFnFastRuns(function ()
     jianghuo.action:playStand() -- 站起来
     player.action:playDown() -- 趴下
-    player:speakSelf(ws:use(), '我不是故意的。')
+    player:speakSelf(0, '我不是故意的。')
   end, ws:use())
   jianghuo:speakTo(player.objid, ws:use(), '你要是故意的，我早就给你邦邦两拳了。')
   jianghuo:speakTo(player.objid, ws:use(), '好了，你考试通过了。去找龙先生吧。我得休息一下。')
