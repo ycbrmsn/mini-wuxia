@@ -319,7 +319,7 @@ end
 -- 所有特定生物重新开始干现在应该干的事情
 function ActorHelper.doItNow ()
   for k, actor in pairs(ActorHelper.actors) do
-    if (not(actor:isWantsExist()) or actor.wants[1].think ~= 'forceDoNothing') then
+    if not(actor:isWantsExist()) or actor.wants[1].think ~= 'forceDoNothing' then
       actor:doItNow()
     end
   end
