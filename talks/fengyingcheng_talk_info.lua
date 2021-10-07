@@ -192,7 +192,7 @@ yexiaolongTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(true),
           TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
-          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9) -- 进度9
+          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 10) -- 进度10
         ), -- 房主
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
