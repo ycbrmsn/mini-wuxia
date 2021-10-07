@@ -15,7 +15,7 @@ end
 
 -- 剧情前进 两个progress都是要跳到剧情的前置
 function StoryHelper.forward (mainIndex, mainProgress, endProgress)
-  if (StoryHelper.forward2(mainIndex, mainProgress, endProgress)) then
+  if StoryHelper.forward2(mainIndex, mainProgress, endProgress) then -- 剧情前进
     local hostPlayer = PlayerHelper.getHostPlayer()
     GameDataHelper.updateGameData(hostPlayer)
     EventHelper.customEvent('mainStoryForward', StoryHelper.getMainStoryIndex(),
@@ -28,17 +28,17 @@ end
 
 -- 剧情前进，不更新剧情数据道具
 function StoryHelper.forward2 (mainIndex, mainProgress, endProgress)
-  if (not(StoryHelper.check(mainIndex, mainProgress))) then
+  if not StoryHelper.check(mainIndex, mainProgress) then -- 不是当前剧情进度
     return false
   end
   StoryHelper.setLoad(true)
-  if (endProgress) then
+  if endProgress then -- 如果有跳转剧情
     endProgress = StoryHelper.getRealProgress(endProgress)
     StoryHelper.mainProgress = endProgress + 1
-  else
+  else -- 没有则顺延
     StoryHelper.mainProgress = StoryHelper.mainProgress + 1
   end
-  if (StoryHelper.mainProgress > #StoryHelper.stories[StoryHelper.mainIndex].tips) then
+  if StoryHelper.mainProgress > #StoryHelper.stories[StoryHelper.mainIndex].tips then -- 进度越界，则到下一大剧情
     StoryHelper.mainIndex = StoryHelper.mainIndex + 1
     StoryHelper.mainProgress = 1
   end
@@ -59,7 +59,8 @@ function StoryHelper.forwardByPlayer (objid, mainIndex, progressTitle, endProgre
     StoryHelper.forward(mainIndex, progressTitle, endProgressTitle)
   else -- 反之，添加任务标记
     local story = StoryHelper.getStory(mainIndex)
-    TaskHelper.addTask(objid, story:getTaskIdByName(progressTitle))
+    local title = endProgressTitle or progressTitle -- 从后面往前取
+    TaskHelper.addTask(objid, story:getTaskIdByName(title))
   end
 end
 
@@ -71,7 +72,7 @@ end
 
 -- 获得实际进度序数
 function StoryHelper.getRealProgress (progress)
-  if (type(progress) == 'string') then -- 是别名
+  if type(progress) == 'string' then -- 是别名
     local story = StoryHelper.getStory(mainIndex)
     progress = story:getProgressPrepose(progress) or -1 -- 找不到就-1
   end
@@ -120,7 +121,7 @@ end
 ]]
 function StoryHelper.getMainStoryInfo (objid)
   local index, progress
-  if (PlayerHelper.isMainPlayer(objid)) then -- 房主
+  if PlayerHelper.isMainPlayer(objid) then -- 房主
     -- do nothing
   else -- 房客
     local taskid = TaskHelper.getMaxStoryTaskid(objid)
@@ -158,14 +159,14 @@ end
 
 -- 玩家重新进入游戏时恢复剧情
 function StoryHelper.recover (player)
-  if (#StoryHelper.stories == 0) then
+  if #StoryHelper.stories == 0 then -- 为0表示还没有初始化过
     MyStoryHelper.init()
   end
-  if (player) then -- 非初始化剧情
-    if (PlayerHelper.isMainPlayer(player.objid)) then -- 房主
+  if player then -- 非初始化剧情
+    if PlayerHelper.isMainPlayer(player.objid) then -- 房主
       local story = StoryHelper.getStory()
-      if (story) then -- 如果存在剧情
-        if (StoryHelper.isLoad()) then
+      if story then -- 如果存在剧情
+        if StoryHelper.isLoad() then -- 如果剧情已加载
           return false
         else
           StoryHelper.setLoad(true)
@@ -178,7 +179,7 @@ function StoryHelper.recover (player)
       end
     else -- 房客
       local story = StoryHelper.getStory()
-      if (story) then -- 如果存在剧情
+      if story then -- 如果存在剧情
         story:recover(player)
       end
     end
@@ -201,7 +202,7 @@ function StoryHelper.showInitError (key, name)
   key = key or 'defaultInitKey'
   name = name or '必需角色'
   StoryHelper.initKey[key] = StoryHelper.initKey[key] or 1
-  if (StoryHelper.initKey[key] % 30 == 5) then
+  if StoryHelper.initKey[key] % 30 == 5 then -- 每30次执行一次
     ChatHelper.sendMsg(nil, '地图错误：', name, '未找到，找到', name, '后方可继续后续剧情')
   end
   StoryHelper.initKey[key] = StoryHelper.initKey[key] + 1
@@ -210,7 +211,7 @@ end
 -- 进入未加载提示
 function StoryHelper.loadTip (objid, seconds)
   seconds = seconds or 30
-  if (not(StoryHelper.isLoad())) then
+  if not StoryHelper.isLoad() then -- 未加载
     ChatHelper.sendMsg(objid, '当前游戏进度未加载，请加载进度')
     TimeHelper.callFnAfterSecond(function ()
       StoryHelper.loadTip(objid, seconds)

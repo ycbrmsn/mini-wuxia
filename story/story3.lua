@@ -192,7 +192,7 @@ function Story3:startTest (player)
   -- 未考试过时剧情前进
   StoryHelper.forwardByPlayer(player.objid, 3, '开始考试')
   -- 考试失败时剧情前进
-  StoryHelper.forwardByPlayer(player.objid, 3, '考试通过', '考试没通过')
+  StoryHelper.forwardByPlayer(player.objid, 3, '考试通过', '开始考试')
   jianghuo:setPlayerClickEffective(player.objid, false) -- 玩家无法点击对话
   local ws = WaitSeconds:new()
   player:setMyPosition(-4, 7, 602) -- 移动玩家去演武场
@@ -273,8 +273,8 @@ function Story3:passTest (player)
     StoryHelper.showInitError('passTest', '江火')
     return
   end
-  StoryHelper.forwardByPlayer(player.objid, 3, '考试没通过') -- 剧情前进
-  StoryHelper.forwardByPlayer(player.objid, 3, '考试通过') -- 剧情前进
+  StoryHelper.forwardByPlayer(player.objid, 3, '考试没通过', '考试通过') -- 剧情前进
+  -- StoryHelper.forwardByPlayer(player.objid, 3, '考试通过') -- 剧情前进
   local ws = WaitSeconds:new()
   CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
   CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
