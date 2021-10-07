@@ -313,7 +313,7 @@ function Story3:failTest (player)
     return
   end
   StoryHelper.forwardByPlayer(player.objid, 3, '考试没通过') -- 剧情前进
-  TaskHelper.removeTask(player.objid, story3:getTaskIdByName('考试开始')) -- 移除考试开始任务标志
+  TaskHelper.removeTask(player.objid, story3:getTaskIdByName('开始考试')) -- 移除开始考试任务标志
   local ws = WaitSeconds:new()
   CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
   CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
