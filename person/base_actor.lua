@@ -780,6 +780,11 @@ function BaseActor:isCollidePlayerEffective ()
   return true
 end
 
+-- 开始攻击
+function BaseActor:attack (toobjid)
+  -- body
+end
+
 -- 攻击命中
 function BaseActor:attackHit (toobjid)
   -- body

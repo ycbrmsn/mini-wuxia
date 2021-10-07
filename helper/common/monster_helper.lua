@@ -238,6 +238,11 @@ end
 
 -- 事件
 
+-- 怪物开始攻击
+function MonsterHelper.actorAttack (objid, toobjid)
+  -- body
+end
+
 -- 怪物攻击命中
 function MonsterHelper.actorAttackHit (objid, toobjid)
   local actorid = CreatureHelper.getActorID(objid)

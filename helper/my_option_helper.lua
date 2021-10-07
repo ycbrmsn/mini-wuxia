@@ -12,6 +12,7 @@ MyOptionHelper = {
           player:enableMove(true)
           MyStoryHelper.addHour(1)
           PlayerHelper.everyPlayerNotify('时间过去半个时辰')
+          PlayerHelper.everyPlayerRecoverHp(10)
           MyOptionHelper.removeClickBedLimit(player) -- 移除点击限制
         end
       },
@@ -19,6 +20,7 @@ MyOptionHelper = {
           player:enableMove(true)
           if (MyStoryHelper.addHour(2)) then
             PlayerHelper.everyPlayerNotify('时间过去一个时辰')
+            PlayerHelper.everyPlayerRecoverHp(20)
             ActorHelper.doItNow()
           else
             PlayerHelper.notifyGameInfo2Self(player.objid, '快到约定的时间了，不能睡那么久了')
@@ -30,6 +32,7 @@ MyOptionHelper = {
           player:enableMove(true)
           if (MyStoryHelper.addHour(4)) then
             PlayerHelper.everyPlayerNotify('时间过去两个时辰')
+            PlayerHelper.everyPlayerRecoverHp(40)
             ActorHelper.doItNow()
           else
             PlayerHelper.notifyGameInfo2Self(player.objid, '快到约定的时间了，不能睡那么久了')

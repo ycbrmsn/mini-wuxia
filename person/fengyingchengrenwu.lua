@@ -48,28 +48,28 @@ end
 
 -- 在几点想做什么
 function Ludaofeng:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:lightCandle('free', true, { self.candlePositions[3] })
     self:nextWantFreeInArea({ self.studyAreaPositions })
-  elseif (hour == 8) then
+  elseif hour == 8 then
     self:putOutCandle('free', true, { self.candlePositions[3] })
     self:nextWantMove('free', self.movePositions)
     self:nextWantFreeInArea({ self.hallAreaPositions })
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:lightCandle('free', true, { self.candlePositions[1], self.candlePositions[2] })
     self:nextWantFreeInArea({ self.bedroomAreaPositions })
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed({ self.candlePositions[1], self.candlePositions[2] })
   end
 end
 
 function Ludaofeng:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 19) then
+  elseif hour >= 8 and hour < 19 then
     self:wantAtHour(8)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -79,7 +79,7 @@ end
 -- 初始化
 function Ludaofeng:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -126,16 +126,16 @@ end
 
 -- 在几点想做什么
 function Qianbingwei:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:defaultWant()
-  elseif (hour == 21) then
+  elseif hour == 21 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Qianbingwei:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 21) then
+  if hour >= 6 and hour < 21 then
     self:wantAtHour(6)
   else
     self:wantAtHour(21)
@@ -145,7 +145,7 @@ end
 -- 初始化
 function Qianbingwei:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -153,10 +153,10 @@ end
 
 function Qianbingwei:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     -- self:speakTo(playerid, 0, '请注意不要随便撞人。')
     self:toastSpeak('请注意不要随便撞人。')
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     -- self:speakTo(playerid, 0, '你是想被抓起来吗？')
     self:toastSpeak('你是想被抓起来吗？')
   else
@@ -167,9 +167,9 @@ end
 
 function Qianbingwei:candleEvent (player, candle)
   local nickname = player:getName()
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
+    if self.wants[1].style == 'sleeping' then
       -- self:speakTo(player.objid, 0, '我……')
       self:toastSpeak('我……')
     else
@@ -240,31 +240,31 @@ end
 function Yexiaolong:wantAtHour (hour)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1) then
-    if (hour == 7) then
+  if mainIndex == 1 then
+    if hour == 7 then
       self:wantFreeInArea({ self.homeAreaPositions })
-    elseif (hour == 19) then
+    elseif hour == 19 then
       self:lightCandle(nil, true)
       self:nextWantFreeInArea({ self.homeAreaPositions })
-    elseif (hour == 22) then
+    elseif hour == 22 then
       self:putOutCandleAndGoToBed()
     end
-  elseif (mainIndex == 2 and mainProgress == #story2.tips) then
+  elseif mainIndex == 2 and mainProgress == #story2.tips then
     self:wantMove('init', { self.story3InitPosition })
-  elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
+  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
     self.candlePositions = self.candlePositions2
-    if (hour == 6) then
+    if hour == 6 then
       self:wantFreeInArea({ self.classroomAreaPositions })
-    elseif (hour == 8) then
+    elseif hour == 8 then
       self:stayInClass()
-    elseif (hour == 12) then
+    elseif hour == 12 then
       self:wantFreeTime()
-    elseif (hour == 14) then
+    elseif hour == 14 then
       self:wantFreeInArea({ self.trainAreaPositions })
-    elseif (hour == 20) then
+    elseif hour == 20 then
       self:lightCandle()
       self:nextWantFreeInArea({ self.classroomAreaPositions })
-    elseif (hour == 22) then
+    elseif hour == 22 then
       self.bedData = self.bedData2
       self:putOutCandleAndGoToBed()
     end
@@ -274,26 +274,26 @@ end
 function Yexiaolong:doItNow ()
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1) then
+  if mainIndex == 1 then
     local hour = TimeHelper.getHour()
-    if (hour >= 7 and hour < 19) then
+    if hour >= 7 and hour < 19 then
       self:wantAtHour(7)
-    elseif (hour >= 19 and hour < 22) then
+    elseif hour >= 19 and hour < 22 then
       self:wantAtHour(19)
     else
       self:wantAtHour(22)
     end
-  elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
+  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
     local hour = TimeHelper.getHour()
-    if (hour >= 6 and hour < 8) then
+    if hour >= 6 and hour < 8 then
       self:wantAtHour(6)
-    elseif (hour >= 8 and hour < 12) then
+    elseif hour >= 8 and hour < 12 then
       self:wantAtHour(8)
-    elseif (hour >= 12 and hour < 14) then
+    elseif hour >= 12 and hour < 14 then
       self:wantAtHour(12)
-    elseif (hour >= 14 and hour < 20) then
+    elseif hour >= 14 and hour < 20 then
       self:wantAtHour(14)
-    elseif (hour >= 20 and hour < 22) then
+    elseif hour >= 20 and hour < 22 then
       self:wantAtHour(20)
     else
       self:wantAtHour(22)
@@ -304,7 +304,7 @@ end
 -- 初始化
 function Yexiaolong:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -320,23 +320,23 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
   local nickname
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1) then
-    if (mainProgress < 5) then
+  if mainIndex == 1 then
+    if mainProgress < 5 then
       nickname = '年轻人'
     else
       nickname = PlayerHelper.getNickname(playerid)
     end
-    if (self.wants and self.wants[1].currentRestTime > 0) then
+    if self.wants and self.wants[1].currentRestTime > 0 then
       -- self:speakTo(playerid, 0, nickname, '，你撞我是想试试你的实力吗？')
       self:toastSpeak(nickname, '，你撞我是想试试你的实力吗？')
-    elseif (self.think == 'sleep') then
+    elseif self.think == 'sleep' then
       -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要惹我哟。')
       self:toastSpeak(nickname, '，我要睡觉了，不要惹我哟。')
     else
       -- self:speakTo(playerid, 0, nickname, '，找我有事吗？')
       self:toastSpeak(nickname, '，找我有事吗？')
     end
-  elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
+  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
     -- self:speakTo(playerid, 0, '武术修为，也不是一蹴而就的。')
     self:toastSpeak('武术修为，也不是一蹴而就的。')
   end
@@ -344,7 +344,7 @@ end
 
 function Yexiaolong:defaultCollidePlayerEvent (playerid, isPlayerInFront)
   local mainIndex = StoryHelper.getMainStoryIndex()
-  if (mainIndex ~= 2) then
+  if mainIndex ~= 2 then
     self.action:stopRun()
     self:collidePlayer(playerid, isPlayerInFront)
     self:wantLookAt(nil, playerid)
@@ -354,16 +354,16 @@ end
 function Yexiaolong:playerClickEvent (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1 and mainProgress == #story1.tips - 1) then
+  if mainIndex == 1 and mainProgress == #story1.tips - 1 then
     -- self:speakTo(objid, 0, '你先去准备准备，我们明日#G辰时#n出发。')
     self:toastSpeak('你先去准备准备，我们明日#G辰时#n出发。')
-  elseif (mainIndex == 1 and mainProgress == #story1.tips) then
+  elseif mainIndex == 1 and mainProgress == #story1.tips then
     -- self:speakTo(objid, 0, '准备得怎么样了，我们#G辰时#n就要出发了。')
     self:toastSpeak('准备得怎么样了，我们#G辰时#n就要出发了。')
-  elseif (mainIndex == 3 and mainProgress >= 3 and mainProgress <= 5) then
+  elseif mainIndex == 3 and mainProgress >= 3 and mainProgress <= 5 then
     -- self:speakTo(objid, 0, '你先去找小高，我要歇一歇。')
     self:toastSpeak('你先去找小高，我要歇一歇。')
-  elseif (mainProgress == 3 and mainProgress == 6) then
+  elseif mainProgress == 3 and mainProgress == 6 then
     -- self:speakTo(objid, 0, '目前没有什么事情。')
     self:toastSpeak('目前没有什么事情。')
   end
@@ -373,15 +373,15 @@ function Yexiaolong:candleEvent (player, candle)
   local nickname
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1) then
-    if (mainProgress < 5) then
+  if mainIndex == 1 then
+    if mainProgress < 5 then
       nickname = '年轻人'
     else
       nickname = player:getName()
     end
-    if (self.think == 'sleep' and candle.isLit) then
+    if self.think == 'sleep' and candle.isLit then
       self.action:stopRun()
-      if (self.wants[1].style == 'sleeping') then
+      if self.wants[1].style == 'sleeping' then
         -- self:speakTo(player.objid, 0, nickname, '，你想吃棍子吗？不要碰蜡烛。')
         self:toastSpeak(nickname, '，你想吃棍子吗？不要碰蜡烛。')
       else
@@ -394,8 +394,8 @@ function Yexiaolong:candleEvent (player, candle)
         self:doItNow()
       end, 3)
     end
-  elseif ((mainIndex == 3 and mainProgress >= 3) or mainIndex > 3) then
-    if (self.think == 'sleep' and candle.isLit) then
+  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
+    if self.think == 'sleep' and candle.isLit then
       -- self:speakTo(player.objid, 0, '……')
       self:toastSpeak('……')
     end
@@ -444,20 +444,20 @@ end
 
 -- 在几点想做什么
 function Sunkongwu:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:toSell()
-  elseif (hour == 20) then
+  elseif hour == 20 then
     self:goSecondFloor()
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Sunkongwu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 20) then
+  if hour >= 6 and hour < 20 then
     self:wantAtHour(6)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -467,7 +467,7 @@ end
 -- 初始化
 function Sunkongwu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -533,20 +533,20 @@ end
 
 -- 在几点想做什么
 function Limiaoshou:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:toSell()
-  elseif (hour == 20) then
+  elseif hour == 20 then
     self:goSecondFloor()
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Limiaoshou:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 20) then
+  if hour >= 6 and hour < 20 then
     self:wantAtHour(6)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -556,7 +556,7 @@ end
 -- 初始化
 function Limiaoshou:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -622,20 +622,20 @@ end
 
 -- 在几点想做什么
 function Qianduo:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:toSell()
-  elseif (hour == 20) then
+  elseif hour == 20 then
     self:freeInHome()
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Qianduo:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 20) then
+  if hour >= 6 and hour < 20 then
     self:wantAtHour(6)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -645,7 +645,7 @@ end
 -- 初始化
 function Qianduo:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -705,19 +705,19 @@ end
 
 -- 在几点想做什么
 function Daniu:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:lightCandle('toSell', true)
     self:nextWantMove('toSell', { self.initPosition })
     self:nextWantLookAt(nil, self.doorPosition, 1)
     self:nextWantDoNothing('sell')
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Daniu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 22) then
+  if hour >= 6 and hour < 22 then
     self:wantAtHour(6)
   else
     self:wantAtHour(22)
@@ -727,7 +727,7 @@ end
 -- 初始化
 function Daniu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -785,22 +785,22 @@ end
 
 -- 在几点想做什么
 function Erniu:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:lightCandle('free', true)
     self:nextWantFreeInArea({ self.bedroomAreaPositions })
-  elseif (hour == 8) then
+  elseif hour == 8 then
     self:putOutCandle('free', true)
     self:nextWantFreeInArea({ self.roomAreaPositions1, self.roomAreaPositions2 })
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Erniu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 22) then
+  elseif hour >= 8 and hour < 22 then
     self:wantAtHour(8)
   else
     self:wantAtHour(22)
@@ -810,7 +810,7 @@ end
 -- 初始化
 function Erniu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -828,7 +828,7 @@ end
 
 function Erniu:playerClickEvent (objid)
   local itemid = PlayerHelper.getCurToolID(objid)
-  if (itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID) then -- 落叶村车票
+  if itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID then -- 落叶村车票
     ItemHelper.removeCurTool(objid)
     -- self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
     self:toastSpeak('这是去往落叶村的车票。我这就送你过去。')
@@ -836,7 +836,7 @@ function Erniu:playerClickEvent (objid)
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.luoyecunPos)
     end, 2)
-  elseif (itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID) then -- 平风寨车票
+  elseif itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID then -- 平风寨车票
     ItemHelper.removeCurTool(objid)
     -- self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
     self:toastSpeak('这是去往平风寨的车票。我这就送你过去。')
@@ -844,7 +844,7 @@ function Erniu:playerClickEvent (objid)
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
     end, 2)
-  elseif (itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID) then -- 叛军营地
+  elseif itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID then -- 叛军营地
     ItemHelper.removeCurTool(objid)
     -- self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
     self:toastSpeak('这是去往叛军营地的车票。我这就送你过去。')
@@ -852,7 +852,7 @@ function Erniu:playerClickEvent (objid)
       local player = PlayerHelper.getPlayer(objid)
       player:setMyPosition(MyAreaHelper.panjunyingdiPos)
     end, 2)
-  elseif (itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID) then -- 橘山
+  elseif itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID then -- 橘山
     ItemHelper.removeCurTool(objid)
     -- self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
     self:toastSpeak('这是去往橘山的车票。我这就送你过去。')
@@ -901,24 +901,24 @@ end
 
 -- 在几点想做什么
 function Murongxiaotian:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:wantFreeInArea({ self.studyAreaPositions })
-  elseif (hour == 8) then
+  elseif hour == 8 then
     self:wantFreeInArea({ self.hallAreaPositions })
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:wantFreeInArea({ self.studyAreaPositions })
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed({ self.candlePositions[1] })
   end
 end
 
 function Murongxiaotian:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 19) then
+  elseif hour >= 8 and hour < 19 then
     self:wantAtHour(8)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -928,7 +928,7 @@ end
 -- 初始化
 function Murongxiaotian:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -988,21 +988,21 @@ end
 function Gaoxiaohu:wantAtHour (hour)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
+  if (mainIndex == 3 and mainProgress < 3) or mainIndex < 3 then
     self:wantDoNothing()
   else
-    if (hour == 6) then
+    if hour == 6 then
       self:wantFreeInArea({ self.classroomAreaPositions })
-    elseif (hour == 8) then
+    elseif hour == 8 then
       self:stayInClass()
-    elseif (hour == 12) then
+    elseif hour == 12 then
       self:wantFreeTime()
-    elseif (hour == 14) then
+    elseif hour == 14 then
       self:wantFreeInArea({ self.trainAreaPositions })
-    elseif (hour == 20) then
+    elseif hour == 20 then
       self:lightCandle()
       self:nextWantFreeInArea({ self.classroomAreaPositions })
-    elseif (hour == 22) then
+    elseif hour == 22 then
       self:putOutCandleAndGoToBed()
     end
   end
@@ -1010,15 +1010,15 @@ end
 
 function Gaoxiaohu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 12) then
+  elseif hour >= 8 and hour < 12 then
     self:wantAtHour(8)
-  elseif (hour >= 12 and hour < 14) then
+  elseif hour >= 12 and hour < 14 then
     self:wantAtHour(12)
-  elseif (hour >= 14 and hour < 20) then
+  elseif hour >= 14 and hour < 20 then
     self:wantAtHour(14)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -1028,7 +1028,7 @@ end
 -- 初始化
 function Gaoxiaohu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -1041,7 +1041,7 @@ function Gaoxiaohu:collidePlayer (playerid, isPlayerInFront)
 end
 
 function Gaoxiaohu:candleEvent (player, candle)
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     -- self:speakTo(player.objid, 0, '……')
     self:toastSpeak('……')
   end
@@ -1056,7 +1056,7 @@ end
 function Gaoxiaohu:playerClickEvent (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainProgress == 3 and mainProgress == 4) then
+  if mainProgress == 3 and mainProgress == 4 then
     -- self:speakTo(objid, 0, '真宝阁就在学院斜对面。')
     self:toastSpeak('真宝阁就在学院斜对面。')
   end
@@ -1103,21 +1103,21 @@ end
 function Yuewushuang:wantAtHour (hour)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if ((mainIndex == 3 and mainProgress < 3) or mainIndex < 3) then
+  if (mainIndex == 3 and mainProgress < 3) or mainIndex < 3 then
     self:wantDoNothing()
   else
-    if (hour == 6) then
+    if hour == 6 then
       self:wantFreeInArea({ self.dormitoryAreaPositions })
-    elseif (hour == 8) then
+    elseif hour == 8 then
       self:wantFreeAttack({ self.trainAreaPositions })
-    elseif (hour == 12) then
+    elseif hour == 12 then
       self:wantFreeTime()
-    elseif (hour == 14) then
+    elseif hour == 14 then
       self:wantFreeAttack({ self.trainAreaPositions })
-    elseif (hour == 20) then
+    elseif hour == 20 then
       self:lightCandle()
       self:nextWantFreeInArea({ self.dormitoryAreaPositions })
-    elseif (hour == 22) then
+    elseif hour == 22 then
       self:putOutCandleAndGoToBed()
     end
   end
@@ -1125,15 +1125,15 @@ end
 
 function Yuewushuang:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 12) then
+  elseif hour >= 8 and hour < 12 then
     self:wantAtHour(8)
-  elseif (hour >= 12 and hour < 14) then
+  elseif hour >= 12 and hour < 14 then
     self:wantAtHour(12)
-  elseif (hour >= 14 and hour < 20) then
+  elseif hour >= 14 and hour < 20 then
     self:wantAtHour(14)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -1143,7 +1143,7 @@ end
 -- 初始化
 function Yuewushuang:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -1156,7 +1156,7 @@ function Yuewushuang:collidePlayer (playerid, isPlayerInFront)
 end
 
 function Yuewushuang:candleEvent (player, candle)
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     -- self:speakTo(player.objid, 0, '明天还要训练呢，早点休息。')
     self:toastSpeak('明天还要训练呢，早点休息。')
   end
@@ -1189,7 +1189,7 @@ function Jianghuo:new ()
     },
     attr = {
       isTesting = false, -- 正在考试
-      dodgeCD = 3, -- 表示每被攻击几次后会进行躲避
+      dodgeCD = 2, -- 表示每被攻击几次后会进行躲避
       dodgeIndex = 0, -- 躲避能量，被攻击加1
     }, -- 特殊属性
     talkInfos = jianghuoTalkInfos,
@@ -1211,33 +1211,33 @@ function Jianghuo:wantAtHour (hour)
   if self:isTesting() then -- 正在考试
     return
   end
-  if (hour == 6) then
+  if hour == 6 then
     self:wantFreeInArea({ self.dormitoryAreaPositions })
-  elseif (hour == 8) then
+  elseif hour == 8 then
     self:wantFreeAttack({ self.trainAreaPositions })
-  elseif (hour == 12) then
+  elseif hour == 12 then
     self:wantFreeTime()
-  elseif (hour == 14) then
+  elseif hour == 14 then
     self:wantFreeAttack({ self.trainAreaPositions })
-  elseif (hour == 20) then
+  elseif hour == 20 then
     self:lightCandle()
     self:nextWantFreeInArea({ self.dormitoryAreaPositions })
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Jianghuo:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 8) then
+  if hour >= 6 and hour < 8 then
     self:wantAtHour(6)
-  elseif (hour >= 8 and hour < 12) then
+  elseif hour >= 8 and hour < 12 then
     self:wantAtHour(8)
-  elseif (hour >= 12 and hour < 14) then
+  elseif hour >= 12 and hour < 14 then
     self:wantAtHour(12)
-  elseif (hour >= 14 and hour < 20) then
+  elseif hour >= 14 and hour < 20 then
     self:wantAtHour(14)
-  elseif (hour >= 20 and hour < 22) then
+  elseif hour >= 20 and hour < 22 then
     self:wantAtHour(20)
   else
     self:wantAtHour(22)
@@ -1247,7 +1247,7 @@ end
 -- 初始化
 function Jianghuo:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -1260,7 +1260,7 @@ function Jianghuo:collidePlayer (playerid, isPlayerInFront)
 end
 
 function Jianghuo:candleEvent (player, candle)
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     -- self:speakTo(player.objid, 0, '睡觉睡觉，明天再闹。')
     self:toastSpeak('睡觉睡觉，明天再闹。')
   end
@@ -1318,11 +1318,11 @@ function Jianghuo:tryDodge (posBeg, posEnd)
 end
 
 --[[
-  攻击命中
+  开始命中
   @param    {number} toobjid 玩家/生物id
   @author   莫小仙
   @datetime 2021-10-07 01:25:05
 ]]
-function Jianghuo:attackHit (toobjid)
+function Jianghuo:attack (toobjid)
   self:toastSpeak('邦邦一拳。')
 end

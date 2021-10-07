@@ -295,6 +295,13 @@ local actorCollide = function (event)
 end
 
 -- eventobjid, toobjid
+local actorAttack = function (event)
+  LogHelper.call(function ()
+    EventHelper.actorAttack(event.eventobjid, event.toobjid)
+  end)
+end
+
+-- eventobjid, toobjid
 local actorAttackHit = function (event)
   LogHelper.call(function ()
     EventHelper.actorAttackHit(event.eventobjid, event.toobjid)
@@ -522,6 +529,7 @@ ScriptSupportEvent:registerEvent([=[Actor.Create]=], actorCreate) -- 生物被�
 ScriptSupportEvent:registerEvent([=[Actor.AreaIn]=], actorEnterArea) -- 生物进入区域
 ScriptSupportEvent:registerEvent([=[Actor.AreaOut]=], actorLeaveArea) -- 生物离开区域
 ScriptSupportEvent:registerEvent([=[Actor.Collide]=], actorCollide) -- 生物发生碰撞
+ScriptSupportEvent:registerEvent([=[Actor.Attack]=], actorAttack) -- 生物开始攻击
 ScriptSupportEvent:registerEvent([=[Actor.AttackHit]=], actorAttackHit) -- 生物攻击命中
 ScriptSupportEvent:registerEvent([=[Actor.Beat]=], actorBeat) -- 生物击败玩家/生物
 ScriptSupportEvent:registerEvent([=[Actor.ChangeMotion]=], actorChangeMotion) -- 生物行为状态变更

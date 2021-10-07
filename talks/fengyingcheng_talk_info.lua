@@ -108,7 +108,7 @@ yexiaolongTalkInfos = {
     },
   }),
   TalkInfo:new({
-    id = 105,
+    id = 104,
     ants = {
       TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
       TalkAnt:betweenHour(0, 5), -- 天没亮
@@ -121,7 +121,7 @@ yexiaolongTalkInfos = {
     },
   }),
   TalkInfo:new({
-    id = 106,
+    id = 105,
     ants = {
       TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
       TalkAnt:betweenHour(20, 23), -- 天黑
@@ -134,21 +134,22 @@ yexiaolongTalkInfos = {
     },
   }),
   TalkInfo:new({
-    id = 107,
+    id = 106,
     ants = {
       TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
     },
     progress = {
       [0] = {
         TalkSession:speak('我准备好了。'),
-        TalkSession:reply('很好。考试很简单，你只需要击败小火同学就行了。这就去练武场。'):call(function(player, actor)
+        TalkSession:reply('很好。这就送你去练武场。'):call(function(player, actor)
           story3:startTest(player)
         end),
       },
     },
   }),
+  -- 准备考试
   TalkInfo:new({
-    id = 104,
+    id = 107,
     ants = {
       TalkAnt:orAnts(
         TalkAnt:andAnts(
@@ -171,6 +172,46 @@ yexiaolongTalkInfos = {
     progress = {
       [0] = {
         TalkSession:reply('怎么样，你做好考试的准备的了吗？'),
+        TalkSession:choose({
+          PlayerTalk:continue('准备好了'):call(function (player)
+            TaskHelper.addTempTask(player.objid, MyTask.T308)
+            player:resetTalkIndex(0)
+          end),
+          PlayerTalk:continue('还没准备好'),
+        }),
+        TalkSession:speak('我还没准备好。'),
+        TalkSession:reply('无妨，再好好准备准备也不错。'),
+      },
+    },
+  }),
+  -- 考试没通过
+  TalkInfo:new({
+    id = 108,
+    ants = {
+      TalkAnt:orAnts(
+        TalkAnt:andAnts(
+          TalkAnt:isHostPlayer(true),
+          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9) -- 进度9
+        ), -- 房主
+        TalkAnt:andAnts(
+          TalkAnt:isHostPlayer(false),
+          TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:includeTask(function ()
+            return story3:getTaskIdByName('考试没通过')
+          end),
+          TalkAnt:excludeTask(function ()
+            return story3:getTaskIdByName('开始考试')
+          end),
+          TalkAnt:excludeTask(function ()
+            return story3:getTaskIdByName('考试通过')
+          end)
+        ) -- 非房主
+      ),
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('上次没有好好准备吧。你做好补考的准备的了吗？'),
         TalkSession:choose({
           PlayerTalk:continue('准备好了'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.T308)

@@ -20,7 +20,7 @@ end
 -- 移除玩家信息
 function PlayerHelper.removePlayer (objid)
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
-    if (v.objid == objid) then
+    if v.objid == objid then -- 找到对应玩家
       table.remove(PlayerHelper.getAllPlayers(), i)
       break
     end
@@ -30,7 +30,7 @@ end
 -- 获取玩家信息
 function PlayerHelper.getPlayer (objid)
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
-    if (v.objid == objid) then
+    if v.objid == objid then -- 找到对应玩家
       return v
     end
   end
@@ -40,7 +40,7 @@ end
 -- 获取房主信息
 function PlayerHelper.getHostPlayer ()
   local objid = PlayerHelper.getMainPlayerUin()
-  if (objid) then
+  if objid then -- 找到房主id
     return PlayerHelper.getPlayer(objid)
   else
     return nil
@@ -56,7 +56,7 @@ end
 function PlayerHelper.getActivePlayers ()
   local players = {}
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
-    if (v:isActive()) then
+    if v:isActive() then -- 活跃玩家，表示还在房间中
       table.insert(players, v)
     end
   end
@@ -96,7 +96,7 @@ end
 -- 显示actor当前生命值
 function PlayerHelper.showActorHp (objid, toobjid)
   local actorname, hp
-  if (ActorHelper.isPlayer(toobjid)) then -- 生物是玩家
+  if ActorHelper.isPlayer(toobjid) then -- 生物是玩家
     local player = PlayerHelper.getPlayer(toobjid)
     actorname = player:getName()
     hp = PlayerHelper.getHp(toobjid)
@@ -107,8 +107,8 @@ function PlayerHelper.showActorHp (objid, toobjid)
   local t = 'showActorHp' .. toobjid
   TimeHelper.delFnFastRuns(t)
   TimeHelper.callFnFastRuns(function ()
-    if (hp) then
-      if (hp <= 0) then
+    if hp then -- 获取到玩家/生物的当前生命
+      if hp <= 0 then -- 表示已死亡
         PlayerHelper.showToast(objid, StringHelper.concat(actorname, '已死亡'))
       else
         hp = math.ceil(hp)
@@ -132,11 +132,12 @@ function PlayerHelper.generateDamageKey (objid, toobjid)
   return objid .. 'damage' .. toobjid
 end
 
+-- 所有玩家做某事
 function PlayerHelper.everyPlayerDoSomeThing (f, afterSeconds)
-  if (not(f)) then
+  if type(f) ~= 'function' then -- 不是函数
     return
   end
-  if (afterSeconds) then
+  if afterSeconds then -- 需要延时
     TimeHelper.callFnAfterSecond (function ()
       for i, v in ipairs(PlayerHelper.getAllPlayers()) do
         f(v)
@@ -149,42 +150,49 @@ function PlayerHelper.everyPlayerDoSomeThing (f, afterSeconds)
   end
 end
 
+-- 更新所有玩家位置信息
 function PlayerHelper.updateEveryPlayerPositions ()
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     player:updatePositions()
   end)
 end
 
+-- 改变所有玩家位置
 function PlayerHelper.setEveryPlayerPosition (x, y, z, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     player:setPosition(x, y, z)
   end, afterSeconds)
 end
 
+-- 所有玩家自己说
 function PlayerHelper.everyPlayerSpeakToSelf (second, ...)
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
     v.action:speakToAfterSeconds(v.objid, second, ...)
   end
 end
 
+-- 所有玩家说
 function PlayerHelper.everyPlayerSpeak (second, ...)
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
     v.action:speakAfterSeconds(second, ...)
   end
 end
 
+-- 所有玩家想
 function PlayerHelper.everyPlayerThinkToSelf (second, ...)
   for i, v in ipairs(PlayerHelper.getAllPlayers()) do
     v.action:thinkToAfterSeconds(v.objid, second, ...)
   end
 end
 
+-- 飘窗提示所有玩家
 function PlayerHelper.everyPlayerNotify (info, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     PlayerHelper.notifyGameInfo2Self(player.objid, info)
   end, afterSeconds)
 end
 
+-- 所有玩家可移动控制
 function PlayerHelper.everyPlayerEnableMove (enable, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     local msg = enable and true or '剧情中'
@@ -192,38 +200,49 @@ function PlayerHelper.everyPlayerEnableMove (enable, afterSeconds)
   end, afterSeconds)
 end
 
+-- 所有玩家跑去
 function PlayerHelper.everyPlayerRunTo (positions, callback, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:runTo(positions, callback, player)
   end, afterSeconds)
 end
 
+-- 所有玩家加buff
 function PlayerHelper.everyPlayerAddBuff (buffid, bufflv, customticks, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     ActorHelper.addBuff(player.objid, buffid, bufflv, customticks)
   end, afterSeconds)
 end
 
+-- 所有玩家看向
 function PlayerHelper.everyPlayerLookAt (toobjid, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     player:lookAt(toobjid)
   end, afterSeconds)
 end
 
+-- 所有玩家比动作
 function PlayerHelper.everyPlayerPlayAct (act, afterSeconds)
   PlayerHelper.everyPlayerDoSomeThing(function (player)
     player.action:playAct(act)
   end, afterSeconds)
 end
 
+-- 所有玩家恢复生命
+function PlayerHelper.everyPlayerRecoverHp (hp, afterSeconds)
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
+    player:recoverHp(hp)
+  end, afterSeconds)
+end
+
 -- 改变玩家视角模式
 function PlayerHelper.changeVMode (objid, viewmode, islock)
   viewmode = viewmode or VIEWPORTTYPE.BACKVIEW
-  if (not(objid)) then -- 不存在，表示是对所有玩家执行
+  if not objid then -- 不存在，表示是对所有玩家执行
     PlayerHelper.everyPlayerDoSomeThing(function (player)
       PlayerHelper.changeViewMode(player.objid, viewmode, islock)
     end)
-  elseif (type(objid) == 'number') then -- 是数字，表示对一个玩家执行
+  elseif type(objid) == 'number' then -- 是数字，表示对一个玩家执行
     PlayerHelper.changeViewMode(objid, viewmode, islock)
   else -- 剩下的应该是数组，表示对这一群玩家执行
     for i, v in ipairs(objid) do
@@ -365,11 +384,11 @@ end
 -- 玩家进入游戏 是否之前已存在
 function PlayerHelper.playerEnterGame (objid)
   local player = PlayerHelper.getPlayer(objid)
-  if (not(player)) then
+  if not player then -- 玩家信息不存在
     player = PlayerHelper.addPlayer(objid)
     player:init()
     return false
-  else
+  else -- 存在，表示之前玩家进入过房间
     player:init()
     player:setActive(true)
     return true
@@ -387,11 +406,11 @@ end
 -- 玩家进入区域
 function PlayerHelper.playerEnterArea (objid, areaid)
   local player = PlayerHelper.getPlayer(objid)
-  if (areaid == player.toAreaId) then -- 玩家自动前往地点
+  if areaid == player.toAreaId then -- 玩家自动前往地点
     AreaHelper.destroyArea(areaid)
     -- player.action:runAction()
     player.action:doNext()
-  elseif (AreaHelper.showToastArea(objid, areaid)) then -- 显示提示区域检测
+  elseif AreaHelper.showToastArea(objid, areaid) then -- 显示提示区域检测
   end
 end
 
@@ -403,7 +422,8 @@ end
 -- 玩家点击方块
 function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
   local pos = MyPosition:new(x, y, z)
-  if (BlockHelper.checkCandle(objid, blockid, pos)) then
+  if BlockHelper.checkCandle(objid, blockid, pos) then -- 如果是点蜡烛
+    return
   end
   ItemHelper.clickBlock(objid, blockid, x, y, z)
   local player = PlayerHelper.getPlayer(objid)
@@ -413,11 +433,11 @@ end
 -- 玩家点击生物 simulatedClick(true表示模拟点击，不是真实点击生物)
 function PlayerHelper.playerClickActor (objid, toobjid, simulatedClick)
   local actor = ActorHelper.getActor(toobjid)
-  if (actor) then
+  if actor then -- 如果是特定生物
     ActorHelper.recordClickActor(objid, actor)
     local want = actor:getFirstWant()
-    if (want and string.find(want.think, 'noClick')) then -- 此时点击生物无反应
-    elseif (actor:isPlayerClickEffective(objid)) then -- 当前玩家点击有效
+    if want and string.find(want.think, 'noClick') then -- 此时点击生物无反应
+    elseif actor:isPlayerClickEffective(objid) then -- 当前玩家点击有效
       return actor:defaultPlayerClickEvent(objid, simulatedClick)
     end
   end
@@ -457,9 +477,9 @@ end
 function PlayerHelper.playerAttackHit (objid, toobjid)
   local itemid = PlayerHelper.getCurToolID(objid)
   local item = ItemHelper.getItem(itemid)
-  if (item) then
+  if item then -- 自定义道具
     item:attackHit(objid, toobjid)
-    if (objid ~= toobjid) then
+    if objid ~= toobjid then -- 不是击中自己
       PlayerHelper.showActorHp(objid, toobjid)
     end
   end
@@ -474,7 +494,7 @@ end
 
 -- 玩家击败目标
 function PlayerHelper.playerDefeatActor (playerid, objid)
-  if (PlayerHelper.getDefeatActor(objid)) then -- 该生物已死亡
+  if PlayerHelper.getDefeatActor(objid) then -- 该生物已死亡
     return false
   else
     PlayerHelper.recordDefeatActor(objid)
@@ -492,7 +512,7 @@ end
 -- 玩家死亡
 function PlayerHelper.playerDie (objid, toobjid)
   -- 检测技能是否正在释放
-  if (ItemHelper.isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
+  if ItemHelper.isDelaySkillUsing(objid, '坠星') then -- 技能释放中
     FallStarBow:cancelSkill(objid)
   end
 end
@@ -519,10 +539,10 @@ end
 
 -- 玩家运动状态改变
 function PlayerHelper.playerMotionStateChange (objid, playermotion)
-  if (playermotion == PLAYERMOTION.WALK) then -- 行走
+  if playermotion == PLAYERMOTION.WALK then -- 行走
     ActorHelper.resumeClickActor(objid)
-  elseif (playermotion == PLAYERMOTION.SNEAK) then -- 潜行
-    if (not(TalkHelper.talkAround(objid))) then -- 附近没有可对话NPC
+  elseif playermotion == PLAYERMOTION.SNEAK then -- 潜行
+    if not TalkHelper.talkAround(objid) then -- 附近没有可对话NPC
       ItemHelper.useItem2(objid) -- 使用武器技能
     end
   end
@@ -589,9 +609,9 @@ end
 -- 按键松开
 function PlayerHelper.playerInputKeyUp (objid, vkey)
   -- body
-  -- if (vkey == 'SPACE') then
+  -- if vkey == 'SPACE' then
   --   aaa = aaa + 1
-  --   if (aaa >= 16) then
+  --   if aaa >= 16 then
   --     aaa = 0
   --   end
   --   LogHelper.debug('aaa: ', aaa)
@@ -603,7 +623,7 @@ function PlayerHelper.playerLevelModelUpgrade (objid, toobjid)
   local player = PlayerHelper.getPlayer(objid)
   local prevLevel = player:getPrevLevel()
   local level = player:getLevel()
-  if (level) then
+  if level then -- 获取到等级信息
     player:upgrade(level - prevLevel)
     local map = { level = level }
     local msg = StringHelper.getTemplateResult(MyTemplate.UPGRADE_MSG, map)
@@ -620,7 +640,7 @@ end
 -- 玩家获得状态效果
 function PlayerHelper.playerAddBuff (objid, buffid, bufflvl)
   local buff = ActorHelper.getBuff(buffid)
-  if (buff) then
+  if buff then -- 自定义buff
     buff:addBuff(objid)
   end
   -- body
@@ -629,7 +649,7 @@ end
 -- 玩家失去状态效果
 function PlayerHelper.playerRemoveBuff (objid, buffid, bufflvl)
   local buff = ActorHelper.getBuff(buffid)
-  if (buff) then
+  if buff then -- 自定义buff
     buff:removeBuff(objid)
   end
   -- body

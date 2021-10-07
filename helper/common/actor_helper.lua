@@ -1116,6 +1116,15 @@ function ActorHelper.actorCollide (objid, toobjid)
   end
 end
 
+-- 生物开始攻击
+function ActorHelper.actorAttack (objid, toobjid)
+  MonsterHelper.actorAttack(objid, toobjid)
+  local actor = ActorHelper.getActor(objid)
+  if (actor) then
+    actor:attack(toobjid)
+  end
+end
+
 -- 生物攻击命中
 function ActorHelper.actorAttackHit (objid, toobjid)
   MonsterHelper.actorAttackHit(objid, toobjid)

@@ -16,7 +16,7 @@ end
 
 -- 替换初始方块
 function MyStoryHelper.replaceInitBlock (pos)
-  if (not(BlockHelper.replaceBlock(200, pos.x, pos.y, pos.z))) then
+  if not BlockHelper.replaceBlock(200, pos.x, pos.y, pos.z) then
     TimeHelper.callFnAfterSecond(function ()
       MyStoryHelper.replaceInitBlock(pos)
     end, 1)
@@ -25,12 +25,12 @@ end
 
 -- 不同玩家给不同的礼物
 function MyStoryHelper.diffPersonDiffPresents (player)
-  if (player.objid == 807364131) then -- 作者
+  if player.objid == 807364131 then -- 作者
     BackpackHelper.addItem(player.objid, MyMap.ITEM.PROTECT_GEM_ID, 5)
     BackpackHelper.addItem(player.objid, 4246, 1) -- 慑魂枪
     ChatHelper.sendMsg(player.objid, '欢迎', player:getName(), '，作者额外送你5个',
       ItemHelper.getItemName(MyMap.ITEM.PROTECT_GEM_ID))
-  elseif (player.objid == 865147101) then -- 懒懒小朋友
+  elseif player.objid == 865147101 then -- 懒懒小朋友
     BackpackHelper.addItem(player.objid, MyMap.ITEM.PROTECT_GEM_ID, 5)
     ChatHelper.sendMsg(player.objid, '欢迎', player:getName(), '小朋友，作者额外送你5个',
       ItemHelper.getItemName(MyMap.ITEM.PROTECT_GEM_ID))
@@ -53,14 +53,14 @@ end
 
 -- 过去几小时，用于睡觉
 function MyStoryHelper.addHour (hours)
-  if (StoryHelper.check(1, '明日出发')) then
+  if StoryHelper.check(1, '明日出发') then
     local hour = TimeHelper.getHour()
-    if (hour + hours > 24) then
+    if hour + hours > 24 then
       StoryHelper.forward(1, '明日出发')
     end
-  elseif (StoryHelper.check(1, '今日出发')) then
+  elseif StoryHelper.check(1, '今日出发') then
     local hour = TimeHelper.getHour()
-    if (hour + hours > 7) then -- 再睡就要睡过头了，返回false表示睡觉失败
+    if hour + hours > 7 then -- 再睡就要睡过头了，返回false表示睡觉失败
       return false
     end
   end
@@ -72,12 +72,12 @@ end
 
 -- 世界时间到[n]点
 EventHelper.addEvent('atHour', function (hour)
-  if (hour == 0) then
+  if hour == 0 then
     StoryHelper.forward(1, '明日出发')
-  elseif (hour == 7) then
+  elseif hour == 7 then
     -- LogHelper.debug(StoryHelper.getMainStoryIndex(), '-', StoryHelper.getMainStoryProgress(), '-', #story1.tips)
-    -- if (StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == #story1.tips) then
-    if (StoryHelper.forward(1, '今日出发')) then
+    -- if StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == #story1.tips then
+    if StoryHelper.forward(1, '今日出发') then -- 剧情进展
       story2:goToCollege()
     end
   end
@@ -97,19 +97,19 @@ EventHelper.addEvent('playerEnterGame', function (objid)
   BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 8)
   -- 调试部分 end --
 
-  if (PlayerHelper.isMainPlayer(objid)) then -- 本地玩家
-    if (not(GameDataHelper.updateStoryData())) then -- 未找到游戏数据文件
+  if PlayerHelper.isMainPlayer(objid) then -- 本地玩家
+    if not GameDataHelper.updateStoryData() then -- 未找到游戏数据文件
       -- 判断是否刚进入游戏，等待1s后检测
       TimeHelper.callFnAfterSecond(function ()
         local blockid = BlockHelper.getBlockID(MyStoryHelper.initWoodPos.x, MyStoryHelper.initWoodPos.y, MyStoryHelper.initWoodPos.z)
-        if (blockid and blockid == MyStoryHelper.woodid) then -- 刚进入游戏
+        if blockid and blockid == MyStoryHelper.woodid then -- 刚进入游戏
           GameDataHelper.updateMainIndex() -- 更新主剧情
           GameDataHelper.updateMainProgress() -- 更新主剧情进度
           StoryHelper.setLoad(true) -- 标记剧情已加载
           TimeHelper.setHour(MyMap.CUSTOM.INIT_HOUR) -- 初始化时间
           player:setPosition(MyStoryHelper.initPosition) -- 初始位置
           PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0) -- 对齐相机，朝向南方
-          -- if (not(LogPaper:hasItem(objid))) then -- 没有江湖日志
+          -- if not LogPaper:hasItem(objid) then -- 没有江湖日志
             -- LogPaper:newItem(objid, 1, true) -- 江湖日志
             BackpackHelper.addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 3) -- 给房主三颗守护宝石
             -- SaveGame:newItem(objid, 1, true) -- 保存游戏
@@ -132,7 +132,7 @@ EventHelper.addEvent('playerEnterGame', function (objid)
     end
   else -- 其他玩家
     local hostPlayer = PlayerHelper.getHostPlayer()
-    if (hostPlayer) then
+    if hostPlayer then -- 存在房主
       player:setPosition(hostPlayer:getPosition())
       StoryHelper.recover(player) -- 恢复剧情
     else -- 没有房主
@@ -145,21 +145,21 @@ end)
 
 -- 玩家进入区域
 EventHelper.addEvent('playerEnterArea', function (objid, areaid)
-  if (story1 and areaid == story1.areaid) then -- 文羽通知事件
-    if (StoryHelper.check(1, '闲来无事')) then
+  if story1 and areaid == story1.areaid then -- 文羽通知事件
+    if StoryHelper.check(1, '闲来无事') then -- 剧情进展
       story1:noticeEvent(areaid)
       -- 玩家看文羽两秒
       local player = PlayerHelper.getPlayer(objid)
       TimeHelper.callFnContinueRuns(function ()
-        if (player:isActive()) then
+        if player:isActive() then
           player:lookAt(wenyu.objid)
         end
       end, 2)
     end
-  elseif (areaid == MyAreaHelper.playerInHomeAreaId) then -- 主角进入家中
+  elseif areaid == MyAreaHelper.playerInHomeAreaId then -- 主角进入家中
     -- story1:fasterTime()
-  elseif (story3 and areaid == story3.startArea) then -- 剧情三开启区域
-    if (StoryHelper.forward(2, '临近风颖城')) then
+  elseif story3 and areaid == story3.startArea then -- 剧情三开启区域
+    if StoryHelper.forward(2, '临近风颖城') then
       AreaHelper.destroyArea(areaid)
       story3:comeToCollege()
     end
@@ -167,16 +167,16 @@ EventHelper.addEvent('playerEnterArea', function (objid, areaid)
     local player = PlayerHelper.getPlayer(objid)
     -- 监狱区域
     for i, v in ipairs(MyAreaHelper.prisonAreas) do
-      if (areaid == v) then
+      if areaid == v then
         local timerid = TimerHelper.doAfterSeconds(function ()
           local pos = player:getMyPosition()
-          if (pos) then
+          if pos then -- 玩家还在
             TimerHelper.hideTips({ objid }, timerid)
-            player:setPosition(-14.5, pos.y, pos.z)
+            player:setPosition(-14.5, pos.y, pos.z) -- 移动玩家到牢房外
             TimeHelper.callFnAfterSecond(function ()
-              if (not(BackpackHelper.hasItem(player.objid, MyMap.ITEM.TOKEN_ID))) then -- 没有令牌
+              if not BackpackHelper.hasItem(player.objid, MyMap.ITEM.TOKEN_ID) then -- 没有令牌
                 local objids = WorldHelper.spawnCreature(-14.5, pos.y, pos.z - 3, guard.actorid, 1)
-                if (objids and #objids > 0) then
+                if objids and #objids > 0 then -- 创建卫兵成功
                   player:enableMove(false, '你被卫兵盯着')
                   CreatureHelper.closeAI(objids[1])
                   ActorHelper.lookAt(objids[1], objid)
@@ -185,7 +185,7 @@ EventHelper.addEvent('playerEnterArea', function (objid, areaid)
                   TimeHelper.callFnAfterSecond(function ()
                     player:setPosition(MyStoryHelper.outCityPos)
                     player:enableMove(true, true)
-                    WorldHelper.despawnActor(objids[1])
+                    WorldHelper.despawnActor(objids[1]) -- 移除卫兵
                   end, 2)
                 end
               end
@@ -203,7 +203,7 @@ end)
 EventHelper.addEvent('playerLeaveArea', function (objid, areaid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid) then -- 跑出强盗区域
+  if mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid then -- 玩家跑出强盗区域
     story2:comeBack(objid, areaid)
   end
 end)
@@ -211,26 +211,26 @@ end)
 -- 玩家获得道具
 EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
   local mainIndex = StoryHelper.getMainStoryIndex()
-  if (mainIndex == 1) then -- 剧情一
-    if (itemid == MyMap.ITEM.WENYU_PACKAGE_ID) then -- 文羽包裹
+  if mainIndex == 1 then -- 剧情一
+    if itemid == MyMap.ITEM.WENYU_PACKAGE_ID then -- 文羽包裹
       -- StoryHelper.forward(1, '对话文羽')
       -- wenyu:doItNow() -- 不再跟随
-    elseif (itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID) then -- 村长包裹
+    elseif itemid == MyMap.ITEM.YANGWANLI_PACKAGE_ID then -- 村长包裹
       -- StoryHelper.forward(1, '对话村长')
-    -- elseif (itemid == MyMap.ITEM.TOKEN_ID) then -- 风颖城通行令牌
+    -- elseif itemid == MyMap.ITEM.TOKEN_ID then -- 风颖城通行令牌
     --   PlayerHelper.setItemDisableThrow(objid, itemid)
     --   StoryHelper.forward(1, '对话叶先生')
     --   story1:finishNoticeEvent(objid)
     end
-  elseif (mainIndex == 3) then -- 剧情三
-    if (itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID) then
-      if (StoryHelper.forward(3, '对话高先生')) then
-        BackpackHelper.removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
-      end
-    elseif (itemid == MyMap.ITEM.GAME_DATA_GET_WEAPON_ID) then
-      if (StoryHelper.forward(3, '新生武器')) then
-        BackpackHelper.removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
-      end
+  elseif mainIndex == 3 then -- 剧情三
+    if itemid == MyMap.ITEM.GAME_DATA_TALK_WITH_GAO_ID then
+      -- if StoryHelper.forward(3, '对话高先生') then
+      --   BackpackHelper.removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      -- end
+    elseif itemid == MyMap.ITEM.GAME_DATA_GET_WEAPON_ID then
+      -- if StoryHelper.forward(3, '新生武器') then
+      --   BackpackHelper.removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
+      -- end
     end
   end
 end)
@@ -238,18 +238,23 @@ end)
 -- 玩家受到伤害
 EventHelper.addEvent('playerBeHurt', function (objid, toobjid, hurtlv)
   local hp = PlayerHelper.getHp(objid)
-  if (hp and hp == 1) then -- 重伤
+  if hp and hp == 1 then -- 重伤
     -- 检测技能是否正在释放
-    if (ItemHelper.isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
+    if ItemHelper.isDelaySkillUsing(objid, '坠星') then -- 技能释放中
       FallStarBow:cancelSkill(objid)
       return
     end
     local mainIndex = StoryHelper.getMainStoryIndex()
     local mainProgress = StoryHelper.getMainStoryProgress()
-    -- if (mainIndex == 1) then -- 在落叶村受重伤
+    -- if mainIndex == 1 then -- 在落叶村受重伤
     --   story1:playerBadHurt(objid)
-    if (mainIndex == 2 and mainProgress == 4) then -- 杀强盗受重伤
+    if mainIndex == 2 and mainProgress == 4 then -- 杀强盗受重伤
       story2:playerBadHurt(objid)
+      return
+    end
+    local player = PlayerHelper.getPlayer(objid)
+    if story3:isTesting(player) then -- 如果是在考试
+      story3:failTest(player)
     end
   end
 end)
@@ -258,9 +263,9 @@ end)
 EventHelper.addEvent('actorLeaveArea', function (objid, areaid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid) then
+  if mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid then -- 遭遇强盗开战剧情
     local actorid = CreatureHelper.getActorID(objid)
-    if (actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid) then
+    if actorid == QiangdaoLouluo.actorid or actorid == QiangdaoXiaotoumu.actorid then -- 强盗跑出圈，让他跑回来
       story2:comeBack(objid, areaid)
     end
   end
@@ -268,28 +273,28 @@ end)
 
 -- 生物死亡
 EventHelper.addEvent('actorDie', function (objid, toobjid)
-  if (StoryHelper.getMainStoryIndex() == 2) then
+  if StoryHelper.getMainStoryIndex() == 2 then -- 剧情二中，提示剩余强盗数量
     story2:showMessage(objid)
   end
 end)
 
 -- 完成方块挖掘
 EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
-  if (blockid == 422 or blockid == 123) then -- 粗制岩石砖 冰块插件
+  if blockid == 422 or blockid == 123 then -- 粗制岩石砖 冰块插件
     local pos = ActorHelper.getMyPosition(objid)
-    if (pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633) then -- 风颖城范围
+    if pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633 then -- 风颖城范围
       local player = PlayerHelper.getPlayer(objid)
       table.insert(player.destroyBlock, { blockid = blockid, x = x, y = y, z = z })
-      if (player.whichChoose and player.whichChoose == 'breakCity') then
+      if player.whichChoose and player.whichChoose == 'breakCity' then -- 破坏城墙卫兵出现对话
         player.whichChoose = nil
         guard:speakTo(objid, 0, '你还敢挖！！！')
         TimeHelper.callFnAfterSecond(function ()
           MyStoryHelper.beatBreakCityPlayer(player)
         end, 1)
       else
-        local pos = AreaHelper.getEmptyPos(player)
+        local pos = AreaHelper.getEmptyPos(player) -- 找到玩家附近的一个空位置
         local objids = WorldHelper.spawnCreature(pos.x, pos.y, pos.z, guard.actorid, 1)
-        if (objids and #objids > 0) then
+        if objids and #objids > 0 then -- 创建卫兵成功
           player:enableMove(false, '你被卫兵盯着')
           CreatureHelper.closeAI(objids[1])
           ActorHelper.lookAt(objids[1], objid)

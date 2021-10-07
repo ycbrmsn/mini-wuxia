@@ -264,6 +264,12 @@ function EventHelper.actorCollide (objid, toobjid)
   EventHelper.customEvent('actorCollide', objid, toobjid)
 end
 
+-- 生物开始攻击
+function EventHelper.actorAttack (objid, toobjid)
+  ActorHelper.actorAttack(objid, toobjid)
+  EventHelper.customEvent('actorAttack', objid, toobjid)
+end
+
 -- 生物攻击命中
 function EventHelper.actorAttackHit (objid, toobjid)
   ActorHelper.actorAttackHit(objid, toobjid)
