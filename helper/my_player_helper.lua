@@ -126,6 +126,10 @@ EventHelper.addEvent('playerDie', function (objid, toobjid)
   elseif (mainIndex == 3) then
     local pos = MyStoryHelper.initPosition3
     PlayerHelper.reviveToPos(objid, pos.x, pos.y, pos.z)
+    local player = PlayerHelper.getPlayer(objid)
+    if story3:isTesting(player) then -- 如果是在考试
+      story3:failTest(player)
+    end
   end
   -- if (num == 0) then -- 玩家没有守护宝石
     -- if (PlayerHelper.isMainPlayer(objid)) then -- 房主

@@ -47,6 +47,7 @@ function Story3:new ()
     airWallArea = nil,
     testAreaPosBeg = MyPosition:new(-12, 7, 594), -- 考核区域起点
     testAreaPosEnd = MyPosition:new(1, 7, 607), -- 考核区域终点
+    failTestPos = MyPosition:new(17, 8.5, 605), -- 考试失败后江火出现位置
   }
   self:checkData(data)
 
@@ -201,17 +202,19 @@ function Story3:startTest (player)
   local pos = MyPosition:new(-10, 7, 602)
   jianghuo:setPosition(pos) -- 移动江火过来
   jianghuo:wantMove('forceDoNothing', { pos }) -- 避免江火乱跑
+  jianghuo:nextWantLookAt('forceDoNothing', player.objid, 5)
   jianghuo:nextWantDoNothing('forceDoNothing')
+
   jianghuo:speakTo(player.objid, ws:use(), '现在我是考官，考核内容就是击败我。')
-  jianghuo:lookAt(player, ws:get())
+  -- jianghuo:lookAt(player, ws:get())
   player:speakSelf(ws:use(), '我会全力以赴的。')
-  jianghuo:lookAt(player, ws:get()) -- 第二次看是避免第一次没看
+  -- jianghuo:lookAt(player, ws:get()) -- 第二次看是避免第一次没看
   jianghuo:speakTo(player.objid, ws:use(), '当然，你全力以赴也不可能击败我。因此，我只会拿出三成的实力。')
   jianghuo:speakTo(player.objid, ws:use(), '好了，考核正式开始。')
   TimeHelper.callFnFastRuns(function ()
     CreatureHelper.setTeam(jianghuo.objid, 2) -- 将江火的队伍变为蓝队
     CreatureHelper.setWalkSpeed(jianghuo.objid, 400) -- 设置移动速度
-    PlayerHelper.setPlayerEnableBeKilled(player.objid, false) -- 玩家不可被击败
+    -- PlayerHelper.setPlayerEnableBeKilled(player.objid, false) -- 玩家不可被击败
     jianghuo:openAI()
     player:enableMove(true, true)
   end, ws:use())
@@ -278,8 +281,9 @@ function Story3:passTest (player)
   local ws = WaitSeconds:new()
   CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
   CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
-  PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 玩家可被击败
-  jianghuo:closeAI()
+  -- PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 玩家可被击败
+  jianghuo:stopRun()
+  jianghuo:wantLookAt('forceDoNothing', player.objid, 5)
   jianghuo.action:playDie() -- 死亡动作
   player:enableMove(false, '剧情中')
   jianghuo:speakTo(player.objid, 0, '你小子下手可真狠。')
@@ -317,12 +321,20 @@ function Story3:failTest (player)
   local ws = WaitSeconds:new()
   CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
   CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
-  PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 玩家可被击败
-  jianghuo:closeAI()
+  -- PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 玩家可被击败
+  jianghuo:setPosition(story3.failTestPos)
+  jianghuo:wantApproach('forceDoNothing', { story3.failTestPos }) -- 避免江火乱跑
+  jianghuo:nextWantLookAt('forceDoNothing', player.objid, 5)
+  PlayerHelper.rotateCamera(player.objid, ActorHelper.FACE_YAW.EAST, 0) -- 看向西方
   player:enableMove(false, '剧情中')
-  jianghuo:speakTo(player.objid, 0, '很遗憾，你没有通过考试。下次再来吧。')
-  player:speakSelf(ws:use(), '好像有点难。')
-  jianghuo:speakTo(player.objid, ws:use(), '如果不难那考试多没意思。再去准备准备吧。')
+  jianghuo:speakTo(player.objid, ws:use(), '很遗憾，你没有通过考试。')
+  player:speakSelf(ws:use(), '好难啊。')
+  jianghuo:speakTo(player.objid, ws:use(), '如果不难那考试多没意思。再去准备准备补考吧。')
+  -- 恢复生命
+  TimeHelper.callFnFastRuns(function ()
+    ActorHelper.playAndStopBodyEffectById(jianghuo.objid, BaseConstant.BODY_EFFECT.LIGHT26)
+    CreatureHelper.resetHp(jianghuo.objid)
+  end, ws:get())
   TimeHelper.callFnFastRuns(function ()
     jianghuo:setPlayerClickEffective(player.objid, true) -- 可以点击对话
     jianghuo:doItNow() -- 做现在该做的事

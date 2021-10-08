@@ -252,10 +252,6 @@ EventHelper.addEvent('playerBeHurt', function (objid, toobjid, hurtlv)
       story2:playerBadHurt(objid)
       return
     end
-    local player = PlayerHelper.getPlayer(objid)
-    if story3:isTesting(player) then -- 如果是在考试
-      story3:failTest(player)
-    end
   end
 end)
 
