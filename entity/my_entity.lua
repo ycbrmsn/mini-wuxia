@@ -397,11 +397,11 @@ function TalkAnt:includeTask (taskid, state)
 end
 
 -- 前置互斥任务
-function TalkAnt:excludeTask (taskid)
+function TalkAnt:excludeTask (taskid, state)
   if type(taskid) == 'table' then
     taskid = taskid.id
   end
-  return TalkAnt:new({ t = 2, taskid = taskid })
+  return TalkAnt:new({ t = 2, taskid = taskid, state = state })
 end
 
 -- 世界时间
@@ -509,6 +509,10 @@ function TalkAnt:isMeet (playerid)
   elseif self.t == 2 then -- 前置互斥任务
     -- LogHelper.debug(self)
     if TaskHelper.hasTask(playerid, taskid) then
+      if self.state then -- 任务进度
+        local state = TaskHelper.getTaskState(playerid, taskid)
+        return state ~= self.state
+      end
       return false
     end
   elseif self.t == 3 then -- 世界时间
