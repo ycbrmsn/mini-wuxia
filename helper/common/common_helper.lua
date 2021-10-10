@@ -9,7 +9,7 @@ do
   end
 end
 
--- 参数 f:函数 p:参数 methodDesc:接口描述 ... 参数名=参数值
+-- 参数 f:函数 methodDesc:接口描述 ... 参数名=参数值
 function CommonHelper.callIsSuccessMethod (f, methodDesc, ...)
   for i = 1, CommonHelper.repeatTime do
     local result = f()
@@ -33,7 +33,7 @@ end
 
 function CommonHelper.callResultMethod (f, methodDesc, ...)
   for i = 1, CommonHelper.repeatTime do
-    local arr = {f(p)}
+    local arr = {f()}
     if arr[1] == ErrorCode.OK then
       return table.unpack(arr, 2)
     else
