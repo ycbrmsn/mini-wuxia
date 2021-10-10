@@ -321,8 +321,9 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, cTask)
   -- end
 end
 
--- 初始化任务相关选项
-function TaskHelper.initTaskTalkChoices (player, cTask)
+-- 初始化任务相关选项 ...能够接受的条件
+function TaskHelper.initTaskTalkChoices (player, cTask, ...)
+  local ants = { ... }
   local arr = {}
   local realid = cTask:getRealid()
   table.insert(arr, PlayerTalk:continue(cTask.name .. '任务#G(已接受)')
@@ -335,8 +336,9 @@ function TaskHelper.initTaskTalkChoices (player, cTask)
       TaskHelper.addTempTask(player.objid, realid + 2)
       player:resetTalkIndex(0)
   end))
+  table.insert(ants, TalkAnt:excludeTask(realid))
   table.insert(arr, PlayerTalk:continue(cTask.name .. '任务')
-    :ant(TalkAnt:excludeTask(realid)):call(function (player)
+    :ant(table.unpack(ants)):call(function (player)
       TaskHelper.addTempTask(player.objid, cTask.id)
       player:resetTalkIndex(0)
   end))
