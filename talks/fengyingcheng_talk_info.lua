@@ -28,6 +28,13 @@ yexiaolongTalkInfos = {
       [0] = {
         TalkSession:reply('你是来报名的吗？'),
         TalkSession:speak('是的，是的。'),
+        TalkSession:reply('……'):ant(TalkAnt:atMostLevel(4)),
+        TalkSession:noReply('这还不到5级，去了和送死差不多。'):ant(TalkAnt:atMostLevel(4)),
+        TalkSession:reply('你现在太羸弱了。等你变强一点再来吧。'):ant(
+          TalkAnt:atMostLevel(4)
+        ):call(function (player, actor)
+          TalkHelper.turnTalkIndex(player.objid, actor)
+        end),
         TalkSession:reply('嗯，我看你天庭饱满，骨骼惊奇，应该没什么大问题。'),
         TalkSession:speak('真的吗？那我可以进入学院了吗？'),
         TalkSession:reply('必要的考验还是需要的。听说这里附近有一个恶狼谷。你去杀十匹恶狼证明你的实力。'),
@@ -61,7 +68,7 @@ yexiaolongTalkInfos = {
     },
     progress = {
       [0] = {
-        TalkSession:noDialogue():call(function(player, actor)
+        TalkSession:noDialogue():call(function (player, actor)
           player:speak(0, '先生，我已经消灭了足够的恶狼了。')
           TaskHelper.finishTask(player.objid, xiaomieelangTask)
         end),
@@ -121,22 +128,22 @@ yexiaolongTalkInfos = {
         TalkSession:speak('先生，我准备好了。'),
         TalkSession:reply('这天还没亮，等天亮了再说。'):ant(
           TalkAnt:betweenHour(0, 5) -- 天没亮
-        ):call(function(player, actor)
+        ):call(function (player, actor)
           TalkHelper.turnTalkIndex(player.objid, actor)
         end),
         TalkSession:reply('今天不早了，等明天再说。'):ant(
           TalkAnt:betweenHour(20, 23) -- 已天黑
-        ):call(function(player, actor)
+        ):call(function (player, actor)
           TalkHelper.turnTalkIndex(player.objid, actor)
         end),
         TalkSession:reply('还有人在考试呢。先等一等。'):ant(
           TalkAnt:custom(function ()
             return story3.testObjid and true or false
           end) -- 有人在考试
-        ):call(function(player, actor)
+        ):call(function (player, actor)
           TalkHelper.turnTalkIndex(player.objid, actor)
         end),
-        TalkSession:reply('很好。这就送你去练武场。'):call(function(player, actor)
+        TalkSession:reply('很好。这就送你去练武场。'):call(function (player, actor)
           story3:startTest(player)
         end),
       },
@@ -265,7 +272,7 @@ qianbingweiTalkInfos = {
     progress = {
       [0] = {
         TalkSession:speak('我击败了一些叛军。'),
-        TalkSession:reply('干得不错。这是你的奖励。'):call(function(player, actor)
+        TalkSession:reply('干得不错。这是你的奖励。'):call(function (player, actor)
           TaskHelper.finishTask(player.objid, jibaipanjunTask)
         end),
       },
@@ -372,7 +379,7 @@ gaoxiaohuTalkInfos = {
     progress = {
       [0] = {
         TalkSession:speak('高先生，不辱使命。'),
-        TalkSession:reply('你果然做到了。嗯，这个给你。你去找小龙吧，他有话对你说。'):call(function(player, actor)
+        TalkSession:reply('你果然做到了。嗯，这个给你。你去找小龙吧，他有话对你说。'):call(function (player, actor)
           TaskHelper.finishTask(player.objid, xiaomieqiangdaoTask)
           StoryHelper.forwardByPlayer(player.objid, 3, '消灭大头目')
         end),
