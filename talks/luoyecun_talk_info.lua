@@ -170,7 +170,7 @@ wangdaliTalkInfos = {
       [0] = {
         TalkSession:reply('这不是{{:getName}}嘛。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask, TalkAnt:atLeastLevel(10)))
           playerTalks:add(PlayerTalk:continue('武器介绍'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.ST12)
             player:resetTalkIndex(0)
@@ -214,7 +214,7 @@ miaolanTalkInfos = {
       [0] = {
         TalkSession:speak('我受伤了，需要治疗一下。'),
         TalkSession:noDialogue():call(function (player, actor)
-          actor:setPlayerClickEffective(player.objid, false)
+          actor:setPlayerClickEffective(player.objid, false) -- 禁止对话
           actor:speakTo(player.objid, 0, '我来看看。')
           player:enableMove(false, '检查中')
           TimeHelper.callFnAfterSecond (function ()
@@ -281,7 +281,7 @@ miaolanTalkInfos = {
       [0] = {
         TalkSession:reply('{{:getName}}，又见到你了。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask, TalkAnt:atLeastLevel(5)))
           playerTalks:add(PlayerTalk:continue('疗伤'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.ST10)
             player:resetTalkIndex(0)
