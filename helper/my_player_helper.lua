@@ -20,6 +20,9 @@ end)
 -- 玩家离开游戏
 EventHelper.addEvent('playerLeaveGame', function (objid)
   MusicHelper.stopBGM(objid)
+  if story3.testObjid and story3.testObjid == objid then -- 如果是在考试的人离开游戏，则关闭考试
+    story3:closeTest(objid)
+  end
 end)
 
 -- 玩家进入区域

@@ -215,7 +215,7 @@ function Story3:startTest (player)
   if not CreatureHelper.isHpFull(jianghuo.objid) then -- 没有满血
     jianghuo:speakTo(player.objid, ws:use(), '嗯？我状态竟然没有恢复。')
     TimeHelper.callFnFastRuns(function ()
-      jianghuo.action.playAttack()
+      jianghuo.action:playAttack()
       ActorHelper.recoverAllHp(jianghuo.objid) -- 恢复生命
     end, ws:use())
   end
@@ -327,9 +327,9 @@ function Story3:failTest (player)
   end
   StoryHelper.forwardByPlayer(player.objid, 3, '考试没通过') -- 剧情前进
   TaskHelper.removeTask(player.objid, story3:getTaskIdByName('开始考试')) -- 移除开始考试任务标志
-  local ws = WaitSeconds:new()
   CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
   CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
+  local ws = WaitSeconds:new()
   -- PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 玩家可被击败
   jianghuo:setPosition(story3.failTestPos)
   jianghuo:wantApproach('forceDoNothing', { story3.failTestPos }) -- 避免江火乱跑
@@ -341,6 +341,7 @@ function Story3:failTest (player)
   jianghuo:speakTo(player.objid, ws:use(), '如果不难那考试多没意思。再去准备准备补考吧。')
   -- 恢复生命
   TimeHelper.callFnFastRuns(function ()
+    jianghuo.action:playAttack()
     ActorHelper.recoverAllHp(jianghuo.objid) -- 恢复生命
   end, ws:get())
   TimeHelper.callFnFastRuns(function ()
@@ -349,6 +350,23 @@ function Story3:failTest (player)
     player:enableMove(true, true) -- 恢复移动
     story3.testObjid = nil -- 考试结束
   end, ws:use())
+end
+
+--[[
+  关闭考试，用于考试玩家中途退出游戏
+  @param    {number} objid 玩家id
+  @author   莫小仙
+  @datetime 2021-10-10 19:28:09
+]]
+function Story3:closeTest (objid)
+  StoryHelper.forwardByPlayer(objid, 3, '考试没通过') -- 剧情前进
+  TaskHelper.removeTask(objid, story3:getTaskIdByName('开始考试')) -- 移除开始考试任务标志
+  CreatureHelper.setTeam(jianghuo.objid, 1) -- 将江火的队伍变为红队
+  CreatureHelper.setWalkSpeed(jianghuo.objid, -1) -- 恢复移动速度
+  jianghuo:setPlayerClickEffective(objid, true) -- 可以点击对话
+  jianghuo:doItNow() -- 做现在该做的事
+  jianghuo:toastSpeak('人呢？')
+  story3.testObjid = nil -- 考试结束
 end
 
 function Story3:recover (player)

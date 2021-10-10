@@ -1170,6 +1170,7 @@ function Jianghuo:new ()
     objid = 4402063235,
     isSingleton = true, -- 唯一
     unableBeKilled = true, -- 不可被杀死
+    teamid = 1, -- 红队
     initPosition = MyPosition:new(-5.5, 7.5, 599.5), -- 学院演武场内
     bedData = {
       MyPosition:new(17.5, 8.5, 608.5), -- 床尾位置

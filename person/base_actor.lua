@@ -661,6 +661,10 @@ function BaseActor:initActor ()
     if self.immuneFall then
       ActorHelper.setImmuneFall(self.objid, true)
     end
+    -- 如果生物设置了队伍，则设置队伍（用于可能会在游戏中队伍被改变的情况，也许会因为某些原因如中途退出游戏而导致没有改回来）
+    if self.teamid then
+      CreatureHelper.setTeam(self.objid, self.teamid)
+    end
     self:keepSingleIfNeed()
     self:wantAtHour()
     self.isInit = true
