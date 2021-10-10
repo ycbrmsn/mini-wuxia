@@ -25,7 +25,7 @@ function BlockHelper.getDoorState (x, y, z)
   local data2 = BlockHelper.getBlockData(x, y + 1, z)
   for i, v in ipairs(BlockHelper.doorStateData) do
     for ii, vv in ipairs(v) do
-      if (data1 == vv[1] and data2 == vv[2]) then
+      if data1 == vv[1] and data2 == vv[2] then
         return i
       end
     end
@@ -35,7 +35,7 @@ end
 function BlockHelper.getCloseDoorState (x, y, z)
   local pos = MyPosition:new(x, y, z)
   for k, doorInfo in pairs(AreaHelper.allDoorAreas) do
-    if (pos:equals(doorInfo.pos)) then
+    if pos:equals(doorInfo.pos) then
       return doorInfo.state
     end
   end
@@ -59,7 +59,7 @@ end
 
 -- 开门，参数为x, y, z或者table
 -- function BlockHelper.openDoor (x, y, z)
---   if (BlockHelper.isDoorOpen(x, y, z)) then -- 门开着
+--   if BlockHelper.isDoorOpen(x, y, z) then -- 门开着
 --     -- do nothing
 --   else -- 门没有打开
 --     local blockid = BlockHelper.getBlockID(x, y, z)
@@ -87,7 +87,7 @@ end
 
 -- 关门，参数为x, y, z或者table
 -- function BlockHelper.closeDoor (x, y, z)
---   if (BlockHelper.isDoorOpen(x, y, z)) then -- 门开着
+--   if BlockHelper.isDoorOpen(x, y, z) then -- 门开着
 --     local blockid = BlockHelper.getBlockID(x, y, z)
 --     local data1 = BlockHelper.getBlockData(x, y, z)
 --     local data2 = BlockHelper.getBlockData(x, y + 1, z)
@@ -101,7 +101,7 @@ end
 -- end
 function BlockHelper.closeDoor (x, y, z)
   local isOpen, closeDoorState = BlockHelper.isDoorOpen(x, y, z)
-  if (isOpen) then -- 门开着
+  if isOpen then -- 门开着
     local blockid = BlockHelper.getBlockID(x, y, z)
     local doorData = BlockHelper.doorStateData[closeDoorState][1]
     BlockHelper.setBlockAll(x, y, z, blockid, doorData[1])
@@ -114,7 +114,7 @@ end
 
 -- 开关门，参数为x, y, z或者table
 function BlockHelper.toggleDoor (x, y, z)
-  if (BlockHelper.isDoorOpen(x, y, z)) then
+  if BlockHelper.isDoorOpen(x, y, z) then
     BlockHelper.closeDoor(x, y, z)
   else
     BlockHelper.openDoor(x, y, z)
@@ -124,7 +124,7 @@ end
 -- 指定位置处的蜡烛台加入集合，参数为（myPosition, blockid）或者 如下
 function BlockHelper.addCandle (x, y, z, blockid)
   local myPosition
-  if (type(x) == 'number') then
+  if type(x) == 'number' then
     myPosition = MyPosition:new(x, y, z)
   else
     myPosition = x
@@ -151,9 +151,9 @@ end
 -- 检查指定位置处是否是蜡烛台
 function BlockHelper.checkIsCandle (myPosition)
   local isCandle, blockid = MyCandle:isCandle(myPosition)
-  if (isCandle) then
+  if isCandle then
     local candle = BlockHelper.getCandle(myPosition)
-    if (not(candle)) then
+    if not candle then
       candle = BlockHelper.addCandle(myPosition, blockid)
     end
     return true, candle
@@ -164,7 +164,7 @@ end
 
 -- 检查被破坏/移除的方块是否是蜡烛台
 function BlockHelper.checkIfRemoveCandle (myPosition, blockid)
-  if (MyCandle:isBlockCandle(blockid)) then
+  if MyCandle:isBlockCandle(blockid) then
     BlockHelper.removeCandle(myPosition)
   end
 end
@@ -173,10 +173,10 @@ function BlockHelper.getWhoseCandle (myPosition)
   local index = 1
   -- myPosition = myPosition:floor()
   for k, v in pairs(ActorHelper.getAllActors()) do
-    if (v.candlePositions and #v.candlePositions > 0) then
+    if v.candlePositions and #v.candlePositions > 0 then
       for kk, vv in pairs(v.candlePositions) do
         index = index + 1
-        if (vv:equals(myPosition)) then
+        if vv:equals(myPosition) then
           return v
         end
       end
@@ -186,14 +186,14 @@ function BlockHelper.getWhoseCandle (myPosition)
 end
 
 function BlockHelper.handleCandle (myPosition, isLit)
-  if (not(MyPosition:isPosition(myPosition))) then
+  if not MyPosition:isPosition(myPosition) then -- 如果不是位置对象，则构造一个位置对象
     myPosition = MyPosition:new(myPosition)
   end
   local isCandle, candle = BlockHelper.checkIsCandle(myPosition)
-  if (isCandle) then
-    if (type(isLit) == 'nil') then
+  if isCandle then
+    if type(isLit) == 'nil' then
       candle:toggle()
-    elseif (isLit) then
+    elseif isLit then
       candle:light()
     else
       candle:putOut()
@@ -203,12 +203,12 @@ function BlockHelper.handleCandle (myPosition, isLit)
 end
 
 function BlockHelper.checkCandle (objid, blockid, pos)
-  if (MyCandle:isCandle(blockid)) then
+  if MyCandle:isCandle(blockid) then
     -- 处理蜡烛台
     local candle = BlockHelper.handleCandle(pos)
-    if (candle) then
+    if candle then
       local myActor = BlockHelper.getWhoseCandle(pos)
-      if (myActor) then
+      if myActor then
         local player = PlayerHelper.getPlayer(objid)
         myActor:candleEvent(player, candle)
       end
@@ -241,7 +241,7 @@ end
 -- 切换开关状态
 function BlockHelper.toggleSwitch (pos)
   local isActive = BlockHelper.getBlockSwitchStatus(pos)
-  BlockHelper.setBlockSwitchStatus(pos, not(isActive))
+  BlockHelper.setBlockSwitchStatus(pos, not isActive)
 end
 
 -- 是否是水（3静态水4水）
@@ -253,7 +253,7 @@ end
 -- 放置方块与空位置
 function BlockHelper.placeBlockWhenEmpty (blockid, x, y, z, face)
   local bid = BlockHelper.getBlockID(x, y, z)
-  if (bid and bid == BLOCKID.AIR) then
+  if bid and bid == BLOCKID.AIR then
     -- BlockHelper.placeBlock(blockid, x, y, z, face)
     return BlockHelper.setBlockAll(x, y, z, blockid, face)
   end

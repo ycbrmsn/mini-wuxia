@@ -6,7 +6,7 @@ TeamHelper = {
 -- 获取玩家的队伍颜色
 function TeamHelper.getTeamColor (objid)
   local teamid = PlayerHelper.getTeam(objid)
-  if (teamid) then
+  if teamid then
     return TeamHelper.teamColor[teamid]
   else
     return nil

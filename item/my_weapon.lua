@@ -17,12 +17,12 @@ DrinkBloodSword = MyWeapon:new(MyWeaponAttr.drinkBloodSword)
 function DrinkBloodSword:attackHit (objid, toobjid)
   local hp = self.hp + self.addHpPerLevel * self.level
   local toHp
-  if (ActorHelper.isPlayer(toobjid)) then -- 命中玩家
+  if ActorHelper.isPlayer(toobjid) then -- 命中玩家
     toHp = PlayerHelper.getHp(toobjid)
   else -- 命中生物
     toHp = CreatureHelper.getHp(toobjid)
   end
-  if (toHp < hp) then
+  if toHp < hp then
     hp = toHp
   end
   local player = PlayerHelper.getPlayer(objid)
@@ -44,17 +44,17 @@ function StrongAttackSword:useItem1 (objid)
     local areaid = AreaHelper.createNineCubicArea(pos)
     local objids = ActorHelper.getAllOtherTeamActorsInAreaId(objid, areaid)
     AreaHelper.destroyArea(areaid)
-    if (#objids > 0) then
+    if #objids > 0 then
       ItemHelper.recordUseSkill(objid, self.id, self.cd)
       local tempDistance
       for ii, vv in ipairs(objids) do
         local distance = MathHelper.getDistance(playerPos, ActorHelper.getMyPosition(vv))
-        if (not(tempDistance) or distance < tempDistance) then
+        if not tempDistance or distance < tempDistance then -- 未初始化 或 不是最小值
           tempDistance = distance
           targetObjid = vv
         end
       end
-      if (targetObjid) then -- 发现目标
+      if targetObjid then -- 发现目标
         local itemid = MyMap.ITEM.COMMON_PROJECTILE_ID -- 通用投掷物id
         local targetPos = ActorHelper.getMyPosition(targetObjid)
         local initPos = MyPosition:new(targetPos.x, targetPos.y + 0.2, targetPos.z)
@@ -65,7 +65,7 @@ function StrongAttackSword:useItem1 (objid)
       end
     end
   end
-  if (not(targetObjid)) then
+  if not targetObjid then
     ChatHelper.sendSystemMsg('闪袭技能有效范围内未发现目标', objid)
   end
 end
@@ -77,18 +77,18 @@ function StrongAttackSword:projectileHit (projectileInfo, toobjid, blockid, pos)
   local player = PlayerHelper.getPlayer(objid)
   local playerPos = projectileInfo.pos
   WorldHelper.playAndStopBodyEffectById(playerPos, BaseConstant.BODY_EFFECT.SMOG1)
-  if (toobjid > 0) then -- 命中生物（似乎命中同队生物不会进入这里）
+  if toobjid > 0 then -- 命中生物（似乎命中同队生物不会进入这里）
     player:setDistancePosition(toobjid, -1)
     player:lookAt(toobjid)
     -- 击退效果
     ActorHelper.appendFixedSpeed(toobjid, 2, player:getMyPosition())
     -- 判断是否是敌对生物
-    if (not(ActorHelper.isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
+    if not ActorHelper.isTheSameTeamActor(objid, toobjid) then -- 敌对生物，则造成伤害
       local hurt = projectileInfo.hurt
       -- 伤害
       player:damageActor(toobjid, hurt)
     end
-  elseif (blockid > 0) then -- 命中方块
+  elseif blockid > 0 then -- 命中方块
     player:setMyPosition(pos)
     ChatHelper.sendSystemMsg('闪袭技能放偏了', objid)
   end
@@ -113,7 +113,7 @@ function ChaseWindSword:useItem1 (objid)
   local weaponType = objid .. '-' .. self.id
   TimeHelper.callFnFastRuns (function ()
     local pos = ActorHelper.getMyPosition(projectileid)
-    if (pos.x) then
+    if pos.x then
       WorldHelper.despawnActor(projectileid) -- 移除投掷物
       self:moveAndRecoverWeapon(player, objid, playerPos, pos, self, curDur)
     else
@@ -131,11 +131,11 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
   local player = PlayerHelper.getPlayer(objid)
   local playerPos = projectileInfo.pos
   local curDur = projectileInfo.curDur -- 耐久度
-  if (toobjid > 0) then -- 命中生物（似乎命中同队生物不会进入这里）
+  if toobjid > 0 then -- 命中生物（似乎命中同队生物不会进入这里）
     self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
     ActorHelper.appendFixedSpeed(toobjid, 2, player:getMyPosition()) -- 冲击
     -- 判断是否是敌对生物
-    if (not(ActorHelper.isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
+    if not ActorHelper.isTheSameTeamActor(objid, toobjid) then -- 敌对生物，则造成伤害
       local toPos = ActorHelper.getMyPosition(toobjid)
       local distance = MathHelper.getDistance(playerPos, toPos)
       local dam = item.damage + item.level * item.addDamagePerLevel
@@ -143,7 +143,7 @@ function ChaseWindSword:projectileHit (projectileInfo, toobjid, blockid, pos)
       -- LogHelper.debug(math.floor(distance))
       player:damageActor(toobjid, damage)
     end
-  elseif (blockid > 0) then -- 命中方块
+  elseif blockid > 0 then -- 命中方块
     self:moveAndRecoverWeapon(player, objid, playerPos, pos, item, curDur)
   end
 end
@@ -159,7 +159,7 @@ end
 -- 收回追风剑
 function ChaseWindSword:recoverWeapon (playerid, item, curDur)
   local itemid = PlayerHelper.getCurToolID(playerid)
-  if (itemid and itemid > 0) then -- 手上拿了别的东西
+  if itemid and itemid > 0 then -- 手上拿了别的东西
     item:newItem(playerid, 1)
     local num, backpacks = BackpackHelper.getItemNum(playerid, item.id)
     BackpackHelper.setGridItem(playerid, backpacks[1], item.id, 1, curDur)
@@ -210,7 +210,7 @@ function SealDemonKnife:useItem1 (objid)
   local areaid = AreaHelper.createAreaRect(playerPos, { x = skillRange, y = skillRange, z = skillRange })
   local objids = ActorHelper.getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper.destroyArea(areaid)
-  if (#objids > 0) then
+  if #objids > 0 then
     ItemHelper.recordUseSkill(objid, self.id, self.cd)
     local ticks = (self.skillTime + self.level * self.addSkillTimePerLevel) * 20
     for i, v in ipairs(objids) do
@@ -277,7 +277,7 @@ function OverlordSpear:useItem1 (objid)
   ActorHelper.clearAllBadBuff(objid) -- 清除全部减益buff
   local curHp = PlayerHelper.getHp(objid)
   local maxHp = PlayerHelper.getMaxHp(objid)
-  if (curHp < maxHp) then -- 恢复损失生命的20%
+  if curHp < maxHp then -- 恢复损失生命的20%
     local coverHp = self.coverHp + self.level * addCoverHpPerLevel
     local hp = curHp + math.floor((maxHp - curHp) * coverHp)
     PlayerHelper.setHp(objid, hp)
@@ -309,7 +309,7 @@ function ShockSoulSpear:useItem1 (objid)
   local areaid = AreaHelper.createAreaRect(playerPos, { x = skillRange, y = skillRange, z = skillRange })
   local objids = ActorHelper.getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper.destroyArea(areaid)
-  if (#objids > 0) then
+  if #objids > 0 then
     ItemHelper.recordUseSkill(objid, self.id, self.cd)
     local ticks = (self.skillTime + self.level * self.addSkillTimePerLevel) * 20
     for i, v in ipairs(objids) do
@@ -351,13 +351,13 @@ FallStarBow = MyWeapon:new(MyWeaponAttr.fallStarBow)
 
 function FallStarBow:useItem3 (objid)
   -- 检测技能是否正在释放
-  if (ItemHelper.isDelaySkillUsing(objid, '坠星')) then -- 技能释放中
+  if ItemHelper.isDelaySkillUsing(objid, '坠星') then -- 技能释放中
     self:cancelSkill(objid)
     return
   end
   local player = PlayerHelper.getPlayer(objid)
   -- 检测技能释放条件
-  if (self:getObjids(objid, 1)) then
+  if self:getObjids(objid, 1) then
     ItemHelper.recordUseSkill(objid, self.id, self.cd) -- 记录新的技能
     player:enableMove(false)
     -- ChatHelper.sendSystemMsg('释放技能中无法移动', objid)
@@ -369,7 +369,7 @@ end
 function FallStarBow:getObjids (objid, index)
   -- 8格内的敌对生物
   local player = PlayerHelper.getPlayer(objid)
-  if (not(player:ableUseSkill('坠星'))) then
+  if not player:ableUseSkill('坠星') then -- 不能使用坠星技能
     return false
   end
   local playerPos = player:getMyPosition()
@@ -378,8 +378,8 @@ function FallStarBow:getObjids (objid, index)
   local objids = ActorHelper.getAllOtherTeamActorsInAreaId(objid, areaid)
   AreaHelper.destroyArea(areaid)
   local msg
-  if (#objids == 0) then
-    if (index == 1) then
+  if #objids == 0 then
+    if index == 1 then
       msg = '坠星技能有效范围内未发现目标'
     else
       msg = '坠星技能有效范围内已无目标'
@@ -389,8 +389,8 @@ function FallStarBow:getObjids (objid, index)
   end
   -- 查询背包内箭矢数量
   local num = BackpackHelper.getItemNumAndGrid(objid, MyMap.ITEM.ARROW_ID)
-  if (num < #objids) then -- 箭矢数量不足
-    if (index == 1) then
+  if num < #objids then -- 箭矢数量不足
+    if index == 1 then
       msg = '箭矢数量不足'
     else
       msg = '箭矢数量不足，技能终止'
@@ -409,7 +409,7 @@ function FallStarBow:useSkill (objid, index)
   player.action:playAttack()
   local time, idx = TimeHelper.callFnAfterSecond (function ()
     local objids = self:getObjids(objid, index + 1)
-    if (not(objids)) then -- 没有目标
+    if not objids then -- 没有目标
       self:cancelSkill(objid)
       return
     end
@@ -437,7 +437,7 @@ end
 
 -- 投掷物命中
 function FallStarBow:projectileHit (projectileInfo, toobjid, blockid, pos)
-  if (toobjid > 0) then
+  if toobjid > 0 then
     local objid = projectileInfo.objid
     local player = PlayerHelper.getPlayer(objid)
     ActorHelper.appendFixedSpeed(toobjid, 2, player:getMyPosition()) -- 箭矢冲击
@@ -453,7 +453,7 @@ function OneByOneBow:useItem3 (objid)
   -- 查询背包内箭矢数量
   local num = BackpackHelper.getItemNumAndGrid(objid, MyMap.ITEM.ARROW_ID)
   local times = self.arrowNum + self.level * self.addArrowNumPerLevel
-  if (num < times) then
+  if num < times then
     ChatHelper.sendSystemMsg('箭矢数量不足', objid)
     return false
   end
@@ -467,7 +467,7 @@ function OneByOneBow:useItem3 (objid)
     for i = 1, times do
       TimeHelper.callFnFastRuns(function ()
         local num = BackpackHelper.getItemNumAndGrid(objid, MyMap.ITEM.ARROW_ID)
-        if (num > 0 and player:ableUseSkill('连珠')) then -- 有箭矢并且能释放技能
+        if num > 0 and player:ableUseSkill('连珠') then -- 有箭矢并且能释放技能
           BackpackHelper.removeGridItemByItemID(objid, MyMap.ITEM.ARROW_ID, 1) -- 扣除箭矢
           local playerPos = player:getMyPosition()
           -- local srcPos = MyPosition:new(playerPos.x, playerPos.y + 1, playerPos.z)
@@ -475,7 +475,7 @@ function OneByOneBow:useItem3 (objid)
           local aimPos = player:getAimPos() -- 准星位置
           local projectileid = WorldHelper.spawnProjectileByPos(objid, MyMap.ITEM.ARROW_ID, srcPos, aimPos)
           ItemHelper.recordProjectile(projectileid, objid, self)
-          if (i == times) then -- 最后一箭关闭特效
+          if i == times then -- 最后一箭关闭特效
             ActorHelper.stopBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT4)
           end
         else -- 无法释放技能则终止其他箭的发射并关闭特效
@@ -492,19 +492,19 @@ function OneByOneBow:projectileHit (projectileInfo, toobjid, blockid, pos)
   local objid = projectileInfo.objid
   local item = projectileInfo.item
   local player = PlayerHelper.getPlayer(objid)
-  if (toobjid > 0) then -- 命中生物（似乎命中同队生物不会进入这里）
+  if toobjid > 0 then -- 命中生物（似乎命中同队生物不会进入这里）
     ActorHelper.appendFixedSpeed(toobjid, 1, player:getMyPosition()) -- 冲击
     -- 判断是否是敌对生物
-    if (not(ActorHelper.isTheSameTeamActor(objid, toobjid))) then -- 敌对生物，则造成伤害
+    if not ActorHelper.isTheSameTeamActor(objid, toobjid) then -- 敌对生物，则造成伤害
       local key = PlayerHelper.generateDamageKey(objid, toobjid)
       local isHurt = TimeHelper.getFrameInfo(key)
       local superfluousHurt = 0 -- 多余的伤害
-      if (isHurt) then -- 造成伤害事件发生了
+      if isHurt then -- 造成伤害事件发生了
         superfluousHurt = MyMap.CUSTOM.PROJECTILE_HURT
       end
       local hurt = item.remoteAttack - superfluousHurt - self:addHitTimes(objid) * 10 -- 命中伤害10点递减
       local minHurt = 10 - superfluousHurt
-      if (hurt < minHurt) then -- 最低伤害10点
+      if hurt < minHurt then -- 最低伤害10点
         hurt = minHurt
       end
       player:damageActor(toobjid, hurt)
@@ -514,7 +514,7 @@ end
 
 -- 重置命中次数
 function OneByOneBow:resetHitTimes (objid)
-  if (not(self.hitTimes)) then
+  if not self.hitTimes then
     self.hitTimes = {}
   end
   self.hitTimes[objid] = 0

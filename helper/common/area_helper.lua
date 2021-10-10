@@ -19,9 +19,9 @@ function AreaHelper.isWaterArea (pos)
 end
 
 function AreaHelper.removeToArea (myActor)
-  if (myActor and myActor.wants) then
+  if myActor and myActor.wants then
     local want = myActor.wants[1]
-    if (want.toAreaId) then
+    if want.toAreaId then
       AreaHelper.destroyArea(want.toAreaId)
       want.toAreaId = nil
     end
@@ -31,7 +31,7 @@ end
 function AreaHelper.getRandomAirPositionInArea (areaid)
   local pos = AreaHelper.getRandomPos(areaid)
   local times = 1
-  while (not(AreaHelper.isAirArea(pos)) and times < AreaHelper.maxRandomTimes) do
+  while not AreaHelper.isAirArea(pos) and times < AreaHelper.maxRandomTimes do -- 不是空气区域 且 没有超过循环次数
     pos = AreaHelper.getRandomPos(areaid)
     times = times + 1
   end
@@ -47,16 +47,16 @@ end
 function AreaHelper.showToastArea (objid, areaid)
   local player = PlayerHelper.getPlayer(objid)
   for k, v in pairs(AreaHelper.showToastAreas) do
-    if (k == areaid) then
-      if (v[1] == -1 or (player.prevAreaId and player.prevAreaId == v[1])) then
+    if k == areaid then
+      if v[1] == -1 or (player.prevAreaId and player.prevAreaId == v[1]) then
         PlayerHelper.showToast(objid, v[2])
-        if (#v == 3) then -- 生成怪物
+        if #v == 3 then -- 生成怪物
           v[3]()
         end
       end
       player.prevAreaId = areaid
       return true
-    elseif (v[1] == areaid) then
+    elseif v[1] == areaid then
       player.prevAreaId = areaid
       return true
     end
@@ -136,11 +136,11 @@ end
 -- 是否是门区域，规定水平两格大小的区域都是门区域
 function AreaHelper.isDoorArea (areaid)
   local posBeg, posEnd = AreaHelper.getAreaRectRange(areaid)
-  if (posBeg) then -- 区域有效
-    if (posBeg.y == posEnd.y and MathHelper.getDistance(posBeg, posEnd) == 1) then
-      if (BlockHelper.isAirBlock(posBeg.x, posBeg.y, posBeg.z)) then -- 起点位置是空气方块
+  if posBeg then -- 区域有效
+    if posBeg.y == posEnd.y and MathHelper.getDistance(posBeg, posEnd) == 1 then
+      if BlockHelper.isAirBlock(posBeg.x, posBeg.y, posBeg.z) then -- 起点位置是空气方块
         return true, posEnd, AreaHelper.getCloseDoorState(posBeg, posEnd, posEnd)
-      elseif (BlockHelper.isAirBlock(posEnd.x, posEnd.y, posEnd.z)) then -- 终点位置是空气方块
+      elseif BlockHelper.isAirBlock(posEnd.x, posEnd.y, posEnd.z) then -- 终点位置是空气方块
         return true, posBeg, AreaHelper.getCloseDoorState(posBeg, posEnd, posBeg)
       else
         return false
@@ -183,7 +183,7 @@ function AreaHelper.getBlockPositionsAround (pos, dim, blockid)
     for k = math.floor(pos.z) - dim.z, math.floor(pos.z) + dim.z do
       for j = math.floor(pos.y) + dim.y, math.floor(pos.y) - dim.y, -1 do -- 从上往下
         local id = BlockHelper.getBlockID(i, j, k)
-        if (id and id == blockid) then
+        if id and id == blockid then
           table.insert(positions, MyPosition:new(i, j, k))
         end
       end
@@ -198,7 +198,7 @@ function AreaHelper.getEmptyPos (player)
   for i = 3, 2, -1 do
     for j = 90, 360, 30 do
       pos = player:getDistancePosition(i, j)
-      if (AreaHelper.isAirArea(pos) and not(BlockHelper.isWater(pos.x, pos.y - 1, pos.z))) then
+      if AreaHelper.isAirArea(pos) and not BlockHelper.isWater(pos.x, pos.y - 1, pos.z) then -- 空气区域 且 脚下不是水
         return pos
       end
     end

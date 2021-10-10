@@ -203,7 +203,7 @@ function TaskHelper.playerAddItem (playerid, itemid, showType)
         if itemid == itemInfo.itemid then -- 获得该道具
           local curnum = BackpackHelper.getItemNumAndGrid(playerid, itemid)
           -- LogHelper.debug('当前有', curnum)
-          if not(itemInfo.curnum) or itemInfo.curnum ~= curnum then -- 当前数量发生变化时提示
+          if not itemInfo.curnum or itemInfo.curnum ~= curnum then -- 当前数量发生变化时提示
             itemInfo.curnum = curnum
             if curnum >= itemInfo.num then -- 达到目标
               if not task.enough then -- 之前道具不够
@@ -292,18 +292,18 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, cTask)
     TaskHelper.addTempTask(player.objid, cTask.id)
     player:resetTalkIndex(0)
   end))
-  -- if (type(taskid) == 'table') then
+  -- if type(taskid) == 'table' then
   --   taskid, taskname = taskid.id, taskid.name
   -- end
-  -- if (TaskHelper.hasTask(player.objid, taskid * 10000)) then -- 已有任务
+  -- if TaskHelper.hasTask(player.objid, taskid * 10000) then -- 已有任务
   --   local state = TaskHelper.getTaskState(player.objid, taskid * 10000)
-  --   if (state == 1) then -- 未完成
+  --   if state == 1 then -- 未完成
   --     table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(已接受)'):call(function (player)
   --       TaskHelper.addTempTask(player.objid, taskid * 10000 + 1)
   --       player:resetTalkIndex(0)
   --     end))
   --     return true
-  --   elseif (state == 2) then -- 已完成
+  --   elseif state == 2 then -- 已完成
   --     table.insert(playerTalks, PlayerTalk:continue(taskname .. '任务#G(可交付)'):call(function (player)
   --       TaskHelper.addTempTask(player.objid, taskid * 10000 + 2)
   --       player:resetTalkIndex(0)

@@ -18,7 +18,7 @@ MyOptionHelper = {
       },
       { '睡一个时辰', function (player)
           player:enableMove(true)
-          if (MyStoryHelper.addHour(2)) then
+          if MyStoryHelper.addHour(2) then
             PlayerHelper.everyPlayerNotify('时间过去一个时辰')
             PlayerHelper.everyPlayerRecoverHp(20)
             ActorHelper.doItNow()
@@ -30,7 +30,7 @@ MyOptionHelper = {
       },
       { '睡两个时辰', function (player)
           player:enableMove(true)
-          if (MyStoryHelper.addHour(4)) then
+          if MyStoryHelper.addHour(4) then
             PlayerHelper.everyPlayerNotify('时间过去两个时辰')
             PlayerHelper.everyPlayerRecoverHp(40)
             ActorHelper.doItNow()

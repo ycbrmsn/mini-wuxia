@@ -4,7 +4,7 @@ MathHelper = {}
 -- 水平旋转角度计算，可以忽略y方向，直接与正南方向向量取夹角即可
 function MathHelper.getActorFaceYaw (myVector3)
   local tempAngle = MathHelper.getTwoVector2Angle(0, -1, myVector3.x, myVector3.z)
-  if (myVector3.x > 0) then
+  if myVector3.x > 0 then
     tempAngle = -tempAngle
   end
   return tempAngle
@@ -13,7 +13,7 @@ end
 -- 同上，此处计算与正北方向向量夹角（仅使用第一人称视角）
 function MathHelper.getPlayerFaceYaw (myVector3)
   local tempAngle = MathHelper.getTwoVector2Angle(0, 1, myVector3.x, myVector3.z)
-  if (myVector3.x < 0) then
+  if myVector3.x < 0 then
     tempAngle = -tempAngle
   end
   return tempAngle
@@ -25,7 +25,7 @@ end
 ]]--
 function MathHelper.getActorFacePitch (myVector3)
   local tempAngle = MathHelper.getTwoVector3Angle(myVector3.x, 0, myVector3.z, myVector3:get())
-  if (myVector3.y > 0) then
+  if myVector3.y > 0 then
     tempAngle = - tempAngle
   end
   return tempAngle
@@ -65,11 +65,11 @@ function MathHelper.getDistancePositions (pos, angle, distance1, distance2, num)
   distance2 = distance2 or 1
   num = num or 1
   local positions = { MathHelper.getDistancePosition(pos, angle, distance1) }
-  if (num > 1) then
+  if num > 1 then
     for i = 1, num - 1 do
       local tempDistance = distance2 * math.ceil(i / 2)
       local tempAngle
-      if (i % 2 == 0) then
+      if i % 2 == 0 then
         tempAngle = angle + 90
       else
         tempAngle = angle - 90
@@ -85,83 +85,83 @@ function MathHelper.getRegularDistancePositions (pos, angle, distance, num)
   num = num or 1
   local p = MathHelper.getDistancePosition(pos, angle, distance)
   local positions = { p }
-  if (num > 1) then
+  if num > 1 then
     local tempAngle = angle % 360
     local index = 1
     for i = 22.5, 315, 45 do
-      if (tempAngle >= i and tempAngle < i + 45) then
+      if tempAngle >= i and tempAngle < i + 45 then
         break
       else
         index = index + 1
       end
     end
-    if (index == 1) then -- 西南
+    if index == 1 then -- 西南
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z - gap))
         else
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z + gap))
         end
       end
-    elseif (index == 2) then -- 西
+    elseif index == 2 then -- 西
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x, p.y, p.z - gap))
         else
           table.insert(positions, MyPosition:new(p.x, p.y, p.z + gap))
         end
       end
-    elseif (index == 3) then -- 西北
+    elseif index == 3 then -- 西北
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z - gap))
         else
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z + gap))
         end
       end
-    elseif (index == 4) then -- 北
+    elseif index == 4 then -- 北
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z))
         else
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z))
         end
       end
-    elseif (index == 5) then -- 东北
+    elseif index == 5 then -- 东北
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z + gap))
         else
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z - gap))
         end
       end
-    elseif (index == 6) then -- 东
+    elseif index == 6 then -- 东
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x, p.y, p.z + gap))
         else
           table.insert(positions, MyPosition:new(p.x, p.y, p.z - gap))
         end
       end
-    elseif (index == 7) then -- 东南
+    elseif index == 7 then -- 东南
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z + gap))
         else
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z - gap))
         end
       end
-    elseif (index == 8) then -- 南
+    elseif index == 8 then -- 南
       for i = 1, num - 1 do
         local gap = math.ceil(i / 2)
-        if (i % 2 == 1) then
+        if i % 2 == 1 then
           table.insert(positions, MyPosition:new(p.x + gap, p.y, p.z))
         else
           table.insert(positions, MyPosition:new(p.x - gap, p.y, p.z))
@@ -188,10 +188,10 @@ end
 
 -- 两点之间的距离
 function MathHelper.getDistance (pos1, pos2)
-  if (type(pos1) == 'number') then
+  if type(pos1) == 'number' then
     pos1 = CacheHelper.getMyPosition(pos1)
   end
-  if (type(pos2) == 'number') then
+  if type(pos2) == 'number' then
     pos2 = CacheHelper.getMyPosition(pos2)
   end
   return MathHelper.getVector3Length(pos1.x - pos2.x, pos1.y - pos2.y, pos1.z - pos2.z)
@@ -199,10 +199,10 @@ end
 
 -- 两点水平方向上的距离
 function MathHelper.getDistanceV2 (pos1, pos2)
-  if (type(pos1) == 'number') then
+  if type(pos1) == 'number' then
     pos1 = CacheHelper.getMyPosition(pos1)
   end
-  if (type(pos2) == 'number') then
+  if type(pos2) == 'number' then
     pos2 = CacheHelper.getMyPosition(pos2)
   end
   return MathHelper.getVector2Length(pos1.x - pos2.x, pos1.z - pos2.z)
@@ -240,11 +240,11 @@ function MathHelper.getRelativePlayerAngle (objid, toobjid)
   local angle1 = MathHelper.getTwoVector2Angle(aimPos.x - playerPos.x, aimPos.z - playerPos.z, vx, vz) -- 与前方向量夹角
   local angle2 = MathHelper.getTwoVector2Angle(leftPos.x - playerPos.x, leftPos.z - playerPos.z, vx, vz) -- 与左方向量夹角
   local angle
-  if (angle1 <= 90 and angle2 < 90) then -- 左前
+  if angle1 <= 90 and angle2 < 90 then -- 左前
     angle = -angle1
-  elseif (angle1 <= 90 and angle2 >= 90) then -- 右前
+  elseif angle1 <= 90 and angle2 >= 90 then -- 右前
     angle = angle1
-  elseif (angle1 > 90 and angle2 < 90) then -- 左后
+  elseif angle1 > 90 and angle2 < 90 then -- 左后
     angle = -angle1
   else -- 右后
     angle = angle1

@@ -20,11 +20,11 @@ function ItemHelper.changeHold (objid, itemid1, itemid2)
   local item1 = ItemHelper.getItem(itemid1)
   local item2 = ItemHelper.getItem(itemid2)
   local foundItem = false
-  if (item1) then -- 之前手持物是自定义特殊道具
+  if item1 then -- 之前手持物是自定义特殊道具
     item1:putDown(objid)
     foundItem = true
   end
-  if (item2) then -- 当前手持物是自定义特殊道具
+  if item2 then -- 当前手持物是自定义特殊道具
     item2:pickUp(objid)
     foundItem = true
   end
@@ -33,7 +33,7 @@ end
 
 function ItemHelper.useItem (objid, itemid)
   local item = ItemHelper.getItem(itemid)
-  if (item) then -- 使用自定义特殊道具
+  if item then -- 使用自定义特殊道具
     item:useItem(objid)
   end
 end
@@ -41,14 +41,14 @@ end
 function ItemHelper.useItem2 (objid)
   local itemid = PlayerHelper.getCurToolID(objid)
   local item = ItemHelper.getItem(itemid)
-  if (item) then -- 使用自定义特殊道具
+  if item then -- 使用自定义特殊道具
     item:useItem2(objid)
   end
 end
 
 function ItemHelper.selectItem (objid, itemid)
   local item = ItemHelper.getItem(itemid)
-  if (item) then -- 选择自定义特殊道具
+  if item then -- 选择自定义特殊道具
     item:selectItem(objid, PlayerHelper.getCurShotcut(objid))
   end
 end
@@ -56,7 +56,7 @@ end
 function ItemHelper.clickBlock (objid, blockid, x, y, z)
   local itemid = PlayerHelper.getCurToolID(objid)
   local item = ItemHelper.getItem(itemid)
-  if (item) then -- 手持自定义特殊道具点击方块
+  if item then -- 手持自定义特殊道具点击方块
     item:clickBlock(objid, blockid, x, y, z)
   end
 end
@@ -76,18 +76,18 @@ end
 
 -- 记录使用技能
 function ItemHelper.recordUseSkill (objid, itemid, cd, dontSetCD)
-  if (objid and itemid and cd) then -- 确保玩家、道具类型、冷却时间必须存在
-    if (not(ItemHelper.itemcds[objid])) then -- 如果玩家对应的道具冷却信息不存在，则创建一个
+  if objid and itemid and cd then -- 确保玩家、道具类型、冷却时间必须存在
+    if not ItemHelper.itemcds[objid] then -- 如果玩家对应的道具冷却信息不存在，则创建一个
       ItemHelper.itemcds[objid] = {}
     end
     ItemHelper.itemcds[objid][itemid] = os.time() -- 将道具技能使用时间记录下来，记录为当前系统时间
-    if (not(dontSetCD)) then -- 需要进入冷却
+    if not dontSetCD then -- 需要进入冷却
       PlayerHelper.setSkillCD(objid, itemid, cd) -- 使道具开始冷却
     end
   else
-    if (not(objid)) then
+    if not objid then
       LogHelper.debug('objid不存在')
-    elseif (not(itemid)) then
+    elseif not itemid then
       LogHelper.debug('itemid不存在')
     else
       LogHelper.debug('cd不存在')
@@ -97,20 +97,20 @@ end
 
 -- 是否能够使用技能
 function ItemHelper.ableUseSkill (objid, itemid, cd)
-  if (not(cd) or cd <= 0) then -- cd值有误
+  if not cd or cd <= 0 then -- cd值有误
     return true
   end
-  if (objid and itemid) then
+  if objid and itemid then
     local info = ItemHelper.itemcds[objid]
-    if (not(info)) then -- 玩家未使用过技能
+    if not info then -- 玩家未使用过技能
       return true
     else
       local time = info[itemid]
-      if (not(time)) then -- 该技能未使用过
+      if not time then -- 该技能未使用过
         return true
       else -- 技能使用过
         local remainingTime = cd + time - os.time()
-        if (remainingTime <= 0) then
+        if remainingTime <= 0 then
           return true
         else
           return false, remainingTime
@@ -118,7 +118,7 @@ function ItemHelper.ableUseSkill (objid, itemid, cd)
       end
     end
   else
-    if (objid) then
+    if objid then
       LogHelper.debug('itemid不存在')
     else
       LogHelper.debug('objid不存在')
@@ -134,7 +134,7 @@ end
 
 -- 延迟技能是否正在释放
 function ItemHelper.isDelaySkillUsing (objid, name)
-  if (ItemHelper.delaySkills[objid] and ItemHelper.delaySkills[objid].name == name) then
+  if ItemHelper.delaySkills[objid] and ItemHelper.delaySkills[objid].name == name then
     return true
   else
     return false
@@ -149,7 +149,7 @@ end
 -- 取消延迟技能
 function ItemHelper.cancelDelaySkill (objid)
   local delaySkillInfo = ItemHelper.delaySkills[objid]
-  if (delaySkillInfo and delaySkillInfo.index) then
+  if delaySkillInfo and delaySkillInfo.index then
     TimeHelper.delFn(delaySkillInfo.time, delaySkillInfo.index)
     ItemHelper.delDelaySkillRecord(objid)
     ChatHelper.sendSystemMsg('取消' .. delaySkillInfo.name .. '技能', objid)
@@ -165,7 +165,7 @@ end
 -- 记录投掷物属性
 function ItemHelper.recordMissile (objid, attr, val)
   local t = objid .. 'recordMissile'
-  if (ItemHelper.missiles[objid]) then -- 已存在
+  if ItemHelper.missiles[objid] then -- 已存在
     ItemHelper.missiles[objid][attr] = val
     TimeHelper.delFnFastRuns(t)
   else -- 不存在
@@ -217,7 +217,7 @@ end
 -- 投掷物命中
 function ItemHelper.projectileHit (projectileid, toobjid, blockid, x, y, z)
   local projectileInfo = ItemHelper.projectiles[projectileid]
-  if (projectileInfo) then
+  if projectileInfo then
     local item = projectileInfo.item
     local pos = MyPosition:new(x, y, z)
     item:projectileHit(projectileInfo, toobjid, blockid, pos)

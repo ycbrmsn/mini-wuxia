@@ -44,7 +44,7 @@ function Dog:init ()
 end
 
 function Dog:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '野狗'
   end
   return self.actorname
@@ -55,7 +55,7 @@ function Dog:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
     local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
-    if (curNum < num) then
+    if curNum < num then
       for i = 1, num - curNum do
         local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
@@ -126,7 +126,7 @@ function Wolf:init ()
 end
 
 function Wolf:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '恶狼'
   end
   return self.actorname
@@ -137,7 +137,7 @@ function Wolf:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
     local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
-    if (curNum < num) then
+    if curNum < num then
       for i = 1, num - curNum do
         local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
@@ -205,7 +205,7 @@ function Ox:init ()
 end
 
 function Ox:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '狂牛'
   end
   return self.actorname
@@ -216,7 +216,7 @@ function Ox:generateMonsters (num)
   num = num or 10
   for i, v in ipairs(self.monsterAreas) do
     local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
-    if (curNum < num) then
+    if curNum < num then
       for i = 1, num - curNum do
         local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
@@ -297,7 +297,7 @@ end
 function QiangdaoLouluo:initStoryMonsters ()
   local areaid = AreaHelper.getAreaByPos(self.initPosition)
   local objids = AreaHelper.getAllCreaturesInAreaId(areaid)
-  if (objids and #objids > 0) then
+  if objids and #objids > 0 then
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
@@ -308,8 +308,8 @@ function QiangdaoLouluo:initStoryMonsters ()
 end
 
 function QiangdaoLouluo:setPositions (positions)
-  if (positions and #positions > 0) then
-    if (#positions == 1) then
+  if positions and #positions > 0 then
+    if #positions == 1 then
       local pos = positions[1]
       for i, v in ipairs(self.monsters) do
         ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
@@ -317,7 +317,7 @@ function QiangdaoLouluo:setPositions (positions)
     else
       for i, v in ipairs(self.monsters) do
         local pos = positions[i]
-        if (pos) then
+        if pos then
           ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
         else
           break
@@ -329,7 +329,7 @@ end
 
 function QiangdaoLouluo:enableMove (enable)
   local speed
-  if (enable) then
+  if enable then
     speed = -1
   else
     speed = 0
@@ -355,7 +355,7 @@ function QiangdaoLouluo:lookAt (objid, monsters)
 end
 
 function QiangdaoLouluo:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '强盗喽罗'
   end
   return self.actorname
@@ -366,7 +366,7 @@ function QiangdaoLouluo:generateMonsters ()
   num = num or 5
   for i, v in ipairs(self.monsterAreas) do
     local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
-    if (curNum < num) then
+    if curNum < num then
       for i = 1, num - curNum do
         local pos = AreaHelper.getRandomAirPositionInArea(v)
         self:newMonster(pos.x, pos.y, pos.z, 1)
@@ -387,7 +387,7 @@ end
 function QiangdaoLouluo:attackSpeak (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 2 and mainProgress < #story2.tips) then
+  if mainIndex == 2 and mainProgress < #story2.tips then
     -- ChatHelper.speak(self:getName(), toobjid, '小子，把令牌交出来！')
     -- self:toastSpeak('小子，把令牌交出来！')
     GraphicsHelper.speak(objid, self.offset, '小子，把令牌交出来！')
@@ -443,7 +443,7 @@ end
 function QiangdaoXiaotoumu:initStoryMonsters ()
   local areaid = AreaHelper.getAreaByPos(self.initPosition)
   local objids = AreaHelper.getAllCreaturesInAreaId(areaid)
-  if (objids and #objids > 0) then
+  if objids and #objids > 0 then
     for i, v in ipairs(objids) do
       table.insert(self.monsters, v)
     end
@@ -454,8 +454,8 @@ function QiangdaoXiaotoumu:initStoryMonsters ()
 end
 
 function QiangdaoXiaotoumu:setPositions (positions)
-  if (positions and #positions > 0) then
-    if (#positions == 1) then
+  if positions and #positions > 0 then
+    if #positions == 1 then
       local pos = positions[1]
       for i, v in ipairs(self.monsters) do
         ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
@@ -463,7 +463,7 @@ function QiangdaoXiaotoumu:setPositions (positions)
     else
       for i, v in ipairs(self.monsters) do
         local pos = positions[i]
-        if (pos) then
+        if pos then
           ActorHelper.setPosition(v, pos.x, pos.y, pos.z)
         else
           break
@@ -475,7 +475,7 @@ end
 
 function QiangdaoXiaotoumu:enableMove (enable)
   local speed
-  if (enable) then
+  if enable then
     speed = -1
   else
     speed = 0
@@ -501,7 +501,7 @@ function QiangdaoXiaotoumu:lookAt (objid, monsters)
 end
 
 function QiangdaoXiaotoumu:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '强盗小头目'
   end
   return self.actorname
@@ -512,7 +512,7 @@ function QiangdaoXiaotoumu:generateMonsters (num)
   num = num or 1
   for i, v in ipairs(self.monsterAreas) do
     local curNum = MonsterHelper.getMonsterNum(v, self.actorid)
-    if (curNum < num) then
+    if curNum < num then
       self:newMonster(self.monsterPositions[i].x, self.monsterPositions[i].y, self.monsterPositions[i].z, num - curNum)
     end
   end
@@ -530,7 +530,7 @@ end
 function QiangdaoXiaotoumu:attackSpeak (objid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 2 and mainProgress < #story2.tips) then
+  if mainIndex == 2 and mainProgress < #story2.tips then
     -- ChatHelper.speak(self:getName(), toobjid, '小子，交出令牌给你个痛快！')
     -- self:toastSpeak('小子，交出令牌给你个痛快！')
     GraphicsHelper.speak(objid, self.offset, '小子，交出令牌给你个痛快！')
@@ -574,7 +574,7 @@ function QiangdaoDatoumu:init ()
 end
 
 function QiangdaoDatoumu:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '强盗大头目'
   end
   return self.actorname
@@ -585,7 +585,7 @@ function QiangdaoDatoumu:generateMonsters (num)
   num = num or 1
   local curNum = MonsterHelper.getMonsterNumByPos(self.begPos, self.endPos, self.actorid)
   for i, v in ipairs(self.monsterPositions) do
-    if (curNum < num) then
+    if curNum < num then
       self:newMonster(v.x, v.y, v.z, num - curNum)
     end
   end
@@ -664,7 +664,7 @@ end
 
 function Guard:init ()
   for i, v in ipairs(self.initPositions) do
-    if (i % 2 == 1) then
+    if i % 2 == 1 then
       table.insert(self.initAreas, { areaid = AreaHelper.getAreaByPos(v), isOk = false })
     end
   end
@@ -675,9 +675,9 @@ function Guard:init ()
   TimeHelper.repeatUtilSuccess(function ()
     local isAllOk = true
     for i, v in ipairs(self.initAreas) do
-      if (not(v.isOk)) then
+      if not v.isOk then
         local objids = AreaHelper.getAllCreaturesInAreaId(v.areaid)
-        if (objids and #objids > 0) then
+        if objids and #objids > 0 then
           self:initCityGuard(i, v, objids)
         else
           isAllOk = false
@@ -691,21 +691,21 @@ end
 function Guard:initCityGuard (index, o, objids)
   o.objids = objids
   local dir
-  if (index == 1) then -- 南
+  if index == 1 then -- 南
     dir = 'S'
-  elseif (index == 2) then -- 东
+  elseif index == 2 then -- 东
     dir = 'E'
-  elseif (index == 3) then -- 北
+  elseif index == 3 then -- 北
     dir = 'N'
-  elseif (index == 4) then -- 西
+  elseif index == 4 then -- 西
     dir = 'W'
   else
     for i, v in ipairs(objids) do
       CreatureHelper.closeAI(v)
-      if (i == 1) then
+      if i == 1 then
         ActorHelper.setMyPosition(v, self.lordHousePositions[i])
         ActorHelper.lookToward(v, 'E')
-      elseif (i == 2) then
+      elseif i == 2 then
         ActorHelper.setMyPosition(v, self.lordHousePositions[i])
         ActorHelper.lookToward(v, 'W')
       else
@@ -716,7 +716,7 @@ function Guard:initCityGuard (index, o, objids)
       end
     end
   end
-  if (index < 5) then
+  if index < 5 then
     for i, v in ipairs(objids) do
       CreatureHelper.closeAI(v)
       ActorHelper.setMyPosition(v, self.initPositions[(index - 1) * 2 + i])
@@ -728,7 +728,7 @@ function Guard:initCityGuard (index, o, objids)
 end
 
 function Guard:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '卫兵'
   end
   return self.actorname
@@ -740,18 +740,18 @@ end
 
 function Guard:checkTokenArea (objid, areaid)
   for i, v in ipairs(self.initAreas) do
-    if (i < 5 and v.areaid == areaid) then
+    if i < 5 and v.areaid == areaid then
       local playerids = AreaHelper.getAllPlayersInAreaId(areaid)
       local players = {}
       local hasToken = false
       for ii, vv in ipairs(playerids) do
         local player = PlayerHelper.getPlayer(vv)
         table.insert(players, player)
-        if (player:takeOutItem(MyMap.ITEM.TOKEN_ID)) then
+        if player:takeOutItem(MyMap.ITEM.TOKEN_ID) then
           hasToken = true
         end
       end
-      if (not(hasToken)) then
+      if not hasToken then
         for ii, vv in ipairs(players) do
           -- self:speakTo(vv.objid, 0, '出示令牌。强闯者，捕。')
           self:toastSpeak('出示令牌。强闯者，捕。')
@@ -827,7 +827,7 @@ function Pantaojianshibing:init ()
 end
 
 function Pantaojianshibing:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '叛逃士兵'
   end
   return self.actorname
@@ -897,7 +897,7 @@ function Pantaogongshibing:init ()
 end
 
 function Pantaogongshibing:getName ()
-  if (not(self.actorname)) then
+  if not self.actorname then
     self.actorname = '叛逃士兵'
   end
   return self.actorname

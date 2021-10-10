@@ -37,7 +37,7 @@ yangwanliTalkInfos = {
         TalkSession:reply('别急，这个拿着，你也许用得上。'),
         TalkSession:speak('太好了，村长，我会努力的。先走了。'):call(function (player, actor)
           local itemid = MyMap.ITEM.YANGWANLI_PACKAGE_ID
-          if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得村长的包裹
+          if BackpackHelper.gainItem(player.objid, itemid) then -- 获得村长的包裹
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
             StoryHelper.forwardByPlayer(player.objid, 1, '对话村长')
           end
@@ -220,7 +220,7 @@ miaolanTalkInfos = {
           TimeHelper.callFnAfterSecond (function (p)
             local hp = PlayerHelper.getHp(player.objid)
             local maxHp = PlayerHelper.getMaxHp(player.objid)
-            if (hp < maxHp) then -- 受伤了
+            if hp < maxHp then -- 受伤了
               actor:speakTo(objid, 0, '确实是呢。不要动哦。')
               actor.action:playAttack()
               actor.action:playAttack(1)
@@ -233,7 +233,7 @@ miaolanTalkInfos = {
                 player:speakTo(player.objid, 4, '我知道了。')
                 TimeHelper.callFnAfterSecond (function (p)
                   local talkIndex = TalkHelper.getTalkIndex(player.objid, actor)
-                  if (talkIndex ~= 1) then
+                  if talkIndex ~= 1 then
                     TalkHelper.turnTalkIndex(player.objid, actor)
                   end
                   player:enableMove(true, true)
@@ -246,7 +246,7 @@ miaolanTalkInfos = {
               actor:speakTo(objid, 4, '呵呵呵呵……')
               TimeHelper.callFnAfterSecond (function (p)
                 local talkIndex = TalkHelper.getTalkIndex(player.objid, actor)
-                if (talkIndex ~= 1) then
+                if talkIndex ~= 1 then
                   TalkHelper.turnTalkIndex(player.objid, actor)
                 end
                 player:enableMove(true, true)
@@ -336,9 +336,9 @@ wenyuTalkInfos = {
         TalkSession:reply('对了，这是我的一点心意，你也许用得上。'),
         TalkSession:speak('谢谢你，文羽。'):call(function (player, actor)
           local itemid = MyMap.ITEM.WENYU_PACKAGE_ID
-          if (BackpackHelper.gainItem(player.objid, itemid)) then -- 获得文羽的包裹
+          if BackpackHelper.gainItem(player.objid, itemid) then -- 获得文羽的包裹
             PlayerHelper.notifyGameInfo2Self(player.objid, '获得' .. ItemHelper.getItemName(itemid))
-            if (StoryHelper.forwardByPlayer(player.objid, 1, '对话文羽')) then
+            if StoryHelper.forwardByPlayer(player.objid, 1, '对话文羽') then
               wenyu:doItNow() -- 不再跟随
             end
           end

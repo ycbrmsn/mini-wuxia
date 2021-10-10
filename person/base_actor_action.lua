@@ -15,11 +15,11 @@ end
 
 -- 生物是否是强制移动，强制移动即用脚本让他移动
 function BaseActorAction:isForceMove ()
-  if (not(self.myActor.wants) or not(self.myActor.wants[1])) then -- 没有想法，则不是
+  if not self.myActor.wants or not self.myActor.wants[1] then -- 没有想法，则不是
     return false
   end
   local want = self.myActor.wants[1]
-  if (want.currentRestTime > 0) then -- 如果在休息，也不是
+  if want.currentRestTime > 0 then -- 如果在休息，也不是
     return false
   end
   return (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea' 
@@ -105,7 +105,7 @@ function BaseActorAction:playStretch (afterSeconds)
 end
 
 function BaseActorAction:playAct (act, afterSeconds)
-  if (afterSeconds) then
+  if afterSeconds then
     TimeHelper.callFnAfterSecond (function (p)
       ActorHelper.playAct(self.myActor.objid, act)
     end, afterSeconds)
@@ -117,55 +117,55 @@ end
 -- 生物行动
 function BaseActorAction:execute ()
   local want
-  if (not(self.myActor.wants) or not(self.myActor.wants[1])) then -- 如果生物没有想法，则给他一个原始的想法，然后再行动
+  if not self.myActor.wants or not self.myActor.wants[1] then -- 如果生物没有想法，则给他一个原始的想法，然后再行动
     self.myActor:defaultWant()
   end
   want = self.myActor.wants[1]
-  if (not(want.execute)) then
+  if not want.execute then
     print(want)
   end
   want:execute()
-  -- if (want.currentRestTime > 0) then -- 如果生物还想休息，则让生物继续休息
+  -- if want.currentRestTime > 0 then -- 如果生物还想休息，则让生物继续休息
   --   want.currentRestTime = want.currentRestTime - 1
-  --   if (want.style == 'sleep') then
+  --   if want.style == 'sleep' then
   --     self.myActor:setFaceYaw(want.faceYaw)
-  --   elseif (want.style == 'lookAt') then
+  --   elseif want.style == 'lookAt' then
   --     want.style = 'lookingAt'
   --     TimeHelper.callFnContinueRuns(function ()
   --       self.myActor:lookAt(want.dst)
   --     end, want.currentRestTime, self.myActor.objid .. 'lookat')
-  --   elseif (want.style == 'forceDoNothing') then
+  --   elseif want.style == 'forceDoNothing' then
   --     self.myActor:stopRun()
   --   end
   -- else
-  --   if (want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea'
-  --     or want.style == 'freeAttack' or want.style == 'approach') then -- 如果生物想移动/巡逻，则让生物移动/巡逻
-  --     if (self.myActor.cantMoveTime > self.maxCantMoveTime) then
+  --   if want.style == 'move' or want.style == 'patrol' or want.style == 'freeInArea'
+  --     or want.style == 'freeAttack' or want.style == 'approach' then -- 如果生物想移动/巡逻，则让生物移动/巡逻
+  --     if self.myActor.cantMoveTime > self.maxCantMoveTime then
   --       self:transmitTo(want.toPos)
   --       self.myActor.cantMoveTime = 0
   --     else
-  --       -- if (self.myActor.cantMoveTime > 0) then
+  --       -- if self.myActor.cantMoveTime > 0 then
   --       --   self.myActor:setWalkSpeed(-1)
   --       -- end
   --       self:runTo(want.toPos, want.speed)
   --     end
-  --   elseif (want.style == 'follow') then
+  --   elseif want.style == 'follow' then
   --     want:execute()
-  --   elseif (want.style == 'dontMove') then -- 如果生物想原地不动，则不让生物移动
+  --   elseif want.style == 'dontMove' then -- 如果生物想原地不动，则不让生物移动
 
-  --   elseif (want.style == 'freeTime') then -- 自由活动
+  --   elseif want.style == 'freeTime' then -- 自由活动
   --     self:freeTime(want)
-  --   elseif (want.style == 'freeAndAlert') then -- 自由警戒
+  --   elseif want.style == 'freeAndAlert' then -- 自由警戒
   --     self:freeAndAlert(want)
-  --   elseif (want.style == 'sleep') then
+  --   elseif want.style == 'sleep' then
   --     want.style = 'sleeping'
   --     self:playSleep()
-  --   elseif (want.style == 'sleeping') then
+  --   elseif want.style == 'sleeping' then
   --     -- 暂不处理
-  --   elseif (want.style == 'wake') then
+  --   elseif want.style == 'wake' then
   --     self.myActor:doItNow()
   --     -- self.myActor:putOutCandleAndGoToBed()
-  --   elseif (want.style == 'lightCandle' or want.style == 'putOutCandle') then
+  --   elseif want.style == 'lightCandle' or want.style == 'putOutCandle' then
   --     local isLit = want.style == 'lightCandle'
   --     want.style = 'handlingCandle'
   --     self.myActor:lookAt(want.toPos)
@@ -174,17 +174,17 @@ function BaseActorAction:execute ()
   --     -- TimeHelper.callFnAfterSecond (function (p)
   --     BlockHelper.handleCandle(want.toPos, isLit)
   --     -- end, 1)
-  --   elseif (want.style == 'handlingCandle') then
-  --     if (self.myActor.wants[2]) then
+  --   elseif want.style == 'handlingCandle' then
+  --     if self.myActor.wants[2] then
   --       ActorHelper.handleNextWant(self.myActor)
   --     end
-  --   elseif (want.style == 'lookingAt') then
-  --     if (self.myActor.wants[2]) then
+  --   elseif want.style == 'lookingAt' then
+  --     if self.myActor.wants[2] then
   --       ActorHelper.handleNextWant(self.myActor)
   --     else -- 没有想法
   --       -- self.myActor:openAI()
   --     end
-  --   elseif (want.style == 'battle') then -- 战斗
+  --   elseif want.style == 'battle' then -- 战斗
   --     self.myActor:doItNow()
   --   else -- 生物不想做什么，则生物自由安排
   --     -- do nothing
@@ -239,8 +239,8 @@ function BaseActorAction:lightCandle (think, isNow, candlePositions)
   local index = 1
   for i, v in ipairs(candlePositions) do
     local candle = BlockHelper.getCandle(v)
-    if (not(candle) or not(candle.isLit)) then
-      if (index == 1 and isNow) then
+    if not candle or not candle.isLit then -- 没找到蜡烛 或 蜡烛没有亮
+      if index == 1 and isNow then
         self:toggleCandle(think, v, true, true)
       else
         self:toggleCandle(think, v, true)
@@ -256,8 +256,8 @@ function BaseActorAction:putOutCandle (think, isNow, candlePositions)
   local index = 1
   for i, v in ipairs(candlePositions) do
     local candle = BlockHelper.getCandle(v)
-    if (not(candle) or candle.isLit) then
-      if (index == 1 and isNow) then
+    if not candle or candle.isLit then -- 没找到蜡烛 或 蜡烛亮着
+      if index == 1 and isNow then
         self:toggleCandle(think, v, false, true)
       else
         self:toggleCandle(think, v, false)
@@ -274,14 +274,14 @@ function BaseActorAction:putOutCandleAndGoToBed (candlePositions)
 end
 
 function BaseActorAction:toggleCandle (think, myPosition, isLitCandle, isNow)
-  if (not(think)) then
-    if (isLitCandle) then
+  if not think then
+    if isLitCandle then
       think = 'lightCandle'
     else
       think = 'putOutCandle'
     end
   end
-  if (isNow) then
+  if isNow then
     self.myActor:wantApproach(think, { myPosition })
   else
     self.myActor:nextWantApproach(think, { myPosition })
@@ -290,7 +290,7 @@ function BaseActorAction:toggleCandle (think, myPosition, isLitCandle, isNow)
 end
 
 function BaseActorAction:goToBed (isNow)
-  if (isNow) then
+  if isNow then
     self.myActor:wantGoToSleep(self.myActor.bedData)
   else
     self.myActor:nextWantGoToSleep(self.myActor.bedData)

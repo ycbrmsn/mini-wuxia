@@ -3,9 +3,9 @@ WorldContainerHelper = {}
 
 -- 是否储物箱是空的
 function WorldContainerHelper.isStorageBoxEmpty (x, y, z)
-  if (type(x) == 'number') then
+  if type(x) == 'number' then
 
-  elseif (type(x) == 'table') then
+  elseif type(x) == 'table' then
     x, y, z = x.x, x.y, x.z
   else
     LogHelper.error('检测储物箱空时参数错误')
@@ -14,7 +14,7 @@ function WorldContainerHelper.isStorageBoxEmpty (x, y, z)
   local isEmpty = true
   for i = 0, 29 do
     local itemid = WorldContainerHelper.getStorageItem(x, y, z, i)
-    if (itemid and itemid ~= 0) then
+    if itemid and itemid ~= 0 then
       isEmpty = false
       break
     end

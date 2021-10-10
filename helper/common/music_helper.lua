@@ -32,18 +32,18 @@ end
 -- 获取音符的音色值 1、3、5、6、8、10、12
 function MusicHelper.getNoteTimbre (note, category)
   local index, timbre = math.abs(tonumber(note))
-  if (index < 4) then -- 123
+  if index < 4 then -- 123
     timbre = index * 2 - 1
   else --4567
     timbre = index * 2 - 2
   end
-  if (#note == 2) then -- 低音
+  if #note == 2 then -- 低音
     timbre = timbre - 1
   end
 
-  if (not(category)) then -- 中音
+  if not category then -- 中音
     return MusicHelper.middle[timbre]
-  elseif (category == '-') then -- 低音
+  elseif category == '-' then -- 低音
     return MusicHelper.low[timbre]
   else -- 高音
     return MusicHelper.high[timbre]
@@ -52,7 +52,7 @@ end
 
 -- 播放一个音符
 function MusicHelper.play (objid, pitch)
-  if (pitch) then
+  if pitch then
     local info = MusicHelper.playerMusicInfos[objid]
     PlayerHelper.playMusic(objid, info.musicid, MusicHelper.volumes[info.volumeIndex], pitch)
     -- ActorHelper.playSoundEffectById(objid, MusicHelper.musicid, 100, pitch)
@@ -68,15 +68,15 @@ function MusicHelper.playBGM (objid, musicInfo, isLoop, index, delay)
   delay = delay or 1
   TimeHelper.callFnFastRuns(function ()
     local pos = CacheHelper.getMyPosition(objid)
-    if (pos) then
-      if (index > #musicInfo.notes and isLoop) then -- 循环播放
+    if pos then
+      if index > #musicInfo.notes and isLoop then -- 循环播放
         index = 1
       end
-      if (index <= #musicInfo.notes) then
+      if index <= #musicInfo.notes then
         local pitch, multiple, index = MusicHelper.parseNoteInfo(objid, musicInfo.notes, index)
         local nextDelay
         local baseDelay = MusicHelper.delays[MusicHelper.playerMusicInfos[objid].speedIndex]
-        if (not(musicInfo.method) or musicInfo.method == 'mul') then
+        if not musicInfo.method or musicInfo.method == 'mul' then -- 没有计算方式 或 计算方式是乘法
           nextDelay = baseDelay * multiple
         else
           nextDelay = baseDelay / multiple
@@ -111,7 +111,7 @@ end
 
 -- 不存在信息则初始化一个，第二个参数为是否覆盖
 function MusicHelper.initInfoIfNotExist (objid, isOverride)
-  if (not(MusicHelper.playerMusicInfos[objid]) or isOverride) then
+  if not MusicHelper.playerMusicInfos[objid] or isOverride then -- 不存在 或 需要重置
     -- 默认电子音，音量100
     MusicHelper.playerMusicInfos[objid] = { t = objid .. 'playBGM', musicid = 10773,
       volumeIndex = 6, musicIndex = 1, speedIndex = 4 }
@@ -122,14 +122,14 @@ end
 function MusicHelper.modulateVolume (objid, change)
   MusicHelper.initInfoIfNotExist(objid)
   MusicHelper.playerMusicInfos[objid].volumeIndex = MusicHelper.playerMusicInfos[objid].volumeIndex + change
-  if (MusicHelper.playerMusicInfos[objid].volumeIndex <= 1) then
+  if MusicHelper.playerMusicInfos[objid].volumeIndex <= 1 then
     MusicHelper.playerMusicInfos[objid].volumeIndex = 1
     ChatHelper.sendMsg(objid, '音乐音量已调到最小')
-  elseif (MusicHelper.playerMusicInfos[objid].volumeIndex >= #MusicHelper.volumes) then
+  elseif MusicHelper.playerMusicInfos[objid].volumeIndex >= #MusicHelper.volumes then
     MusicHelper.playerMusicInfos[objid].volumeIndex = #MusicHelper.volumes
     ChatHelper.sendMsg(objid, '音乐音量已调到最大')
   else
-    if (change > 0) then
+    if change > 0 then
       ChatHelper.sendMsg(objid, '音乐音量变大')
     else
       ChatHelper.sendMsg(objid, '音乐音量变小')
@@ -147,14 +147,14 @@ end
 function MusicHelper.changeSpeed (objid, change)
   MusicHelper.initInfoIfNotExist(objid)
   MusicHelper.playerMusicInfos[objid].speedIndex = MusicHelper.playerMusicInfos[objid].speedIndex + change
-  if (MusicHelper.playerMusicInfos[objid].speedIndex <= 1) then
+  if MusicHelper.playerMusicInfos[objid].speedIndex <= 1 then
     MusicHelper.playerMusicInfos[objid].speedIndex = 1
     ChatHelper.sendMsg(objid, '音乐播放速度已调到最慢')
-  elseif (MusicHelper.playerMusicInfos[objid].speedIndex >= #MusicHelper.delays) then
+  elseif MusicHelper.playerMusicInfos[objid].speedIndex >= #MusicHelper.delays then
     MusicHelper.playerMusicInfos[objid].speedIndex = #MusicHelper.delays
     ChatHelper.sendMsg(objid, '音乐播放速度已调到最快')
   else
-    if (change > 0) then
+    if change > 0 then
       ChatHelper.sendMsg(objid, '音乐播放速度变快')
     else
       ChatHelper.sendMsg(objid, '音乐播放速度变慢')

@@ -211,7 +211,7 @@ function MyCustomUIHelper.showStoryMessage (objid)
   local tasks = TaskHelper.getTasks(objid)
   local task -- 假定主线剧情任务至多只有一个
   for k, v in pairs(tasks) do
-    if type(v) == 'table' and v.isMain and not(v:isFinish()) then -- 是主线任务 且 未结束
+    if type(v) == 'table' and v.isMain and not v:isFinish() then -- 是主线任务 且 未结束
       task = v
       break
     end

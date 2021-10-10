@@ -20,9 +20,9 @@ end
 
 function MyMonsterHelper.getMonsterModel (objid)
   local actorid = CreatureHelper.getActorID(objid)
-  if (actorid) then
+  if actorid then
     for i, v in ipairs(MonsterHelper.getMonsterModels()) do
-      if (v.actorid == actorid) then
+      if v.actorid == actorid then
         return v
       end
     end

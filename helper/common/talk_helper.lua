@@ -210,7 +210,7 @@ function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
         table.insert(chooseArr, v)
       end
     end
-    if (#chooseArr == 0) then -- 没有选项，即选项都不满足
+    if #chooseArr == 0 then -- 没有选项，即选项都不满足
       return false
     end
     player.chooseArr = chooseArr
@@ -300,7 +300,7 @@ function TalkHelper.realChooseTalk (playerid, actor, index, sessions)
   if playerTalk.f then
     playerTalk.f(player, actor)
   end
-  if not(playerTalk.t) or playerTalk.t == 1 then -- 继续
+  if not playerTalk.t or playerTalk.t == 1 then -- 继续
     if TalkHelper.turnTalkIndex(playerid, actor, max) then
       TalkHelper.talkWith(playerid, actor)
     end

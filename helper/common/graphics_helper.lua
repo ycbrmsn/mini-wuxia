@@ -33,7 +33,7 @@ end
 
 function GraphicsHelper.updateHp (objid, hp, maxHp, offset)
   local graphid = GraphicsHelper.hpMap[objid]
-  -- if (graphid) then
+  -- if graphid then
   --   return GraphicsHelper.updateGraphicsProgressById(graphid, hp, maxHp)
   -- else
     GraphicsHelper.removeGraphicsByObjID(objid, GraphicsHelper.defaultItype, GRAPHICS.GRAPHICS_PROGRESS)
@@ -67,7 +67,7 @@ end
 -- 在位置上创建文字板
 function GraphicsHelper.createTextByPos (x, y, z, title, font, alpha, itype)
   local info = GraphicsHelper.makeTxt(title, font, alpha, itype)
-  if (info) then
+  if info then
     return GraphicsHelper.createGraphicsTxtByPos(x, y, z, info)
   end
 end
@@ -75,7 +75,7 @@ end
 -- 在生物身上创建文字板
 function GraphicsHelper.createTxtByActor (objid, title, dir, offset, font, alpha, itype)
   local info = GraphicsHelper.makeTxt(title, font, alpha, itype)
-  if (info) then
+  if info then
     dir = dir or GraphicsHelper.defaultDir
     offset = offset or GraphicsHelper.defaultOffset
     return GraphicsHelper.createGraphicsTxtByActor(objid, info, dir, offset)
@@ -85,7 +85,7 @@ end
 -- 在位置上创建漂浮文字
 function GraphicsHelper.createFTxtByPos (x, y, z, title, font, itype)
   local info = GraphicsHelper.makeFTxt(title, font, itype)
-  if (info) then
+  if info then
     return GraphicsHelper.createflotageTextByPos(x, y, z, info)
   end
 end
@@ -93,7 +93,7 @@ end
 -- 在生物身上创建漂浮文字
 function GraphicsHelper.createFTxtByActor (objid, title, dir, offset, font, itype)
   local info = GraphicsHelper.makeFTxt(title, font, itype)
-  if (info) then
+  if info then
     dir = dir or GraphicsHelper.defaultDir
     offset = offset or GraphicsHelper.defaultOffset
     return GraphicsHelper.createflotageTextByActor(objid, info, dir, offset)
@@ -103,7 +103,7 @@ end
 -- 在位置上创建进度条
 function GraphicsHelper.createProgressByPos (x, y, z, v1, v2, color, itype)
   local info = GraphicsHelper.makeProgress(v1, v2, color, itype)
-  if (info) then
+  if info then
     return GraphicsHelper.createGraphicsProgressByPos(x, y, z, info)
   end
 end
@@ -111,7 +111,7 @@ end
 -- 在生物身上创建进度条
 function GraphicsHelper.createProgressByActor (objid, v1, v2, dir, offset, color, itype)
   local info = GraphicsHelper.makeProgress(v1, v2, color, itype)
-  if (info) then
+  if info then
     dir = dir or GraphicsHelper.defaultDir
     offset = offset or GraphicsHelper.defaultOffset
     return GraphicsHelper.createGraphicsProgressByActor(objid, info, dir, offset)

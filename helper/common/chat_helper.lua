@@ -60,7 +60,7 @@ end
 
 -- 等待后发送消息
 function ChatHelper.waitSendMsg (objid, seconds, ...)
-  if (seconds <= 0) then
+  if seconds <= 0 then
     ChatHelper.sendMsg(objid, ...)
   else
     local content = StringHelper.concat(...)
@@ -74,7 +74,7 @@ end
 function ChatHelper.showChooseItems (objid, arr, key)
   ChatHelper.showSelectSeparate(objid)
   for i, v in ipairs(arr) do
-    if (key) then
+    if key then
       ChatHelper.sendMsg(objid, i .. '.' .. v[key])
     else
       ChatHelper.sendMsg(objid, i .. '.' .. v)

@@ -70,14 +70,14 @@ end
 function MyAreaHelper.initShowToastAreas ()
   local arr = { dog, wolf, qiangdaoLouluo, ox, jianshibing }
   for i, v in ipairs(arr) do
-    if (v.generate) then -- 如果需要生成怪物
+    if v.generate then -- 如果需要生成怪物
       AreaHelper.addToastArea(v.areaids[2], { v.areaids[1], v.areaName, v.generate })
     else
       AreaHelper.addToastArea(v.areaids[2], { v.areaids[1], v.areaName })
     end
   end
   for i, v in ipairs(guard.initAreas) do
-    if (i >= 5) then
+    if i >= 5 then
       break
     end
     AreaHelper.showToastAreas[guard.initAreas2[i]] = { v.areaid, '风颖城' }
@@ -112,7 +112,7 @@ function MyAreaHelper.getEmptyPrisonPos ()
   local pos = MyAreaHelper.prisonPoses[1]
   for i, v in ipairs(MyAreaHelper.prisonAreas) do
     local objids = AreaHelper.getAllPlayersInAreaId(v)
-    if (objids and #objids == 0) then
+    if objids and #objids == 0 then
       pos = MyAreaHelper.prisonPoses[i]
       break
     end

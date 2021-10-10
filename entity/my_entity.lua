@@ -24,7 +24,7 @@ end
 -- 位置上是否是蜡烛台
 function MyCandle:isCandle (pos)
   local blockid
-  if (type(pos) == 'table') then
+  if type(pos) == 'table' then
     blockid = BlockHelper.getBlockID(pos.x, pos.y, pos.z)
   else
     blockid = pos
@@ -39,7 +39,7 @@ end
 
 -- 是否是同一个
 function MyCandle:isSameOne (myPosition)
-  if (type(myPosition) == 'table') then
+  if type(myPosition) == 'table' then
     return myPosition.x == self.pos.x and myPosition.y == self.pos.y and myPosition.z == self.pos.z
   else
     return false
@@ -60,7 +60,7 @@ end
 
 -- 切换
 function MyCandle:toggle ()
-  if (self.isLit) then
+  if self.isLit then
     self:putOut()
   else
     self:light()
@@ -74,7 +74,7 @@ MyBed = {
 
 function MyBed:isBed (pos)
   local blockid
-  if (type(pos) == 'table') then
+  if type(pos) == 'table' then
     blockid = BlockHelper.getBlockID(pos.x, pos.y, pos.z)
   else
     blockid = pos
@@ -88,11 +88,11 @@ MyPosition = {
 }
 
 function MyPosition:new (x, y, z)
-  if (not(x)) then
+  if not x then
     return nil
   end
   local o
-  if (type(x) == 'table') then
+  if type(x) == 'table' then
     o = { x = x.x, y = x.y, z = x.z }
   else
     o = { x = x, y = y, z = z }
@@ -103,9 +103,9 @@ function MyPosition:new (x, y, z)
 end
 
 function MyPosition.__add (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyPosition:new(o1.x + o2, o1.y + o2, o1.z + o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyPosition:new(o1.x + o2.x, o1.y + o2.y, o1.z + o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -113,9 +113,9 @@ function MyPosition.__add (o1, o2)
 end
 
 function MyPosition.__sub (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyPosition:new(o1.x - o2, o1.y - o2, o1.z - o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyPosition:new(o1.x - o2.x, o1.y - o2.y, o1.z - o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -123,9 +123,9 @@ function MyPosition.__sub (o1, o2)
 end
 
 function MyPosition.__mul (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyPosition:new(o1.x * o2, o1.y * o2, o1.z * o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyPosition:new(o1.x * o2.x, o1.y * o2.y, o1.z * o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -133,9 +133,9 @@ function MyPosition.__mul (o1, o2)
 end
 
 function MyPosition.__div (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyPosition:new(o1.x / o2, o1.y / o2, o1.z / o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyPosition:new(o1.x / o2.x, o1.y / o2.y, o1.z / o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -155,14 +155,14 @@ function MyPosition:isPosition (pos)
 end
 
 function MyPosition:equals (pos)
-  if (type(pos) ~= 'table') then
+  if type(pos) ~= 'table' then
     return false
   end
   return pos.x == self.x and pos.y == self.y and pos.z == self.z
 end
 
 function MyPosition:equalBlockPos (pos)
-  if (type(pos) ~= 'table') then
+  if type(pos) ~= 'table' then
     return false
   end
   local x1, y1, z1 = self:floor():get()
@@ -195,7 +195,7 @@ function MyArr:new (arr)
 end
 
 function MyArr:add (index, o)
-  if (o) then
+  if o then
     table.insert(self.arr, index, o)
   else
     table.insert(self.arr, index)
@@ -203,7 +203,7 @@ function MyArr:add (index, o)
 end
 
 function MyArr:addArr (index, arr)
-  if (arr) then
+  if arr then
     for i, v in ipairs(arr) do
       self:add(index, v)
       index = index + 1
@@ -233,11 +233,11 @@ MyVector3 = {}
 -- 参数：六个number/三个number/两个table/一个table
 function MyVector3:new (x0, y0, z0, x1, y1, z1)
   local o
-  if (x1) then
+  if x1 then
     o = { x = x1 - x0, y = y1 - y0, z = z1 - z0 }
-  elseif (z0) then
+  elseif z0 then
     o = { x = x0, y = y0, z = z0 }
-  elseif (y0) then
+  elseif y0 then
     o = { x = y0.x - x0.x, y = y0.y - x0.y, z = y0.z - x0.z }
   else
     o = { x = x0.x, y = x0.y, z = x0. z }
@@ -257,9 +257,9 @@ MyVector3.FORWARD = MyVector3:new(0, 0, 1)
 MyVector3.BACK = MyVector3:new(0, 0, -1)
 
 function MyVector3.__add (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyVector3:new(o1.x + o2, o1.y + o2, o1.z + o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyVector3:new(o1.x + o2.x, o1.y + o2.y, o1.z + o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -267,9 +267,9 @@ function MyVector3.__add (o1, o2)
 end
 
 function MyVector3.__sub (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyVector3:new(o1.x - o2, o1.y - o2, o1.z - o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyVector3:new(o1.x - o2.x, o1.y - o2.y, o1.z - o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -277,9 +277,9 @@ function MyVector3.__sub (o1, o2)
 end
 
 function MyVector3.__mul (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyVector3:new(o1.x * o2, o1.y * o2, o1.z * o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyVector3:new(o1.x * o2.x, o1.y * o2.y, o1.z * o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -287,9 +287,9 @@ function MyVector3.__mul (o1, o2)
 end
 
 function MyVector3.__div (o1, o2)
-  if (type(o2) == 'number') then
+  if type(o2) == 'number' then
     return MyVector3:new(o1.x / o2, o1.y / o2, o1.z / o2)
-  elseif (type(o2) == 'table') then
+  elseif type(o2) == 'table' then
     return MyVector3:new(o1.x / o2.x, o1.y / o2.y, o1.z / o2.z)
   else
     error('运算对象是' .. type(o2) .. ', 不是数字或位置', 2)
@@ -357,11 +357,11 @@ end
 
 -- 是否满足条件
 function TalkInfo:isMeet (playerid)
-  if (not(self.ants)) then
+  if not self.ants then
     return true
   end
   for i, ant in ipairs(self.ants) do
-    if (not(ant:isMeet(playerid))) then
+    if not ant:isMeet(playerid) then
       return false
     end
   end
@@ -377,6 +377,7 @@ end
   itemid(道具id)
   num(道具数量)
   state(任务状态1未完成2已完成3已结束)
+  f(自定义函数，返回true表示通过)
 ]]-- 
 TalkAnt = {}
 
@@ -389,7 +390,7 @@ end
 
 -- 前置必需任务
 function TalkAnt:includeTask (taskid, state)
-  if (type(taskid) == 'table') then
+  if type(taskid) == 'table' then
     taskid = taskid.id
   end
   return TalkAnt:new({ t = 1, taskid = taskid, state = state })
@@ -397,7 +398,7 @@ end
 
 -- 前置互斥任务
 function TalkAnt:excludeTask (taskid)
-  if (type(taskid) == 'table') then
+  if type(taskid) == 'table' then
     taskid = taskid.id
   end
   return TalkAnt:new({ t = 2, taskid = taskid })
@@ -410,7 +411,7 @@ end
 
 -- 拥有num个道具
 function TalkAnt:includeItem (itemid, num)
-  if (type(itemid) == 'table') then
+  if type(itemid) == 'table' then
     itemid = itemid.id
   end
   return TalkAnt:new({ t = 4, itemid = itemid, num = num or 1 })
@@ -418,7 +419,7 @@ end
 
 -- 没有num个道具
 function TalkAnt:excludeItem (itemid, num)
-  if (type(itemid) == 'table') then
+  if type(itemid) == 'table' then
     itemid = itemid.id
   end
   return TalkAnt:new({ t = 5, itemid = itemid, num = num or 1 })
@@ -426,7 +427,7 @@ end
 
 -- 正好几个道具
 function TalkAnt:justItem (itemid, num)
-  if (type(itemid) == 'table') then
+  if type(itemid) == 'table' then
     itemid = itemid.id
   end
   return TalkAnt:new({ t = 6, itemid = itemid, num = num or 1 })
@@ -434,7 +435,7 @@ end
 
 -- 房主正好几个道具（主要用于剧情判断）
 function TalkAnt:hosterJustItem (itemid, num)
-  if (type(itemid) == 'table') then
+  if type(itemid) == 'table' then
     itemid = itemid.id
   end
   return TalkAnt:new({ t = 7, itemid = itemid, num = num or 1 })
@@ -455,10 +456,15 @@ function TalkAnt:isHostPlayer (isHost)
   return TalkAnt:new({ t = 11, isHost = isHost })
 end
 
+-- 自定义满足情况 f返回true表示满足
+function TalkAnt:custom (f)
+  return TalkAnt:new({ t = 19, f = f })
+end
+
 -- 几个条件并且
 function TalkAnt:andAnts ( ... )
   local num = select("#", ...)
-  if (num == 1) then
+  if num == 1 then
     return select(1, ...)
   else
     local ants = {}
@@ -473,7 +479,7 @@ end
 -- 几个条件或者
 function TalkAnt:orAnts ( ... )
   local num = select("#", ...)
-  if (num == 1) then
+  if num == 1 then
     return select(1, ...)
   else
     local ants = {}
@@ -489,69 +495,71 @@ end
 function TalkAnt:isMeet (playerid)
   -- taskid可能是函数，用于动态获取任务id
   local taskid = type(self.taskid) == 'function' and self.taskid() or self.taskid
-  if (self.t == 1) then -- 前置必需任务
+  if self.t == 1 then -- 前置必需任务
     -- LogHelper.debug(taskid)
-    if (TaskHelper.hasTask(playerid, taskid)) then
+    if TaskHelper.hasTask(playerid, taskid) then
       -- LogHelper.debug('满足：', taskid)
-      if (self.state) then -- 任务进度
+      if self.state then -- 任务进度
         local state = TaskHelper.getTaskState(playerid, taskid)
         return state == self.state
       end
     else
       return false
     end
-  elseif (self.t == 2) then -- 前置互斥任务
+  elseif self.t == 2 then -- 前置互斥任务
     -- LogHelper.debug(self)
-    if (TaskHelper.hasTask(playerid, taskid)) then
+    if TaskHelper.hasTask(playerid, taskid) then
       return false
     end
-  elseif (self.t == 3) then -- 世界时间
+  elseif self.t == 3 then -- 世界时间
     local hour = TimeHelper.getHour()
-    if (not(hour >= self.beginHour and hour < self.endHour)) then
+    if not(hour >= self.beginHour and hour < self.endHour) then -- 不在时间范围内
       return false
     end
-  elseif (self.t == 4) then -- 拥有num个道具
+  elseif self.t == 4 then -- 拥有num个道具
     local itemnum = self.num or 1
     local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
-    if (num < itemnum) then
+    if num < itemnum then
       return false
     end
-  elseif (self.t == 5) then -- 没有num个道具
+  elseif self.t == 5 then -- 没有num个道具
     local itemnum = self.num or 1
     local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
-    if (num >= itemnum) then
+    if num >= itemnum then
       return false
     end
-  elseif (self.t == 6) then -- 正好num个道具
+  elseif self.t == 6 then -- 正好num个道具
     local itemnum = self.num or 1
     local num = BackpackHelper.getItemNumAndGrid(playerid, self.itemid)
-    if (num ~= itemnum) then
+    if num ~= itemnum then
       return false
     end
-  elseif (self.t == 7) then -- 房主正好几个道具（主要用于剧情判断）
+  elseif self.t == 7 then -- 房主正好几个道具（主要用于剧情判断）
     local itemnum = self.num or 1
     local hostPlayer = PlayerHelper.getHostPlayer()
     local num = BackpackHelper.getItemNumAndGrid(hostPlayer.objid, self.itemid)
-    if (num ~= itemnum) then
+    if num ~= itemnum then
       return false
     end
-  elseif (self.t == 9) then -- 至少几级
+  elseif self.t == 9 then -- 至少几级
     local level = PlayerHelper.getLevel(playerid)
     return level >= self.level
-  elseif (self.t == 10) then -- 至多几级
+  elseif self.t == 10 then -- 至多几级
     local level = PlayerHelper.getLevel(playerid)
     return level <= self.level
-  elseif (self.t == 11) then -- 是否是房主
+  elseif self.t == 11 then -- 是否是房主
     return PlayerHelper.isMainPlayer(playerid) == self.isHost
-  elseif (self.t == 98) then -- and
+  elseif self.t == 19 then -- 自定义函数
+    return self.f()
+  elseif self.t == 98 then -- and
     for i, ant in ipairs(self.ants) do
-      if (not(ant:isMeet(playerid))) then
+      if not ant:isMeet(playerid) then
         return false
       end
     end
-  elseif (self.t == 99) then -- or
+  elseif self.t == 99 then -- or
     for i, ant in ipairs(self.ants) do
-      if (ant:isMeet(playerid)) then
+      if ant:isMeet(playerid) then
         return true
       end
     end
@@ -768,7 +776,7 @@ function BaseTask:new (o)
   o = o or {}
   self.__index = self
   setmetatable(o, self)
-  if (o.itemid) then -- 需要任务书
+  if o.itemid then -- 需要任务书
     table.insert(TaskHelper.needBookTasks, o:realTask())
   end
   return o
@@ -782,7 +790,7 @@ end
   玩家交付此任务，获得新任务，其id为n * 10000 + 2
 ]==]--
 function BaseTask:getRealid ()
-  if (not(self.realid)) then
+  if not self.realid then
     self.realid = self.id * 10000
   end
   return self.realid
@@ -796,7 +804,7 @@ function BaseTask:realTask (actorname)
   }
   self.__index = self
   setmetatable(o, self)
-  if (self.appendDesc) then
+  if self.appendDesc then
     local desc = ''
     for i, k in ipairs(self.appendDesc) do
       local v = o[k] and o[k] or k -- 如果k是属性，则拼接值；否则直接拼接k
@@ -821,12 +829,12 @@ function BaseTask:getMessage (objid)
   -- 任务奖励
   for i, reward in ipairs(self.rewards) do
     local rewardMsg = reward.desc
-    if (i == #self.rewards) then
+    if i == #self.rewards then
       rewardMsg = rewardMsg .. '。'
     else
       rewardMsg = rewardMsg .. '，'
     end
-    if (i == 1) then
+    if i == 1 then
       table.insert(lines, '任务奖励：' .. rewardMsg)
     else
       table.insert(lines, '\t\t\t\t\t' .. rewardMsg)
@@ -840,7 +848,7 @@ function BaseTask:getMessage (objid)
   elseif self.category == 1 then -- 击败生物
     for i, beatInfo in ipairs(self.beatInfos) do
       local prefix
-      if (i == 1) then -- 第一行
+      if i == 1 then -- 第一行
         prefix = '任务进度：'
       else --其他行对齐
         prefix = '\t\t\t\t\t'
@@ -861,7 +869,7 @@ function BaseTask:getMessage (objid)
       table.insert(lines, StringHelper.concat(prefix, itemname, '（',
         num, '/', itemInfo.num, '）'))
     end
-  elseif (self.category == 3) then -- 达到等级
+  elseif self.category == 3 then -- 达到等级
     local level = PlayerHelper.getLevel(objid)
     table.insert(lines, '任务进度：等级（' .. level .. '/' .. self.level .. '）')
   else
@@ -874,7 +882,7 @@ end
 -- 显示任务信息，是否使用图文显示（默认使用聊天框显示）
 function BaseTask:show (objid, useGraphics)
   local lines = self:getMessage(objid)
-  if (useGraphics) then
+  if useGraphics then
     local title = StringHelper.join(lines, '\n')
     local pos = ActorHelper.getDistancePosition(objid, 2)
     pos.y = pos.y + 1
@@ -907,22 +915,22 @@ end
 function BaseTask:isComplete (objid)
   if type(self.complete) == 'boolean' then -- 该任务是手动设置完成状态，如一些自定义任务（送信后回报）
     return self.complete
-  elseif (self.category == 1) then -- 击败生物
+  elseif self.category == 1 then -- 击败生物
     for i, beatInfo in ipairs(self.beatInfos) do
-      if (beatInfo.curnum < beatInfo.num) then
+      if beatInfo.curnum < beatInfo.num then
         return false
       end
     end
     return true
-  elseif (self.category == 2) then -- 交付道具
+  elseif self.category == 2 then -- 交付道具
     for i, itemInfo in ipairs(self.itemInfos) do
       local num = BackpackHelper.getItemNumAndGrid(objid, itemInfo.itemid)
-      if (num < itemInfo.num) then
+      if num < itemInfo.num then
         return false
       end
     end
     return true
-  elseif (self.category == 3) then -- 达到等级
+  elseif self.category == 3 then -- 达到等级
     local level = PlayerHelper.getLevel(objid)
     return level >= self.level
   else -- 其他

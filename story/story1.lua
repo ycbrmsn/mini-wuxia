@@ -34,7 +34,7 @@ function Story1:new ()
   }
   self:checkData(data)
 
-  if (StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == 1) then -- 剧情1
+  if StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == 1 then -- 剧情1
     local areaid = AreaHelper.createAreaRectByRange(data.posBeg, data.posEnd)
     data.areaid = areaid
   end
@@ -45,7 +45,7 @@ end
 
 -- 文羽通知事件
 function Story1:noticeEvent (areaid)
-  if (not(wenyu) or not(wenyu:isFinishInit())) then -- 校验
+  if not wenyu or not wenyu:isFinishInit() then -- 校验
     TimeHelper.callFnAfterSecond(function ()
       self:noticeEvent(areaid)
     end, 1)
@@ -60,7 +60,7 @@ function Story1:noticeEvent (areaid)
   wenyu:wantFollow('forceDoNothing', hostPlayer.objid)
   local content = StringHelper.join(PlayerHelper.getAllPlayerNames(), '、')
   local subject = '你'
-  if (#PlayerHelper.getActivePlayers() > 1) then 
+  if #PlayerHelper.getActivePlayers() > 1 then 
     subject = '你们'
   end
   content = StringHelper.concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
@@ -75,17 +75,17 @@ end
 function Story1:fasterTime ()
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 1 and mainProgress == (#self.tips - 1) and not(self.isFasterTime)) then -- 主角回家休息
+  if mainIndex == 1 and mainProgress == (#self.tips - 1) and not self.isFasterTime then -- 主角回家休息
     -- 时间快速流逝
     self.isFasterTime = true
     TimeHelper.repeatUtilSuccess(function ()
       local hour = TimeHelper.getHour()
-      if (StoryHelper.getMainStoryProgress() < #self.tips) then
+      if StoryHelper.getMainStoryProgress() < #self.tips then
         hour = 0
         TimeHelper.setHour(hour)
         return false
       else
-        if (hour < 8) then
+        if hour < 8 then
           hour = hour + 1
           TimeHelper.setHour(hour)
           return false
@@ -100,7 +100,7 @@ end
 
 -- 结束通知事件
 function Story1:finishNoticeEvent (objid)
-  if (not(yexiaolong) or not(yexiaolong:isFinishInit())) then -- 校验
+  if not yexiaolong or not yexiaolong:isFinishInit() then -- 校验
     TimeHelper.callFnAfterSecond(function ()
       self:finishNoticeEvent(objid)
     end, 1)
@@ -124,7 +124,7 @@ function Story1:finishNoticeEvent (objid)
   yexiaolong.action:playStand(ws:use(3))
   local hour = WorldHelper.getHours()
   local hourName = StringHelper.getHourName(hour)
-  if (hour < 7) then
+  if hour < 7 then
     yexiaolong:speak(ws:use(), '现在才', hourName, '。这样，收拾一下，#G辰时',
       StringHelper.speakColor, '在村门口集合出发。')
   else
@@ -138,7 +138,7 @@ function Story1:finishNoticeEvent (objid)
     player:enableMove(true, true)
     yexiaolong:wantStayForAWhile(1)
     yexiaolong:enableMove(true)
-    if (hour < 9) then
+    if hour < 9 then
       StoryHelper.forward(1, '获得令牌', '明日出发')
     else
       StoryHelper.forward(1, '获得令牌')
@@ -149,13 +149,13 @@ end
 function Story1:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
   TaskHelper.addStoryTask(player.objid)
-  if (mainProgress == 5) then
-    if (PlayerHelper.isMainPlayer(player.objid)) then -- 房主
+  if mainProgress == 5 then
+    if PlayerHelper.isMainPlayer(player.objid) then -- 房主
       story1:finishNoticeEvent(player.objid)
     else
       player:enableMove(true)
     end
-  elseif (mainProgress > 5) then
+  elseif mainProgress > 5 then
     player:enableMove(true)
   end
 end

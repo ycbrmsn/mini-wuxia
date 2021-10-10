@@ -5,8 +5,8 @@ TimerHelper = {
 
 -- 如果timerid不存在就创建计时器
 function TimerHelper.createTimerIfNotExist (timername, timerid)
-  if (timerid) then
-    if (not(TimerHelper.isExist(timerid))) then -- 计时器不存在
+  if timerid then
+    if not TimerHelper.isExist(timerid) then -- 计时器不存在
       timerid = TimerHelper.createTimer(timername)
     end
     return timerid
@@ -21,14 +21,14 @@ function TimerHelper.getTimer (timername)
   local timerid
   -- 查找一个停止的计时器
   for k, v in pairs(TimerHelper.timerPool) do
-    if (v.isOver and v.timername == timername) then
+    if v.isOver and v.timername == timername then
       v.isOver = false -- 设置计时器开始工作标识isOver
       timerid = k
       break
     end
   end
   -- 没找到则创建一个计时器，并加入计时器池中
-  if (not(timerid)) then
+  if not timerid then
     timerid = TimerHelper.createTimer(timername)
     TimerHelper.timerPool[timerid] = { timerid = timerid, timername = timername, isOver = false }
   end
@@ -59,11 +59,11 @@ end
 -- 任意计时器发生变化
 function TimerHelper.minitimerChange(timerid, timername)
   local time = TimerHelper.getTimerTime(timerid)
-  if (time == 0) then
+  if time == 0 then
     local timerInfo = TimerHelper.timerPool[timerid]
-    if (timerInfo) then
+    if timerInfo then
       timerInfo.isOver = true
-      if (timerInfo.f) then
+      if timerInfo.f then
         timerInfo.f()
         timerInfo.f = nil
       end

@@ -13,17 +13,17 @@ end
 function CommonHelper.callIsSuccessMethod (f, methodDesc, ...)
   for i = 1, CommonHelper.repeatTime do
     local result = f()
-    if (result == ErrorCode.OK) then
+    if result == ErrorCode.OK then
       return true
     else
-      -- if (methodDesc) then
+      -- if methodDesc then
       --   LogHelper.debug(methodDesc, '失败一次')
       -- end
     end
   end
-  if (LogHelper.level == 'debug' and methodDesc) then
+  if LogHelper.level == 'debug' and methodDesc then
     local msg = StringHelper.concat(...)
-    if (#msg > 0) then
+    if #msg > 0 then
       msg = '，参数：' .. msg
     end
     LogHelper.debug(methodDesc, '失败', msg)
@@ -34,17 +34,17 @@ end
 function CommonHelper.callResultMethod (f, methodDesc, ...)
   for i = 1, CommonHelper.repeatTime do
     local arr = {f(p)}
-    if (arr[1] == ErrorCode.OK) then
+    if arr[1] == ErrorCode.OK then
       return table.unpack(arr, 2)
     else
-      -- if (methodDesc) then
+      -- if methodDesc then
       --   LogHelper.debug(methodDesc, '失败一次')
       -- end
     end
   end
-  if (LogHelper.level == 'debug' and methodDesc) then
+  if LogHelper.level == 'debug' and methodDesc then
     local msg = StringHelper.concat(...)
-    if (#msg > 0) then
+    if #msg > 0 then
       msg = '，参数：' .. msg
     end
     LogHelper.debug(methodDesc, '失败', msg)
@@ -68,7 +68,7 @@ end
 function CommonHelper.copy (t)
   local result
   local tp = type(t)
-  if (tp == 'table') then
+  if tp == 'table' then
     result = {}
     for k, v in pairs(t) do
       result[k] = CommonHelper.copy(v)

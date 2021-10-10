@@ -5,7 +5,7 @@ EventHelper = {
 
 -- 新增事件
 function EventHelper.addEvent (eventname, f)
-  if (not(EventHelper.func[eventname])) then
+  if not EventHelper.func[eventname] then
     EventHelper.func[eventname] = { f }
   else
     table.insert(EventHelper.func[eventname], f)
@@ -15,7 +15,7 @@ end
 -- 自定义方法
 function EventHelper.customEvent (eventname, ...)
   local fs = EventHelper.func[eventname]
-  if (fs) then
+  if fs then
     for i, v in ipairs(fs) do
       v(...)
     end
@@ -119,10 +119,10 @@ end
 -- 玩家击败目标 item参数是自己加的，为自定义道具
 function EventHelper.playerDefeatActor (objid, toobjid, item)
   local realDefeat = PlayerHelper.playerDefeatActor(objid, toobjid)
-  if (not(realDefeat)) then -- 是重复击败，则不执行下面的内容
+  if not realDefeat then -- 是重复击败，则不执行下面的内容
     return
   end
-  if (ActorHelper.isPlayer(toobjid)) then -- 击败玩家
+  if ActorHelper.isPlayer(toobjid) then -- 击败玩家
     TaskHelper.playerDefeatActor(objid, -1, true)
   else
     TaskHelper.playerDefeatActor(objid, CreatureHelper.getActorID(toobjid), true)

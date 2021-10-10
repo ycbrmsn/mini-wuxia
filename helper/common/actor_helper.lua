@@ -57,7 +57,7 @@ end
 -- 根据actorid删除actor
 function ActorHelper.delAcotrsByActorid (actorid)
   for k, v in pairs(ActorHelper.actors) do
-    if (v.actorid == actorid) then
+    if v.actorid == actorid then
       ActorHelper.actors[k] = nil
     end
   end
@@ -85,7 +85,7 @@ end
 -- 获取自定义buff
 function ActorHelper.getBuff (buffid)
   for k, v in pairs(ActorHelper.buffs) do
-    if (k == buffid) then
+    if k == buffid then
       return v
     end
   end
@@ -95,7 +95,7 @@ end
 -- 获取自定义build
 function ActorHelper.getBuild (buildid)
   for k, v in pairs(ActorHelper.builds) do
-    if (k == buildid) then
+    if k == buildid then
       return v
     end
   end
@@ -116,13 +116,13 @@ end
 function ActorHelper.getInitActorObjids ()
   local time = TimeHelper.getTime()
   local objids = ActorHelper.initActorObjids[time]
-  if (not(objids)) then
+  if not objids then
     objids = {}
     PlayerHelper.everyPlayerDoSomeThing(function (player)
       local pos = player:getMyPosition()
-      if (pos) then
+      if pos then
         local ids = WorldHelper.getCreaturesAroundPos(pos)
-        if (ids and #ids > 0) then
+        if ids and #ids > 0 then
           for i, objid in ipairs(ids) do
             table.insert(objids, objid)
           end
@@ -143,15 +143,15 @@ end
 
 function ActorHelper.setMyPosition (objid, x, y, z)
   local pos
-  if (type(x) == 'table') then
+  if type(x) == 'table' then
     pos = x 
-  elseif (type(x) == 'number') then
+  elseif type(x) == 'number' then
     pos = MyPosition:new(x, y, z)
   else
     LogHelper.debug('设置位置参数类型为：', type(x))
     return false
   end
-  if (ActorHelper.isPlayer(objid)) then
+  if ActorHelper.isPlayer(objid) then
     return PlayerHelper.setPosition(objid, pos.x, pos.y, pos.z)
   else
     return ActorHelper.setPosition(objid, pos.x, pos.y, pos.z)
@@ -161,9 +161,9 @@ end
 -- 获得人物眼睛高度的位置
 function ActorHelper.getEyeHeightPosition (objid)
   local pos = CacheHelper.getMyPosition(objid)
-  if (pos) then
+  if pos then
     local height = ActorHelper.getEyeHeight(objid)
-    if (height) then
+    if height then
       pos.y = pos.y + height
     end
   end
@@ -176,9 +176,9 @@ function ActorHelper.getDistancePosition (objid, distance, angle)
   angle = angle or 0
   local pos = CacheHelper.getMyPosition(objid)
   local angle = ActorHelper.getFaceYaw(objid) + angle
-  -- if (angle > 180) then
+  -- if angle > 180 then
   --   angle = angle - 360
-  -- elseif (angle < -180) then
+  -- elseif angle < -180 then
   --   angle = angle + 360
   -- end
   return MathHelper.getDistancePosition(pos, angle, distance)
@@ -204,11 +204,11 @@ end
 function ActorHelper.lookToward (objid, dir)
   dir = string.upper(dir)
   local yaw
-  if (dir == 'N') then
+  if dir == 'N' then
     yaw = ActorHelper.FACE_YAW.NORTH
-  elseif (dir == 'S') then
+  elseif dir == 'S' then
     yaw = ActorHelper.FACE_YAW.SOUTH
-  elseif (dir == 'W') then
+  elseif dir == 'W' then
     yaw = ActorHelper.FACE_YAW.WEST
   else
     yaw = ActorHelper.FACE_YAW.EAST
@@ -221,7 +221,7 @@ function ActorHelper.setLookAtFaceYaw (objid, toobjid, angle)
   angle = angle or 0
   local pos = CacheHelper.getMyPosition(objid)
   local dstPos = toobjid
-  if (type(toobjid) == 'number') then
+  if type(toobjid) == 'number' then
     dstPos = CacheHelper.getMyPosition(toobjid)
   end
   local myVector3 = MyVector3:new(pos, dstPos)
@@ -234,26 +234,26 @@ function ActorHelper.handleNextWant (myActor)
   local nextWant = myActor.wants[1]
   -- LogHelper.debug('下一个行为：', nextWant.style)
   myActor.think = nextWant.think
-  if (nextWant.style == 'move' or nextWant.style == 'patrol') then
+  if nextWant.style == 'move' or nextWant.style == 'patrol' then
     ActorActionHelper.createMoveToPos(nextWant)
     myActor.action:execute()
     -- LogHelper.debug('开始移动')
-  elseif (nextWant.style == 'approach') then
+  elseif nextWant.style == 'approach' then
     ActorActionHelper.createApproachToPos(nextWant)
     myActor.action:execute()
-  elseif (nextWant.style == 'freeInArea' or nextWant.style == 'freeAttack') then
+  elseif nextWant.style == 'freeInArea' or nextWant.style == 'freeAttack' then
     nextWant.toPos = ActorActionHelper.getFreeInAreaPos(myActor.freeInAreaIds)
     ActorActionHelper.createMoveToPos(nextWant)
     -- LogHelper.debug(myActor:getName() .. '开始闲逛')
-  elseif (nextWant.style == 'freeTime') then
+  elseif nextWant.style == 'freeTime' then
     myActor:openAI()
-  elseif (nextWant.style == 'wait') then
+  elseif nextWant.style == 'wait' then
     local restTime = nextWant.restTime
     table.remove(myActor.wants, 1)
     nextWant = myActor.wants[1]
     nextWant.currentRestTime = restTime
     -- LogHelper.debug('wait')
-  elseif (nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle') then
+  elseif nextWant.style == 'lightCandle' or nextWant.style == 'putOutCandle' then
     nextWant.toPos = want.toPos
     nextWant.currentRestTime = nextWant.restTime
   end
@@ -262,7 +262,7 @@ end
 -- 记录点击的玩家与被点击的生物之间的一对一关系
 function ActorHelper.recordClickActor (objid, myActor)
   for k, v in pairs(ActorHelper.clickActors) do
-    if (v == myActor) then -- 有其他玩家点击过，则替换为当前玩家点击
+    if v == myActor then -- 有其他玩家点击过，则替换为当前玩家点击
       ActorHelper.clickActors[k] = nil
       break
     end
@@ -270,7 +270,7 @@ function ActorHelper.recordClickActor (objid, myActor)
   ActorHelper.clickActors[objid] = myActor
   local player = PlayerHelper.getPlayer(objid)
   local prevActor = player:getClickActor()
-  if (not(prevActor) or prevActor ~= myActor) then -- 点击生物不同
+  if not prevActor or prevActor ~= myActor then -- 点击生物不同
     player:breakTalk()
   end
   player:setClickActor(myActor)
@@ -279,11 +279,11 @@ end
 -- 准备恢复被点击的生物之前的行为，并终止对话
 function ActorHelper.resumeClickActor (objid)
   local myActor = ActorHelper.clickActors[objid]
-  if (myActor) then
-    if (myActor.wants and #myActor.wants > 0) then
+  if myActor then
+    if myActor.wants and #myActor.wants > 0 then
       local want = myActor.wants[1]
       local t = myActor.objid .. 'lookat'
-      if (TimeHelper.isFnContinueRuns(t)) then -- 正在看，就停止
+      if TimeHelper.isFnContinueRuns(t) then -- 正在看，就停止
         TimeHelper.delFnContinueRuns(t)
         want.currentRestTime = 3
         ActorHelper.clickActors[objid] = nil
@@ -299,7 +299,7 @@ end
 function ActorHelper.runActors ()
   for k, v in pairs(ActorHelper.actors) do
     LogHelper.call(function ()
-      if (v:isActive() and not(v.isBossStyle)) then
+      if v:isActive() and not v.isBossStyle then -- 生物活着 且 不是boss
         v.action:execute()
       end
     end)
@@ -310,7 +310,7 @@ end
 function ActorHelper.atHour (hour)
   hour = hour or TimeHelper.getHour()
   for k, actor in pairs(ActorHelper.actors) do
-    if (not(actor:isWantsExist()) or actor.wants[1].think ~= 'forceDoNothing') then
+    if not actor:isWantsExist() or actor.wants[1].think ~= 'forceDoNothing' then -- 没有设置为不受影响
       actor:wantAtHour(hour)
     end
   end
@@ -319,7 +319,7 @@ end
 -- 所有特定生物重新开始干现在应该干的事情
 function ActorHelper.doItNow ()
   for k, actor in pairs(ActorHelper.actors) do
-    if not(actor:isWantsExist()) or actor.wants[1].think ~= 'forceDoNothing' then
+    if not actor:isWantsExist() or actor.wants[1].think ~= 'forceDoNothing' then -- 没有设置为不受影响
       actor:doItNow()
     end
   end
@@ -328,17 +328,17 @@ end
 -- 是否是同队生物
 function ActorHelper.isTheSameTeamActor (objid1, objid2)
   local teamid1, teamid2
-  if (ActorHelper.isPlayer(objid1)) then -- 是玩家
+  if ActorHelper.isPlayer(objid1) then -- 是玩家
     teamid1 = PlayerHelper.getTeam(objid1)
   else
     teamid1 = CreatureHelper.getTeam(objid1)
   end
-  if (ActorHelper.isPlayer(objid2)) then -- 是玩家
+  if ActorHelper.isPlayer(objid2) then -- 是玩家
     teamid2 = PlayerHelper.getTeam(objid2)
   else
     teamid2 = CreatureHelper.getTeam(objid2)
   end
-  if (not(teamid1) or not(teamid2)) then -- 如果有生物没有队伍，则不是同队
+  if not teamid1 or not teamid2 then -- 如果有生物没有队伍，则不是同队
     return false
   end
   return teamid1 == teamid2
@@ -348,21 +348,21 @@ end
 function ActorHelper.getAllOtherTeamActorsInAreaId (objid, areaid)
   local objids1, objids2 = AreaHelper.getAllCreaturesAndPlayersInAreaId(areaid)
   local objids = {}
-  if (ActorHelper.isPlayer(objid)) then -- 是玩家
+  if ActorHelper.isPlayer(objid) then -- 是玩家
     local teamid = PlayerHelper.getTeam(objid)
-    if (objids1 and #objids1 > 0) then -- 发现生物，排除同队生物
+    if objids1 and #objids1 > 0 then -- 发现生物，排除同队生物
       for i, v in ipairs(objids1) do
         local tid = CreatureHelper.getTeam(v)
-        if (tid ~= teamid) then -- 非同队生物
+        if tid ~= teamid then -- 非同队生物
           table.insert(objids, v)
         end
       end
     end
-    if (objids2 and #objids2 > 0) then -- 发现玩家，排除同队玩家
+    if objids2 and #objids2 > 0 then -- 发现玩家，排除同队玩家
       for i, v in ipairs(objids2) do
-        if (v ~= objid) then -- 非当前玩家
+        if v ~= objid then -- 非当前玩家
           local tid = PlayerHelper.getTeam(v)
-          if (tid ~= teamid) then -- 非同队玩家
+          if tid ~= teamid then -- 非同队玩家
             table.insert(objids, v)
           end
         end
@@ -370,20 +370,20 @@ function ActorHelper.getAllOtherTeamActorsInAreaId (objid, areaid)
     end
   else -- 是生物
     local teamid = CreatureHelper.getTeam(objid)
-    if (objids1 and #objids1 > 0) then -- 发现生物，排除同队生物
+    if objids1 and #objids1 > 0 then -- 发现生物，排除同队生物
       for i, v in ipairs(objids1) do
-        if (v ~= objid) then -- 非当前生物
+        if v ~= objid then -- 非当前生物
           local tid = CreatureHelper.getTeam(v)
-          if (tid ~= teamid) then -- 非同队生物
+          if tid ~= teamid then -- 非同队生物
             table.insert(objids, v)
           end
         end
       end
     end
-    if (objids2 and #objids2 > 0) then -- 发现玩家，排除同队玩家
+    if objids2 and #objids2 > 0 then -- 发现玩家，排除同队玩家
       for i, v in ipairs(objids2) do
         local tid = PlayerHelper.getTeam(v)
-        if (tid ~= teamid) then -- 非同队玩家
+        if tid ~= teamid then -- 非同队玩家
           table.insert(objids, v)
         end
       end
@@ -396,13 +396,13 @@ end
 function ActorHelper.getTeam (objid)
   local teamid
   local objType = ActorHelper.getObjType(objid)
-  if (not(objType)) then -- 不存在
+  if not objType then -- 不存在
     teamid = 0
-  elseif (objType == OBJ_TYPE.OBJTYPE_PLAYER) then -- 玩家
+  elseif objType == OBJ_TYPE.OBJTYPE_PLAYER then -- 玩家
     teamid = PlayerHelper.getTeam(objid)
-  elseif (objType == OBJ_TYPE.OBJTYPE_CREATURE) then -- 生物
+  elseif objType == OBJ_TYPE.OBJTYPE_CREATURE then -- 生物
     teamid = CreatureHelper.getTeam(objid)
-  elseif (objType == OBJ_TYPE.OBJTYPE_MISSILE) then -- 投掷物
+  elseif objType == OBJ_TYPE.OBJTYPE_MISSILE then -- 投掷物
     teamid = ItemHelper.getMissileTeam(objid)
   else -- 掉落物
     teamid = 0
@@ -433,17 +433,17 @@ function ActorHelper.getAllMissilesArroundPos (pos, dim, objid, isTheSame)
 end
 
 function ActorHelper.getTeamObjs (objids, objid, isTheSame)
-  if (objids and objid) then
+  if objids and objid then
     local arr, tid, teamid = {}
-    if (objid < 20) then -- 队伍id
+    if objid < 20 then -- 队伍id
       teamid = objid
     else -- 玩家/生物/投掷物id
       teamid = ActorHelper.getTeam(objid)
     end
     for i, v in ipairs(objids) do
       tid = ActorHelper.getTeam(v)
-      if ((isTheSame and teamid == tid) or -- 同队
-        (not(isTheSame) and teamid ~= tid)) then -- 不同队
+      if isTheSame and teamid == tid or -- 同队
+        not isTheSame and teamid ~= tid then -- 不同队
         table.insert(arr, v)
       end
     end
@@ -464,24 +464,24 @@ end
 -- 生物是否在空气中
 function ActorHelper.isInAir (objid, x, y, z)
   local pos = CacheHelper.getMyPosition(objid)
-  if (not(x)) then
+  if not x then
     x, y, z = pos.x, pos.y, pos.z
   end
   local w = ActorHelper.getBodySize(objid)
   local r = w / 2 - 0.001 -- 去掉一点浮点误差
-  if (not(BlockHelper.isAirBlock(x, y, z)) or 
-    not(BlockHelper.isAirBlock(x - r, y, z)) or
-    not(BlockHelper.isAirBlock(x + r, y, z)) or
-    not(BlockHelper.isAirBlock(x, y, z - r)) or
-    not(BlockHelper.isAirBlock(x, y, z + r))) then -- 生物位置不是空气
+  if not BlockHelper.isAirBlock(x, y, z) or 
+    not BlockHelper.isAirBlock(x - r, y, z) or
+    not BlockHelper.isAirBlock(x + r, y, z) or
+    not BlockHelper.isAirBlock(x, y, z - r) or
+    not BlockHelper.isAirBlock(x, y, z + r) then -- 生物位置不是空气
     return false
   else
     y = y - 1
-    if (BlockHelper.isAirBlock(x, y, z) and
+    if BlockHelper.isAirBlock(x, y, z) and
       BlockHelper.isAirBlock(x - r, y, z) and
       BlockHelper.isAirBlock(x + r, y, z) and
       BlockHelper.isAirBlock(x, y, z - r) and
-      BlockHelper.isAirBlock(x, y, z + r)) then -- 生物下方位置是空气
+      BlockHelper.isAirBlock(x, y, z + r) then -- 生物下方位置是空气
       return true
     else -- 下方位置不是空气
       -- 判断玩家位置是不是很接近与整数
@@ -535,10 +535,10 @@ function ActorHelper.addGravity (obj)
   local t = objid .. 'addGravity'
   TimeHelper.callFnContinueRuns(function ()
     local pos = CacheHelper.getMyPosition(objid)
-    if (pos) then
-      if (pos:equals(obj.pos)) then -- 没有动
+    if pos then
+      if pos:equals(obj.pos) then -- 没有动
         obj.index = (obj.index or 0) + 1
-        if (obj.index > 20) then
+        if obj.index > 20 then
           TimeHelper.callFnFastRuns(function ()
             TimeHelper.delFnContinueRuns(t)
             CacheHelper.despawnActor(obj.objid)
@@ -550,7 +550,7 @@ function ActorHelper.addGravity (obj)
       end
       ActorHelper.appendSpeed(objid, 0, -ActorHelper.FLY_SPEED, 0)
       local speedVector3 = ItemHelper.getMissileSpeed(objid)
-      if (speedVector3) then
+      if speedVector3 then
         speedVector3.y = speedVector3.y - ActorHelper.FLY_SPEED
       else
         ItemHelper.recordMissileSpeed(objid, MyVector3:new(0, -ActorHelper.FLY_SPEED, 0))
@@ -563,67 +563,67 @@ end
 
 -- 对角色造成伤害  攻击者、被攻击者、造成伤害、使用道具（记录的特殊道具）
 function ActorHelper.damageActor (objid, toobjid, val, item)
-  if (val <= 0) then -- 伤害值无效
+  if val <= 0 then -- 伤害值无效
     return
   end
   local isPlayer -- 攻击者是否是玩家
-  if (not(objid)) then
+  if not objid then
     isPlayer = false
   else
     isPlayer = ActorHelper.isPlayer(objid)
   end
-  if (ActorHelper.isPlayer(toobjid)) then -- 伤害玩家
+  if ActorHelper.isPlayer(toobjid) then -- 伤害玩家
     local hp = PlayerHelper.getHp(toobjid)
-    if (hp <= 0) then -- 生物已经死亡
+    if hp <= 0 then -- 生物已经死亡
       return
     end
-    if (hp > val) then -- 玩家不会死亡
+    if hp > val then -- 玩家不会死亡
       hp = hp - val
       PlayerHelper.setHp(toobjid, hp)
-      if (isPlayer) then
+      if isPlayer then
         EventHelper.playerDamageActor(objid, toobjid, val)
       end
     else -- 玩家可能会死亡，则检测玩家是否可被杀死
       local ableBeKilled = PlayerHelper.getPlayerEnableBeKilled(toobjid)
-      if (ableBeKilled) then -- 能被杀死
+      if ableBeKilled then -- 能被杀死
         PlayerHelper.setHp(toobjid, -1)
         -- ActorHelper.killSelf(toobjid)
-        if (isPlayer) then -- 攻击者是玩家
+        if isPlayer then -- 攻击者是玩家
           EventHelper.playerDamageActor(objid, toobjid, val)
           EventHelper.playerDefeatActor(objid, toobjid, item)
         else -- 攻击者是生物，目前暂不处理
         end
       else -- 不能被杀死
         PlayerHelper.setHp(toobjid, 1)
-        if (isPlayer) then -- 攻击者是玩家
+        if isPlayer then -- 攻击者是玩家
           EventHelper.playerDamageActor(objid, toobjid, hp - 1)
         end
       end
     end
   else -- 伤害了生物
     local hp = CreatureHelper.getHp(toobjid)
-    if (not(hp) or hp <= 0) then -- 未找到生物或生物已经死亡
+    if not hp or hp <= 0 then -- 未找到生物或生物已经死亡
       return
     end
-    if (hp > val) then -- 生物不会死亡
+    if hp > val then -- 生物不会死亡
       hp = hp - val
       CreatureHelper.setHp(toobjid, hp)
-      if (isPlayer) then
+      if isPlayer then
         EventHelper.playerDamageActor(objid, toobjid, val)
       end
     else -- 生物可能会死亡，则检测生物是否可被杀死
       local ableBeKilled = ActorHelper.getEnableBeKilledState(toobjid)
-      if (ableBeKilled) then -- 能被杀死
+      if ableBeKilled then -- 能被杀死
         CreatureHelper.setHp(toobjid, -1)
         ActorHelper.killSelf(toobjid)
-        if (isPlayer) then -- 攻击者是玩家
+        if isPlayer then -- 攻击者是玩家
           EventHelper.playerDamageActor(objid, toobjid, val)
           EventHelper.playerDefeatActor(objid, toobjid, item)
         else -- 攻击者是生物，目前暂不处理
         end
       else -- 不能被杀死
         CreatureHelper.setHp(toobjid, 1)
-        if (isPlayer) then -- 攻击者是玩家
+        if isPlayer then -- 攻击者是玩家
           EventHelper.playerDamageActor(objid, toobjid, hp - 1)
         end
       end
@@ -637,13 +637,13 @@ function ActorHelper.isTwoInFrontOfOne (objid1, objid2)
   local x1, y1, z1 = CacheHelper.getPosition(objid1)
   local x2, y2, z2 = CacheHelper.getPosition(objid2)
   -- 获取的方向是反的，不知道是不是bug
-  if (curPlaceDir == FACE_DIRECTION.DIR_NEG_X) then -- 东
+  if curPlaceDir == FACE_DIRECTION.DIR_NEG_X then -- 东
     return x2 > x1
-  elseif (curPlaceDir == FACE_DIRECTION.DIR_POS_X) then -- 西
+  elseif curPlaceDir == FACE_DIRECTION.DIR_POS_X then -- 西
     return x2 < x1
-  elseif (curPlaceDir == FACE_DIRECTION.DIR_NEG_Z) then -- 北
+  elseif curPlaceDir == FACE_DIRECTION.DIR_NEG_Z then -- 北
     return z2 > z1
-  elseif (curPlaceDir == FACE_DIRECTION.DIR_POS_Z) then -- 南
+  elseif curPlaceDir == FACE_DIRECTION.DIR_POS_Z then -- 南
     return z2 < z1
   else
     return false
@@ -655,14 +655,14 @@ function ActorHelper.getNearestActor (objids, pos, isTwo)
   local objid, tempDistance
   for i, v in ipairs(objids) do
     local p = CacheHelper.getMyPosition(v)
-    if (p) then
+    if p then
       local distance
-      if (isTwo) then
+      if isTwo then
         distance = MathHelper.getDistanceV2(p, pos)
       else
         distance = MathHelper.getDistance(p, pos)
       end
-      if (not(tempDistance) or tempDistance > distance) then
+      if not tempDistance or tempDistance > distance then -- 未初始化 或 不是最小
         tempDistance = distance
         objid = v
       end
@@ -674,16 +674,16 @@ end
 -- 获取距离在半径内的生物 生物、距离、半径、是否是二维平面
 function ActorHelper.getRadiusActors (objids, pos, radius, isTwo)
   local arr, distance = {}
-  if (objids and #objids > 0) then
+  if objids and #objids > 0 then
     for i, objid in ipairs(objids) do
       local dstPos = CacheHelper.getMyPosition(objid)
-      if (dstPos) then
-        if (isTwo) then
+      if dstPos then
+        if isTwo then
           distance = MathHelper.getDistanceV2(pos, dstPos)
         else
           distance = MathHelper.getDistance(pos, dstPos)
         end
-        if (distance <= radius) then
+        if distance <= radius then
           table.insert(arr, objid)
         end
       end
@@ -697,12 +697,12 @@ function ActorHelper.getAliveActors (objids)
   local aliveObjids = {}
   for i, v in ipairs(objids) do
     local hp
-    if (ActorHelper.isPlayer(v)) then -- 玩家
+    if ActorHelper.isPlayer(v) then -- 玩家
       hp = PlayerHelper.getHp(v)
     else -- 生物
       hp = CreatureHelper.getHp(v)
     end
-    if (hp and hp > 0) then
+    if hp and hp > 0 then
       table.insert(aliveObjids, v)
     end
   end
@@ -712,11 +712,11 @@ end
 -- 获取特定的生物
 function ActorHelper.getSpecificActors (objids, actorid)
   local arr = {}
-  if (objids and #objids > 0) then
-    if (actorid) then
+  if objids and #objids > 0 then
+    if actorid then
       for i, objid in ipairs(objids) do
         local aid = CreatureHelper.getActorID(objid)
-        if (aid and aid == actorid) then
+        if aid and aid == actorid then
           table.insert(arr, objid)
         end
       end
@@ -730,15 +730,15 @@ end
 -- 获取有攻击目标的生物
 function ActorHelper.getHasTargetActors (objids)
   local arr = {}
-  if (type(objids) == 'table') then
+  if type(objids) == 'table' then
     for i, objid in ipairs(objids) do
       local actor = ActorHelper.getActor(objid)
-      if (actor) then -- 特定生物，则加入
+      if actor then -- 特定生物，则加入
         table.insert(arr, objid)
       else -- 非特定生物
         local motion = ActorHelper.getActorMontion(objid)
-        if (motion and (motion == CREATUREMOTION.ATK_MELEE or 
-          motion == CREATUREMOTION.ATK_REMOTE)) then
+        if motion and (motion == CREATUREMOTION.ATK_MELEE or 
+          motion == CREATUREMOTION.ATK_REMOTE) then
           table.insert(arr, objid)
         end
       end
@@ -751,7 +751,7 @@ end
 function ActorHelper.getFrontAngleActors (objids, objid, halfAngle, isNearest)
   local arr = {}
   local nearest, tempDistance
-  if (objids and #objids > 0) then
+  if objids and #objids > 0 then
     local player = PlayerHelper.getPlayer(objid)
     local pos = player:getMyPosition()
     local x, y, z = ActorHelper.getFaceDirection(objid)
@@ -762,19 +762,19 @@ function ActorHelper.getFrontAngleActors (objids, objid, halfAngle, isNearest)
       local angle1 = MathHelper.getTwoVector2Angle(x, z, vx, vz) -- 与前方向量夹角
       local angle2 = MathHelper.getTwoVector2Angle(leftPos.x - pos.x, leftPos.z - pos.z, vx, vz) -- 与左方向量夹角
       local angle
-      if (angle1 <= 90 and angle2 < 90) then -- 左前
+      if angle1 <= 90 and angle2 < 90 then -- 左前
         angle = -angle1
-      elseif (angle1 <= 90 and angle2 >= 90) then -- 右前
+      elseif angle1 <= 90 and angle2 >= 90 then -- 右前
         angle = angle1
-      elseif (angle1 > 90 and angle2 < 90) then -- 左后
+      elseif angle1 > 90 and angle2 < 90 then -- 左后
         angle = -angle1
       else -- 右后
         angle = angle1
       end
-      if (angle > -halfAngle and angle < halfAngle) then
-        if (isNearest) then -- 找最近的
+      if angle > -halfAngle and angle < halfAngle then
+        if isNearest then -- 找最近的
           local distance = MathHelper.getDistance(pos, dstPos)
-          if (not(tempDistance) or tempDistance > distance) then
+          if not tempDistance or tempDistance > distance then -- 未初始化 或 不是最小值
             tempDistance = distance
             nearest = v
           end
@@ -783,7 +783,7 @@ function ActorHelper.getFrontAngleActors (objids, objid, halfAngle, isNearest)
         end
       end
     end
-    if (nearest) then
+    if nearest then
       table.insert(arr, nearest)
     end
   end
@@ -793,49 +793,49 @@ end
 -- 角色看向 执行者、目标、是否需要旋转镜头（三维视角需要旋转），toobjid可以是objid、位置、玩家、生物
 function ActorHelper.lookAt (objid, toobjid, needRotateCamera)
   -- LogHelper.debug('lookat')
-  if (type(objid) == 'table') then -- 如果执行者是多个（数组）
+  if type(objid) == 'table' then -- 如果执行者是多个（数组）
     for i, v in ipairs(objid) do
       ActorHelper.lookAt(v, toobjid, needRotateCamera)
     end
   else -- 单个执行者
     local x, y, z
-    if (type(toobjid) == 'table') then
+    if type(toobjid) == 'table' then
       -- 判断是不是玩家或者生物
-      if (toobjid.objid) then -- 玩家或生物
+      if toobjid.objid then -- 玩家或生物
         toobjid = toobjid.objid
       else -- 是个位置
         x, y, z = toobjid.x, toobjid.y, toobjid.z
       end
     end
-    if (not(x)) then -- 不是位置
+    if not x then -- 不是位置
       x, y, z = CacheHelper.getPosition(toobjid)
-      if (not(x)) then -- 取不到目标角色数据
+      if not x then -- 取不到目标角色数据
         return
       end
       y = y + ActorHelper.getEyeHeight(toobjid)
     end
     local x0, y0, z0 = CacheHelper.getPosition(objid)
-    if (not(x0)) then -- 取不到执行者数据
+    if not x0 then -- 取不到执行者数据
       return
     end
     y0 = y0 + ActorHelper.getEyeHeight(objid)
     local myVector3 = MyVector3:new(x0, y0, z0, x, y, z)
-    if (ActorHelper.isPlayer(objid) and needRotateCamera) then -- 如果执行者是三维视角玩家
+    if ActorHelper.isPlayer(objid) and needRotateCamera then -- 如果执行者是三维视角玩家
       local faceYaw, facePitch
-      if (y == y0) then
+      if y == y0 then
         facePitch = 0
       else
         facePitch = MathHelper.getActorFacePitch(myVector3)
       end
-      if (x ~= x0 or z ~= z0) then -- 不在同一竖直位置上
+      if x ~= x0 or z ~= z0 then -- 不在同一竖直位置上
         -- faceYaw = MathHelper.getPlayerFaceYaw(myVector3)
         local player = PlayerHelper.getPlayer(objid)
         faceYaw = MathHelper.getActorFaceYaw(myVector3) - player.yawDiff
       else -- 在同一竖直位置上
         faceYaw = ActorHelper.getFaceYaw(objid)
-        -- if (y0 < y) then -- 向上
+        -- if y0 < y then -- 向上
         --   facePitch = -90
-        -- elseif (y0 > y) then -- 向下
+        -- elseif y0 > y then -- 向下
         --   facePitch = 90
         -- else -- 水平
         --   facePitch = 0
@@ -844,25 +844,25 @@ function ActorHelper.lookAt (objid, toobjid, needRotateCamera)
       PlayerHelper.rotateCamera(objid, faceYaw, facePitch)
     else -- 执行者是生物或二维视角玩家
       local facePitch
-      if (y == y0) then
+      if y == y0 then
         facePitch = 0
       else
         facePitch = MathHelper.getActorFacePitch(myVector3)
       end
-      if (x ~= x0 or z ~= z0) then -- 不在同一竖直位置上
+      if x ~= x0 or z ~= z0 then -- 不在同一竖直位置上
         local faceYaw = MathHelper.getActorFaceYaw(myVector3)
         ActorHelper.setFaceYaw(objid, faceYaw)
       else -- 在同一竖直位置上
-        -- if (y0 < y) then -- 向上
+        -- if y0 < y then -- 向上
         --   facePitch = -90
-        -- elseif (y0 > y) then -- 向下
+        -- elseif y0 > y then -- 向下
         --   facePitch = 90
         -- else -- 水平
         --   facePitch = 0
         -- end
       end
       local result = ActorHelper.setFacePitch(objid, facePitch)
-      if (not(result)) then
+      if not result then
         LogHelper.debug(myVector3)
       end
     end
@@ -888,7 +888,7 @@ end
 -- 获取能否移动信息
 function ActorHelper.getEnableMoveInfo (objid)
   local info = ActorHelper.enableMoveInfo[objid]
-  if (not(info)) then
+  if not info then
     info = {}
     ActorHelper.enableMoveInfo[objid] = info
   end
@@ -908,10 +908,10 @@ end
 -- 使能否移动
 function ActorHelper.tryEnableMove (objid, category, switch)
   local info = ActorHelper.getEnableMoveInfo(objid)
-  if (switch) then -- 使能移动
+  if switch then -- 使能移动
     info[category] = nil
     local total = ActorHelper.countDisableMoveReason(objid)
-    if (total == 0) then
+    if total == 0 then
       ActorHelper.setEnableMoveState(objid, true)
       return true
     else
@@ -926,14 +926,14 @@ end
 
 function ActorHelper.updateHp (objid, offset)
   local hp, maxHp
-  if (ActorHelper.isPlayer(toobjid)) then -- 是玩家
+  if ActorHelper.isPlayer(toobjid) then -- 是玩家
     hp = PlayerHelper.getHp(objid)
     maxHp = PlayerHelper.getMaxHp(objid)
   else
     hp = CreatureHelper.getHp(objid)
     maxHp = CreatureHelper.getMaxHp(objid)
   end
-  if (hp and maxHp) then
+  if hp and maxHp then
     hp = hp <= 0 and 0 or math.ceil(hp)
     GraphicsHelper.updateHp(objid, hp, math.ceil(maxHp), offset)
   end
@@ -1010,60 +1010,57 @@ end
 function ActorHelper.actorEnterArea (objid, areaid)
   local myActor = ActorHelper.getActor(objid)
   local doorInfo = AreaHelper.allDoorAreas[areaid]
-  if (doorInfo) then -- 确定是门位置，则打开这个门
+  if doorInfo then -- 确定是门位置，则打开这个门
     local doorPos = doorInfo.pos
     BlockHelper.openDoor(doorPos.x, doorPos.y, doorPos.z)
   else -- 不确定是不是门位置，则判断，规定两格大小的都是门位置
     local isDoorArea, pos, state = AreaHelper.isDoorArea(areaid)
-    if (isDoorArea) then
+    if isDoorArea then
       AreaHelper.allDoorAreas[areaid] = { pos = pos, state = state }
       BlockHelper.openDoor(pos.x, pos.y, pos.z)
-    elseif (type(isDoorArea) == 'nil') then
+    elseif type(isDoorArea) == 'nil' then
       LogHelper.debug(CreatureHelper.getActorName(objid), '进入不确定门区域')
     end
   end
-  if (myActor and myActor.wants) then -- 找到了一个actor，并且这个actor有想法
+  if myActor and myActor.wants then -- 找到了一个actor，并且这个actor有想法
     local want = myActor.wants[1]
-    if (want.toAreaId == areaid) then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
-      if (want.style == 'move' or want.style == 'approach') then -- 如果是仅仅前往，则变更想法，并且停下来
+    if want.toAreaId == areaid then -- 如果是该actor的终点区域，则判断actor是仅仅前往还是巡逻
+      if want.style == 'move' or want.style == 'approach' then -- 如果是仅仅前往，则变更想法，并且停下来
         -- LogHelper.debug(myActor:getName() .. '进入了终点区域' .. areaid)
         AreaHelper.removeToArea(myActor) -- 清除终点区域
         -- AreaHelper.destroyArea(want.toAreaId) 
         local pos = ActorActionHelper.getNextPos(want)
         -- LogHelper.debug(myActor:getName(), pos)
-        if (pos) then -- 有下一个行动位置
+        if pos then -- 有下一个行动位置
           want.toPos = pos
           ActorActionHelper.createMoveToPos(want)
           myActor.action:execute()
           -- LogHelper.debug(myActor:getName(), '向下一个位置出发')
-        elseif (myActor.wants[2]) then
-          if (want.callback) then
+        else -- 没有下一个行动位置
+          if want.callback then
             want.callback()
           end
-          ActorHelper.handleNextWant(myActor)
-        else
-          if (want.callback) then
-            want.callback()
-          end
-          if (not(myActor:isWantsExist()) or myActor.wants[1] == want) then
+          if myActor.wants[2] then -- 有下一个想法
+            ActorHelper.handleNextWant(myActor)
+          elseif not myActor:isWantsExist() or myActor.wants[1] == want then -- 为什么这么写我忘了
             myActor:defaultWant()
             myActor:wantStayForAWhile()
           end
         end
-      elseif (want.style == 'patrol') then -- 如果是巡逻，则停下来并设定前往目的地
+      elseif want.style == 'patrol' then -- 如果是巡逻，则停下来并设定前往目的地
         AreaHelper.removeToArea(myActor) -- 清除终点区域
         -- AreaHelper.destroyArea(want.toAreaId) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = ActorActionHelper.getNextPos(want)
         -- LogHelper.debug('下一个位置' .. type(want.toPos))
         ActorActionHelper.createMoveToPos(want)
-      elseif (want.style == 'freeInArea') then -- 区域内自由移动
+      elseif want.style == 'freeInArea' then -- 区域内自由移动
         AreaHelper.removeToArea(myActor) -- 清除终点区域
         -- AreaHelper.destroyArea(want.toAreaId) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = ActorActionHelper.getFreeInAreaPos(myActor.freeInAreaIds)
         ActorActionHelper.createMoveToPos(want)
-      elseif (want.style == 'freeAttack') then -- 区域自由攻击
+      elseif want.style == 'freeAttack' then -- 区域自由攻击
         AreaHelper.removeToArea(myActor) -- 清除终点区域
         want.currentRestTime = want.restTime
         want.toPos = ActorActionHelper.getFreeInAreaPos(myActor.freeInAreaIds)
@@ -1089,24 +1086,24 @@ end
 function ActorHelper.actorCollide (objid, toobjid)
   local actor1 = ActorHelper.getActor(objid)
   -- LogHelper.info('碰撞了', actor1:getName())
-  if (actor1) then -- 生物是特定生物
-    if (ActorHelper.isPlayer(toobjid)) then -- 是跟玩家发生碰撞
+  if actor1 then -- 生物是特定生物
+    if ActorHelper.isPlayer(toobjid) then -- 是跟玩家发生碰撞
       local want = actor1:getFirstWant()
-      if (want and string.find(want.think, 'noCollide')) then -- 此时碰撞生物无反应
-      elseif (actor1:isCollidePlayerEffective()) then
+      if want and string.find(want.think, 'noCollide') then -- 此时碰撞生物无反应
+      elseif actor1:isCollidePlayerEffective() then
         actor1:defaultCollidePlayerEvent(toobjid, ActorHelper.isTwoInFrontOfOne(objid, toobjid))
       end
     else
       local actor2 = ActorHelper.getActor(toobjid)
-      if (actor2) then
+      if actor2 then
         -- 先简单处理为actorid小的停下来
-        if (actor1.actorid == actor2.actorid) then
-          if (objid < toobjid) then
+        if actor1.actorid == actor2.actorid then
+          if objid < toobjid then
             actor1:wantStayForAWhile()
           else
             actor2:wantStayForAWhile()
           end
-        elseif (actor1.actorid < actor2.actorid) then
+        elseif actor1.actorid < actor2.actorid then
           actor1:wantStayForAWhile()
         else
           actor2:wantStayForAWhile()
@@ -1120,7 +1117,7 @@ end
 function ActorHelper.actorAttack (objid, toobjid)
   MonsterHelper.actorAttack(objid, toobjid)
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:attack(toobjid)
   end
 end
@@ -1129,7 +1126,7 @@ end
 function ActorHelper.actorAttackHit (objid, toobjid)
   MonsterHelper.actorAttackHit(objid, toobjid)
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:attackHit(toobjid)
   end
 end
@@ -1143,7 +1140,7 @@ end
 function ActorHelper.actorChangeMotion (objid, actormotion)
   local t = objid .. 'actorChangeMotion'
   local motion = ActorHelper.getActorMontion(objid)
-  if (not(motion) or motion ~= actormotion) then
+  if not motion or motion ~= actormotion then -- 没有记录过生物行为 或 行为发生了改变
     ActorHelper.setActorMotion(objid, actormotion)
     TimeHelper.delFnFastRuns(t)
   end
@@ -1153,7 +1150,7 @@ function ActorHelper.actorChangeMotion (objid, actormotion)
   end, 30, t)
 
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:changeMotion(actormotion)
   end
 end
@@ -1161,7 +1158,7 @@ end
 -- 生物受到伤害
 function ActorHelper.actorBeHurt (objid, toobjid, hurtlv)
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:beHurt(toobjid, hurtlv)
   end
   -- body
@@ -1175,11 +1172,11 @@ end
 -- 生物获得状态效果
 function ActorHelper.actorAddBuff (objid, buffid, bufflvl)
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:addBuff(buffid, bufflvl)
   else
     local buff = ActorHelper.getBuff(buffid)
-    if (buff) then
+    if buff then
       buff:addBuff(objid)
     end
   end
@@ -1189,11 +1186,11 @@ end
 -- 生物失去状态效果
 function ActorHelper.actorRemoveBuff (objid, buffid, bufflvl)
   local actor = ActorHelper.getActor(objid)
-  if (actor) then
+  if actor then
     actor:removeBuff(buffid, bufflvl)
   else
     local buff = ActorHelper.getBuff(buffid)
-    if (buff) then
+    if buff then
       buff:removeBuff(objid)
     end
   end

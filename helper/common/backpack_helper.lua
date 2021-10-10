@@ -4,14 +4,14 @@ BackpackHelper = {}
 -- 玩家背包里是否有某道具
 function BackpackHelper.hasItem (playerid, itemid, containEquip)
   local r1 = BackpackHelper.hasItemByBackpackBar(playerid, BACKPACK_TYPE.SHORTCUT, itemid) -- 快捷栏
-  if (r1) then
+  if r1 then
     return r1, BACKPACK_TYPE.SHORTCUT
   else
     local r2 = BackpackHelper.hasItemByBackpackBar(playerid, BACKPACK_TYPE.INVENTORY, itemid) -- 存储栏
-    if (r2) then
+    if r2 then
       return r2, BACKPACK_TYPE.INVENTORY
     else
-      if (containEquip) then
+      if containEquip then
         return BackpackHelper.hasItemByBackpackBar(playerid, BACKPACK_TYPE.EQUIP, itemid), BACKPACK_TYPE.EQUIP -- 装备栏
       else
         return false
@@ -23,7 +23,7 @@ end
 -- 单一背包栏道具总数及背包格数组
 function BackpackHelper.getItemNum (playerid, itemid, containEquip)
   local r, bartype = BackpackHelper.hasItem(playerid, itemid, containEquip)
-  if (r) then
+  if r then
     return BackpackHelper.getItemNumByBackpackBar(playerid, bartype, itemid)
   else
     return 0, {}
@@ -43,9 +43,9 @@ end
 -- 获取快捷、存储栏某个道具的总数及背包格数组 返回值 number, table, table
 function BackpackHelper.getItemNumAndGrid (playerid, itemid)
   local num1, arr1 = BackpackHelper.getItemNumByShortcut(playerid, itemid)
-  if (num1) then
+  if num1 then
     local num2, arr2 = BackpackHelper.getItemNumByInventory(playerid, itemid)
-    if (num2) then
+    if num2 then
       return num1 + num2, arr1, arr2
     else
       return nil
@@ -58,7 +58,7 @@ end
 -- 获取快捷、存储栏某个道具的总数及背包格数组 返回值 number, table
 function BackpackHelper.getItemNumAndGrid2 (playerid, itemid)
   local num, arr1, arr2 = BackpackHelper.getItemNumAndGrid(playerid, itemid)
-  if (num) then
+  if num then
     local arr = {}
     for i, v in ipairs(arr1) do
       table.insert(arr, v)
@@ -82,7 +82,7 @@ function BackpackHelper.getFirstEmptyGridByBartype (playerid, bartype)
   local begGrid, endGrid = BackpackHelper.getBackpackBarIDRange(bartype)
   for i = begGrid, endGrid do
     local itemid, num = BackpackHelper.getGridItemID(playerid, i)
-    if (itemid and itemid == 0) then
+    if itemid and itemid == 0 then
       return i
     end
   end
@@ -92,7 +92,7 @@ end
 -- 获取玩家第一个空的背包格，从快捷栏到背包栏
 function BackpackHelper.getFirstEmptyGrid (playerid)
   local gridid = BackpackHelper.getFirstEmptyGridByBartype(playerid, BACKPACK_TYPE.SHORTCUT)
-  if (not(gridid)) then
+  if not gridid then
     gridid = BackpackHelper.getFirstEmptyGridByBartype(playerid, BACKPACK_TYPE.INVENTORY)
   end
   return gridid
@@ -102,7 +102,7 @@ end
 function BackpackHelper.gainItem (playerid, itemid, num)
   num = num or 1
   local spaceNum = BackpackHelper.calcSpaceNumForItem(playerid, itemid) or 0
-  if (spaceNum >= num) then
+  if spaceNum >= num then
     return BackpackHelper.addItem(playerid, itemid, num)
   else
     BackpackHelper.addItem(playerid, itemid, spaceNum)

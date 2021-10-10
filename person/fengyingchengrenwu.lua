@@ -251,7 +251,7 @@ function Yexiaolong:wantAtHour (hour)
     end
   elseif mainIndex == 2 and mainProgress == #story2.tips then
     self:wantMove('init', { self.story3InitPosition })
-  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
+  elseif mainIndex == 3 and mainProgress >= 3 or mainIndex > 3 then
     self.candlePositions = self.candlePositions2
     if hour == 6 then
       self:wantFreeInArea({ self.classroomAreaPositions })
@@ -283,7 +283,7 @@ function Yexiaolong:doItNow ()
     else
       self:wantAtHour(22)
     end
-  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
+  elseif mainIndex == 3 and mainProgress >= 3 or mainIndex > 3 then
     local hour = TimeHelper.getHour()
     if hour >= 6 and hour < 8 then
       self:wantAtHour(6)
@@ -336,7 +336,7 @@ function Yexiaolong:collidePlayer (playerid, isPlayerInFront)
       -- self:speakTo(playerid, 0, nickname, '，找我有事吗？')
       self:toastSpeak(nickname, '，找我有事吗？')
     end
-  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
+  elseif mainIndex == 3 and mainProgress >= 3 or mainIndex > 3 then
     -- self:speakTo(playerid, 0, '武术修为，也不是一蹴而就的。')
     self:toastSpeak('武术修为，也不是一蹴而就的。')
   end
@@ -394,7 +394,7 @@ function Yexiaolong:candleEvent (player, candle)
         self:doItNow()
       end, 3)
     end
-  elseif (mainIndex == 3 and mainProgress >= 3) or mainIndex > 3 then
+  elseif mainIndex == 3 and mainProgress >= 3 or mainIndex > 3 then
     if self.think == 'sleep' and candle.isLit then
       -- self:speakTo(player.objid, 0, '……')
       self:toastSpeak('……')
@@ -988,7 +988,7 @@ end
 function Gaoxiaohu:wantAtHour (hour)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 3 and mainProgress < 3) or mainIndex < 3 then
+  if mainIndex == 3 and mainProgress < 3 or mainIndex < 3 then
     self:wantDoNothing()
   else
     if hour == 6 then
@@ -1103,7 +1103,7 @@ end
 function Yuewushuang:wantAtHour (hour)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
-  if (mainIndex == 3 and mainProgress < 3) or mainIndex < 3 then
+  if mainIndex == 3 and mainProgress < 3 or mainIndex < 3 then
     self:wantDoNothing()
   else
     if hour == 6 then

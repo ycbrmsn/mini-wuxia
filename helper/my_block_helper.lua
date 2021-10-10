@@ -54,11 +54,11 @@ end
 
 -- 检查城门开关
 function MyBlockHelper.checkCityGateSwitch (blockid, pos)
-  if (blockid == 724) then -- 开关
+  if blockid == 724 then -- 开关
     for i, v in ipairs(MyBlockHelper.cityGates) do
-      if (v[1]:equalBlockPos(pos)) then -- 找到开关
-        if (BlockHelper.getBlockSwitchStatus(v[1])) then -- 打开
-          if (BlockHelper.getBlockID(v[4].x, v[4].y, v[4].z) == MyBlockHelper.cityGateBlockIds[1]) then
+      if v[1]:equalBlockPos(pos) then -- 找到开关
+        if BlockHelper.getBlockSwitchStatus(v[1]) then -- 打开
+          if BlockHelper.getBlockID(v[4].x, v[4].y, v[4].z) == MyBlockHelper.cityGateBlockIds[1] then
             AreaHelper.replaceAreaBlock(v[5], MyBlockHelper.cityGateBlockIds[1], MyBlockHelper.cityGateBlockIds[2], 5)
             BlockHelper.replaceBlock(MyBlockHelper.cityGateBlockIds[3], v[2].x, v[2].y, v[2].z)
             TimeHelper.callFnFastRuns(function ()
@@ -79,7 +79,7 @@ end
 
 -- 点击书柜
 function MyBlockHelper.clickBookcase (objid, blockid, x, y, z)
-  if (blockid == 820 and x == 33 and y == 8 and z == 7) then -- 家里的书柜
+  if blockid == 820 and x == 33 and y == 8 and z == 7 then -- 家里的书柜
     TimeHelper.callFnCanRun(function ()
       local player = PlayerHelper.getPlayer(objid)
       player:enableMove(false, '选择中')
@@ -96,12 +96,12 @@ end
 
 -- 点击床睡觉
 function MyBlockHelper.clickBed (objid, blockid, x, y, z)
-  if (MyBed:isBed(blockid)) then
+  if MyBed:isBed(blockid) then
     PlayerHelper.showToast(objid, '你无法在别人的床上睡觉')
     return true
-  elseif (blockid == BlockHelper.bedid2) then
+  elseif blockid == BlockHelper.bedid2 then
     local player = PlayerHelper.getPlayer(objid)
-    if (player:isHostPlayer()) then
+    if player:isHostPlayer() then
       TimeHelper.callFnCanRun(function ()
         player:enableMove(false, '选择中')
         player:thinkSelf(0, '我要睡多长时间呢？')
@@ -120,29 +120,29 @@ end
 -- 完成方块挖掘
 EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
   local disableMsg = '不可被破坏'
-  if (blockid == BlockHelper.switchid) then
+  if blockid == BlockHelper.switchid then
     PlayerHelper.showToast(objid, '开关', disableMsg)
-  elseif (blockid == BlockHelper.doorid or blockid == 860) then
+  elseif blockid == BlockHelper.doorid or blockid == 860 then
     PlayerHelper.showToast(objid, '门', disableMsg)
-  elseif (blockid == BlockHelper.bedid) then -- 木床
+  elseif blockid == BlockHelper.bedid then -- 木床
     PlayerHelper.showToast(objid, '床', disableMsg)
-  elseif (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
+  elseif blockid == MyMap.BLOCK.COPPER_ORE_ID then -- 铜矿石
     BackpackHelper.addItem(objid, blockid, 1)
     PlayerHelper.showToast(objid, '获得一个铜矿石')
-  elseif (blockid == 428) then -- 四格釉面砖
+  elseif blockid == 428 then -- 四格釉面砖
     PlayerHelper.showToast(objid, '此地面', disableMsg)
-  elseif (blockid == 667) then -- 白色硬砂块
+  elseif blockid == 667 then -- 白色硬砂块
     PlayerHelper.showToast(objid, '围墙', disableMsg)
-  elseif (blockid == 820) then -- 书柜
+  elseif blockid == 820 then -- 书柜
     PlayerHelper.showToast(objid, '书柜', disableMsg)
-  elseif (blockid >= 2004 and blockid <= 2008) then
+  elseif blockid >= 2004 and blockid <= 2008 then
     PlayerHelper.showToast(objid, '围栏', disableMsg)
   end
 end)
 
 -- 方块被放置
 EventHelper.addEvent('blockPlaceBy', function (objid, blockid, x, y, z)
-  if (blockid == MyMap.BLOCK.COPPER_ORE_ID) then -- 铜矿石
+  if blockid == MyMap.BLOCK.COPPER_ORE_ID then -- 铜矿石
     -- 一秒后破坏
     TimeHelper.callFnFastRuns(function ()
       BlockHelper.replaceBlock(BLOCKID.AIR, x, y, z)

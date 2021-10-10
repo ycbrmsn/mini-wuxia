@@ -36,21 +36,21 @@ end
 
 -- 在几点想做什么
 function Yangwanli:wantAtHour (hour)
-  if (hour == 7) then
+  if hour == 7 then
     self:wantFreeInArea({ self.homeAreaPositions })
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:lightCandle(nil, true)
     self:nextWantFreeInArea({ self.homeAreaPositions })
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Yangwanli:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 7 and hour < 19) then
+  if hour >= 7 and hour < 19 then
     self:wantAtHour(7)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -60,7 +60,7 @@ end
 -- 初始化
 function Yangwanli:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -74,16 +74,16 @@ end
 -- free提一提背上酒壶 free2扔酒壶喝酒 poss喝酒
 function Yangwanli:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('你怎么能撞老人家呢？')
     -- self:speakTo(playerid, 0, nickname, '，你怎么能撞老人家呢？')
     self.action:playFree(2)
-  elseif (self.think == 'free') then
+  elseif self.think == 'free' then
     self:toastSpeak('找我有事吗？')
     -- self:speakTo(playerid, 0, nickname, '，找我有事吗？')
     self.action:playFree2(2) -- 扔酒壶
-  elseif (self.think == 'goHome') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goHome' then
+    if isPlayerInFront then
       self:toastSpeak('我要回家。不要挡住老人家的路啊。')
       -- self:speakTo(playerid, 0, nickname, '，我要回家。不要挡住老人家的路啊。')
     else
@@ -91,12 +91,12 @@ function Yangwanli:collidePlayer (playerid, isPlayerInFront)
       -- self:speakTo(playerid, 0, nickname, '，有事去我屋里说。不要随便撞人啊')
     end
     self.action:playFree(2)
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，不要打搅我。要尊老知不知道。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要打搅我。要尊老知不知道。')
     self.action:playAngry(2)
-  elseif (self.think == 'lightCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'lightCandle' then
+    if isPlayerInFront then
       self:toastSpeak('不要挡着老人家点蜡烛。')
       -- self:speakTo(playerid, 0, nickname, '，不要挡着老人家点蜡烛。')
     else
@@ -104,8 +104,8 @@ function Yangwanli:collidePlayer (playerid, isPlayerInFront)
       -- self:speakTo(playerid, 0, nickname, '，不要影响我去点蜡烛，多危险知道不？')
     end
     self.action:playFree2(2)
-  elseif (self.think == 'putOutCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'putOutCandle' then
+    if isPlayerInFront then
       self:toastSpeak('让一让，老人家要熄蜡烛去了。')
       -- self:speakTo(playerid, 0, nickname, '，让一让，老人家要熄蜡烛去了。')
     else
@@ -118,9 +118,9 @@ end
 
 function Yangwanli:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
+    if self.wants[1].style == 'sleeping' then
       self:toastSpeak('老人家在睡觉，你点蜡烛做什么')
       -- self:speakTo(myPlayer.objid, 0, nickname, '，老人家在睡觉，你点蜡烛做什么!')
     else
@@ -183,16 +183,16 @@ end
 -- 在几点想做什么
 function Wangdali:wantAtHour (hour)
   -- 发现王大力好像出不了一格的门，方法就暂时不用
-  if (hour == 7) then
+  if hour == 7 then
     self:goOutDoor()
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:goHome()
   end
 end
 
 function Wangdali:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 7 and hour < 19) then
+  if hour >= 7 and hour < 19 then
     self:wantAtHour(7)
   else
     self:wantAtHour(19)
@@ -202,7 +202,7 @@ end
 -- 初始化
 function Wangdali:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -217,7 +217,7 @@ end
 
 -- 回家
 function Wangdali:goHome ()
-  if (self.think == 'atHome') then
+  if self.think == 'atHome' then
     self:lightCandle(nil, true)
     self:nextWantFreeInArea('atHome', { self.homePositions })
   else
@@ -234,24 +234,24 @@ end
 
 function Wangdali:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('你撞我做什么')
     -- self:speakTo(playerid, 0, nickname, '，你撞我做什么?')
-  elseif (self.think == 'free' or self.think == 'atHome') then
+  elseif self.think == 'free' or self.think == 'atHome' then
     self:toastSpeak('你想买点装备吗？')
     -- self:speakTo(playerid, 0, nickname, '，你想买点装备吗？')
-  elseif (self.think == 'goOut') then
+  elseif self.think == 'goOut' then
     self:toastSpeak('有事先出去再说。')
     -- self:speakTo(playerid, 0, nickname, '，有事先出去再说。')
-  elseif (self.think == 'goHome') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goHome' then
+    if isPlayerInFront then
       self:toastSpeak('我要回家了，不要挡路。有事进屋里再说。')
       -- self:speakTo(playerid, 0, nickname, '，我要回家了，不要挡路。有事进屋里再说。')
     else
       self:toastSpeak('你怎么能撞人呢。算了，天色不早了，我先回家了。')
       -- self:speakTo(playerid, 0, nickname, '，你怎么能撞人呢。算了，天色不早了，我先回家了。')
     end
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，有事明天再说。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，有事明天再说。')
   end
@@ -259,7 +259,7 @@ end
 
 function Wangdali:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'atHome') then
+  if self.think == 'atHome' then
     self.action:stopRun()
     self:toastSpeak('别熄蜡烛。')
     -- self:speakTo(myPlayer.objid, 0, nickname, '，别熄蜡烛。')
@@ -316,20 +316,20 @@ function Miaolan:defaultWant ()
 end
 
 function Miaolan:wantAtHour (hour)
-  if (hour == 7) then
+  if hour == 7 then
     self:goToSell()
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:goSecondFloor()
-  elseif (hour == 22) then
+  elseif hour == 22 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Miaolan:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 7 and hour < 19) then
+  if hour >= 7 and hour < 19 then
     self:wantAtHour(7)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -339,7 +339,7 @@ end
 -- 初始化
 function Miaolan:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -361,19 +361,19 @@ end
 
 function Miaolan:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('要爱护身体，不要撞来撞去。')
     -- self:speakTo(playerid, 0, nickname, '，要爱护身体，不要撞来撞去。')
-  elseif (self.think == 'free') then
+  elseif self.think == 'free' then
     self:toastSpeak('这么晚过来，你受伤了吗？')
     -- self:speakTo(playerid, 0, nickname, '，这么晚过来，你受伤了吗？')
-  elseif (self.think == 'toSell') then
+  elseif self.think == 'toSell' then
     self:toastSpeak('我要去卖药了。')
     -- self:speakTo(playerid, 0, nickname, '，我要去卖药了。')
-  elseif (self.think == 'sell') then
+  elseif self.think == 'sell' then
     self:toastSpeak('要抓点药吗？')
     -- self:speakTo(playerid, 0, nickname, '，要抓点药吗？')
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，不要闹。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要闹。')
   end
@@ -381,9 +381,9 @@ end
 
 function Miaolan:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit) then
+  if self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit then
     self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
+    if self.wants[1].style == 'sleeping' then
       self:toastSpeak('睡眠是很重要的，知道吗？不要点蜡烛了。')
       -- self:speakTo(myPlayer.objid, 0, nickname, '，睡眠是很重要的，知道吗？不要点蜡烛了。')
     else
@@ -395,7 +395,7 @@ function Miaolan:candleEvent (myPlayer, candle)
     TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
-  elseif ((self.think == 'toSell' or self.think == 'sell') and candle.pos:equals(self.candlePositions[1]) and not(candle.isLit)) then
+  elseif (self.think == 'toSell' or self.think == 'sell') and candle.pos:equals(self.candlePositions[1]) and not candle.isLit then -- (去卖东西 或 正在卖东西) 且 楼下蜡烛位置 且 蜡烛没有亮
     self.action:stopRun()
     self:toastSpeak('熄了蜡烛光线不好呢。')
     -- self:speakTo(myPlayer.objid, 0, nickname, '，熄了蜡烛光线不好呢。')
@@ -411,7 +411,7 @@ function Miaolan:playerClickEvent (objid)
   local myPlayer = PlayerHelper.getPlayer(objid)
   local hp = PlayerHelper.getHp(objid)
   local maxHp = PlayerHelper.getMaxHp(objid)
-  if (hp < maxHp) then
+  if hp < maxHp then
     TimeHelper.callFnCanRun(function ()
       self:speakTo(objid, 0, myPlayer:getName(), '，你受伤了。来我给你治疗一下。')
       self.action:playAttack()
@@ -463,24 +463,24 @@ end
 
 -- 在几点想做什么
 function Huaxiaolou:wantAtHour (hour)
-  if (hour == 6) then
-    self:goToSell(not(self:lightAndPutOutCandles(self.candlePositions)))
-  elseif (hour == 7) then
-    self:goToSell(not(self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] })))
-  elseif (hour == 19) then
-    self:goToSell(not(self:lightAndPutOutCandles(self.candlePositions)))
-  elseif (hour == 22) then
-    self:goToBed(not(self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] })))
+  if hour == 6 then
+    self:goToSell(not self:lightAndPutOutCandles(self.candlePositions))
+  elseif hour == 7 then
+    self:goToSell(not self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] }))
+  elseif hour == 19 then
+    self:goToSell(not self:lightAndPutOutCandles(self.candlePositions))
+  elseif hour == 22 then
+    self:goToBed(not self:lightAndPutOutCandles({ self.candlePositions[1], self.candlePositions[2] }, { self.candlePositions[3] }))
   end
 end
 
 function Huaxiaolou:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 7) then
+  if hour >= 6 and hour < 7 then
     self:wantAtHour(6)
-  elseif (hour >= 7 and hour < 19) then
+  elseif hour >= 7 and hour < 19 then
     self:wantAtHour(7)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -490,7 +490,7 @@ end
 -- 初始化
 function Huaxiaolou:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -498,7 +498,7 @@ end
 
 -- 卖东西
 function Huaxiaolou:goToSell (isNow)
-  if (isNow) then
+  if isNow then
     self:wantMove('toSell', { self.initPosition })
   else
     self:nextWantMove('toSell', { self.initPosition })
@@ -510,29 +510,29 @@ end
 function Huaxiaolou:lightAndPutOutCandles (lightCandles, putOutCandles)
   local index = 1
   local lcs = {}
-  if (lightCandles and #lightCandles > 0) then
+  if lightCandles and #lightCandles > 0 then
     for i, v in ipairs(lightCandles) do
       local candle = BlockHelper.getCandle(v)
-      if (not(candle.isLit)) then
+      if not candle.isLit then
         table.insert(lcs, v)
       end
     end
   end
-  if (#lcs > 0) then
+  if #lcs > 0 then
     self:lightCandle(nil, true, lcs)
     index = index + 1
   end
   local pocs = {}
-  if (putOutCandles and #putOutCandles > 0) then
+  if putOutCandles and #putOutCandles > 0 then
     for i, v in ipairs(putOutCandles) do
       local candle = BlockHelper.getCandle(v)
-      if (candle.isLit) then
+      if candle.isLit then
         table.insert(pocs, v)
       end
     end
   end
-  if (#pocs > 0) then
-    if (index == 1) then
+  if #pocs > 0 then
+    if index == 1 then
       self:putOutCandle(nil, true, pocs)
     else
       self:putOutCandle(nil, false, pocs)
@@ -544,27 +544,27 @@ end
 
 function Huaxiaolou:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('你撞我我也不给你好吃的。')
     -- self:speakTo(playerid, 0, nickname, '，你撞我我也不给你好吃的。')
-  elseif (self.think == 'lightCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'lightCandle' then
+    if isPlayerInFront then
       self:toastSpeak('让一让，我点灯去了。')
       -- self:speakTo(playerid, 0, nickname, '，让一让，我点灯去了。')
     else
       self:toastSpeak('不要推丫，万一房子点燃了怎么办。')
       -- self:speakTo(playerid, 0, nickname, '，不要推丫，万一房子点燃了怎么办。')
     end
-  elseif (self.think == 'putOutCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'putOutCandle' then
+    if isPlayerInFront then
       self:toastSpeak('让一让，我熄灯去了。')
       -- self:speakTo(playerid, 0, nickname, '，让一让，我熄灯去了。')
     else
       self:toastSpeak('你再打扰我，浪费的灯油你来出哟。')
       -- self:speakTo(playerid, 0, nickname, '，你再打扰我，浪费的灯油你来出哟。')
     end
-  elseif (self.think == 'goToSell') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goToSell' then
+    if isPlayerInFront then
       self:toastSpeak('你要买食物吗？')
       -- self:speakTo(playerid, 0, nickname, '，你要买食物吗？')
     else
@@ -628,24 +628,24 @@ end
 
 -- 在几点想做什么
 function Jiangfeng:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:defaultWant()
-  elseif (hour == 7) then
+  elseif hour == 7 then
     self:toPatrol()
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:goHome()
-  elseif (hour == 21) then
+  elseif hour == 21 then
     self:putOutCandleAndGoToBed()
   end
 end
 
 function Jiangfeng:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 7) then
+  if hour >= 6 and hour < 7 then
     self:wantAtHour(6)
-  elseif (hour >= 7 and hour < 19) then
+  elseif hour >= 7 and hour < 19 then
     self:wantAtHour(7)
-  elseif (hour >= 19 and hour < 21) then
+  elseif hour >= 19 and hour < 21 then
     self:wantAtHour(19)
   else
     self:wantAtHour(21)
@@ -655,7 +655,7 @@ end
 -- 初始化
 function Jiangfeng:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -676,37 +676,37 @@ end
 
 function Jiangfeng:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('撞人是不对的哦。')
     -- self:speakTo(playerid, 0, nickname, '，撞人是不对的哦。')
-  elseif (self.think == 'free') then
+  elseif self.think == 'free' then
     self:toastSpeak('找我有事吗？')
     -- self:speakTo(playerid, 0, nickname, '，找我有事吗？')
-  elseif (self.think == 'toPatrol') then
-    if (isPlayerInFront) then
+  elseif self.think == 'toPatrol' then
+    if isPlayerInFront then
       self:toastSpeak('我要去巡逻了，不要挡住路。')
       -- self:speakTo(playerid, 0, nickname, '，我要去巡逻了，不要挡住路。')
     else
       self:toastSpeak('我要去巡逻了，不要干扰我。')
       -- self:speakTo(playerid, 0, nickname, '，我要去巡逻了，不要干扰我。')
     end
-  elseif (self.think == 'patrol') then
-    if (isPlayerInFront) then
+  elseif self.think == 'patrol' then
+    if isPlayerInFront then
       self:toastSpeak('我在巡逻呢，不要挡路。')
       -- self:speakTo(playerid, 0, nickname, '，我在巡逻呢，不要挡路。')
     else
       self:toastSpeak('我在巡逻呢，不要闹。')
       -- self:speakTo(playerid, 0, nickname, '，我在巡逻呢，不要闹。')
     end
-  elseif (self.think == 'goHome') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goHome' then
+    if isPlayerInFront then
       self:toastSpeak('我刚巡逻完，累死了，正要回家呢。不要挡路。')
       -- self:speakTo(playerid, 0, nickname, '，我刚巡逻完，累死了，正要回家呢。不要挡路。')
     else
       self:toastSpeak('我刚巡逻完，累死了，正要回家呢。不要闹。')
       -- self:speakTo(playerid, 0, nickname, '，我刚巡逻完，累死了，正要回家呢。不要闹。')
     end
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，不要闹。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，不要闹。')
   end
@@ -714,9 +714,9 @@ end
 
 function Jiangfeng:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'sleep' and candle.isLit) then
+  if self.think == 'sleep' and candle.isLit then
     self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
+    if self.wants[1].style == 'sleeping' then
       self:toastSpeak('我在睡觉呢，不要点蜡烛。')
       -- self:speakTo(myPlayer.objid, 0, nickname, '，我在睡觉呢，不要点蜡烛。')
     else
@@ -728,9 +728,9 @@ function Jiangfeng:candleEvent (myPlayer, candle)
     TimeHelper.callFnAfterSecond (function (p)
       self:doItNow()
     end, 3)
-  elseif (jiangyu.think == 'sleep' and candle.isLit) then
+  elseif jiangyu.think == 'sleep' and candle.isLit then
     jiangyu.action:stopRun()
-    if (jiangyu.wants[1].style == 'sleeping') then
+    if jiangyu.wants[1].style == 'sleeping' then
       self:toastSpeak('我在睡觉，离蜡烛远点。')
       -- jiangyu:speakTo(myPlayer.objid, 0, nickname, '，我在睡觉，离蜡烛远点。')
     else
@@ -780,29 +780,29 @@ end
 
 -- 在几点想做什么
 function Jiangyu:wantAtHour (hour)
-  if (hour == 6) then
+  if hour == 6 then
     self:putOutCandle('patrol', true, { self.candlePositions[3], self.candlePositions[2], self.candlePositions[1] })
     self:nextWantPatrol('patrol', self.patrolPositions)
-  elseif (hour == 7) then
+  elseif hour == 7 then
     self:goHome()
-  elseif (hour == 9) then
+  elseif hour == 9 then
     self:putOutCandleAndGoToBed(jiangfeng.candlePositions)
-  elseif (hour == 18) then
+  elseif hour == 18 then
     self:defaultWant()
-  elseif (hour == 19) then
+  elseif hour == 19 then
     self:toPatrol()
   end
 end
 
 function Jiangyu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 6 and hour < 7) then
+  if hour >= 6 and hour < 7 then
     self:wantAtHour(6)
-  elseif (hour >= 7 and hour < 9) then
+  elseif hour >= 7 and hour < 9 then
     self:wantAtHour(7)
-  elseif (hour >= 9 and hour < 18) then
+  elseif hour >= 9 and hour < 18 then
     self:wantAtHour(9)
-  elseif (hour >= 18 and hour < 19) then
+  elseif hour >= 18 and hour < 19 then
     self:wantAtHour(18)
   else
     self:wantAtHour(19)
@@ -812,7 +812,7 @@ end
 -- 初始化
 function Jiangyu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -820,7 +820,7 @@ end
 
 -- 去巡逻
 function Jiangyu:toPatrol ()
-  if (self.think == 'patrol') then
+  if self.think == 'patrol' then
     self:patrol(true)
   else
     self:wantMove('toPatrol', { self.patrolPositions[1] })
@@ -836,7 +836,7 @@ end
 -- 回家
 function Jiangyu:goHome ()
   local index = self:putOutCandle(nil, true, { self.candlePositions[3], self.candlePositions[2], self.candlePositions[1] })
-  if (index == 1) then
+  if index == 1 then
     self:wantMove('goHome', self.doorPositions)
   else
     self:nextWantMove('goHome', self.doorPositions)
@@ -846,37 +846,37 @@ end
 
 function Jiangyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('你撞我好玩吗？')
     -- self:speakTo(playerid, 0, nickname, '，你撞我好玩吗？')
-  elseif (self.think == 'free') then
+  elseif self.think == 'free' then
     self:toastSpeak('找我有什么事吗？')
     -- self:speakTo(playerid, 0, nickname, '，找我有什么事吗？')
-  elseif (self.think == 'toPatrol') then
-    if (isPlayerInFront) then
+  elseif self.think == 'toPatrol' then
+    if isPlayerInFront then
       self:toastSpeak('我要去巡逻了，让开哟。')
       -- self:speakTo(playerid, 0, nickname, '，我要去巡逻了，让开哟。')
     else
       self:toastSpeak('我要去巡逻了，别蹭我。')
       -- self:speakTo(playerid, 0, nickname, '，我要去巡逻了，别蹭我。')
     end
-  elseif (self.think == 'patrol') then
-    if (isPlayerInFront) then
+  elseif self.think == 'patrol' then
+    if isPlayerInFront then
       self:toastSpeak('我在巡逻，别站在我前面。')
       -- self:speakTo(playerid, 0, nickname, '，我在巡逻，别站在我前面。')
     else
       self:toastSpeak('我在巡逻，不要影响我。')
       -- self:speakTo(playerid, 0, nickname, '，我在巡逻，不要影响我。')
     end
-  elseif (self.think == 'goHome') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goHome' then
+    if isPlayerInFront then
       self:toastSpeak('累死了，别挡着我回家的路。')
       -- self:speakTo(playerid, 0, nickname, '，累死了，别挡着我回家的路。')
     else
       self:toastSpeak('累死了，不要降低我回家的速度。')
       -- self:speakTo(playerid, 0, nickname, '，累死了，不要降低我回家的速度。')
     end
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，让开哟。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，让开哟。')
   end
@@ -884,7 +884,7 @@ end
 
 function Jiangyu:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'patrol' and not(candle.isLit)) then
+  if self.think == 'patrol' and not candle.isLit then -- 在巡逻 且 蜡烛没有亮
     self.action:stopRun()
     self:toastSpeak('离蜡烛远点，影响到我巡逻要你好看。')
     -- self:speakTo(myPlayer.objid, 0, nickname, '，离蜡烛远点，影响到我巡逻要你好看。')
@@ -948,12 +948,12 @@ function Wenyu:wantAtHour (hour)
   if mainIndex == 1 and mainProgress == 1 then -- 剧情刚开始时，文羽就呆在家里不动
     self:wantDoNothing()
   else -- 剧情推进后
-    if (hour == 7) then
+    if hour == 7 then
       self:exchangeBed()
       self:wantFreeTime()
-    elseif (hour == 19) then
+    elseif hour == 19 then
       self:goHome()
-    elseif (hour == 22) then
+    elseif hour == 22 then
       self:putOutCandleAndGoToBed()
     end
   end
@@ -961,9 +961,9 @@ end
 
 function Wenyu:doItNow ()
   local hour = TimeHelper.getHour()
-  if (hour >= 7 and hour < 19) then
+  if hour >= 7 and hour < 19 then
     self:wantAtHour(7)
-  elseif (hour >= 19 and hour < 22) then
+  elseif hour >= 19 and hour < 22 then
     self:wantAtHour(19)
   else
     self:wantAtHour(22)
@@ -973,7 +973,7 @@ end
 -- 初始化
 function Wenyu:init ()
   local initSuc = self:initActor(self.initPosition)
-  if (initSuc) then
+  if initSuc then
     self:doItNow()
   end
   return initSuc
@@ -994,8 +994,8 @@ function Wenyu:putOutCandleAndGoToBed ()
   local index = 1
   for i, v in ipairs(self.candlePositions) do
     local candle = BlockHelper.getCandle(v)
-    if (not(candle) or candle.isLit) then
-      if (index == 1) then
+    if not candle or candle.isLit then -- 没找到蜡烛 或 蜡烛亮着
+      if index == 1 then
         self:toggleCandle('sleep', v, false, true)
       else
         self:toggleCandle('sleep', v, false)
@@ -1008,9 +1008,9 @@ end
 
 -- 睡觉
 function Wenyu:goToBed (isNow)
-  if (self.lastBedData and self.lastBedData == self.bedData1) then
+  if self.lastBedData and self.lastBedData == self.bedData1 then
     -- 睡二号床
-    if (isNow) then
+    if isNow then
       self:wantGoToSleep(self.bedData2)
     else
       self:nextWantGoToSleep(self.bedData2)
@@ -1018,7 +1018,7 @@ function Wenyu:goToBed (isNow)
     self.currentBedData = self.bedData2
   else
     -- 睡一号床
-    if (isNow) then
+    if isNow then
       self:wantGoToSleep(self.bedData1)
     else
       self:nextWantGoToSleep(self.bedData1)
@@ -1029,20 +1029,20 @@ end
 
 function Wenyu:collidePlayer (playerid, isPlayerInFront)
   local nickname = PlayerHelper.getNickname(playerid)
-  if (self.wants and self.wants[1].currentRestTime > 0) then
+  if self.wants and self.wants[1].currentRestTime > 0 then
     self:toastSpeak('不要撞我嘛。')
     -- self:speakTo(playerid, 0, nickname, '，不要撞我嘛。')
     self.action:playFree(2)
-  elseif (self.think == 'free') then
+  elseif self.think == 'free' then
     self:toastSpeak('要不要来玩丫？')
     -- self:speakTo(playerid, 0, nickname, '，要不要来玩丫？')
     self.action:playFree2(2)
-  elseif (self.think == 'notice') then
+  elseif self.think == 'notice' then
     self:toastSpeak('有好消息告诉你哦。')
     -- self:speakTo(playerid, 0, nickname, '，有好消息告诉你哦。')
     self.action:playHi(2)
-  elseif (self.think == 'goHome') then
-    if (isPlayerInFront) then
+  elseif self.think == 'goHome' then
+    if isPlayerInFront then
       self:toastSpeak('我要回家了。不要站在路前面，好嘛。')
       -- self:speakTo(playerid, 0, nickname, '，我要回家了。不要站在路前面，好嘛。')
     else
@@ -1050,12 +1050,12 @@ function Wenyu:collidePlayer (playerid, isPlayerInFront)
       -- self:speakTo(playerid, 0, nickname, '，我要回家了。明天再玩吧。')
     end
     self.action:playFree2(2)
-  elseif (self.think == 'sleep') then
+  elseif self.think == 'sleep' then
     self:toastSpeak('我要睡觉了，明天再玩吧。')
     -- self:speakTo(playerid, 0, nickname, '，我要睡觉了，明天再玩吧。')
     self.action:playFree2(2)
-  elseif (self.think == 'lightCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'lightCandle' then
+    if isPlayerInFront then
       self:toastSpeak('我看不清路了，要去点蜡烛。')
       -- self:speakTo(playerid, 0, nickname, '，我看不清路了，要去点蜡烛。')
     else
@@ -1063,8 +1063,8 @@ function Wenyu:collidePlayer (playerid, isPlayerInFront)
       -- self:speakTo(playerid, 0, nickname, '，你要帮我点蜡烛吗？')
     end
     self.action:playFree2(2)
-  elseif (self.think == 'putOutCandle') then
-    if (isPlayerInFront) then
+  elseif self.think == 'putOutCandle' then
+    if isPlayerInFront then
       self:toastSpeak('让一让嘛，我要熄蜡烛去了。')
       -- self:speakTo(playerid, 0, nickname, '，让一让嘛，我要熄蜡烛去了。')
     else
@@ -1077,9 +1077,9 @@ end
 
 function Wenyu:candleEvent (myPlayer, candle)
   local nickname = myPlayer:getName()
-  if (self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit) then
+  if self.think == 'sleep' and candle.pos:equals(self.candlePositions[2]) and candle.isLit then
     self.action:stopRun()
-    if (self.wants[1].style == 'sleeping') then
+    if self.wants[1].style == 'sleeping' then
       self:toastSpeak('我在睡觉呢，不要点蜡烛啦。')
       -- self:speakTo(myPlayer.objid, 0, nickname, '，我在睡觉呢，不要点蜡烛啦。')
     else

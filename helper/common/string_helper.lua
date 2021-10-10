@@ -23,17 +23,17 @@ utf-8编码规则
 --]]
 -- 转自网上
 function StringHelper.getBytes (char)
-  if (not(char)) then
+  if not char then
     return 0
   end
   local code = string.byte(char)
-  if (code < 127) then
+  if code < 127 then
     return 1
-  elseif (code <= 223) then
+  elseif code <= 223 then
     return 2
-  elseif (code <= 239) then
+  elseif code <= 239 then
     return 3
-  elseif (code <= 247) then
+  elseif code <= 247 then
     return 4
   else
     -- 讲道理不会走到这里^_^
@@ -52,9 +52,9 @@ function StringHelper.sub (str, beginIndex, endIndex)
   beginIndex = math.max(beginIndex, 1)
   endIndex = endIndex or -1
   while (string.len(tempStr) > 0) do     
-    if (index == beginIndex - 1) then
+    if index == beginIndex - 1 then
        byteBegin = bytes + 1
-    elseif (index == endIndex) then
+    elseif index == endIndex then
        byteEnd = bytes
        break
     end
@@ -68,7 +68,7 @@ end
 
 -- 截取全中文
 function StringHelper.subZh (str, i, j)
-  if (i > 1) then
+  if i > 1 then
     i = i * 3 - 2
   end
   return string.sub(str, i, j)
@@ -80,12 +80,12 @@ function StringHelper.join (t, c, k)
   local str = ''
   local len = #t
   for i, v in ipairs(t) do
-    if (k) then
+    if k then
       str = str .. v[k]
     else
       str = str .. v
     end
-    if (i ~= len) then
+    if i ~= len then
       str = str .. c
     end
   end
@@ -95,17 +95,17 @@ end
 -- 显示字符串
 function StringHelper.toString (v)
   local t = type(v)
-  if (t == 'nil' or t == 'function' or t == 'userdata' or t == 'thread') then
+  if t == 'nil' or t == 'function' or t == 'userdata' or t == 'thread' then
     return t
-  elseif (t == 'boolean') then
-    if (v) then
+  elseif t == 'boolean' then
+    if v then
       return 'true'
     else
       return 'false'
     end
-  elseif (t == 'number' or t == 'string') then
+  elseif t == 'number' or t == 'string' then
     return v
-  elseif (t == 'table') then
+  elseif t == 'table' then
     return StringHelper.tableToString(v)
   else -- 不会进入这里
     return 'other'
@@ -117,7 +117,7 @@ function StringHelper.tableToString (t)
   local str = '{ '
   local index = 1
   for k, v in pairs(t) do
-    if (index ~= 1) then
+    if index ~= 1 then
       str = str .. ', '
     end
     str = str .. k .. ' = ' .. StringHelper.toString(v)
@@ -130,7 +130,7 @@ end
 -- 拼接所有参数
 function StringHelper.concat (...)
   local num = select("#", ...)
-  if (num == 1) then
+  if num == 1 then
     return StringHelper.toString(select(1, ...))
   else
     local str = ''
@@ -144,11 +144,11 @@ end
 
 -- 根据小时获得时辰名称
 function StringHelper.getHourName (hour)
-  if (hour < 1 or hour >= 23) then
+  if hour < 1 or hour >= 23 then
     return StringHelper.hourName[1]
   else
     for i = 2, 12 do
-      if (hour >= i * 2 - 3 and hour < i * 2 - 1) then
+      if hour >= i * 2 - 3 and hour < i * 2 - 1 then
         return StringHelper.hourName[i]
       end
     end
@@ -158,7 +158,7 @@ end
 -- 获得模板结果
 function StringHelper.getTemplateResult (template, map)
   local temp = template
-  if (map) then
+  if map then
     for k, v in pairs(map) do
       temp = string.gsub(temp, '{' .. k .. '}', v)
     end
@@ -169,31 +169,31 @@ end
 -- 替换插值
 function StringHelper.replaceInterpolation (str, obj)
   local s = str.match(str, '{{%s*:?%w+%s*}}')
-  if (s) then
+  if s then
     local colon, key = str.match(s, '{{%s*(:?)(%w+)%s*}}')
     repeat
       local result
-      if (colon) then
+      if colon then
         result = obj[key](obj)
       else
         result = obj[key]
-        if (type(result) == 'function') then
+        if type(result) == 'function' then
           result = obj[key]()
         end
       end
       str = string.gsub(str, s, result)
       s = str.match(str, '{{%s*:?%w+%s*}}')
-    until (not(s))
+    until (not s) -- 直到没有可以替换的了
   end
   return str
 end
 
 -- 数字转化为字符串
 function StringHelper.number2String (num)
-  if (type(num) == 'number') then
-    if (num < 10000) then
+  if type(num) == 'number' then
+    if num < 10000 then
       return num .. ''
-    elseif (num < 100000000) then
+    elseif num < 100000000 then
       return '超过' .. math.floor(num / 10000) .. '万'
     end
   else
@@ -208,7 +208,7 @@ function StringHelper.split (szFullString, szSeparator)
   local nSplitArray = {}
   while (true) do
     local nFindLastIndex = string.find(szFullString, szSeparator, nFindStartIndex)
-    if (not nFindLastIndex) then
+    if not nFindLastIndex then
       nSplitArray[nSplitIndex] = string.sub(szFullString, nFindStartIndex, string.len(szFullString))
       break
     end
@@ -222,21 +222,21 @@ end
 -- 小整数转中文
 function StringHelper.int2Chinese (num)
   local result
-  if (num < -99 or num > 99) then
+  if num < -99 or num > 99 then
     return num .. ''
-  elseif (num == 0) then
+  elseif num == 0 then
     return '零'
   end
-  if (num < 0) then
+  if num < 0 then
     result = '负'
   else
     result = ''
   end
   local temp = math.abs(num)
-  if (temp > 19) then
+  if temp > 19 then
     result = result .. StringHelper.numName[math.floor(temp / 10)]
   end
-  if (temp > 9) then
+  if temp > 9 then
     result = result .. StringHelper.numName[10]
   end
   result = result .. StringHelper.numName[temp % 10]

@@ -12,7 +12,7 @@ function BaseAction:new (o)
 end
 
 function BaseAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
   else
     -- do nothing
@@ -125,22 +125,22 @@ function FollowAction:new (actor, think, toobjid, speed)
 end
 
 function FollowAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
   else
-    if (self.actor.cantMoveTime > BaseActorAction.maxCantMoveTime) then
+    if self.actor.cantMoveTime > BaseActorAction.maxCantMoveTime then
       self.actor:setPosition(self.toPos)
       self.actor.cantMoveTime = 0
     else
       local selfPos = CacheHelper.getMyPosition(self.actor.objid)
-      if (selfPos) then
+      if selfPos then
         local toPos = CacheHelper.getMyPosition(self.toobjid)
-        if (toPos) then
+        if toPos then
           local distance = MathHelper.getDistance(selfPos, toPos)
           local t = self.actor.objid .. 'lookatHostPlayer'
-          if (distance < 4) then -- 就在附近
+          if distance < 4 then -- 就在附近
             self.actor:stopRun()
-            if (not(TimeHelper.isFnContinueRuns(t))) then
+            if not TimeHelper.isFnContinueRuns(t) then -- 如果没有看着玩家
               TimeHelper.callFnContinueRuns(function ()
                 ActorHelper.lookAt(self.actor.objid, self.toobjid)
               end, 5, t)
@@ -172,7 +172,7 @@ function DontMoveAction:new (actor, think)
 end
 
 -- function DontMoveAction:execute ()
---   if (self.currentRestTime > 0) then
+--   if self.currentRestTime > 0 then
 --     self.currentRestTime = self.currentRestTime - 1
 --   else
 --     -- do nothing
@@ -196,7 +196,7 @@ function FreeTimeAction:new (actor, think)
 end
 
 function FreeTimeAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
   else
     ActorActionHelper.freeTime(self)
@@ -308,17 +308,17 @@ function SleepAction:new (actor, think, faceYaw)
 end
 
 function SleepAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
-    if (self.style == 'sleep') then
+    if self.style == 'sleep' then
       self.actor:setFaceYaw(self.faceYaw)
     end
   else
-    if (self.style == 'sleep') then
+    if self.style == 'sleep' then
       self.style = 'sleeping'
       ActorActionHelper.playSleep(self.actor)
       ActorHelper.playSleep(self.actor.objid)
-    elseif (self.style == 'wake') then
+    elseif self.style == 'wake' then
       self.actor:doItNow()
     end
   end
@@ -364,17 +364,17 @@ function ToggleCandleAction:new (actor, think, isLitCandle)
 end
 
 function ToggleCandleAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
   else
-    if (self.style ~= 'handlingCandle') then
+    if self.style ~= 'handlingCandle' then
       local isLit = self.style == 'lightCandle'
       self.style = 'handlingCandle'
       self.actor:lookAt(self.toPos)
       ActorActionHelper.playAttack(self.actor)
       BlockHelper.handleCandle(self.toPos, isLit)
     else
-      if (self.actor.wants[2]) then
+      if self.actor.wants[2] then
         ActorHelper.handleNextWant(self.actor)
       end
     end
@@ -403,9 +403,9 @@ end
 
 function LookAtAction:execute ()
   -- LogHelper.debug('lookat execute')
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
-    if (self.style == 'lookAt') then
+    if self.style == 'lookAt' then
       self.style = 'lookingAt'
       TimeHelper.callFnContinueRuns(function ()
         self.actor:lookAt(self.dst)
@@ -413,8 +413,8 @@ function LookAtAction:execute ()
       end, self.currentRestTime, self.actor.objid .. 'lookat')
     end
   else
-    if (self.style == 'lookingAt') then
-      if (self.actor.wants[2]) then
+    if self.style == 'lookingAt' then
+      if self.actor.wants[2] then
         ActorHelper.handleNextWant(self.actor)
       else -- 没有想法
         -- self.myActor:openAI()
@@ -443,7 +443,7 @@ function ForceDoNothingAction:new (actor, think)
 end
 
 function ForceDoNothingAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
     self.actor:stopRun()
   else
@@ -468,7 +468,7 @@ function BattleAction:new (actor, think)
 end
 
 function BattleAction:execute ()
-  if (self.currentRestTime > 0) then
+  if self.currentRestTime > 0 then
     self.currentRestTime = self.currentRestTime - 1
   else
     self.actor:doItNow()

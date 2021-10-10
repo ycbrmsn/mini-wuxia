@@ -16,7 +16,7 @@ function ActorActionHelper.getMoveData (think, positions, isNegDir, index, restT
   restTime = restTime or 0
   local data = { style = 'move', restTime = restTime, currentRestTime = 0, positions = positions, 
     index = index, isNegDir = isNegDir, think = think }
-  if (speed) then
+  if speed then
     data.speed = speed
   end
   local toPos = ActorActionHelper.getToPos(positions, isNegDir, index)
@@ -55,7 +55,7 @@ end
 -- 自由活动并警戒数据
 function ActorActionHelper.getFreeAndAlertData (think, speed)
   local data = { style = 'freeAndAlert', restTime = 0, currentRestTime = 0, think = think }
-  if (speed) then
+  if speed then
     data.speed = speed
   end
   return data
@@ -92,7 +92,7 @@ end
 -- 生物处理蜡烛数据
 function ActorActionHelper.getToggleCandleData (think, isLitCandle)
   local style
-  if (isLitCandle) then
+  if isLitCandle then
     style = 'lightCandle'
   else
     style = 'putOutCandle'
@@ -124,7 +124,7 @@ end
 
 -- 获取前往位置
 function ActorActionHelper.getToPos (positions, isNegDir, index)
-  if (isNegDir) then 
+  if isNegDir then 
     return positions[#positions - index + 1]
   else
     return positions[index]
@@ -146,17 +146,17 @@ end
 -- 获取下一个位置，并修改want.index
 function ActorActionHelper.getNextPos (want)
   local style, positions, index, isNegDir = want.style, want.positions, want.index, want.isNegDir
-  if (style == 'move') then
+  if style == 'move' then
     index = index + 1
     want.index = index
-    if (index > #positions) then -- index超出边界
+    if index > #positions then -- index超出边界
       return nil
     else
       return ActorActionHelper.getToPos(positions, isNegDir, index)
     end
-  elseif (style == 'patrol') then
+  elseif style == 'patrol' then
     index = index + 1
-    if (index > #positions) then -- index超出边界
+    if index > #positions then -- index超出边界
       index = 1
     end
     want.index = index
@@ -170,13 +170,13 @@ end
 
 -- 设置区域自由活动
 function ActorActionHelper.setFreeInArea (think, actor, posPairs, isAppend)
-  if (actor.freeInAreaIds and #actor.freeInAreaIds > 0) then -- 如果自由活动区域已经存在，则销毁
+  if actor.freeInAreaIds and #actor.freeInAreaIds > 0 then -- 如果自由活动区域已经存在，则销毁
     for i, v in ipairs(actor.freeInAreaIds) do
       AreaHelper.destroyArea(v)
     end
   end
   local want = FreeInAreaAction:new(actor, think)
-  if (isAppend) then
+  if isAppend then
     table.insert(actor.wants, want)
   else
     actor.wants = { want }
@@ -187,13 +187,13 @@ end
 
 -- 设置区域自由攻击
 function ActorActionHelper.setFreeAttack (think, actor, posPairs, isAppend)
-  if (actor.freeInAreaIds and #actor.freeInAreaIds > 0) then -- 如果自由活动区域已经存在，则销毁
+  if actor.freeInAreaIds and #actor.freeInAreaIds > 0 then -- 如果自由活动区域已经存在，则销毁
     for i, v in ipairs(actor.freeInAreaIds) do
       AreaHelper.destroyArea(v)
     end
   end
   local want = FreeAttackAction:new(actor, think)
-  if (isAppend) then
+  if isAppend then
     table.insert(actor.wants, want)
   else
     actor.wants = { want }
@@ -214,10 +214,10 @@ end
 -- 获得区域中的一个位置
 function ActorActionHelper.getFreeInAreaPos (freeInAreaIds)
   local num, areaid = #freeInAreaIds
-  if (num > 1) then -- 多个位置，则随机一个
+  if num > 1 then -- 多个位置，则随机一个
     local index = math.random(1, num)
     areaid = freeInAreaIds[index]
-  elseif (num == 1) then -- 一个位置
+  elseif num == 1 then -- 一个位置
     areaid = freeInAreaIds[1]
   else
     return nil
@@ -227,13 +227,13 @@ end
 
 -- 更新生物行为状态
 function ActorActionHelper.updateActionState (actor)
-  if (actor.wants) then
+  if actor.wants then
     local style = actor.wants[1].style
-    if (style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'freeAttack'
-      or style == 'doNothing' or style == 'sleep') then
+    if style == 'move' or style == 'patrol' or style == 'freeInArea' or style == 'freeAttack'
+      or style == 'doNothing' or style == 'sleep' then
       -- actor:enableMove(true)
       actor:closeAI()
-    elseif (style == 'dontMove') then
+    elseif style == 'dontMove' then
       -- actor:enableMove(false)
     end
   end
@@ -246,15 +246,15 @@ end
 
 -- 移动
 function ActorActionHelper.actionMove (want)
-  if (want.currentRestTime > 0) then
+  if want.currentRestTime > 0 then
     want.currentRestTime = want.currentRestTime - 1
   else
-    if (want.actor.cantMoveTime > ActorActionHelper.maxCantMoveTime) then
+    if want.actor.cantMoveTime > ActorActionHelper.maxCantMoveTime then
       want.actor:setPosition(want.toPos)
       want.actor.cantMoveTime = 0
     else
       local selfPos = CacheHelper.getMyPosition(want.actor.objid)
-      if (selfPos) then
+      if selfPos then
         ActorActionHelper.runTo(want.actor, want.toPos, want.speed)
       end
     end
@@ -265,7 +265,7 @@ function ActorActionHelper.freeTime (want)
   want.actor:openAI()
   want.currentRestTime = math.random(10, 20)
   local pos = want.actor:getMyPosition()
-  if (not(pos)) then
+  if not pos then
     return
   end
   ActorActionHelper.runTo(want.actor, AreaHelper.getFreeTimePos(pos), want.speed)
@@ -275,7 +275,7 @@ function ActorActionHelper.freeAndAlert (want)
   want.actor:closeAI()
   want.currentRestTime = math.random(10, 20)
   local pos = want.actor:getMyPosition()
-  if (not(pos)) then
+  if not pos then
     return
   end
   ActorActionHelper.runTo(want.actor, AreaHelper.getFreeTimePos(pos), want.speed)
@@ -285,7 +285,7 @@ function ActorActionHelper.playAct (objid, act, afterSeconds)
   if type(objid) == 'table' then -- 可传入actor
     objid = objid.objid
   end
-  if (afterSeconds) then
+  if afterSeconds then
     TimeHelper.callFnAfterSecond (function (p)
       ActorHelper.playAct(objid, act)
     end, afterSeconds)

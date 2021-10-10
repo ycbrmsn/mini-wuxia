@@ -40,7 +40,7 @@ function BasePlayer:isHostPlayer ()
 end
 
 function BasePlayer:speak (afterSeconds, ...)
-  if (afterSeconds > 0) then
+  if afterSeconds > 0 then
     self.action:speakAfterSeconds(afterSeconds, ...)
   else
     self.action:speakToAll(...)
@@ -48,13 +48,13 @@ function BasePlayer:speak (afterSeconds, ...)
 end
 
 function BasePlayer:speakTo (playerids, afterSeconds, ...)
-  if (type(playerids) == 'number') then
-    if (afterSeconds > 0) then
+  if type(playerids) == 'number' then
+    if afterSeconds > 0 then
       self.action:speakToAfterSeconds(playerids, afterSeconds, ...)
     else
       self.action:speak(playerids, ...)
     end
-  elseif (type(playerids) == 'table') then
+  elseif type(playerids) == 'table' then
     for i, v in ipairs(playerids) do
       self:speakTo(v)
     end
@@ -66,7 +66,7 @@ function BasePlayer:speakSelf (afterSeconds, ...)
 end
 
 function BasePlayer:thinks (afterSeconds, ...)
-  if (afterSeconds > 0) then
+  if afterSeconds > 0 then
     self.action:thinkAfterSeconds(afterSeconds, ...)
   else
     self.action:think(...)
@@ -74,13 +74,13 @@ function BasePlayer:thinks (afterSeconds, ...)
 end
 
 function BasePlayer:thinkTo (playerids, afterSeconds, ...)
-  if (type(playerids) == 'number') then
-    if (afterSeconds > 0) then
+  if type(playerids) == 'number' then
+    if afterSeconds > 0 then
       self.action:thinkToAfterSeconds(playerids, afterSeconds, ...)
     else
       self.action:thinkTo(playerids, ...)
     end
-  elseif (type(playerids) == 'table') then
+  elseif type(playerids) == 'table' then
     for i, v in ipairs(playerids) do
       self:thinkTo(v, afterSeconds, ...)
     end
@@ -96,7 +96,7 @@ function BasePlayer:updatePositions ()
 end
 
 function BasePlayer:getName ()
-  if (not(self.nickname)) then
+  if not self.nickname then
     self.nickname = PlayerHelper.getNickname(self.objid)
   end
   return self.nickname
@@ -148,7 +148,7 @@ function BasePlayer:enableBeAttacked (enable)
 end
 
 function BasePlayer:getPosition (notUseCache)
-  if (notUseCache) then
+  if notUseCache then
     return ActorHelper.getPosition(self.objid)
   else
     return CacheHelper.getPosition(self.objid)
@@ -156,7 +156,7 @@ function BasePlayer:getPosition (notUseCache)
 end
 
 function BasePlayer:getMyPosition (notUseCache)
-  if (notUseCache) then
+  if notUseCache then
     return ActorHelper.getMyPosition(self.objid)
   else
     return CacheHelper.getMyPosition(self.objid)
@@ -208,7 +208,7 @@ end
 
 -- 玩家看向，默认会旋转镜头
 function BasePlayer:lookAt (toobjid, needRotateCamera)
-  if (type(needRotateCamera) == 'nil') then
+  if type(needRotateCamera) == 'nil' then
     needRotateCamera = true
   end
   ActorHelper.lookAt(self.objid, toobjid, needRotateCamera)
@@ -228,7 +228,7 @@ end
 -- 拿出道具
 function BasePlayer:takeOutItem (itemid, containEquip)
   local num, arr = self:getItemNum(itemid, containEquip)
-  if (num == 0) then
+  if num == 0 then
     return false
   else
     local grid = BackpackHelper.getCurShotcutGrid(self.objid)
@@ -238,14 +238,14 @@ end
 
 function BasePlayer:holdItem ()
   local itemid = PlayerHelper.getCurToolID(self.objid)
-  if (itemid) then
-    if (not(self.hold) and itemid == 0) then  -- 变化前后都没有拿东西
+  if itemid then
+    if not self.hold and itemid == 0 then  -- 变化前后都没有拿东西
       -- do nothing
-    elseif (not(self.hold)) then -- 之前没有拿东西
+    elseif not self.hold then -- 之前没有拿东西
       self:changeHold(itemid)
-    elseif (itemid == 0) then -- 之后没有拿东西
+    elseif itemid == 0 then -- 之后没有拿东西
       self:changeHold(itemid)
-    elseif (self.hold ~= itemid) then -- 换了一件东西拿
+    elseif self.hold ~= itemid then -- 换了一件东西拿
       self:changeHold(itemid)
     end -- else是没有换东西，略去
   end
@@ -254,7 +254,7 @@ end
 function BasePlayer:changeHold (itemid)
   local foundItem, item1, item2 = ItemHelper.changeHold(self.objid, self.hold, itemid)
   self.hold = itemid
-  if (foundItem) then
+  if foundItem then
     -- self:showAttr(true) -- 目前默认显示近程攻击
     self:changeMyItem(item1, item2)
   end
@@ -344,26 +344,26 @@ end
 -- 继续对话或选择选项
 function BasePlayer:choose ()
   local actor = self:getClickActor()
-  if (self.whichChoose) then -- 当前是选项
-    if (self.whichChoose == 'talk') then -- 对话选项
-      if (actor) then -- 选择过特定生物
+  if self.whichChoose then -- 当前是选项
+    if self.whichChoose == 'talk' then -- 对话选项
+      if actor then -- 选择过特定生物
         TalkHelper.chooseTalk(self.objid, actor)
       end
     else -- 自定义选项
       local whichChoose = self.whichChoose
       local chooseItems = MyOptionHelper.optionMap[whichChoose]
-      if (chooseItems) then
+      if chooseItems then
         local index = PlayerHelper.getCurShotcut(self.objid) + 1
-        if (index <= #chooseItems) then
+        if index <= #chooseItems then
           chooseItems[index][2](self)
-          if (whichChoose == self.whichChoose) then -- 选项未变则自动置空
+          if whichChoose == self.whichChoose then -- 选项未变则自动置空
             self.whichChoose = nil
           end
         end
       end
     end
   else -- 当前不是选项
-    if (actor) then -- 选择过特定生物
+    if actor then -- 选择过特定生物
       PlayerHelper.playerClickActor(self.objid, actor.objid, true)
       -- TalkHelper.talkWith(self.objid, actor)
     end
@@ -373,11 +373,11 @@ end
 -- 中止对话
 function BasePlayer:breakTalk ()
   local actor = self:getClickActor()
-  if (not(actor)) then -- 没有点击特殊生物
+  if not actor then -- 没有点击特殊生物
     return
   end
   local index = TalkHelper.getTalkIndex(self.objid, actor)
-  if (index ~= 1) then -- 表示对话在进行中
+  if index ~= 1 then -- 表示对话在进行中
     TalkHelper.resetTalkIndex(self.objid, actor)
     TalkHelper.showBreakSeparate(self.objid)
   end
@@ -386,14 +386,14 @@ end
 -- 重置对话序数
 function BasePlayer:resetTalkIndex (index)
   local actor = self:getClickActor()
-  if (actor) then
+  if actor then
     TalkHelper.resetTalkIndex(self.objid, actor, index)
   end
 end
 
 -- 新增对话任务，用于改变对话内容
 function BasePlayer:addTalkTask (taskid)
-  if (type(taskid) == 'table') then
+  if type(taskid) == 'table' then
     taskid = taskid.id
   end
   TaskHelper.addTempTask(self.objid, taskid)

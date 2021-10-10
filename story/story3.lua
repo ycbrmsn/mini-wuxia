@@ -48,10 +48,11 @@ function Story3:new ()
     testAreaPosBeg = MyPosition:new(-12, 7, 594), -- 考核区域起点
     testAreaPosEnd = MyPosition:new(1, 7, 607), -- 考核区域终点
     failTestPos = MyPosition:new(17, 8.5, 605), -- 考试失败后江火出现位置
+    testObjid = nil, -- 正在考试的玩家
   }
   self:checkData(data)
 
-  if (StoryHelper.getMainStoryIndex() <= 3) then -- 剧情没有超过3时
+  if StoryHelper.getMainStoryIndex() <= 3 then -- 剧情没有超过3时
     data.startArea = AreaHelper.createAreaRectByRange(data.posBeg, data.posEnd)
   end
 
@@ -63,14 +64,14 @@ end
 -- 来到学院
 function Story3:comeToCollege ()
   local name
-  if (not(yexiaolong and yexiaolong:isFinishInit())) then -- 校验叶小龙
+  if not yexiaolong and yexiaolong:isFinishInit() then -- 校验叶小龙
     name = '叶小龙'
-  elseif (not(yexiaolong and yexiaolong:isFinishInit())) then -- 校验高小虎
+  elseif not yexiaolong and yexiaolong:isFinishInit() then -- 校验高小虎
     name = '高小虎'
-  elseif (not(yuewushuang and yuewushuang:isFinishInit())) then -- 校验月无双
+  elseif not yuewushuang and yuewushuang:isFinishInit() then -- 校验月无双
     name = '月无双'
   end
-  if (name) then
+  if name then
     TimeHelper.callFnAfterSecond(function ()
       self:comeToCollege()
     end, 1)
@@ -83,9 +84,9 @@ function Story3:comeToCollege ()
     player:setPosition(self.startPos.x + px, self.startPos.y, self.startPos.z)
     PlayerHelper.changeVMode(player.objid, VIEWPORTTYPE.BACKVIEW)
     PlayerHelper.rotateCamera(player.objid, ActorHelper.FACE_YAW.SOUTH, 0)
-    if (px == 0) then
+    if px == 0 then
       px = 1
-    elseif (px > 0) then
+    elseif px > 0 then
       px = -px
     else
       px = 1 - px

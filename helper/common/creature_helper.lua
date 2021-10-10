@@ -34,15 +34,15 @@ end
 -- 停止跑
 function CreatureHelper.stopRun (objid, speed)
   CreatureHelper.closeAI(objid)
-  -- if (motion == 1) then
+  -- if motion == 1 then
   --   local x, y, z = ActorHelper.getFaceDirection(objid)
   --   local pos = CacheHelper.getMyPosition(objid)
-  --   if (pos and x) then
+  --   if pos and x then
   --     ActorHelper.tryMoveToPos(objid, pos.x + x, pos.y + y, pos.z + z, speed)
   --   end
   -- end
   local pos = CacheHelper.getMyPosition(objid)
-  if (pos) then
+  if pos then
     local yaw = ActorHelper.getFaceYaw(objid)
     local pitch = ActorHelper.getFacePitch(objid)
     ActorHelper.tryMoveToPos(objid, pos.x, pos.y, pos.z, speed)
@@ -54,9 +54,9 @@ end
 -- 关门
 function CreatureHelper.closeDoor (objid, areaid)
   local doorInfo = AreaHelper.allDoorAreas[areaid]
-  if (doorInfo) then -- 如果门位置存在，说明这是门区域，则判断该区域内是否还有其他生物
+  if doorInfo then -- 如果门位置存在，说明这是门区域，则判断该区域内是否还有其他生物
     local creaturelist = AreaHelper.getAllCreaturesInAreaId(areaid)
-    if (creaturelist and #creaturelist > 0) then -- 如果区域内还有其他生物，则不关门
+    if creaturelist and #creaturelist > 0 then -- 如果区域内还有其他生物，则不关门
       -- do nothing
     else
       local doorPos = doorInfo.pos
@@ -64,7 +64,7 @@ function CreatureHelper.closeDoor (objid, areaid)
     end
   else -- 不确定是不是门的位置
     local isDoorArea, pos, state = AreaHelper.isDoorArea(areaid)
-    if (isDoorArea) then
+    if isDoorArea then
       AreaHelper.allDoorAreas[areaid] = { pos = pos, state = state }
       CreatureHelper.closeDoor(objid, areaid)
     end
@@ -85,7 +85,7 @@ function CreatureHelper.showHp (objid, num)
   local ehp = math.floor(maxHp / num)
   local hpStr = ''
   for i = 0, num - 1 do
-    if (hp > ehp * i) then
+    if hp > ehp * i then
       hpStr = hpStr .. StringHelper.fillStr
     else
       hpStr = hpStr .. StringHelper.emptyStr
@@ -99,20 +99,20 @@ end
 function CreatureHelper.showHp2 (objid, num)
   num = num or 10
   local maxHp = CreatureHelper.getMaxHp(objid)
-  if (not(maxHp)) then
+  if not maxHp then
     return nil
   end
   local hp = CreatureHelper.getHp(objid)
   local ehp = math.floor(maxHp / num)
   local hpStr
-  if (hp > 0) then
+  if hp > 0 then
     hpStr = StringHelper.fillColor
   else
     hpStr = ''
   end
   local idx = 0
   for i = 0, num - 1 do
-    if (hp <= ehp * i and idx == 0) then
+    if hp <= ehp * i and idx == 0 then
       hpStr = hpStr .. StringHelper.emptyColor
       idx = idx + 1
     end

@@ -29,12 +29,12 @@ function MyPlayer:initMyPlayer ()
   local curMaxHp = PlayerHelper.getMaxHp(self.objid)
   local curHp = PlayerHelper.getHp(self.objid)
   local level = self:getLevel()
-  if (curMaxHp and curHp and level) then
+  if curMaxHp and curHp and level then
     local hp = self.initHp + level * self.attr.addMaxHp
-    if (curMaxHp ~= hp) then -- 当前最大值与实际最大值不等
+    if curMaxHp ~= hp then -- 当前最大值与实际最大值不等
       PlayerHelper.setMaxHp(self.objid, hp)
     end
-    if (curMaxHp == curHp) then -- 满血
+    if curMaxHp == curHp then -- 满血
       PlayerHelper.setHp(self.objid, hp)
     end
   else
@@ -45,7 +45,7 @@ end
 -- 手持自定义道具变化
 function MyPlayer:changeMyItem (item1, item2)
   -- 检测技能是否正在释放
-  if (ItemHelper.isDelaySkillUsing(self.objid, '坠星')) then -- 技能释放中
+  if ItemHelper.isDelaySkillUsing(self.objid, '坠星') then -- 技能释放中
     FallStarBow:cancelSkill(self.objid)
     return
   end
