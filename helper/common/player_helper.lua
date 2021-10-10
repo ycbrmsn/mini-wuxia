@@ -72,6 +72,12 @@ function PlayerHelper.getAllPlayerNames ()
   return names
 end
 
+-- 是否是玩家
+function PlayerHelper.isPlayer (objid)
+  local player = PlayerHelper.getPlayer(objid)
+  return player and true or false
+end
+
 -- 记录死亡生物，5秒后清除数据
 function PlayerHelper.recordDefeatActor (objid)
   PlayerHelper.defeatActors[objid] = true
@@ -279,6 +285,13 @@ end
 -- 设置玩家是否可破坏方块
 function PlayerHelper.setPlayerEnableDestroyBlock (objid, enable)
   return PlayerHelper.setActionAttrState(objid, PLAYERATTR.ENABLE_DESTROYBLOCK, enable)
+end
+
+-- 是否满血 返回nil表示玩家不存在
+function PlayerHelper.isHpFull (objid)
+  local maxHp = PlayerHelper.getMaxHp(objid)
+  local hp = PlayerHelper.getHp(objid)
+  return maxHp and hp and maxHp == hp
 end
 
 function PlayerHelper.getHp (objid)

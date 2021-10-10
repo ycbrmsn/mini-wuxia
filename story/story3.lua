@@ -191,6 +191,7 @@ function Story3:startTest (player)
     StoryHelper.showInitError('startTest', '江火')
     return
   end
+  story3.testObjid = player.objid -- 记录考试玩家
   -- 未考试过时剧情前进
   StoryHelper.forwardByPlayer(player.objid, 3, '开始考试')
   -- 考试失败时剧情前进
@@ -211,11 +212,17 @@ function Story3:startTest (player)
   player:speakSelf(ws:use(), '我会全力以赴的。')
   -- jianghuo:lookAt(player, ws:get()) -- 第二次看是避免第一次没看
   jianghuo:speakTo(player.objid, ws:use(), '当然，你全力以赴也不可能击败我。因此，我只会拿出三成的实力。')
+  if not CreatureHelper.isHpFull(jianghuo.objid) then -- 没有满血
+    jianghuo:speakTo(player.objid, ws:use(), '嗯？我状态竟然没有恢复。')
+    TimeHelper.callFnFastRuns(function ()
+      jianghuo.action.playAttack()
+      ActorHelper.recoverAllHp(jianghuo.objid) -- 恢复生命
+    end, ws:use())
+  end
   jianghuo:speakTo(player.objid, ws:use(), '好了，考核正式开始。')
   TimeHelper.callFnFastRuns(function ()
     CreatureHelper.setTeam(jianghuo.objid, 2) -- 将江火的队伍变为蓝队
     CreatureHelper.setWalkSpeed(jianghuo.objid, 400) -- 设置移动速度
-    -- PlayerHelper.setPlayerEnableBeKilled(player.objid, false) -- 玩家不可被击败
     jianghuo:openAI()
     player:enableMove(true, true)
   end, ws:use())
@@ -300,6 +307,7 @@ function Story3:passTest (player)
     jianghuo:setPlayerClickEffective(player.objid, true) -- 可以点击对话
     jianghuo:wantDoNothing() -- 不做事
     player:enableMove(true, true) -- 恢复移动
+    story3.testObjid = nil -- 考试结束
   end, ws:use())
 end
 
@@ -333,13 +341,13 @@ function Story3:failTest (player)
   jianghuo:speakTo(player.objid, ws:use(), '如果不难那考试多没意思。再去准备准备补考吧。')
   -- 恢复生命
   TimeHelper.callFnFastRuns(function ()
-    ActorHelper.playAndStopBodyEffectById(jianghuo.objid, BaseConstant.BODY_EFFECT.LIGHT26)
-    CreatureHelper.resetHp(jianghuo.objid)
+    ActorHelper.recoverAllHp(jianghuo.objid) -- 恢复生命
   end, ws:get())
   TimeHelper.callFnFastRuns(function ()
     jianghuo:setPlayerClickEffective(player.objid, true) -- 可以点击对话
     jianghuo:doItNow() -- 做现在该做的事
     player:enableMove(true, true) -- 恢复移动
+    story3.testObjid = nil -- 考试结束
   end, ws:use())
 end
 

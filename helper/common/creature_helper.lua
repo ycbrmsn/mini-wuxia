@@ -71,6 +71,13 @@ function CreatureHelper.closeDoor (objid, areaid)
   end
 end
 
+-- 是否满血 返回nil表示玩家不存在
+function CreatureHelper.isHpFull (objid)
+  local maxHp = CreatureHelper.getMaxHp(objid)
+  local hp = CreatureHelper.getHp(objid)
+  return maxHp and hp and maxHp == hp
+end
+
 -- 重置生命值
 function CreatureHelper.resetHp (objid, hp)
   hp = hp or CreatureHelper.getMaxHp(objid)

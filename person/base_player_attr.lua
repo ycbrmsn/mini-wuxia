@@ -207,26 +207,38 @@ function BasePlayerAttr:showAttr ()
   self.remoteDefense = remoteDefense
 end
 
--- 恢复生命
+--[[
+  恢复/扣除生命
+  @param    {number} hp 生命值，为正表示加血，为负表示扣血，为nil表示加满血
+  @return   {boolean} 表示生命值是否发生了变化
+  @author   莫小仙
+  @datetime 2021-10-10 17:13:57
+]]
 function BasePlayerAttr:recoverHp (hp)
-  if hp == 0 then
-    return
-  end
+  local curHp, maxHp
   local objid = self.myActor.objid
-  local curHp = PlayerHelper.getHp(objid)
+  if not hp then -- hp没有值，则表示恢复所有生命
+    curHp = PlayerHelper.getHp(objid)
+    maxHp = PlayerHelper.getMaxHp(objid)
+    hp = maxHp - curHp
+  end
+  if hp == 0 then -- 表示不需要恢复生命
+    return false
+  end
+  curHp = curHp or PlayerHelper.getHp(objid)
   if hp > 0 then -- 加血
-    local maxHp = PlayerHelper.getMaxHp(objid)
+    maxHp = maxHp or PlayerHelper.getMaxHp(objid)
     if curHp == maxHp then -- 满血量不处理
-      return
+      return false
     end
     curHp = curHp + hp
-    if curHp > maxHp then
+    if curHp > maxHp then -- 如果计算后的生命值超过满血，则按满血计算
       curHp = maxHp
     end
   else -- 减血
     local minHp = 1
     curHp = curHp + hp
-    if curHp <= 0 then
+    if curHp <= 0 then -- 生命值不足
       local ableBeKilled = PlayerHelper.getPlayerEnableBeKilled(self.myActor.objid)
       if not ableBeKilled then -- 不能被杀死
         curHp = minHp
@@ -234,6 +246,7 @@ function BasePlayerAttr:recoverHp (hp)
     end
   end
   PlayerHelper.setHp(objid, curHp)
+  return true
 end
 
 -- 恢复饱食度

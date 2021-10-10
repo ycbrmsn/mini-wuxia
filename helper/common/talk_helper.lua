@@ -148,8 +148,11 @@ end
 
 -- 对话序数跳转 默认跳下一个 返回true表示有下一条对话
 function TalkHelper.turnTalkIndex (playerid, actor, max, index)
-  if not max then -- 没有最大对话序数，则标记为0，表示一定会重置对话
-    max = 0
+  if not max then -- 没有最大对话序数，表示一定会重置对话，用于对话项call中
+    index = 0 -- 对话项中最后还会再加1，所以这里设置为0
+    actor.talkIndex[playerid] = index
+    TalkHelper.showEndSeparate(playerid)
+    return false
   end
   if not index then -- 没有具体跳转序数，则默认跳转到下一条
     index = TalkHelper.getTalkIndex(playerid, actor) + 1

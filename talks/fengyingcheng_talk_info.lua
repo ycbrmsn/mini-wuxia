@@ -2,7 +2,7 @@
 
 -- 叶小龙
 yexiaolongTalkInfos = {
-  -- 主线
+  -- 主线1对话叶先生
   TalkInfo:new({
     id = 100,
     ants = {
@@ -38,6 +38,7 @@ yexiaolongTalkInfos = {
       },
     },
   }),
+  -- 主线1未消灭恶狼
   TalkInfo:new({
     id = 101,
     ants = {
@@ -51,6 +52,7 @@ yexiaolongTalkInfos = {
       },
     }
   }),
+  -- 主线1已消灭恶狼
   TalkInfo:new({
     id = 102,
     ants = {
@@ -66,6 +68,7 @@ yexiaolongTalkInfos = {
       },
     }
   }),
+  -- 主线3对话叶先生
   TalkInfo:new({
     id = 103,
     ants = {
@@ -107,40 +110,32 @@ yexiaolongTalkInfos = {
       },
     },
   }),
+  -- 主线3接受考试
   TalkInfo:new({
     id = 104,
     ants = {
       TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
-      TalkAnt:betweenHour(0, 5), -- 天没亮
     },
     progress = {
       [0] = {
         TalkSession:speak('先生，我准备好了。'),
-        TalkSession:reply('这天还没亮，等天亮了再说。'),
-      },
-    },
-  }),
-  TalkInfo:new({
-    id = 105,
-    ants = {
-      TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
-      TalkAnt:betweenHour(20, 23), -- 天黑
-    },
-    progress = {
-      [0] = {
-        TalkSession:speak('先生，我准备好了。'),
-        TalkSession:reply('今天不早了，等明天再说。'),
-      },
-    },
-  }),
-  TalkInfo:new({
-    id = 106,
-    ants = {
-      TalkAnt:includeTask(MyTask.T308), -- 接受考试任务
-    },
-    progress = {
-      [0] = {
-        TalkSession:speak('我准备好了。'),
+        TalkSession:reply('这天还没亮，等天亮了再说。'):ant(
+          TalkAnt:betweenHour(0, 5) -- 天没亮
+        ):call(function(player, actor)
+          TalkHelper.turnTalkIndex(player.objid, actor)
+        end),
+        TalkSession:reply('今天不早了，等明天再说。'):ant(
+          TalkAnt:betweenHour(20, 23) -- 已天黑
+        ):call(function(player, actor)
+          TalkHelper.turnTalkIndex(player.objid, actor)
+        end),
+        TalkSession:reply('还有人在考试呢。先等一等。'):ant(
+          TalkAnt:custom(function ()
+            return story3.testObjid and true or false
+          end) -- 有人在考试
+        ):call(function(player, actor)
+          TalkHelper.turnTalkIndex(player.objid, actor)
+        end),
         TalkSession:reply('很好。这就送你去练武场。'):call(function(player, actor)
           story3:startTest(player)
         end),
@@ -149,7 +144,7 @@ yexiaolongTalkInfos = {
   }),
   -- 准备考试
   TalkInfo:new({
-    id = 107,
+    id = 110,
     ants = {
       TalkAnt:orAnts(
         TalkAnt:andAnts(
@@ -186,7 +181,7 @@ yexiaolongTalkInfos = {
   }),
   -- 考试没通过
   TalkInfo:new({
-    id = 108,
+    id = 111,
     ants = {
       TalkAnt:orAnts(
         TalkAnt:andAnts(

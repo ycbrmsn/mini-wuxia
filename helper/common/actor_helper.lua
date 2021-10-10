@@ -924,9 +924,10 @@ function ActorHelper.tryEnableMove (objid, category, switch)
   end
 end
 
+-- 更新进度条中玩家/生物的生命值（暂时没用了）
 function ActorHelper.updateHp (objid, offset)
   local hp, maxHp
-  if ActorHelper.isPlayer(toobjid) then -- 是玩家
+  if ActorHelper.isPlayer(objid) then -- 是玩家
     hp = PlayerHelper.getHp(objid)
     maxHp = PlayerHelper.getMaxHp(objid)
   else
@@ -936,6 +937,32 @@ function ActorHelper.updateHp (objid, offset)
   if hp and maxHp then
     hp = hp <= 0 and 0 or math.ceil(hp)
     GraphicsHelper.updateHp(objid, hp, math.ceil(maxHp), offset)
+  end
+end
+
+-- 是否满血 返回nil表示玩家不存在
+function ActorHelper.isHpFull (objid)
+  local hp, maxHp
+  if ActorHelper.isPlayer(objid) then -- 是玩家
+    return PlayerHelper.isHpFull(objid)
+  else -- 不是玩家
+    return CreatureHelper.isHpFull(objid)
+  end
+end
+
+-- 恢复所有生命值
+function ActorHelper.recoverAllHp (objid)
+  if ActorHelper.isPlayer(objid) then -- 是玩家
+    if not PlayerHelper.isHpFull(objid) then -- 生命值不满
+      local player = PlayerHelper.getPlayer(objid)
+      player:resetHp() -- 恢复生命
+      ActorHelper.playAndStopBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT26)
+    end
+  else -- 不是玩家
+    if not CreatureHelper.isHpFull(objid) then -- 生命值不满
+      CreatureHelper.resetHp(objid) -- 恢复生命
+      ActorHelper.playAndStopBodyEffectById(objid, BaseConstant.BODY_EFFECT.LIGHT26)
+    end
   end
 end
 
@@ -1256,7 +1283,8 @@ end
 
 -- 是否是玩家
 function ActorHelper.isPlayer (objid)
-  return Actor:isPlayer(objid) == ErrorCode.OK
+  -- return Actor:isPlayer(objid) == ErrorCode.OK
+  return PlayerHelper.isPlayer(objid)
 end
 
 -- 播放动作

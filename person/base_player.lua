@@ -275,7 +275,19 @@ function BasePlayer:showAttr ()
   self.attr:showAttr()
 end
 
--- 恢复血量（加/减血）
+-- 重置生命值
+function BasePlayer:resetHp (hp)
+  hp = hp or PlayerHelper.getMaxHp(objid)
+  return PlayerHelper.setHp(objid, hp)
+end
+
+--[[
+  恢复/扣除生命
+  @param    {number} hp 生命值，为正表示加血，为负表示扣血，为nil表示加满血
+  @return   {boolean} 表示生命值是否发生了变化
+  @author   莫小仙
+  @datetime 2021-10-10 17:13:57
+]]
 function BasePlayer:recoverHp (hp)
   self.attr:recoverHp(hp)
 end
