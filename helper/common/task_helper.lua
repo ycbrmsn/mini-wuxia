@@ -321,8 +321,9 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, cTask)
   -- end
 end
 
--- 初始化任务相关选项 ...能够接受的条件
-function TaskHelper.initTaskTalkChoices (player, cTask, ...)
+-- 初始化任务相关选项 isOnlyOne是否是唯一任务 ...能够接受的条件
+function TaskHelper.initTaskTalkChoices (player, cTask, isOnlyOne, ...)
+  isOnlyOne = isOnlyOne == nil and true or isOnlyOne -- 默认是唯一任务
   local ants = { ... }
   local arr = {}
   local realid = cTask:getRealid()
@@ -336,7 +337,12 @@ function TaskHelper.initTaskTalkChoices (player, cTask, ...)
       TaskHelper.addTempTask(player.objid, realid + 2)
       player:resetTalkIndex(0)
   end))
-  table.insert(ants, TalkAnt:excludeTask(realid))
+  if isOnlyOne then -- 如果是唯一任务
+    table.insert(ants, TalkAnt:excludeTask(realid))
+  else -- 不是唯一任务
+    table.insert(ants, TalkAnt:excludeTask(realid, 1)) -- 排除 任务未完成
+    table.insert(ants, TalkAnt:excludeTask(realid, 2)) -- 排除 任务可交付
+  end
   table.insert(arr, PlayerTalk:continue(cTask.name .. '任务')
     :ant(table.unpack(ants)):call(function (player)
       TaskHelper.addTempTask(player.objid, cTask.id)
@@ -389,7 +395,8 @@ function TaskHelper.generateUnableAcceptTalk (cTask, talks, ants)
   local realid = cTask:getRealid()
   local talkAnts = ants or {}
   table.insert(talkAnts, TalkAnt:includeTask(taskid)) -- 选择任务
-  table.insert(talkAnts, TalkAnt:excludeTask(realid)) -- 未接受任务
+  table.insert(talkAnts, TalkAnt:excludeTask(realid, 1)) -- 排除 任务未完成
+  table.insert(talkAnts, TalkAnt:excludeTask(realid, 2)) -- 排除 任务可交付
   return TalkInfo:new({
     id = realid + 3,
     ants = talkAnts,
@@ -416,7 +423,8 @@ function TaskHelper.generateAcceptTalk (cTask, talks, ants)
   local realid = cTask:getRealid()
   local talkAnts = ants or {}
   table.insert(talkAnts, TalkAnt:includeTask(taskid)) -- 选择任务
-  table.insert(talkAnts, TalkAnt:excludeTask(realid)) -- 未接受任务
+  table.insert(talkAnts, TalkAnt:excludeTask(realid, 1)) -- 排除 任务未完成
+  table.insert(talkAnts, TalkAnt:excludeTask(realid, 2)) -- 排除 任务可交付
   return TalkInfo:new({
     id = taskid,
     ants = talkAnts,
