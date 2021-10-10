@@ -139,7 +139,7 @@ end
 -- 获取对话序数，指在一段对话中的序数
 function TalkHelper.getTalkIndex (playerid, actor)
   local index = actor.talkIndex[playerid]
-  if not index then -- 对话信息还不存在，表示还没有开始过此对话
+  if not index or index == 0 then -- 对话信息还不存在 或 跳转到了0（因为选项对话后会加1，而自定义对话不会加1，所以跳到0）
     index = 1
     actor.talkIndex[playerid] = index
   end
