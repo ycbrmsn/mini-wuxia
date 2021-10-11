@@ -67,7 +67,7 @@ yangwanliTalkInfos = {
       [0] = {
         TalkSession:reply('{{:getName}}，你来啦。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, kanshuTask, false))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, kanshuTask))
           playerTalks:add(PlayerTalk:continue('闲聊'))
           local sessions = MyArr:new()
           sessions:add(TalkSession:choose(playerTalks:get()))
@@ -170,7 +170,7 @@ wangdaliTalkInfos = {
       [0] = {
         TalkSession:reply('这不是{{:getName}}嘛。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask, true, TalkAnt:atLeastLevel(10)))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, caijitongkuangshiTask, TalkAnt:atLeastLevel(10)))
           playerTalks:add(PlayerTalk:continue('武器介绍'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.ST12)
             player:resetTalkIndex(0)
@@ -281,7 +281,7 @@ miaolanTalkInfos = {
       [0] = {
         TalkSession:reply('{{:getName}}，又见到你了。'),
         TalkSession:init(function ()
-          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask, false, TalkAnt:atLeastLevel(5)))
+          local playerTalks = MyArr:new(TaskHelper.initTaskTalkChoices(player, shoujishouguTask, TalkAnt:atLeastLevel(5)))
           playerTalks:add(PlayerTalk:continue('疗伤'):call(function (player)
             TaskHelper.addTempTask(player.objid, MyTask.ST10)
             player:resetTalkIndex(0)

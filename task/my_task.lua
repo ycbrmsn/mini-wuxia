@@ -22,6 +22,7 @@ kanshuTask = BaseTask:new({
   itemInfos = {
     { itemid = 201, num = 5 }, -- 落叶松木5个
   },
+  isSingleton = false, -- 不是唯一任务
   rewards = {
     TaskReward:new({
       desc = '获得铜板数枚',
@@ -64,6 +65,7 @@ shoujishouguTask = BaseTask:new({
   itemInfos = {
     { itemid = MyMap.ITEM.ANIMAL_BONE_ID, num = 5 }, -- 兽骨5个
   },
+  isSingleton = false, -- 不是唯一任务
   rewards = {
     TaskReward:new({
       desc = '获得铜板数枚',

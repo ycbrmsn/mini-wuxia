@@ -321,9 +321,8 @@ function TaskHelper.appendPlayerTalk (playerTalks, player, cTask)
   -- end
 end
 
--- 初始化任务相关选项 isOnlyOne是否是唯一任务 ...能够接受的条件
-function TaskHelper.initTaskTalkChoices (player, cTask, isOnlyOne, ...)
-  isOnlyOne = isOnlyOne == nil and true or isOnlyOne -- 默认是唯一任务
+-- 初始化任务相关选项 ...能够接受所需达到的条件
+function TaskHelper.initTaskTalkChoices (player, cTask, ...)
   local ants = { ... }
   local arr = {}
   local realid = cTask:getRealid()
@@ -337,7 +336,7 @@ function TaskHelper.initTaskTalkChoices (player, cTask, isOnlyOne, ...)
       TaskHelper.addTempTask(player.objid, realid + 2)
       player:resetTalkIndex(0)
   end))
-  if isOnlyOne then -- 如果是唯一任务
+  if cTask.isSingleton then -- 如果是唯一任务
     table.insert(ants, TalkAnt:excludeTask(realid))
   else -- 不是唯一任务
     table.insert(ants, TalkAnt:excludeTask(realid, 1)) -- 排除 任务未完成
