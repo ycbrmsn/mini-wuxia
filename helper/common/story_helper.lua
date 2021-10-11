@@ -59,8 +59,16 @@ function StoryHelper.forwardByPlayer (objid, mainIndex, progressTitle, endProgre
     StoryHelper.forward(mainIndex, progressTitle, endProgressTitle)
   else -- 反之，添加任务标记
     local story = StoryHelper.getStory(mainIndex)
-    local title = endProgressTitle or progressTitle -- 从后面往前取
-    TaskHelper.addTask(objid, story:getTaskIdByName(title))
+    local taskid = story:getTaskIdByName(endProgressTitle or progressTitle)
+    TaskHelper.addTask(objid, taskid) -- 加入剧情任务
+    if endProgressTitle then -- 如果是跳转任务，则需要检查是否是从后往前跳的情况
+      local taskid0 = story:getTaskIdByName(progressTitle)
+      if taskid < taskid0 then -- 跳转的任务id比原任务id小，表示是从后往前跳。为了使主线剧情显示不出问题，则需要将之后的任务都删掉
+        for i = taskid + 1, taskid0 do
+          TaskHelper.removeTask(objid, i) -- 移除过头的剧情任务
+        end
+      end
+    end
   end
 end
 
