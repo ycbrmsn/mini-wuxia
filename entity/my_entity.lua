@@ -761,6 +761,8 @@ BaseTask = {
   desc = '无描述',
   category = 3,
   finish = false,
+  isSingleton = true,
+  rewardMsg = '不详。',
   rewards = {},
 }
 
@@ -774,6 +776,10 @@ BaseTask = {
   beatInfos(击败生物信息) { actorid = actorid, actorname = actorname, num = num, curnum = curnum }
   itemInfos(交付道具信息) { itemid = itemid, num = num }
   level(达到等级信息)
+  finish(任务是否结束/关闭)
+  complete(是否完成，如果不为空，则用来判断任务是否完成，常用于特殊类任务)
+  isSingleton(任务是否是唯一)
+  rewardMsg(如果不为空，则奖励显示这个)
   rewards(任务奖励)
 ]]-- 
 function BaseTask:new (o)
@@ -828,20 +834,24 @@ end
 ]]
 function BaseTask:getMessage (objid)
   local lines = {}
-  table.insert(lines, '任务名称：' .. self.name .. '任务')
+  table.insert(lines, '任务名称：' .. self.name .. '任务。')
   table.insert(lines, '任务描述：' .. self.desc)
   -- 任务奖励
-  for i, reward in ipairs(self.rewards) do
-    local rewardMsg = reward.desc
-    if i == #self.rewards then
-      rewardMsg = rewardMsg .. '。'
-    else
-      rewardMsg = rewardMsg .. '，'
-    end
-    if i == 1 then
-      table.insert(lines, '任务奖励：' .. rewardMsg)
-    else
-      table.insert(lines, '\t\t\t\t\t' .. rewardMsg)
+  if self.rewardMsg then -- 如果存在奖励描述
+    table.insert(lines, '任务奖励：' .. self.rewardMsg)
+  else -- 不存在奖励描述
+    for i, reward in ipairs(self.rewards) do
+      local rewardMsg = reward.desc
+      if i == #self.rewards then
+        rewardMsg = rewardMsg .. '。'
+      else
+        rewardMsg = rewardMsg .. '，'
+      end
+      if i == 1 then
+        table.insert(lines, '任务奖励：' .. rewardMsg)
+      else
+        table.insert(lines, '\t\t\t\t\t' .. rewardMsg)
+      end
     end
   end
   -- 任务进度
