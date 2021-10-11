@@ -59,7 +59,7 @@ yangwanliTalkInfos = {
   }),
   TaskHelper.generatePayTalk(kanshuTask, {
     { 3, '村长我采回来了。' },
-    { 1, '真是个好孩子。' },
+    { 1, '真是个好孩子。累坏了吧，这几个铜板拿去买吃的吧。' },
   }),
   TalkInfo:new({
     id = 1,
