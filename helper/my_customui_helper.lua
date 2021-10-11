@@ -79,7 +79,7 @@ function MyCustomUIHelper.refreshTaskPanel (objid, page)
   local tasks = TaskHelper.getTasks(objid)
   local taskArr = {} -- 支线任务数组
   for k, task in pairs(tasks) do
-    if type(task) == 'table' and task.isBranch then -- 是支线任务
+    if type(task) == 'table' and task.isBranch and not task:isFinish() then -- 是支线任务 且 任务未关闭
       table.insert(taskArr, task)
     end
   end
