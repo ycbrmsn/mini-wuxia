@@ -184,9 +184,10 @@ CongealFrostKnife = MyWeapon:new(MyWeaponAttr.congealFrostKnife)
 
 -- 攻击命中冰冻
 function CongealFrostKnife:attackHit (objid, toobjid)
-  local bufflv = self.level + 1
+  -- local bufflv = self.level + 1
+  local buffid = freezeBuffs[self.level + 1].id
   local customticks = 5 * 20 -- 每秒20帧
-  ActorHelper.addBuff(toobjid, 45, bufflv, customticks)
+  ActorHelper.addBuff(toobjid, buffid, bufflv, customticks)
 end
 
 -- 回春刀

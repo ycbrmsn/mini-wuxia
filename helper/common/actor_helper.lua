@@ -1198,28 +1198,30 @@ end
 
 -- 生物获得状态效果
 function ActorHelper.actorAddBuff (objid, buffid, bufflvl)
+  -- 自定义buff处理
+  local buff = ActorHelper.getBuff(buffid)
+  if buff then
+    buff:afterAdd(objid)
+  end
+  -- 自定义生物获得buff处理
   local actor = ActorHelper.getActor(objid)
   if actor then
     actor:addBuff(buffid, bufflvl)
-  else
-    local buff = ActorHelper.getBuff(buffid)
-    if buff then
-      buff:addBuff(objid)
-    end
   end
   -- body
 end
 
 -- 生物失去状态效果
 function ActorHelper.actorRemoveBuff (objid, buffid, bufflvl)
+  -- 自定义buff处理
+  local buff = ActorHelper.getBuff(buffid)
+  if buff then
+    buff:afterRemove(objid)
+  end
+  -- 自定义生物获得buff处理
   local actor = ActorHelper.getActor(objid)
   if actor then
     actor:removeBuff(buffid, bufflvl)
-  else
-    local buff = ActorHelper.getBuff(buffid)
-    if buff then
-      buff:removeBuff(objid)
-    end
   end
   -- body
 end

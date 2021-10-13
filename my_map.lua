@@ -119,6 +119,10 @@ MyMap = {
     PROTECT_ID = 50000001, -- 守护状态
     SEAL_ID = 50000002, -- 封魔状态
     IMPRISON_ID = 50000003, -- 慑魂状态
+    FREEZE1 = 50000004, -- 冰冻1级
+    FREEZE2 = 50000005, -- 冰冻2级
+    FREEZE3 = 50000006, -- 冰冻3级
+    FREEZE4 = 50000007, -- 冰冻4级
   },
   CUSTOM = {
     INIT_HOUR = 7, -- 初始时间

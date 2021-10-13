@@ -652,18 +652,20 @@ end
 
 -- 玩家获得状态效果
 function PlayerHelper.playerAddBuff (objid, buffid, bufflvl)
+  -- 自定义buff处理
   local buff = ActorHelper.getBuff(buffid)
-  if buff then -- 自定义buff
-    buff:addBuff(objid)
+  if buff then
+    buff:afterAdd(objid)
   end
   -- body
 end
 
 -- 玩家失去状态效果
 function PlayerHelper.playerRemoveBuff (objid, buffid, bufflvl)
+  -- 自定义buff处理
   local buff = ActorHelper.getBuff(buffid)
-  if buff then -- 自定义buff
-    buff:removeBuff(objid)
+  if buff then
+    buff:afterRemove(objid)
   end
   -- body
 end

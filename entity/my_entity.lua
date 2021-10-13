@@ -1007,6 +1007,29 @@ function TaskReward:call (f)
   return self
 end
 
+-- 我的状态
+BaseBuff = {}
+
+function BaseBuff:new (o)
+  o = o or {}
+  if (o.id) then
+    ActorHelper.registerBuff(o)
+  end
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 获得buff后的一些额外效果
+function BaseBuff:afterAdd (objid)
+  -- body
+end
+
+-- 移除buff后的一些额外效果
+function BaseBuff:afterRemove (objid)
+  -- body
+end
+
 -- 基础模板
 BaseTemplate = {
   GAIN_EXP_MSG = '你获得{{exp}}点经验', -- exp（获得经验）
