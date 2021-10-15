@@ -186,6 +186,7 @@ CongealFrostKnife = MyWeapon:new(MyWeaponAttr.congealFrostKnife)
 function CongealFrostKnife:attackHit (objid, toobjid)
   -- local bufflv = self.level + 1
   local buffid = freezeBuffs[self.level + 1].id
+  local bufflv = 1
   local customticks = 5 * 20 -- 每秒20帧
   ActorHelper.addBuff(toobjid, buffid, bufflv, customticks)
 end
@@ -259,9 +260,11 @@ FireTipSpear = MyWeapon:new(MyWeaponAttr.fireTipSpear)
 -- 攻击命中着火
 function FireTipSpear:attackHit (objid, toobjid)
   self:reduceStrength(objid)
-  local bufflv = self.level + 1
+  -- local bufflv = self.level + 1
+  local buffid = fireBuffs[self.level + 1].id
+  local bufflv = 1
   local customticks = 5 * 20 -- 每秒20帧
-  ActorHelper.addBuff(toobjid, 33, bufflv, customticks)
+  ActorHelper.addBuff(toobjid, buffid, bufflv, customticks)
 end
 
 -- 霸王枪
@@ -340,11 +343,13 @@ ShootEagleBow = MyWeapon:new(MyWeaponAttr.shootEagleBow)
 -- 噬魂弓
 SwallowSoulBow = MyWeapon:new(MyWeaponAttr.swallowSoulBow)
 
--- 攻击命中中毒
+-- 攻击命中噬魂
 function SwallowSoulBow:attackHit (objid, toobjid)
-  local bufflv = self.level + 1
+  -- local bufflv = self.level + 1
+  local buffid = soulBuffs[self.level + 1].id
+  local bufflv = 1
   local customticks = 5 * 20 -- 每秒20帧
-  ActorHelper.addBuff(toobjid, 34, bufflv, customticks)
+  ActorHelper.addBuff(toobjid, buffid, bufflv, customticks)
 end
 
 -- 坠星弓
