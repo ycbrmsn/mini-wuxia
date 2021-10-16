@@ -440,7 +440,8 @@ function PlayerHelper.playerClickBlock (objid, blockid, x, y, z)
   end
   ItemHelper.clickBlock(objid, blockid, x, y, z)
   local player = PlayerHelper.getPlayer(objid)
-  player:breakTalk()
+  -- 暂时点击方块不会终止对话，以免玩家误点而导致中止对话
+  -- player:breakTalk()
 end
 
 -- 玩家点击生物 simulatedClick(true表示模拟点击，不是真实点击生物)
