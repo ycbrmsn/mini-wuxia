@@ -86,7 +86,7 @@ end
 -- 新增剧情任务
 function TaskHelper.addStoryTask (playerid, index, progress)
   index = index or StoryHelper.getMainStoryIndex()
-  progress = progress or StoryHelper.getMainStoryProgress()
+  progress = progress or StoryHelper.getMainStoryProgress() - 1
   LogHelper.debug(index, 'add-', progress)
   TaskHelper.addTask(playerid, StoryHelper.getStoryTaskid(index, progress))
 end

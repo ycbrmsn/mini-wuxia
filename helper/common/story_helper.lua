@@ -46,6 +46,27 @@ function StoryHelper.forward2 (mainIndex, mainProgress, endProgress)
 end
 
 --[[
+  所有人剧情至少统一为房主主线，至少的意思是某些非房主可能剧情超过房主主线
+  @param    {number} mainIndex 剧情序号，从1开始
+  @param    {string} progressTitle 需要推进的小剧情名称
+  @param    {string} endProgressTitle 推进到的小剧情名称（可选）
+  @return   {boolean} true房主剧情推动 false房主剧情未推动
+  @author   莫小仙
+  @datetime 2021-10-16 22:10:38
+]]
+function StoryHelper.forwardAll (mainIndex, progressTitle, endProgressTitle)
+  if StoryHelper.forward(mainIndex, progressTitle, endProgressTitle) then -- 剧情前进
+    local index = StoryHelper.getMainStoryIndex()
+    local progress = StoryHelper.getMainStoryProgress()
+    PlayerHelper.everyPlayerDoSomeThing(function (player)
+      TaskHelper.addStoryTask(player.objid, index, progress - 1)
+    end)
+    return true
+  end
+  return false
+end
+
+--[[
   根据玩家推荐剧情，房主可推进大小剧情，房客仅能推进小剧情
   @param    {number} objid 玩家id
   @param    {number} mainIndex 剧情序号，从1开始
@@ -135,7 +156,7 @@ function StoryHelper.getMainStoryInfo (objid)
   else -- 房客
     local taskid = TaskHelper.getMaxStoryTaskid(objid)
     index = math.floor(taskid / 100)
-    progress = taskid % 100
+    progress = taskid % 100 + 1
   end
   return StoryHelper.getMainStoryTitleAndTip(index, progress)
 end

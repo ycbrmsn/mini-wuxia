@@ -65,10 +65,11 @@ function Story1:noticeEvent (areaid)
   end
   content = StringHelper.concat(content, '，', subject, '在家吗？我有一个好消息要告诉', subject, '。')
   wenyu:speak(0, content)
-  StoryHelper.forward(1, '闲来无事')
-  PlayerHelper.everyPlayerDoSomeThing(function (player)
-    TaskHelper.addStoryTask(player.objid)
-  end)
+  StoryHelper.forwardAll(1, '闲来无事')
+  -- StoryHelper.forward(1, '闲来无事')
+  -- PlayerHelper.everyPlayerDoSomeThing(function (player)
+  --   TaskHelper.addStoryTask(player.objid)
+  -- end)
 end
 
 -- 时间快速流逝，目前此方法停用
@@ -149,16 +150,23 @@ function Story1:finishNoticeEvent (objid)
 end
 
 function Story1:recover (player)
-  local mainProgress = StoryHelper.getMainStoryProgress()
-  TaskHelper.addStoryTask(player.objid)
-  if mainProgress == 5 then
-    if PlayerHelper.isMainPlayer(player.objid) then -- 房主
-      story1:finishNoticeEvent(player.objid)
-    else
+  if PlayerHelper.isMainPlayer(player.objid) then -- 如果是房主
+    local mainProgress = StoryHelper.getMainStoryProgress()
+    if mainProgress == 6 then -- 完成恶狼任务
+      if PlayerHelper.isMainPlayer(player.objid) then -- 房主
+        story1:finishNoticeEvent(player.objid)
+      else
+        player:enableMove(true)
+      end
+    elseif mainProgress > 6 then
       player:enableMove(true)
     end
-  elseif mainProgress > 5 then
-    player:enableMove(true)
+  else -- 不是房主
+    if mainProgress == 1 then -- 剧情还没开始
+      TaskHelper.addStoryTask(player.objid, 1, 0)
+    else
+      TaskHelper.addStoryTask(player.objid, 1, 1) -- 固定为未与文羽对话
+    end
   end
 end
 

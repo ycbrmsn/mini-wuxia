@@ -121,7 +121,7 @@ function Story3:comeToCollege ()
   end, ws:get())
   PlayerHelper.everyPlayerThinkToSelf(ws:use(), '咦，是先生的声音。进去看看。')
   TimeHelper.callFnAfterSecond(function ()
-    StoryHelper.forward(3, '来到学院')
+    StoryHelper.forwardAll(3, '来到学院')
   end, ws:get())
   gaoxiaohu:speak(ws:use(), '说了多少遍了，叫我小虎，别把我叫矮了。你也回来了。')
   yexiaolong:speak(ws:use(), '回来一阵子了，一直没找到你。小高，看看你的新学生。')
@@ -176,7 +176,7 @@ function Story3:comeToCollege ()
   PlayerHelper.everyPlayerSpeakToSelf(ws:use(), '先生走好。')
   TimeHelper.callFnAfterSecond(function ()
     AreaHelper.clearAllBlock(self.airWallArea, 1001) -- 清除空气墙
-    StoryHelper.forward(3, '先生的声音')
+    StoryHelper.forwardAll(3, '先生的声音')
     PlayerHelper.everyPlayerEnableMove(true)
     gaoxiaohu:doItNow()
     yuewushuang:doItNow()
@@ -428,14 +428,18 @@ function Story3:recover (player)
   local mainProgress = StoryHelper.getMainStoryProgress()
   local hostPlayer = PlayerHelper.getHostPlayer()
   PlayerHelper.setPlayerEnableBeKilled(player.objid, true) -- 能被杀死
-  TaskHelper.addStoryTask(player.objid)
-  if mainProgress == 1 or mainProgress == 2 then -- 进度1或进度2
-    player:enableMove(true)
-    if player == hostPlayer then
+  if player == hostPlayer then -- 玩家是房主
+    if mainProgress == 1 or mainProgress == 2 then -- 进度1或进度2
+      player:enableMove(true)
       story3:comeToCollege() -- 来到学院
-    else
-      player:setMyPosition(hostPlayer:getMyPosition())
     end
+  else -- 不是房主
+    if mainProgress < 3 then -- 表示还在剧情对话中
+      TaskHelper.addStoryTask(player.objid)
+    else -- 剧情对话已完
+      TaskHelper.addStoryTask(player.objid, 3, 2)
+    end
+    player:setMyPosition(hostPlayer:getMyPosition())
   end
 end
 

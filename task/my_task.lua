@@ -121,8 +121,9 @@ xiaomieelangTask = BaseTask:new({
       num = 1,
     }):call(function (objid)
       PlayerHelper.setItemDisableThrow(objid, MyMap.ITEM.TOKEN_ID)
-      StoryHelper.forward(1, '考核任务')
-      story1:finishNoticeEvent(objid)
+      if StoryHelper.forwardByPlayer(objid, 1, '考核任务') then -- 房主通过任务
+        story1:finishNoticeEvent(objid)
+      end
     end),
   },
   isMain = true, -- 标记是主线任务
@@ -145,7 +146,7 @@ xiaomieqiangdaoTask = BaseTask:new({
       itemid = MyMap.ITEM.CHEST_GAO_ID, -- 宝箱
       num = 1,
     }):call(function (objid)
-      StoryHelper.forward(3, '准备消灭大头目')
+      StoryHelper.forwardByPlayer(objid, 3, '准备消灭大头目')
     end),
   },
   isMain = true, -- 标记是主线任务

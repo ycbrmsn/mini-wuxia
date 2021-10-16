@@ -78,6 +78,9 @@ function MyStoryHelper.atHour (hour)
     -- LogHelper.debug(StoryHelper.getMainStoryIndex(), '-', StoryHelper.getMainStoryProgress(), '-', #story1.tips)
     -- if StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == #story1.tips then
     if StoryHelper.forward(1, '今日出发') then -- 剧情进展
+      PlayerHelper.everyPlayerDoSomeThing(function (player)
+        TaskHelper.addStoryTask(player.objid)
+      end)
       story2:goToCollege()
     end
   end
@@ -92,14 +95,14 @@ function MyStoryHelper.playerEnterGame (objid)
   -- player:setMyPosition(118, 7, 1)
 
   -- 剧情二结束 人物在菜市场附近
-  player:setMyPosition(-4, 7, 570)
-  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 2)
-  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
+  -- player:setMyPosition(-4, 7, 570)
+  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 2)
+  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
 
   -- 剧情三准备考试
-  -- player:setMyPosition(-4, 7, 602)
-  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3)
-  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 8)
+  player:setMyPosition(-4, 7, 602)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 8)
   -- 调试部分 end --
 
   if PlayerHelper.isMainPlayer(objid) then -- 本地玩家
@@ -164,7 +167,7 @@ function MyStoryHelper.playerEnterArea (objid, areaid)
   elseif areaid == MyAreaHelper.playerInHomeAreaId then -- 主角进入家中
     -- story1:fasterTime()
   elseif story3 and areaid == story3.startArea then -- 剧情三开启区域
-    if StoryHelper.forward(2, '临近风颖城') then
+    if StoryHelper.forwardAll(2, '临近风颖城') then
       AreaHelper.destroyArea(areaid)
       story3:comeToCollege()
     end
