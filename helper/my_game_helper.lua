@@ -66,6 +66,11 @@ EventHelper.addEvent('endGame', function ()
   MyGameHelper.setGBattleUI()
 end)
 
+-- 世界时间到[n]点
+EventHelper.addEvent('atHour', function (hour)
+  MyStoryHelper.atHour(hour)
+end)
+
 -- 世界时间到[n]秒
 EventHelper.addEvent('atSecond', function (second)
   if second == 1 then

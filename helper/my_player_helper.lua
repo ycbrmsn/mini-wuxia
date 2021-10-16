@@ -15,6 +15,7 @@ EventHelper.addEvent('playerEnterGame', function (objid)
     end
   end
   MyCustomUIHelper.init(objid) -- 初始化UI界面
+  MyStoryHelper.playerEnterGame(objid)
 end)
 
 -- 玩家离开游戏
@@ -29,6 +30,12 @@ end)
 EventHelper.addEvent('playerEnterArea', function (objid, areaid)
   if guard and guard:checkTokenArea(objid, areaid) then -- 检查通行令牌
   end
+  MyStoryHelper.playerEnterArea(objid, areaid)
+end)
+
+-- 玩家离开区域
+EventHelper.addEvent('playerLeaveArea', function (objid, areaid)
+  MyStoryHelper.playerLeaveArea(objid, areaid)
 end)
 
 -- 玩家点击方块
@@ -70,6 +77,7 @@ EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
     player:gainExp(500)
     BackpackHelper.removeGridItemByItemID(objid, itemid, itemnum) -- 销毁
   end
+  MyStoryHelper.playerAddItem(objid, itemid, itemnum)
 end)
 
 -- 玩家使用道具
@@ -105,6 +113,11 @@ EventHelper.addEvent('playerConsumeItem', function (objid, toobjid, itemid, item
   elseif itemid == MyMap.ITEM.FASTER_RUN_PILL3_ID then -- 神行丸
     ActorHelper.addBuff(objid, ActorHelper.BUFF.FASTER_RUN, 3, 3600)
   end
+end)
+
+-- 玩家受到伤害
+EventHelper.addEvent('playerBeHurt', function (objid, toobjid, hurtlv)
+  MyStoryHelper.playerBeHurt(objid, toobjid, hurtlv)
 end)
 
 -- 玩家死亡

@@ -68,10 +68,10 @@ function MyStoryHelper.addHour (hours)
   return true
 end
 
--- 事件
+-- 事件相关
 
 -- 世界时间到[n]点
-EventHelper.addEvent('atHour', function (hour)
+function MyStoryHelper.atHour (hour)
   if hour == 0 then
     StoryHelper.forward(1, '明日出发')
   elseif hour == 7 then
@@ -81,10 +81,10 @@ EventHelper.addEvent('atHour', function (hour)
       story2:goToCollege()
     end
   end
-end)
+end
 
 -- 玩家进入游戏
-EventHelper.addEvent('playerEnterGame', function (objid)
+function MyStoryHelper.playerEnterGame (objid)
   local player = PlayerHelper.getPlayer(objid)
 
   -- 调试部分 begin --
@@ -143,10 +143,10 @@ EventHelper.addEvent('playerEnterGame', function (objid)
       -- todo 云服效果以后再说
     end
   end
-end)
+end
 
 -- 玩家进入区域
-EventHelper.addEvent('playerEnterArea', function (objid, areaid)
+function MyStoryHelper.playerEnterArea (objid, areaid)
   if story1 and areaid == story1.areaid then -- 文羽通知事件
     if StoryHelper.check(1, '闲来无事') then -- 剧情进展
       story1:noticeEvent(areaid)
@@ -199,19 +199,19 @@ EventHelper.addEvent('playerEnterArea', function (objid, areaid)
       end
     end
   end
-end)
+end
 
 -- 玩家离开区域
-EventHelper.addEvent('playerLeaveArea', function (objid, areaid)
+function MyStoryHelper.playerLeaveArea (objid, areaid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid then -- 玩家跑出强盗区域
     story2:comeBack(objid, areaid)
   end
-end)
+end
 
 -- 玩家获得道具
-EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
+function MyStoryHelper.playerAddItem (objid, itemid, itemnum)
   local mainIndex = StoryHelper.getMainStoryIndex()
   if mainIndex == 1 then -- 剧情一
     if itemid == MyMap.ITEM.WENYU_PACKAGE_ID then -- 文羽包裹
@@ -235,10 +235,10 @@ EventHelper.addEvent('playerAddItem', function (objid, itemid, itemnum)
       -- end
     end
   end
-end)
+end
 
 -- 玩家受到伤害
-EventHelper.addEvent('playerBeHurt', function (objid, toobjid, hurtlv)
+function MyStoryHelper.playerBeHurt (objid, toobjid, hurtlv)
   local hp = PlayerHelper.getHp(objid)
   if hp and hp == 1 then -- 重伤
     -- 检测技能是否正在释放
@@ -255,10 +255,10 @@ EventHelper.addEvent('playerBeHurt', function (objid, toobjid, hurtlv)
       return
     end
   end
-end)
+end
 
 -- 生物离开区域
-EventHelper.addEvent('actorLeaveArea', function (objid, areaid)
+function MyStoryHelper.actorLeaveArea (objid, areaid)
   local mainIndex = StoryHelper.getMainStoryIndex()
   local mainProgress = StoryHelper.getMainStoryProgress()
   if mainIndex == 2 and mainProgress == 4 and areaid == story2.areaid then -- 遭遇强盗开战剧情
@@ -267,17 +267,17 @@ EventHelper.addEvent('actorLeaveArea', function (objid, areaid)
       story2:comeBack(objid, areaid)
     end
   end
-end)
+end
 
 -- 生物死亡
-EventHelper.addEvent('actorDie', function (objid, toobjid)
+function MyStoryHelper.actorDie (objid, toobjid)
   if StoryHelper.getMainStoryIndex() == 2 then -- 剧情二中，提示剩余强盗数量
     story2:showMessage(objid)
   end
-end)
+end
 
 -- 完成方块挖掘
-EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
+function MyStoryHelper.blockDigEnd (objid, blockid, x, y, z)
   if blockid == 422 or blockid == 123 then -- 粗制岩石砖 冰块插件
     local pos = ActorHelper.getMyPosition(objid)
     if pos.x > -117 and pos.x < 45 and pos.z > 471 and pos.z < 633 then -- 风颖城范围
@@ -311,4 +311,4 @@ EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
       end
     end
   end
-end)
+end

@@ -138,6 +138,7 @@ EventHelper.addEvent('blockDigEnd', function (objid, blockid, x, y, z)
   elseif blockid >= 2004 and blockid <= 2008 then
     PlayerHelper.showToast(objid, '围栏', disableMsg)
   end
+  MyStoryHelper.blockDigEnd(objid, blockid, x, y, z)
 end)
 
 -- 方块被放置

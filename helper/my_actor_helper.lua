@@ -54,6 +54,16 @@ end
 --   MyActorHelper.updateHp(objid)
 -- end)
 
+-- 生物离开区域
+EventHelper.addEvent('actorLeaveArea', function (objid, areaid)
+  MyStoryHelper.actorLeaveArea(objid, areaid)
+end)
+
+-- 生物死亡
+EventHelper.addEvent('actorDie', function (objid, toobjid)
+  MyStoryHelper.actorDie(objid, toobjid)
+end)
+
 -- 生物击败目标
 EventHelper.addEvent('actorBeat', function (objid, toobjid)
   if ActorHelper.isPlayer(toobjid) then -- 目标是玩家
