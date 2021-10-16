@@ -65,11 +65,11 @@ end
 -- 来到学院
 function Story3:comeToCollege ()
   local name
-  if not yexiaolong and yexiaolong:isFinishInit() then -- 校验叶小龙
+  if not(yexiaolong and yexiaolong:isFinishInit()) then -- 校验叶小龙
     name = '叶小龙'
-  elseif not yexiaolong and yexiaolong:isFinishInit() then -- 校验高小虎
+  elseif not(yexiaolong and yexiaolong:isFinishInit()) then -- 校验高小虎
     name = '高小虎'
-  elseif not yuewushuang and yuewushuang:isFinishInit() then -- 校验月无双
+  elseif not(yuewushuang and yuewushuang:isFinishInit()) then -- 校验月无双
     name = '月无双'
   end
   if name then
@@ -95,9 +95,15 @@ function Story3:comeToCollege ()
   end)
   local hostPlayer = PlayerHelper.getHostPlayer()
   PlayerHelper.everyPlayerEnableMove(false)
-  yexiaolong:setPosition(self.yexiaolongInitPos)
-  gaoxiaohu:setPosition(self.gaoxiaohuInitPos)
-  yuewushuang:setPosition(self.yuewushuangInitPos)
+  -- 调整三个生物的位置
+  yexiaolong:setPosition(self.yexiaolongInitPos) -- 调整叶小龙位置
+  gaoxiaohu:setPosition(self.gaoxiaohuInitPos) -- 调整高小虎位置
+  yuewushuang:setPosition(self.yuewushuangInitPos) -- 调整月无双位置
+  -- 使三个生物无法点击对话且不会乱跑
+  yexiaolong:wantDoNothing('forceDoNothing noClick')
+  gaoxiaohu:wantDoNothing('forceDoNothing noClick')
+  yuewushuang:wantDoNothing('forceDoNothing noClick')
+  -- 加上空气墙，目前没什么用了，不过暂时先不去掉
   self.airWallArea = AreaHelper.createAreaRectByRange(self.airWallPosBeg, self.airWallPosEnd)
   AreaHelper.fillBlock(self.airWallArea, 1001) -- 区域填充空气墙
 

@@ -88,10 +88,10 @@ function MyStoryHelper.playerEnterGame (objid)
   local player = PlayerHelper.getPlayer(objid)
 
   -- 调试部分 begin --
-  -- 剧情二结束
-  -- player:setMyPosition(-4, 7, 570)
-  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 2)
-  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
+  -- 剧情二结束 人物在菜市场附近
+  player:setMyPosition(-4, 7, 570)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 2)
+  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
 
   -- 剧情三准备考试
   -- player:setMyPosition(-4, 7, 602)

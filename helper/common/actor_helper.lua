@@ -310,7 +310,7 @@ end
 function ActorHelper.atHour (hour)
   hour = hour or TimeHelper.getHour()
   for k, actor in pairs(ActorHelper.actors) do
-    if not actor:isWantsExist() or actor.wants[1].think ~= 'forceDoNothing' then -- 没有设置为不受影响
+    if not(actor:isWantsExist() and string.find(actor.wants[1].think, 'forceDoNothing')) then -- 没有设置为不受影响
       actor:wantAtHour(hour)
     end
   end
@@ -319,7 +319,7 @@ end
 -- 所有特定生物重新开始干现在应该干的事情
 function ActorHelper.doItNow ()
   for k, actor in pairs(ActorHelper.actors) do
-    if not actor:isWantsExist() or actor.wants[1].think ~= 'forceDoNothing' then -- 没有设置为不受影响
+    if not(actor:isWantsExist() and string.find(actor.wants[1].think, 'forceDoNothing')) then -- 没有设置为不受影响
       actor:doItNow()
     end
   end

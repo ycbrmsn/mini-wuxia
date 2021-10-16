@@ -262,7 +262,7 @@ function Yexiaolong:wantAtHour (hour)
     elseif hour == 14 then
       self:wantFreeInArea({ self.trainAreaPositions })
     elseif hour == 20 then
-      self:lightCandle()
+      self:lightCandle(nil, true)
       self:nextWantFreeInArea({ self.classroomAreaPositions })
     elseif hour == 22 then
       self.bedData = self.bedData2
@@ -1000,7 +1000,7 @@ function Gaoxiaohu:wantAtHour (hour)
     elseif hour == 14 then
       self:wantFreeInArea({ self.trainAreaPositions })
     elseif hour == 20 then
-      self:lightCandle()
+      self:lightCandle(nil, true)
       self:nextWantFreeInArea({ self.classroomAreaPositions })
     elseif hour == 22 then
       self:putOutCandleAndGoToBed()
@@ -1115,7 +1115,7 @@ function Yuewushuang:wantAtHour (hour)
     elseif hour == 14 then
       self:wantFreeAttack({ self.trainAreaPositions })
     elseif hour == 20 then
-      self:lightCandle()
+      self:lightCandle(nil, true)
       self:nextWantFreeInArea({ self.dormitoryAreaPositions })
     elseif hour == 22 then
       self:putOutCandleAndGoToBed()
@@ -1221,7 +1221,7 @@ function Jianghuo:wantAtHour (hour)
   elseif hour == 14 then
     self:wantFreeAttack({ self.trainAreaPositions })
   elseif hour == 20 then
-    self:lightCandle()
+    self:lightCandle(nil, true)
     self:nextWantFreeInArea({ self.dormitoryAreaPositions })
   elseif hour == 22 then
     self:putOutCandleAndGoToBed()
