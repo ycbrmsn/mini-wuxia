@@ -177,12 +177,16 @@ function TaskHelper.playerDefeatActor (playerid, actorid, isShow)
       for i, beatInfo in ipairs(task.beatInfos) do
         if actorid == beatInfo.actorid then -- 击败该生物
           beatInfo.curnum = beatInfo.curnum + 1
-          if isShow and beatInfo.curnum <= beatInfo.num then -- 未超过任务数量
-            ChatHelper.sendMsg(playerid, '击败', beatInfo.actorname, '（', beatInfo.curnum,
-              '/', beatInfo.num, '）')
+          if beatInfo.curnum <= beatInfo.num then -- 未超过任务数量
             local state = TaskHelper.getTaskState(playerid, taskid)
-            if state == 2 then
-              ChatHelper.sendMsg(playerid, task.name, '任务#G可交付')
+            if isShow then -- 显示
+              TaskHelper.showTaskTips(playerid, task, 'chat')
+              -- 暂时不显示任务进度
+              -- ChatHelper.sendMsg(playerid, '击败', beatInfo.actorname, '（', beatInfo.curnum,
+              --   '/', beatInfo.num, '）')
+              -- if state == 2 then
+              --   ChatHelper.sendMsg(playerid, task.name, '任务#G可交付')
+              -- end
             end
             EventHelper.customEvent('playerDefeatTaskActor', playerid, task, actorid) -- 自定义击杀任务怪物
           end
@@ -208,11 +212,13 @@ function TaskHelper.playerAddItem (playerid, itemid, showType)
             if curnum >= itemInfo.num then -- 达到目标
               if not task.enough then -- 之前道具不够
                 task.enough = true
-                TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
+                TaskHelper.showTaskTips(playerid, task, 'chat')
+                -- TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
               end
             else -- 未达到目标
               task.enough = false
-              TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
+              -- TaskHelper.showTips(showType, playerid, itemid, curnum, itemInfo.num, task)
+              TaskHelper.showTaskTips(playerid, task, 'chat')
             end
             EventHelper.customEvent('playerAddTaskItem', playerid, task, itemid) -- 自定义获得任务道具
           end
@@ -250,17 +256,40 @@ function TaskHelper.showTips (showType, objid, itemid, curnum, neednum, task)
   if showType == 'none' then
     return
   end
-  local msg = StringHelper.concat('获得', ItemHelper.getItemName(itemid),
-    '#n（', curnum, '/', neednum, '）')
+  -- 暂时不显示任务进度
+  -- local msg = StringHelper.concat('获得', ItemHelper.getItemName(itemid),
+  --   '#n（', curnum, '/', neednum, '）')
   local state = TaskHelper.getTaskState(objid, task.id)
   if showType == 'chat' then -- 聊天框信息提示
-    ChatHelper.sendMsg(objid, msg)
+    -- ChatHelper.sendMsg(objid, msg)
     if state == 2 then
       ChatHelper.sendMsg(objid, task.name, '任务#G可交付')
     end
   elseif showType == 'toast' then -- 飘窗提示
-    PlayerHelper.notifyGameInfo2Self(objid, msg)
+    -- PlayerHelper.notifyGameInfo2Self(objid, msg)
     if state == 2 then
+      PlayerHelper.notifyGameInfo2Self(objid, task.name .. '任务#G可交付')
+    end
+  end
+end
+
+--[[
+  显示任务提示，目前仅当任务完成时提示
+  @param    {number} objid 玩家id
+  @param    {table} task 实际任务
+  @param    {string} showType 提示类型 nil时不提示
+  @author   莫小仙
+  @datetime 2021-10-16 20:46:44
+]]
+function TaskHelper.showTaskTips (objid, task, showType)
+  if not showType then
+    return
+  end
+  local state = TaskHelper.getTaskState(objid, task.id)
+  if state == 2 then -- 任务完成
+    if showType == 'chat' then -- 聊天框提示
+      ChatHelper.sendMsg(objid, task.name, '任务#G可交付')
+    elseif showType == 'toast' then -- 飘窗提示
       PlayerHelper.notifyGameInfo2Self(objid, task.name .. '任务#G可交付')
     end
   end
