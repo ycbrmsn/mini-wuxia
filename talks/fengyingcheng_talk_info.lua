@@ -226,6 +226,33 @@ yexiaolongTalkInfos = {
       },
     },
   }),
+  -- 考试通过
+  TalkInfo:new({
+    id = 112,
+    ants = {
+      TalkAnt:orAnts(
+        TalkAnt:andAnts(
+          TalkAnt:isHostPlayer(true),
+          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:justItem(MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 11) -- 进度10
+        ), -- 房主
+        TalkAnt:andAnts(
+          TalkAnt:isHostPlayer(false),
+          TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:includeTask(function ()
+            return story3:getTaskIdByName('考试通过')
+          end)
+        ) -- 非房主
+      ),
+    },
+    progress = {
+      [0] = {
+        TalkSession:reply('你果然通过了考试。你成长的速度快赶上当年的我了。'),
+        TalkSession:speak('都是学院与先生的功劳。'),
+        TalkSession:reply('嗯……学院的历练还有一段时间。你先四处去逛逛吧。'),
+      },
+    },
+  }),
 }
 
 -- 千兵卫
