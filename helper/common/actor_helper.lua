@@ -1126,14 +1126,14 @@ function ActorHelper.actorCollide (objid, toobjid)
         -- 先简单处理为actorid小的停下来
         if actor1.actorid == actor2.actorid then
           if objid < toobjid then
-            actor1:wantStayForAWhile()
+            actor1:wantStayForAWhile(1)
           else
-            actor2:wantStayForAWhile()
+            actor2:wantStayForAWhile(1)
           end
         elseif actor1.actorid < actor2.actorid then
-          actor1:wantStayForAWhile()
+          actor1:wantStayForAWhile(1)
         else
-          actor2:wantStayForAWhile()
+          actor2:wantStayForAWhile(1)
         end
       end
     end
