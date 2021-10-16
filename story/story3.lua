@@ -49,6 +49,7 @@ function Story3:new ()
     testAreaPosEnd = MyPosition:new(1, 7, 607), -- 考核区域终点
     failTestPos = MyPosition:new(17, 8.5, 605), -- 考试失败后江火出现位置
     testObjid = nil, -- 正在考试的玩家
+    callHelpRobber = {}, -- { objid -> true } 叫了帮手的强盗，用于打强盗大头目剧情中，强盗生命值过低后叫帮手
   }
   self:checkData(data)
 
@@ -175,6 +176,54 @@ function Story3:comeToCollege ()
     yuewushuang:doItNow()
     yexiaolong:doItNow()
   end, ws:get())
+end
+
+--[[
+  强盗大头目找帮手
+  @param    {number} objid 生物id
+  @author   莫小仙
+  @datetime 2021-10-16 16:08:37
+]]
+function Story3:callHelp (objid)
+  local actorid = CreatureHelper.getActorID(objid)
+  if not actorid or actorid ~= MyMap.ACTOR.QIANGDAO_DATOUMU_ACTOR_ID then -- 如果不是强盗大头目
+    return
+  end
+  local hp = CreatureHelper.getHp(objid)
+  if hp and hp < 300 then -- 生命值不到一半
+    if not story3.callHelpRobber[objid] then -- 没找到表示没有叫过帮手
+      story3.callHelpRobber[objid] = true -- 标记已经叫过帮手
+      story3:robberComeOut(objid)
+    end
+  end
+end
+
+--[[
+  在附近的玩家周围出现1个小头目以及3个喽罗
+  @param    {number} objid 大头目id
+  @author   莫小仙
+  @datetime 2021-10-16 16:34:41
+]]
+function Story3:robberComeOut (objid)
+  local pos = CacheHelper.getMyPosition(objid)
+  local dis = 5 -- 出现强盗的距离
+  PlayerHelper.everyPlayerDoSomeThing(function (player)
+    if pos then -- 位置存在，表示强大大头目还存在
+      local playerPos = player:getMyPosition()
+      local distance = MathHelper.getDistanceV2(pos, playerPos)
+      if distance and distance < 10 then -- 水平10格内的所有玩家
+        ChatHelper.speak('强盗大头目', player.objid, '你们还埋伏什么，赶紧出来！')
+        -- 在前方出现一个小头目
+        local pos1 = MathHelper.getDistancePosition(playerPos, 0, dis) -- 正前方5米处
+        WorldHelper.spawnCreature(pos1.x, pos1.y, pos1.z, MyMap.ACTOR.QIANGDAO_XIAOTOUMU_ACTOR_ID, 1) -- 小头目
+        -- 在左右后出现一共三个喽罗
+        for i = 1, 3 do
+          local tempPos = MathHelper.getDistancePosition(playerPos, 90 * i, dis)
+          WorldHelper.spawnCreature(tempPos.x, tempPos.y, tempPos.z, MyMap.ACTOR.QIANGDAO_LOULUO_ACTOR_ID, 1) -- 喽罗
+        end
+      end
+    end
+  end)
 end
 
 --[[

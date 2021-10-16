@@ -59,6 +59,11 @@ EventHelper.addEvent('actorLeaveArea', function (objid, areaid)
   MyStoryHelper.actorLeaveArea(objid, areaid)
 end)
 
+-- 生物受到伤害
+EventHelper.addEvent('actorBeHurt', function (objid, toobjid, hurtlv)
+  story3:callHelp(objid)
+end)
+
 -- 生物死亡
 EventHelper.addEvent('actorDie', function (objid, toobjid)
   MyStoryHelper.actorDie(objid, toobjid)
