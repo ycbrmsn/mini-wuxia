@@ -638,9 +638,10 @@ function PlayerHelper.playerLevelModelUpgrade (objid, toobjid)
   local level = player:getLevel()
   if level then -- 获取到等级信息
     player:upgrade(level - prevLevel)
-    local map = { level = level }
-    local msg = StringHelper.getTemplateResult(MyTemplate.UPGRADE_MSG, map)
-    ChatHelper.sendMsg(objid, msg)
+    -- 升级暂时不再提示
+    -- local map = { level = level }
+    -- local msg = StringHelper.getTemplateResult(MyTemplate.UPGRADE_MSG, map)
+    -- ChatHelper.sendMsg(objid, msg)
   end
   -- body
 end
