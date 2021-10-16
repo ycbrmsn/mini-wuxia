@@ -51,12 +51,13 @@ end
   @param    {number} mainIndex 剧情序号，从1开始
   @param    {string} progressTitle 需要推进的小剧情名称
   @param    {string} endProgressTitle 推进到的小剧情名称（可选）
+  @return   {boolean} true房主剧情推动 false房主剧情未推动 nil非房主记录任务
   @author   莫小仙
   @datetime 2021-10-03 22:26:16
 ]]
 function StoryHelper.forwardByPlayer (objid, mainIndex, progressTitle, endProgressTitle)
   if PlayerHelper.isMainPlayer(objid) then -- 是房主，则更新剧情数据
-    StoryHelper.forward(mainIndex, progressTitle, endProgressTitle)
+    return StoryHelper.forward(mainIndex, progressTitle, endProgressTitle)
   else -- 反之，添加任务标记
     local story = StoryHelper.getStory(mainIndex)
     local taskid = story:getTaskIdByName(endProgressTitle or progressTitle)
