@@ -276,7 +276,7 @@ function Egg:useItem (objid)
   local index = PlayerHelper.getCurShotcut(objid)
   local itemid = self:getItemid(index)
   if itemid then
-    if BackpackHelper.addItem(objid, itemid, 1) then
+    if BackpackHelper.gainItem(objid, itemid, 1) then
       BackpackHelper.removeGridItemByItemID(objid, self.id, 1)
     end
   else
