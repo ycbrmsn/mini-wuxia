@@ -358,6 +358,7 @@ function BasePlayerAttr:defeatActor (objid)
   --   end
   -- end
   -- 击败生物获得经验暂时不再提示
+  self:gainExp(exp)
   -- if self:gainExp(exp) then
   --   local map = { exp = exp }
   --   ChatHelper.sendTemplateMsg(MyTemplate.GAIN_EXP_MSG, map, self.myActor.objid)
