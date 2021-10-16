@@ -331,12 +331,12 @@ function BasePlayerAttr:ableUseSkill (skillname)
 end
 
 -- 玩家击败actor
-function BasePlayerAttr:defeatActor (objid)
+function BasePlayerAttr:defeatActor (toobjid)
   local exp = 1
-  if ActorHelper.isPlayer(objid) then -- 如果是击败玩家
-    exp = self:getDefeatExp(objid)
+  if ActorHelper.isPlayer(toobjid) then -- 如果是击败玩家
+    exp = self:getDefeatExp(toobjid)
   else -- 如果是击败生物
-    local actorid = CreatureHelper.getActorID(objid)
+    local actorid = CreatureHelper.getActorID(toobjid)
     if actorid then
       for i, v in ipairs(MonsterHelper.getMonsterModels()) do
         if v.actorid == actorid then
@@ -359,6 +359,8 @@ function BasePlayerAttr:defeatActor (objid)
   -- end
   -- 击败生物获得经验暂时不再提示
   self:gainExp(exp)
+  local msg = StringHelper.concat('#n，获得经验', exp)
+  PlayerHelper.showActorHp(self.myActor.objid, toobjid, msg)
   -- if self:gainExp(exp) then
   --   local map = { exp = exp }
   --   ChatHelper.sendTemplateMsg(MyTemplate.GAIN_EXP_MSG, map, self.myActor.objid)

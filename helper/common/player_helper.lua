@@ -100,7 +100,8 @@ function PlayerHelper.showToast (objid, ...)
 end
 
 -- 显示actor当前生命值
-function PlayerHelper.showActorHp (objid, toobjid)
+function PlayerHelper.showActorHp (objid, toobjid, msg)
+  msg = msg or ''
   local actorname, hp
   if ActorHelper.isPlayer(toobjid) then -- 生物是玩家
     local player = PlayerHelper.getPlayer(toobjid)
@@ -115,11 +116,12 @@ function PlayerHelper.showActorHp (objid, toobjid)
   TimeHelper.callFnFastRuns(function ()
     if hp then -- 获取到玩家/生物的当前生命
       if hp <= 0 then -- 表示已死亡
-        PlayerHelper.showToast(objid, StringHelper.concat(actorname, '已死亡'))
+        PlayerHelper.showToast(objid, StringHelper.concat('击败', actorname, msg))
       else
-        hp = math.ceil(hp)
-        PlayerHelper.showToast(objid, StringHelper.concat(actorname, '剩余生命：', 
-          StringHelper.number2String(hp)))
+        -- 因为目前可以看到生物的生命值，所以暂时不显示生物剩余生命了
+        -- hp = math.ceil(hp)
+        -- PlayerHelper.showToast(objid, StringHelper.concat(actorname, '剩余生命：', 
+        --   StringHelper.number2String(hp)))
       end
     end
   end, 0.1, t)
@@ -495,7 +497,7 @@ function PlayerHelper.playerAttackHit (objid, toobjid)
   if item then -- 自定义道具
     item:attackHit(objid, toobjid)
     if objid ~= toobjid then -- 不是击中自己
-      PlayerHelper.showActorHp(objid, toobjid)
+      -- PlayerHelper.showActorHp(objid, toobjid)
     end
   end
 end
@@ -504,7 +506,7 @@ end
 function PlayerHelper.playerDamageActor (objid, toobjid, hurtlv)
   local key = PlayerHelper.generateDamageKey(objid, toobjid)
   TimeHelper.setFrameInfo(key, hurtlv)
-  PlayerHelper.showActorHp(objid, toobjid)
+  -- PlayerHelper.showActorHp(objid, toobjid)
 end
 
 -- 玩家击败目标
