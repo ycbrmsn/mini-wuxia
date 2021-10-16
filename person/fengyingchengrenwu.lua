@@ -829,37 +829,53 @@ end
 function Erniu:playerClickEvent (objid)
   local itemid = PlayerHelper.getCurToolID(objid)
   if itemid == MyMap.ITEM.CARRIAGE_LUOYECUN_ID then -- 落叶村车票
-    ItemHelper.removeCurTool(objid)
-    -- self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
-    self:toastSpeak('这是去往落叶村的车票。我这就送你过去。')
-    TimeHelper.callFnFastRuns(function ()
-      local player = PlayerHelper.getPlayer(objid)
-      player:setMyPosition(MyAreaHelper.luoyecunPos)
-    end, 2)
+    -- 防止多车票时重复点击
+    TimeHelper.callFnCanRun(function ()
+      ItemHelper.removeCurTool(objid)
+      -- self:speakTo(objid, 0, '这是去往落叶村的车票。我这就送你过去。')
+      self:toastSpeak('这是去往落叶村的车票。我这就送你过去。')
+      TimeHelper.callFnFastRuns(function ()
+        local player = PlayerHelper.getPlayer(objid)
+        player:setMyPosition(MyAreaHelper.luoyecunPos)
+      end, 2)
+    end, 10, objid .. 'showTicket')
+    return true
   elseif itemid == MyMap.ITEM.CARRIAGE_PINGFENGZHAI_ID then -- 平风寨车票
-    ItemHelper.removeCurTool(objid)
-    -- self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
-    self:toastSpeak('这是去往平风寨的车票。我这就送你过去。')
-    TimeHelper.callFnFastRuns(function ()
-      local player = PlayerHelper.getPlayer(objid)
-      player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
-    end, 2)
+    -- 防止多车票时重复点击
+    TimeHelper.callFnCanRun(function ()
+      ItemHelper.removeCurTool(objid)
+      -- self:speakTo(objid, 0, '这是去往平风寨的车票。我这就送你过去。')
+      self:toastSpeak('这是去往平风寨的车票。我这就送你过去。')
+      TimeHelper.callFnFastRuns(function ()
+        local player = PlayerHelper.getPlayer(objid)
+        player:setMyPosition(MyAreaHelper.pingfengzhaiPos)
+      end, 2)
+    end, 10, objid .. 'showTicket')
+    return true
   elseif itemid == MyMap.ITEM.CARRIAGE_PANJUNYINGDI_ID then -- 叛军营地
-    ItemHelper.removeCurTool(objid)
-    -- self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
-    self:toastSpeak('这是去往叛军营地的车票。我这就送你过去。')
-    TimeHelper.callFnFastRuns(function ()
-      local player = PlayerHelper.getPlayer(objid)
-      player:setMyPosition(MyAreaHelper.panjunyingdiPos)
-    end, 2)
+    -- 防止多车票时重复点击
+    TimeHelper.callFnCanRun(function ()
+      ItemHelper.removeCurTool(objid)
+      -- self:speakTo(objid, 0, '这是去往叛军营地的车票。我这就送你过去。')
+      self:toastSpeak('这是去往叛军营地的车票。我这就送你过去。')
+      TimeHelper.callFnFastRuns(function ()
+        local player = PlayerHelper.getPlayer(objid)
+        player:setMyPosition(MyAreaHelper.panjunyingdiPos)
+      end, 2)
+    end, 10, objid .. 'showTicket')
+    return true
   elseif itemid == MyMap.ITEM.CARRIAGE_JUSHAN_ID then -- 橘山
-    ItemHelper.removeCurTool(objid)
-    -- self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
-    self:toastSpeak('这是去往橘山的车票。我这就送你过去。')
-    TimeHelper.callFnFastRuns(function ()
-      local player = PlayerHelper.getPlayer(objid)
-      player:setMyPosition(MyAreaHelper.jushanPos)
-    end, 2)
+    -- 防止多车票时重复点击
+    TimeHelper.callFnCanRun(function ()
+      ItemHelper.removeCurTool(objid)
+      -- self:speakTo(objid, 0, '这是去往橘山的车票。我这就送你过去。')
+      self:toastSpeak('这是去往橘山的车票。我这就送你过去。')
+      TimeHelper.callFnFastRuns(function ()
+        local player = PlayerHelper.getPlayer(objid)
+        player:setMyPosition(MyAreaHelper.jushanPos)
+      end, 2)
+    end, 10, objid .. 'showTicket')
+    return true
   end
 end
 

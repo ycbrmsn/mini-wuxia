@@ -714,9 +714,9 @@ function BaseActor:candleEvent (myPlayer, candle)
   self:speakTo(myPlayer.objid, 0, nickname, '，你搞啥呢')
 end
 
--- 一般重写此方法
+-- 一般重写此方法，返回false表示会进行对话，true则不会
 function BaseActor:playerClickEvent (objid)
-  self.action:playFree2(2)
+  return false
 end
 
 function BaseActor:defaultPlayerClickEvent (playerid, simulatedClick)
@@ -739,8 +739,8 @@ function BaseActor:defaultPlayerClickEvent (playerid, simulatedClick)
     end
     -- self:lookAt(playerid)
     self:wantLookAt(nil, playerid, 60)
-    -- self:playerClickEvent(playerid)
-    if not self.clickNoUse or simulatedClick then -- 人物非点击无效 or 模拟点击
+    if self:playerClickEvent(playerid) then -- 是否不再对话
+    elseif not self.clickNoUse or simulatedClick then -- 人物非点击无效 or 模拟点击
       return TalkHelper.talkWith(playerid, self)
     end
   end
