@@ -106,9 +106,9 @@ function MyStoryHelper.playerEnterGame (objid)
   -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 9)
 
   -- 剧情三准备考试
-  player:setMyPosition(-4, 7, 602)
-  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3)
-  BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 8)
+  -- player:setMyPosition(-4, 7, 602)
+  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3)
+  -- BackpackHelper.gainItem(objid, MyMap.ITEM.GAME_DATA_MAIN_PROGRESS_ID, 8)
   -- 调试部分 end --
 
   if PlayerHelper.isMainPlayer(objid) then -- 本地玩家
@@ -125,7 +125,7 @@ function MyStoryHelper.playerEnterGame (objid)
           PlayerHelper.rotateCamera(objid, ActorHelper.FACE_YAW.NORTH, 0) -- 对齐相机，朝向南方
           -- if not LogPaper:hasItem(objid) then -- 没有江湖日志
             -- LogPaper:newItem(objid, 1, true) -- 江湖日志
-            BackpackHelper.addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 3) -- 给房主三颗守护宝石
+            BackpackHelper.addItem(objid, MyMap.ITEM.PROTECT_GEM_ID, 5) -- 给房主五颗守护宝石
             -- SaveGame:newItem(objid, 1, true) -- 保存游戏
             -- LoadGame:newItem(objid, 1, true) -- 加载进度
             MyStoryHelper.diffPersonDiffPresents(player) -- 不同玩家给予道具
