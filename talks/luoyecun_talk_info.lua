@@ -317,7 +317,7 @@ wenyuTalkInfos = {
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 1), -- 剧情一
           TalkAnt:excludeTask(function ()
-            return story1:getTaskIdByName('对话村长')
+            return story1:getTaskIdByName('对话文羽')
           end)
         ) -- 非房主
       ),
