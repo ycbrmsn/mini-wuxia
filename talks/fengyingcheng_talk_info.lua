@@ -322,6 +322,9 @@ gaoxiaohuTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:includeTask(function ()
+            return story3:getTaskIdByName('先生的声音')
+          end),
           TalkAnt:excludeTask(function ()
             return story3:getTaskIdByName('对话高先生')
           end)
@@ -356,6 +359,9 @@ gaoxiaohuTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:includeTask(function ()
+            return story3:getTaskIdByName('新生武器')
+          end),
           TalkAnt:excludeTask(function ()
             return story3:getTaskIdByName('接受任务')
           end)
@@ -430,6 +436,9 @@ qianduoTalkInfos = {
         TalkAnt:andAnts(
           TalkAnt:isHostPlayer(false),
           TalkAnt:hosterJustItem(MyMap.ITEM.GAME_DATA_MAIN_INDEX_ID, 3), -- 剧情三
+          TalkAnt:includeTask(function ()
+            return story3:getTaskIdByName('对话高先生')
+          end),
           TalkAnt:excludeTask(function ()
             return story3:getTaskIdByName('新生武器')
           end)
