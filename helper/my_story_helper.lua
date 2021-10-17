@@ -78,8 +78,14 @@ function MyStoryHelper.atHour (hour)
     -- LogHelper.debug(StoryHelper.getMainStoryIndex(), '-', StoryHelper.getMainStoryProgress(), '-', #story1.tips)
     -- if StoryHelper.getMainStoryIndex() == 1 and StoryHelper.getMainStoryProgress() == #story1.tips then
     if StoryHelper.forward(1, '今日出发') then -- 剧情进展
+      local taskid = xiaomieelangTask:getRealid()
       PlayerHelper.everyPlayerDoSomeThing(function (player)
         TaskHelper.addStoryTask(player.objid)
+        -- 标记恶狼任务关闭
+        if TaskHelper.hasTask(player.objid, taskid) then -- 如果有恶狼任务，则关闭
+          local task = TaskHelper.getTask(player.objid, taskid)
+          task:setFinish()
+        end
       end)
       story2:goToCollege()
     end
