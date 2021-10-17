@@ -33,7 +33,8 @@ ActorHelper = {
     NORTH = 180
   },
   FLY_SPEED = 0.0785, -- 飞行速度
-  actors = {}, -- objid -> actor
+  actors = {}, -- objid -> actor 这里是已经初始化好的actor
+  needInitActors = {}, -- 数组，这里是需要初始化的actor
   clickActors = {}, -- 玩家点击的actor：objid -> actor
   actormotions = {}, -- 生物及其当前对应的状态 { objid -> motion }
   initActorObjids = {}, -- 初始化生物时，每个玩家附近的所有生物的id数组 { time -> objids }
@@ -41,6 +42,36 @@ ActorHelper = {
   builds = {}, -- 自定义建筑 { buildid -> build }
   enableMoveInfo = {}, -- 能否移动信息 { objid -> { 不能移动原因（没有原因则可移动） } }
 }
+
+-- 查询需要初始化的所有生物
+function ActorHelper.getNeedInitActors ()
+  return ActorHelper.needInitActors
+end
+
+-- 加入需要初始化的actor
+function ActorHelper.addNeedInitActor (o)
+  table.insert(ActorHelper.getNeedInitActors(), o)
+end
+
+--[[
+  根据objid查询是否是需要初始化的actor
+  @param    {number} objid 生物id
+  @return   {table} actor，没找到则返回nil
+  @author   莫小仙
+  @datetime 2021-10-17 19:40:07
+]]
+function ActorHelper.getNeedInitActor (objid)
+  local actorid = CreatureHelper.getActorID(objid)
+  if not actorid then -- 没找到，多半是生物死了
+    return nil
+  end
+  for i, actor in ipairs(ActorHelper.getNeedInitActors()) do
+    if actor.actorid == actorid then -- 匹配到生物
+      return actor
+    end
+  end
+  return nil
+end
 
 -- 新增person
 function ActorHelper.addActor (o)

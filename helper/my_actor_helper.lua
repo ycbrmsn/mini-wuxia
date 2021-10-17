@@ -30,6 +30,7 @@ function MyActorHelper.init ()
       erniu, qianbingwei, ludaofeng, sunkongwu, limiaoshou, qianduo, murongxiaotian, gaoxiaohu, juyidao,
       yuewushuang, jianghuo }
   for i, v in ipairs(myActors) do
+    ActorHelper.addNeedInitActor(v)
     TimeHelper.initActor(v)
     -- LogHelper.debug('创建', v:getName(), '完成')
   end

@@ -457,6 +457,11 @@ function PlayerHelper.playerClickActor (objid, toobjid, simulatedClick)
       ActorHelper.recordClickActor(objid, actor)
       return actor:defaultPlayerClickEvent(objid, simulatedClick)
     end
+  else -- 如果没找到，判断一下是不是没有初始化
+    actor = ActorHelper.getNeedInitActor(toobjid)
+    if actor then -- 找到了，则表示因为某种原因，该actor没有被初始化
+      actor:init()
+    end
   end
 end
 
