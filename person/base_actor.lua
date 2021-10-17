@@ -743,6 +743,7 @@ function BaseActor:defaultPlayerClickEvent (playerid, simulatedClick)
     elseif not self.clickNoUse or simulatedClick then -- 人物非点击无效 or 模拟点击
       return TalkHelper.talkWith(playerid, self)
     end
+    TalkHelper.handleTalkOver(playerid) -- 对话结束处理
   end
 end
 
