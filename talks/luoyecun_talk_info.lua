@@ -111,29 +111,52 @@ wangdaliTalkInfos = {
     { 1, '不错，你采集到了足够的矿石。你想要件什么武器？' },
     { 5,
       {
-        PlayerTalk:stop('我想我需要一把剑。'):call(function (player, actor)
-          actor:speakTo(player.objid, 0, '拿稳了。')
-          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSword.levelIds[1])
-          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+        PlayerTalk:continue('剑'):call(function (player, actor)
+          local ws = WaitSeconds:new()
+          player:speakSelf(0, '我想我需要一把剑。')
+          TimeHelper.callFnFastRuns(function ()
+            BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSword.levelIds[1])
+            TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+            actor:speakTo(player.objid, 0, '拿稳了。')
+            player:finishTalk()
+          end, ws:use())
         end),
-        PlayerTalk:stop('我想要一把刀。'):call(function (player, actor)
-          actor:speakTo(player.objid, 0, '拿稳了。')
-          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeKnife.levelIds[1])
-          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+        PlayerTalk:continue('刀'):call(function (player, actor)
+          local ws = WaitSeconds:new()
+          player:speakSelf(0, '我想要一把刀。')
+          TimeHelper.callFnFastRuns(function ()
+            BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeKnife.levelIds[1])
+            TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+            actor:speakTo(player.objid, 0, '拿稳了。')
+            player:finishTalk()
+          end, ws:use())
         end),
-        PlayerTalk:stop('我想舞枪。'):call(function (player, actor)
-          actor:speakTo(player.objid, 0, '拿稳了。')
-          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSpear.levelIds[1])
-          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+        PlayerTalk:continue('枪'):call(function (player, actor)
+          local ws = WaitSeconds:new()
+          player:speakSelf(0, '我想舞枪。')
+          TimeHelper.callFnFastRuns(function ()
+            BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeSpear.levelIds[1])
+            TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+            actor:speakTo(player.objid, 0, '拿稳了。')
+            player:finishTalk()
+          end, ws:use())
         end),
-        PlayerTalk:stop('我想来一张弓。'):call(function (player, actor)
-          actor:speakTo(player.objid, 0, '拿稳了。')
-          BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeBow.levelIds[1])
-          TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+        PlayerTalk:continue('弓'):call(function (player, actor)
+          local ws = WaitSeconds:new()
+          player:speakSelf(0, '我想来一张弓。')
+          TimeHelper.callFnFastRuns(function ()
+            BackpackHelper.gainItem(player.objid, MyWeaponAttr.bronzeBow.levelIds[1])
+            TaskHelper.finishTask(player.objid, caijitongkuangshiTask)
+            actor:speakTo(player.objid, 0, '拿稳了。')
+            player:finishTalk()
+          end, ws:use())
         end),
       }
-    }
-  }),
+    },
+    { 9 },
+  }, function ()
+    -- 一个空方法，用于不自动完成任务
+  end),
   TalkInfo:new({
     id = MyTask.ST12,
     ants = {

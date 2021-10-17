@@ -395,6 +395,19 @@ function BasePlayer:breakTalk ()
   end
 end
 
+-- 结束对话
+function BasePlayer:finishTalk ()
+  local actor = self:getClickActor()
+  if not actor then -- 没有点击特殊生物
+    return
+  end
+  local index = TalkHelper.getTalkIndex(self.objid, actor)
+  if index ~= 1 then -- 表示对话在进行中
+    TalkHelper.resetTalkIndex(self.objid, actor)
+    TalkHelper.showEndSeparate(self.objid)
+  end
+end
+
 -- 重置对话序数
 function BasePlayer:resetTalkIndex (index)
   local actor = self:getClickActor()
