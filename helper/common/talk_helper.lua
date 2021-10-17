@@ -223,7 +223,7 @@ function TalkHelper.handleTalkSession (playerid, actor, index, sessions)
       return true
     end
     -- 避免一直重复选项
-    local fnCanRunT = playerid .. chooseArr[1].msg
+    local fnCanRunT = playerid .. 'chooseItem'
     TimeHelper.callFnCanRun(function ()
       player.fnCanRunT = fnCanRunT
       -- 有多个选项，则出现选项列表
@@ -297,6 +297,7 @@ end
 function TalkHelper.realChooseTalk (playerid, actor, index, sessions)
   local player = PlayerHelper.getPlayer(playerid)
   player.whichChoose = nil -- 去掉选择状态
+  TimeHelper.delFnCanRun(10, player.fnCanRunT) -- 解除选项等待时间限制
   -- local playerTalk = session.msg[index]
   local playerTalk = player.chooseArr[index]
   local max = #sessions
