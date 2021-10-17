@@ -143,7 +143,7 @@ function Wangdali:new ()
     objid = 4339145592,
     isSingleton = true,
     unableBeKilled = true,
-    clickNoUse = true, -- 点击无效，主要是点击人物买东西，不通过点击进行对话
+    -- clickNoUse = true, -- 点击无效，主要是点击人物买东西，不通过点击进行对话
     initPosition = MyPosition:new(-29.5, 9.5, -44.5), -- 屋内
     bedData = {
       MyPosition:new(-25.5, 10.5, -46.5), -- 床尾位置
@@ -278,7 +278,7 @@ function Miaolan:new ()
     objid = 4314184974,
     isSingleton = true,
     unableBeKilled = true,
-    clickNoUse = true,
+    -- clickNoUse = true,
     initPosition = MyPosition:new(-33.5, 8.5, -13.5), -- 药店柜台后
     bedData = {
       MyPosition:new(-29.5, 14.5, -14.5), -- 床尾位置
