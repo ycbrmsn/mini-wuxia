@@ -95,6 +95,14 @@ MyOptionHelper = {
           MyOptionHelper.showOptions(player, 'back')
         end
       },
+      { 'v0.3.6', function (player)
+          ChatHelper.sendMsg(player.objid, '1.新增学院考试。', StringHelper.repeatStrs('\t', 10))
+          ChatHelper.sendMsg(player.objid, '2.接任务加上等级限制。', StringHelper.repeatStrs('\t', 7))
+          ChatHelper.sendMsg(player.objid, '3.加上UI。', StringHelper.repeatStrs('\t', 13))
+          ChatHelper.sendMsg(player.objid, '4.其他更新详见官网。', StringHelper.repeatStrs('\t', 8))
+          MyOptionHelper.showOptions(player, 'back')
+        end
+      },
       { '返回', function (player)
           MyOptionHelper.showOptions(player, 'readme')
         end
